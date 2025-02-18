@@ -7,6 +7,7 @@ public enum Chocolat implements IProduit {
 	C_HQ_E( Gamme.HQ, false,true), // CHOCOLAT HAUTE QUALITE EQUITABLE
 	C_MQ_E( Gamme.MQ, false,true), // CHOCOLAT MOYENNE QUALITE EQUITABLE
 	C_MQ  ( Gamme.MQ, false,false),// CHOCOLAT MOYENNE QUALITE (NI BIO NI EQUITABLE)
+	C_BQ_E( Gamme.BQ, false,true), // CHOCOLAT BASSE QUALITE EQUITABLE
 	C_BQ(   Gamme.BQ, false,false);// CHOCOLAT BASSE QUALITE (NI BIO NI EQUITABLE)
 	
 	private Gamme gamme;
