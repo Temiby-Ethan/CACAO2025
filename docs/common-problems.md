@@ -17,7 +17,7 @@ You have a local change that you did not commit.
 
 1. Two options:
    1. commit without pushing your local change, or 
-   2. delete your local change by replacing the changed files/folders with a previous version: right-click on these files or folders -> `Replace with` -> `HEAD Revision`
+   2. delete your local change by replacing the changed files/folders with a previous version (you can find the previous version of a file in the Timeline or Source Control Graph view in VSCode)
 3. Pull from your team repository
 
 This will maybe result in a conflict, if your team mate changed the same lines. 
@@ -33,22 +33,20 @@ If the pull request is correct, it is merged automatically (within 5 minutes) an
 
 You are changing files outside of the java package of your team. You can see the files that you are changing in the `Files changed` tab of your pull request on the github website. This list must contain only files in your package.
 
-1. Replace these files in Eclipse with the version from the main repository: right-click on these files or folders -> `Replace with` -> `Branch, Tag or Reference...` -> `Remote tracking` -> select the main repository (not your team repository) -> `Replace`
+1. Replace these files in VSCode with the version from the main repository: Fetch from all remotes, then you can find the version of a file from the main repository in the Source Control Graph view in VSCode (tagged as with the main repository branch, usually named `upstream`)
 2. Commit and push
-
-Note that if the files you changed are not Java files, they will be hidden in the Package Exporer of Eclipse. To see and replace them: click the three dots in the top bar of Package Exporer -> `Filters...` -> uncheck `.* resources`. 
 
 ## `Some checks were not successful`: `Checks / java_tests`
 
-Not accepting because the code does not pass the tests. You can read the error message by clicking on `Details` near to the failed check. Then click on `Build with Ant` to see the output of the test execution. You can run the same tests on your Eclipse, they are `test/abstraction/FiliereParDefaultTest.java` and `test/presentation/FenetrePrincipaleTest.java`. To run them:  right-click on `build.xml` -> `Run As` -> `Ant Build`. You will see the error message in the console. Fix the error, then commit and push.
+Not accepting because the code does not pass the tests. You can read the error message by clicking on `Details` near to the failed check. Then click on `Build with Ant` to see the output of the test execution. Fix the error, then commit and push.
 
 ## `Some checks were not successful`: `Checks / performance_tests`
 
-Not accepting because your update makes the simulation too slow. You can read the results of the performance tests by clicking on `Details` near to the failed check. You will see how much time (in milliseconds) each team takes when the button `Next` is clicked 300 times. The maximum time allowed per team is 20 seconds.
+Not accepting because your update makes the simulation too slow. You can read the results of the performance tests by clicking on `Details` near to the failed check. You will see how much time (in milliseconds) each team takes when the button `Next` is clicked 300 times. The maximum time allowed per team is 20 seconds. Fix the problem, then commit and push.
 
 ## `This branch is out-of-date with the base branch`
 
 Your team repository is not up-to-date with the changes that happened on the main repository. 
 
-1. Pull from the main repository: right-click on the java project -> `Team` -> `Pull...` -> in `Remote:` select the main repository (not your team repository) -> `Finish`
+1. Pull from the main repository: in the Source Control view in VSCode select `Pull from...` then select the main repository (usually named `upstream`)
 2. Push
