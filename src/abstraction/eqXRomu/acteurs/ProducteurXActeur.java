@@ -40,6 +40,7 @@ public class ProducteurXActeur  implements IActeur {
 		this.prodParStep.put(Feve.F_HQ_E, PART*41600.0);
 		this.prodParStep.put(Feve.F_MQ_E, PART*10400.0);
 		this.prodParStep.put(Feve.F_MQ, PART*52000.0);
+		this.prodParStep.put(Feve.F_BQ_E, PART*21100.0);
 		this.prodParStep.put(Feve.F_BQ, PART*83320.0);
 		
 		this.stock = new HashMap<Feve, Variable>();
