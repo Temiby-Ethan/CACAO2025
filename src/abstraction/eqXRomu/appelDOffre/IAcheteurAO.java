@@ -1,8 +1,7 @@
 package abstraction.eqXRomu.appelDOffre;
 
-import java.util.List;
-
 import abstraction.eqXRomu.filiere.IActeur;
+import java.util.List;
 
 public interface IAcheteurAO extends IActeur {
 

@@ -234,7 +234,7 @@ public class Filiere implements IAssermente {
 	}
 	/** @return Retourne l'annee de l'etape courante */
 	public int getAnnee() {
-		return 2024+this.etape/24;
+		return 2025+this.etape/24;
 	}
 
 	/** @return Le numero du mois de l'etape precisee en parametre
