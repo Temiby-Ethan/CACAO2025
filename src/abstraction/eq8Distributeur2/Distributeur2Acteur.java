@@ -14,7 +14,7 @@ public class Distributeur2Acteur implements IActeur {
 	
 	//Journal par Tidiane
 	public int tour = 0;
-	public Journal journal = new Journal("journal next", this);
+	private Journal journal = new Journal("journal next", this);
 	
 	protected int cryptogramme;
 
@@ -39,6 +39,10 @@ public class Distributeur2Acteur implements IActeur {
 	public void next() {
 		tour++;
 		journal.ajouter("tour");
+	}
+
+	public Journal getJournal(){
+		return this.journal;
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
