@@ -12,7 +12,7 @@ import abstraction.eqXRomu.produits.IProduit;
 
 public class Producteur1Acteur implements IActeur {
 
-	private Journal journal_next = new Journal("journal next", this);
+	private Journal journal_next = new Journal("journal équipe1", this);
 
 	protected int cryptogramme;
 
