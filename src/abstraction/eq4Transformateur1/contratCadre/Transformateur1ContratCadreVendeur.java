@@ -10,7 +10,7 @@ import abstraction.eqXRomu.contratsCadres.*;
 
 /*
  * @author MURY Julien
- * Cette calsse, héritant de TransformateurContratCadre, décrit le comportement de notre acteur lors de la creation d'un contrat cadre en tant que venndeur
+ * Cette calsse, héritant de Transformateur1ContratCadre, décrit le comportement de notre acteur lors de la creation d'un contrat cadre en tant que venndeur
  */
 
 public class Transformateur1ContratCadreVendeur extends TransformateurContratCadre implements IVendeurContratCadre {
@@ -28,12 +28,7 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 
 	}
 
-    /*
-     * Cette methode decrit la strategie de negociation du volume en jeu par le Transformateur1 en tant que vendeur
-	 * @param contrat exemplaire du contrat au moment de la negociation
-	 * 
-	 * @return Echeancier du vendeur qui contient les differents volume de vente pour les differentes periodes
-     */
+
 	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
 
 		if (contrat.getProduit().equals(produit)) {
@@ -69,21 +64,13 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 		}
 	}
 
-	/*
-	 * @param contrat exemplaire du contrat en cours de negociation
-	 * 
-	 * @return prix initial propose par notre acteur
-	 */
+	//A MODIFIER
 	public double propositionPrix(ExemplaireContratCadre contrat) {
 		return 0.5 + (5000.0-contrat.getQuantiteTotale());// plus la quantite est elevee, plus le prix est interessant
 	}
 
 
-	/*
-	 * @param contrat exemplaire du contrat en cours de negociation
-	 * 
-	 * @return nouveau prix negocie par notre acteur
-	 */
+	//A MODIFIER
 	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
 		if (Filiere.random.nextDouble()<0.1) {
 			return contrat.getPrix(); // on ne cherche pas a negocier dans 10% des cas
@@ -96,6 +83,7 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 		this.mesContratEnTantQueVendeur.add(contrat);
 	}
 	
+
 	public void next() {
 		List<ExemplaireContratCadre> contratsObsoletes=new LinkedList<ExemplaireContratCadre>();
 		for (ExemplaireContratCadre contrat : this.mesContratEnTantQueVendeur) {
