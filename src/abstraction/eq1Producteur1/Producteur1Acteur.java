@@ -11,7 +11,9 @@ import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Producteur1Acteur implements IActeur {
-	
+
+	private Journal journal_next = new Journal("journal next", this);
+
 	protected int cryptogramme;
 
 	public Producteur1Acteur() {
@@ -28,11 +30,18 @@ public class Producteur1Acteur implements IActeur {
 		return this.getNom();
 	}
 
+
 	////////////////////////////////////////////////////////
 	//         En lien avec l'interface graphique         //
 	////////////////////////////////////////////////////////
 
 	public void next() {
+	
+		journal_next.ajouter("" + Filiere.LA_FILIERE.getEtape());
+	}
+
+	public Journal getJournal(){
+		return this.journal_next;
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
