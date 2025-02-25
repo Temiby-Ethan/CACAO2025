@@ -13,7 +13,8 @@ import abstraction.eqXRomu.produits.IProduit;
 public class Distributeur2Acteur implements IActeur {
 	
 	//Journal par Tidiane
-	private Journal journal_next = new Journal("journal next", this);
+	private Journal journal_next = new Journal("journal Eq8", this);
+	
 	
 	protected int cryptogramme;
 
@@ -67,6 +68,7 @@ public class Distributeur2Acteur implements IActeur {
 	// Renvoie les journaux
 	public List<Journal> getJournaux() {
 		List<Journal> res=new ArrayList<Journal>();
+		res.add(getJournal());
 		return res;
 	}
 
@@ -115,7 +117,10 @@ public class Distributeur2Acteur implements IActeur {
 		if (this.cryptogramme==cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
 			return 0; // A modifier
 		} else {
+			System.out.println("Cet acteur n'est pas assermenté");
 			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
 		}
 	}
+
+	
 }
