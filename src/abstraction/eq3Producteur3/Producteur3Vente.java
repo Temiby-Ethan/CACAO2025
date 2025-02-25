@@ -1,9 +1,11 @@
 package abstraction.eq3Producteur3;
 
+import abstraction.eqXRomu.bourseCacao.BourseCacao;
 import abstraction.eqXRomu.bourseCacao.IVendeurBourse;
 import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 import abstraction.eqXRomu.contratsCadres.IVendeurContratCadre;
+import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
@@ -17,12 +19,20 @@ public class Producteur3Vente extends Producteur3Stock implements IVendeurBourse
 
     @Override
     public double offre(Feve f, double cours) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if(this.feve.equals(f)){
+            BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
+            double pourcentage = (bourse.getCours(feve).getValeur()-bourse.getCours(feve).getMin())/(bourse.getCours(feve).getMax()-bourse.getCours(feve).getMin());
+			return this.stockFeve.getValeur()*pourcentage;
+        }else{
+            return 0.0;
+        }
     }
 
     @Override
     public double notificationVente(Feve f, double quantiteEnT, double coursEnEuroParT) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        double livrable = Math.min(quantiteEnT, this.stockFeve.getValeur());
+		this.stockFeve.setValeur(this, this.stockFeve.getValeur()-livrable);
+		return livrable;
     }
 
     @Override
