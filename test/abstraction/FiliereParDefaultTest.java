@@ -9,9 +9,15 @@ public class FiliereParDefaultTest {
 
 	@Test
 	public void testNext() {
-		Filiere.LA_FILIERE = null;
-		Filiere.LA_FILIERE = new FiliereParDefaut();
+		
+		int seed = 0;
+		if (System.getProperty("seed") != null) 
+			seed = Integer.parseInt(System.getProperty("seed"));
+		
+		Filiere.LA_FILIERE = new FiliereParDefaut(seed);
+
 		Filiere.LA_FILIERE.initialiser();
+
 		for (int i=0; i<300; i++)
 			Filiere.LA_FILIERE.next();
 	}
