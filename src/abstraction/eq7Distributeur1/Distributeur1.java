@@ -14,6 +14,7 @@ import abstraction.eqXRomu.produits.IProduit;
 
 public class Distributeur1 extends Distributeur1Acteur  {
 	
+	// défi 1 et 2 par Alexiho
 	private Journal journal;  // Déclaration du journal
 	private double stockC_HQ_BE; // CHOCOLAT HAUTE QUALITE BIO EQUITABLE
 	private double stockC_HQ_E; // CHOCOLAT HAUTE QUALITE EQUITABLE
@@ -22,7 +23,7 @@ public class Distributeur1 extends Distributeur1Acteur  {
 	private double stockC_BQ_E; // CHOCOLAT BASSE QUALITE EQUITABLE
 	private double stockC_BQ; // CHOCOLAT BASSE QUALITE (NI BIO NI EQUITABLE)
 
-	public Distributeur1() {
+	public Distributeur1() { // par Alexiho
 		super();
 
 		this.journal = new Journal("Journal de EQ7", this); // Initialisation du journal
@@ -53,7 +54,7 @@ public class Distributeur1 extends Distributeur1Acteur  {
 		System.out.println(journal);
 	}
 
-	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
+	public double getQuantiteEnStock(IProduit p, int cryptogramme) { // par Alexiho
 		if (this.cryptogramme == cryptogramme) { // Vérification que l'accès est autorisé
 			if (p == Chocolat.C_HQ_BE) {
 				return stockC_HQ_BE;
@@ -76,7 +77,7 @@ public class Distributeur1 extends Distributeur1Acteur  {
 	}
 
 	// Renvoie les journaux
-	public List<Journal> getJournaux() {
+	public List<Journal> getJournaux() { // par Alexiho
 		List<Journal> res=new ArrayList<Journal>();
 		res.add(journal);
 		return res;
