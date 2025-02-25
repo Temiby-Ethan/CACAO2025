@@ -11,13 +11,23 @@ import abstraction.eqXRomu.produits.Feve;
 public class Distributeur1 extends Distributeur1Acteur  {
 	
 	private Journal journal;  // Déclaration du journal
-	private Variable stockChocolat;
+	private double stockC_HQ_BE; // CHOCOLAT HAUTE QUALITE BIO EQUITABLE
+	private double stockC_HQ_E; // CHOCOLAT HAUTE QUALITE EQUITABLE
+	private double stockC_MQ_E; // CHOCOLAT MOYENNE QUALITE EQUITABLE
+	private double stockC_MQ;// CHOCOLAT MOYENNE QUALITE (NI BIO NI EQUITABLE)
+	private double stockC_BQ_E; // CHOCOLAT BASSE QUALITE EQUITABLE
+	private double stockC_BQ; // CHOCOLAT BASSE QUALITE (NI BIO NI EQUITABLE)
 
 	public Distributeur1() {
 		super();
 
 		this.journal = new Journal("Journal de EQX", this); // Initialisation du journal
-		this.stockChocolat = new Variable("Stock de chocolat", this, 0.0); 
+		this.stockC_HQ_BE = 0.0; // CHOCOLAT HAUTE QUALITE BIO EQUITABLE
+		this.stockC_HQ_E = 0.0; // CHOCOLAT HAUTE QUALITE EQUITABLE
+		this.stockC_MQ_E = 0.0; // CHOCOLAT MOYENNE QUALITE EQUITABLE
+		this.stockC_MQ = 0.0;// CHOCOLAT MOYENNE QUALITE (NI BIO NI EQUITABLE)
+		this.stockC_BQ_E = 0.0; // CHOCOLAT BASSE QUALITE EQUITABLE
+		this.stockC_BQ = 0.0; // CHOCOLAT BASSE QUALITE (NI BIO NI EQUITABLE)
 	}
 
 	public void next() // par Alexiho
@@ -31,7 +41,7 @@ public class Distributeur1 extends Distributeur1Acteur  {
         double quantiteAjoutee = 100.0; // 100 tonnes
 
         // Mettre en rayon (ajouter au stock)
-        stockChocolat.ajouter(this, quantiteAjoutee);
+        this.stockC_MQ += quantiteAjoutee;
 
         // Enregistrement dans le journal
         journal.ajouter("Étape " + etape + " : Ajout de " + quantiteAjoutee + " t de " + produit + " en rayon.");
