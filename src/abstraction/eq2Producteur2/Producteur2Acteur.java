@@ -13,6 +13,8 @@ import abstraction.eqXRomu.produits.IProduit;
 public class Producteur2Acteur implements IActeur {
 	
 	protected int cryptogramme;
+	private int numero = 0;
+	private Journal num = new Journal("Numero", this);
 
 	public Producteur2Acteur() {
 	}
@@ -33,6 +35,8 @@ public class Producteur2Acteur implements IActeur {
 	////////////////////////////////////////////////////////
 
 	public void next() {
+		num.ajouter("Numero : " + numero);
+		numero++;
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
@@ -58,6 +62,7 @@ public class Producteur2Acteur implements IActeur {
 	// Renvoie les journaux
 	public List<Journal> getJournaux() {
 		List<Journal> res=new ArrayList<Journal>();
+		res.add(num);
 		return res;
 	}
 
