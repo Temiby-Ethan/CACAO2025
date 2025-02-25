@@ -1,15 +1,23 @@
 package abstraction.eq3Producteur3;
 
+import abstraction.eqXRomu.bourseCacao.BourseCacao;
 import abstraction.eqXRomu.bourseCacao.IVendeurBourse;
 import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 import abstraction.eqXRomu.contratsCadres.IVendeurContratCadre;
+import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
 
 //Classe écrite par Zoé
 public class Producteur3Vente extends Producteur3Stock implements IVendeurBourse, IVendeurContratCadre{
+
+   
+   
+    public Producteur3Vente(Feve feve, double stock) {
+        super(feve, stock);
+    }
 
 
 
@@ -19,14 +27,14 @@ public class Producteur3Vente extends Producteur3Stock implements IVendeurBourse
     //Pour vendre en bourse
     @Override
     public double offre(Feve f, double cours) {
-        /*if(this.feve.equals(f)){
+        if(this.feve.equals(f)){
             BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
             double pourcentage = (bourse.getCours(feve).getValeur()-bourse.getCours(feve).getMin())/(bourse.getCours(feve).getMax()-bourse.getCours(feve).getMin());
 			return this.stockFeve.getValeur()*pourcentage;
         }else{
             return 0.0;
-        }*/
-        throw new UnsupportedOperationException("Not supported yet.");
+        }
+       
     }
 
     @Override
