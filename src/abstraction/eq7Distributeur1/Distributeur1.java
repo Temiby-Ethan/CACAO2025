@@ -25,7 +25,7 @@ public class Distributeur1 extends Distributeur1Acteur  {
 	public Distributeur1() {
 		super();
 
-		this.journal = new Journal("Journal de EQX", this); // Initialisation du journal
+		this.journal = new Journal("Journal de EQ7", this); // Initialisation du journal
 		this.stockC_HQ_BE = 0.0; // CHOCOLAT HAUTE QUALITE BIO EQUITABLE
 		this.stockC_HQ_E = 0.0; // CHOCOLAT HAUTE QUALITE EQUITABLE
 		this.stockC_MQ_E = 0.0; // CHOCOLAT MOYENNE QUALITE EQUITABLE
