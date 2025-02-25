@@ -12,8 +12,10 @@ import abstraction.eqXRomu.produits.IProduit;
 
 public class Distributeur2Acteur implements IActeur {
 	
+	//Journal par Tidiane
 	public int tour = 0;
 	public Journal journal = new Journal("journal next", this);
+	
 	protected int cryptogramme;
 
 	public Distributeur2Acteur() {
