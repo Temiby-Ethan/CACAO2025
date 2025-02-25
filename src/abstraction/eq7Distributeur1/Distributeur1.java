@@ -1,5 +1,8 @@
 package abstraction.eq7Distributeur1;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.acteurs.TransformateurXActeur;
@@ -70,6 +73,13 @@ public class Distributeur1 extends Distributeur1Acteur  {
 		} else {
 			return 0; // Les acteurs non assermentés n'ont pas à connaître notre stock
 		}
+	}
+
+	// Renvoie les journaux
+	public List<Journal> getJournaux() {
+		List<Journal> res=new ArrayList<Journal>();
+		res.add(journal);
+		return res;
 	}
 	
 }
