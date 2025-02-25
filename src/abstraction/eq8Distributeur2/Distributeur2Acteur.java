@@ -12,13 +12,14 @@ import abstraction.eqXRomu.produits.IProduit;
 
 public class Distributeur2Acteur implements IActeur {
 	
-	//Journal par Tidiane
+	//stockTotal et journal par Tidiane
 	private Journal journal_next = new Journal("journal Eq8", this);
 	
-	
+	protected Variable stockTotal;
 	protected int cryptogramme;
 
 	public Distributeur2Acteur() {
+		stockTotal = new Variable("Volume total du stock de l'EQ8", "Volume total du stock", this);
 	}
 	
 	public void initialiser() {
@@ -45,6 +46,10 @@ public class Distributeur2Acteur implements IActeur {
 		return this.journal_next;
 	}
 
+	public Variable getStockTotal(){
+		return stockTotal;
+	}
+	
 	public Color getColor() {// NE PAS MODIFIER
 		return new Color(209, 179, 221); 
 	}
@@ -56,12 +61,15 @@ public class Distributeur2Acteur implements IActeur {
 	// Renvoie les indicateurs
 	public List<Variable> getIndicateurs() {
 		List<Variable> res = new ArrayList<Variable>();
+		res.add(getStockTotal());
 		return res;
 	}
 
 	// Renvoie les parametres
 	public List<Variable> getParametres() {
 		List<Variable> res=new ArrayList<Variable>();
+		
+		
 		return res;
 	}
 
@@ -121,6 +129,8 @@ public class Distributeur2Acteur implements IActeur {
 			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
 		}
 	}
+	
+	
 
 	
 }
