@@ -17,6 +17,7 @@ public class Producteur1Acteur implements IActeur {
 	protected int cryptogramme;
 
 	public Producteur1Acteur() {
+		
 	}
 	
 	public void initialiser() {
