@@ -14,7 +14,7 @@ public class Producteur2Acteur implements IActeur {
 	
 	protected int cryptogramme;
 	private int numero = 0;
-	private Journal num = new Journal("Numero", this);
+	private Journal num = new Journal("Journal Eq2", this);
 
 	public Producteur2Acteur() {
 	}
