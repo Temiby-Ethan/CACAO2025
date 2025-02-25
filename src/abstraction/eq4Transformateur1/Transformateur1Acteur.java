@@ -33,6 +33,8 @@ public class Transformateur1Acteur implements IActeur {
 	////////////////////////////////////////////////////////
 
 	public void next() {
+		Journal J = new Journal("journal_defi",this);
+		J.ajouter(" ");
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
