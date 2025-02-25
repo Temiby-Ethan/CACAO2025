@@ -12,6 +12,8 @@ import abstraction.eqXRomu.produits.IProduit;
 
 public class Distributeur2Acteur implements IActeur {
 	
+	public int tour = 0;
+	public Journal journal = new Journal("journal next", this);
 	protected int cryptogramme;
 
 	public Distributeur2Acteur() {
@@ -33,6 +35,8 @@ public class Distributeur2Acteur implements IActeur {
 	////////////////////////////////////////////////////////
 
 	public void next() {
+		tour++;
+		journal.ajouter("tour");
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
