@@ -112,8 +112,8 @@ public class Producteur1Acteur implements IActeur {
 	}
 
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
-		if (this.cryptogramme==cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
-			return 0; // A modifier
+		if (this.cryptogramme==cryptogramme && this.stock.keySet().contains(p)) { 
+			return this.stock.get(p).getValeur((Integer)cryptogramme);
 		} else {
 			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
 		}
