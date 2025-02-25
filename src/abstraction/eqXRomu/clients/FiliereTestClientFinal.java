@@ -1,5 +1,8 @@
 package abstraction.eqXRomu.clients;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 
 import abstraction.eqXRomu.acteurs.Romu;
@@ -21,16 +24,20 @@ public class FiliereTestClientFinal extends Filiere {
 	};
 
 	public FiliereTestClientFinal() {
-		super();
+		this(ZonedDateTime.of(LocalDateTime.now(ZoneId.of("Europe/Paris")),ZoneId.systemDefault()).toEpochSecond());
+	}
 
-	HashMap<Chocolat, Double> repartitionInitiale = new HashMap<Chocolat, Double>();
-	repartitionInitiale.put(Chocolat.C_HQ_BE,  10.0); // Haute Qualite  ,  Bio-Equitable 
-	repartitionInitiale.put(Chocolat.C_HQ_E,   20.0); // Haute Qualite  ,  Equitable 
-	repartitionInitiale.put(Chocolat.C_MQ_E,    5.0); // Moyenne Qualite,  Equitable 
-	repartitionInitiale.put(Chocolat.C_MQ,     25.0); // Moyenne Qualite,ni Bio ni Equitable
-	repartitionInitiale.put(Chocolat.C_BQ,     40.0); // Basse Qualite  ,ni Bio ni  Equitable
+	public FiliereTestClientFinal(long seed) {
+		super(seed);
 
-	ClientFinal  cf = new ClientFinal(7200000000.0 , repartitionInitiale, DISTRIBUTIONS_ANNUELLES);
+		HashMap<Chocolat, Double> repartitionInitiale = new HashMap<Chocolat, Double>();
+		repartitionInitiale.put(Chocolat.C_HQ_BE,  10.0); // Haute Qualite  ,  Bio-Equitable 
+		repartitionInitiale.put(Chocolat.C_HQ_E,   20.0); // Haute Qualite  ,  Equitable 
+		repartitionInitiale.put(Chocolat.C_MQ_E,    5.0); // Moyenne Qualite,  Equitable 
+		repartitionInitiale.put(Chocolat.C_MQ,     25.0); // Moyenne Qualite,ni Bio ni Equitable
+		repartitionInitiale.put(Chocolat.C_BQ,     40.0); // Basse Qualite  ,ni Bio ni  Equitable
+
+		ClientFinal  cf = new ClientFinal(7200000000.0 , repartitionInitiale, DISTRIBUTIONS_ANNUELLES);
 
 		this.ajouterActeur(cf);
 		ChocolatDeMarque[] chocos= {
