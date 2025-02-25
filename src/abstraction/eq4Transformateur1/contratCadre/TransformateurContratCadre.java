@@ -1,4 +1,4 @@
-package abstraction.eq4Transformateur1;
+package abstraction.eq4Transformateur1.contratCadre;
 
 import java.awt.Color;
 import java.util.ArrayList;
