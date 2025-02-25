@@ -16,7 +16,7 @@ public class Producteur3 extends Producteur3Acteur  {
 	@Override
 	public void next() {
 		defiJournal.ajouter(Filiere.LA_FILIERE.getEtape()+"\n");
-
+		
 
 
 	}
