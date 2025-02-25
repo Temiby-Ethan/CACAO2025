@@ -7,6 +7,7 @@ import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.Feve;
+import abstraction.eqXRomu.produits.IProduit;
 
 public class Distributeur1 extends Distributeur1Acteur  {
 	
@@ -48,4 +49,27 @@ public class Distributeur1 extends Distributeur1Acteur  {
 
 		System.out.println(journal);
 	}
+
+	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
+		if (this.cryptogramme == cryptogramme) { // Vérification que l'accès est autorisé
+			if (p == Chocolat.C_HQ_BE) {
+				return stockC_HQ_BE;
+			} else if (p == Chocolat.C_HQ_E) {
+				return stockC_HQ_E;
+			} else if (p == Chocolat.C_MQ_E) {
+				return stockC_MQ_E;
+			} else if (p == Chocolat.C_MQ) {
+				return stockC_MQ;
+			} else if (p == Chocolat.C_BQ_E) {
+				return stockC_BQ_E;
+			} else if (p == Chocolat.C_BQ) {
+				return stockC_BQ;
+			} else {
+				return 0; // Produit non reconnu
+			}
+		} else {
+			return 0; // Les acteurs non assermentés n'ont pas à connaître notre stock
+		}
+	}
+	
 }
