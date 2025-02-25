@@ -13,10 +13,12 @@ import abstraction.eqXRomu.produits.IProduit;
 public class Transformateur2Acteur implements IActeur {
 	
 	protected int cryptogramme;
-	private Journal journal;
+	protected Journal journal;
+	protected Variable indicateur;
 
 	public Transformateur2Acteur() {
 		this.journal = new Journal("Journal Equipe 5", this);
+		this.indicateur = new Variable("Stock Equipe 5", this);
 	}
 	
 	public void initialiser() {
@@ -37,6 +39,7 @@ public class Transformateur2Acteur implements IActeur {
 	public void next() {
 		int etape = Filiere.LA_FILIERE.getEtape();
 		this.journal.ajouter("Etape numéro : " + etape);
+		this.indicateur.setValeur(this, this.getQuantiteEnStock(null, this.cryptogramme), this.cryptogramme);
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
