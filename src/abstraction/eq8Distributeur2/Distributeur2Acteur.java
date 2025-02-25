@@ -12,6 +12,9 @@ import abstraction.eqXRomu.produits.IProduit;
 
 public class Distributeur2Acteur implements IActeur {
 	
+	//Journal par Tidiane
+	private Journal journal_next = new Journal("journal next", this);
+	
 	protected int cryptogramme;
 
 	public Distributeur2Acteur() {
@@ -33,6 +36,12 @@ public class Distributeur2Acteur implements IActeur {
 	////////////////////////////////////////////////////////
 
 	public void next() {
+		//Journal par Tidiane
+		journal_next.ajouter("" + Filiere.LA_FILIERE.getEtape());
+	}
+
+	public Journal getJournal(){
+		return this.journal_next;
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
