@@ -35,12 +35,15 @@ public class Producteur2Acteur implements IActeur {
 		this.prodParStep.put(Feve.F_BQ_E, PART*21100.0);
 		this.prodParStep.put(Feve.F_BQ, PART*83320.0);
 
-		this.stock = new HashMap<Feve, Variable>();
+		double totalInitialStock = 0.0;
 		for (Feve f : Feve.values()) {
-		    this.stock.put(f, new VariableReadOnly(this+"Stock"+f.toString().substring(2), "<html>Stock de feves "+f+"</html>",this, 0.0, prodParStep.get(f)*24, prodParStep.get(f)*6));
-		}
-		this.stockTotal = new Variable("Stock total", "Quantité totale de fèves en stock", this, 0.0);
-	}
+            double initialStock = prodParStep.get(f) * 6;
+            this.stock.put(f, new VariableReadOnly(this+"Stock"+f.toString().substring(2), "<html>Stock de feves "+f+"</html>",this, 0.0, prodParStep.get(f)*24, initialStock));
+            totalInitialStock += initialStock;
+        }
+        
+        this.stockTotal = new Variable("Stock total", "Quantité totale de fèves en stock", this, totalInitialStock);
+    }
 	
 	public void initialiser() {
 		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur();
