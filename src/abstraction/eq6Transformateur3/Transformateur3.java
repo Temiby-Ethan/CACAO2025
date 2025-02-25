@@ -1,3 +1,4 @@
+// Henri ROTH
 package abstraction.eq6Transformateur3;
 import java.util.ArrayList;
 import java.util.List;
