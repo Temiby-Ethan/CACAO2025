@@ -6,22 +6,22 @@ import java.util.List;
 public class Distributeur1AcheteurEncheres extends Distributeur1Acteur  {
 
 	protected Integer cryptogramme;
-	private List<Integer> priceProduct;
-	private List<Integer> requiredQuantities;
+	private List<Double> priceProduct;
+	private List<Double> requiredQuantities;
 	private List<Integer> succesedSell;
 
-	public Distributeur1AcheteurEncheres(List<Integer> priceProduct, List<Integer> requiredQuantities) {
+	public Distributeur1AcheteurEncheres(List<Double> priceProduct, List<Double> requiredQuantities) {
 		super();
 		this.priceProduct = priceProduct;
 		this.requiredQuantities = requiredQuantities;
 	}
 
-	public Boolean tooManyVolume(int product, int volume){
+	public Boolean tooManyVolume(int product, double volume){
 		return(this.requiredQuantities.get(product)<volume);
 	}
 
-	public double priceOffered(int product, int volume){
-		int price = this.priceProduct.get(product);
+	public double proposerPrix(int product, double volume){
+		double price = this.priceProduct.get(product);
 		int numberSuccessedSell = this.succesedSell.get(product);
 		Boolean soldVolumeTooHigh = tooManyVolume(product, volume);
 		if (soldVolumeTooHigh){
