@@ -13,8 +13,10 @@ import abstraction.eqXRomu.produits.IProduit;
 public class Transformateur2Acteur implements IActeur {
 	
 	protected int cryptogramme;
+	private Journal journal;
 
 	public Transformateur2Acteur() {
+		this.journal = new Journal("Journal Equipe 5", this);
 	}
 	
 	public void initialiser() {
@@ -33,6 +35,8 @@ public class Transformateur2Acteur implements IActeur {
 	////////////////////////////////////////////////////////
 
 	public void next() {
+		int etape = Filiere.LA_FILIERE.getEtape();
+		this.journal.ajouter("Etape numéro : " + etape);
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
