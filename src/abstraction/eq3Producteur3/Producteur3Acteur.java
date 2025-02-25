@@ -2,19 +2,27 @@ package abstraction.eq3Producteur3;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
+import javax.lang.model.element.VariableElement;
 
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
+import abstraction.eqXRomu.general.VariablePrivee;
+import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Producteur3Acteur implements IActeur {
 	
 	protected int cryptogramme;
+	protected Journal defiJournal = new Journal("Journal Eq3",this);
+	protected VariablePrivee stock;
 
 	public Producteur3Acteur() {
+		this.stock = new VariablePrivee("Ind Stock", this);
 	}
 	
 	public void initialiser() {
@@ -46,6 +54,7 @@ public class Producteur3Acteur implements IActeur {
 	// Renvoie les indicateurs
 	public List<Variable> getIndicateurs() {
 		List<Variable> res = new ArrayList<Variable>();
+		res.add(this.stock);
 		return res;
 	}
 
@@ -58,6 +67,7 @@ public class Producteur3Acteur implements IActeur {
 	// Renvoie les journaux
 	public List<Journal> getJournaux() {
 		List<Journal> res=new ArrayList<Journal>();
+		res.add(defiJournal);
 		return res;
 	}
 
