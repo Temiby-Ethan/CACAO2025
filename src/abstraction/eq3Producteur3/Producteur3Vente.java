@@ -15,8 +15,8 @@ public class Producteur3Vente extends Producteur3Stock implements IVendeurBourse
 
    
    
-    public Producteur3Vente(Feve feve, double stock) {
-        super(feve, stock);
+    public Producteur3Vente() {
+        super();
     }
 
 

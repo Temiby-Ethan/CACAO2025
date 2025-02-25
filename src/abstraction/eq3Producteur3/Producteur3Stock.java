@@ -21,6 +21,7 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
 		this.stockFeve=new VariablePrivee(this.getNom()+"Stock"+feve, this, 0.0, 1000000.0,stock);
 		this.feve = feve;
     }
+    
     public void ajouterStock(double delta){
         stockFeve.ajouter(this,delta);
         
