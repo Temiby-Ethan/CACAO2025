@@ -8,6 +8,7 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
+import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Transformateur2Acteur implements IActeur {
@@ -15,10 +16,12 @@ public class Transformateur2Acteur implements IActeur {
 	protected int cryptogramme;
 	protected Journal journal;
 	protected Variable stocktotal;
+	protected Feve feve;
 
 	public Transformateur2Acteur() {
 		this.journal = new Journal("Journal Equipe 5", this);
 		this.stocktotal = new Variable("Stock Equipe 5", this);
+		this.feve = Feve.F_MQ;
 	}
 	
 	public void initialiser() {
