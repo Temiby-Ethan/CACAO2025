@@ -5,10 +5,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.lang.model.element.VariableElement;
+
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
+import abstraction.eqXRomu.general.VariablePrivee;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
@@ -16,10 +19,10 @@ public class Producteur3Acteur implements IActeur {
 	
 	protected int cryptogramme;
 	protected Journal defiJournal = new Journal("Journal Eq3",this);
-	protected Variable stock = new Variable("Ind Stock", this);
-	
+	protected VariablePrivee stock;
+
 	public Producteur3Acteur() {
-		this.stock = new Variable("Ind Stock", this);
+		this.stock = new VariablePrivee("Ind Stock", this);
 	}
 	
 	public void initialiser() {
