@@ -8,13 +8,19 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
+import abstraction.eqXRomu.general.VariablePrivee;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Producteur1Acteur implements IActeur {
-	
+
+	private Journal journal_next = new Journal("journal EQ1", this);
+
 	protected int cryptogramme;
+	protected int stock;
 
 	public Producteur1Acteur() {
+		
+		this.stock = 0;
 	}
 	
 	public void initialiser() {
@@ -28,11 +34,18 @@ public class Producteur1Acteur implements IActeur {
 		return this.getNom();
 	}
 
+
 	////////////////////////////////////////////////////////
 	//         En lien avec l'interface graphique         //
 	////////////////////////////////////////////////////////
 
 	public void next() {
+	
+		journal_next.ajouter("" + Filiere.LA_FILIERE.getEtape());
+	}
+
+	public Journal getJournal(){
+		return this.journal_next;
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
@@ -103,10 +116,12 @@ public class Producteur1Acteur implements IActeur {
 	}
 
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
-		if (this.cryptogramme==cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
-			return 0; // A modifier
-		} else {
+		if (this.cryptogramme==cryptogramme && this.stock>0) {
+			return this.stock;
+			} else {
 			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
 		}
 	}
 }
+
+
