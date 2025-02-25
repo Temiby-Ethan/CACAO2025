@@ -1,3 +1,3 @@
 Simon Becand SimonBecand
-Nils Rossignol
+Nils Rossignol NilsRoss
 Nathan Bohin NathanBS02
