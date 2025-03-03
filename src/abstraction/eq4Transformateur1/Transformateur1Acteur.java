@@ -22,35 +22,39 @@ public class Transformateur1Acteur implements IActeur {
 	protected int cryptogramme;
 
 	protected List<Feve> lesFeves;
-	private List<ChocolatDeMarque> chocosProduits;
 	protected HashMap<Feve, Double> stockFeves;
 	protected HashMap<Chocolat, Double> stockChoco;
 	protected HashMap<ChocolatDeMarque, Double> stockChocoMarque;
 	protected Variable totalStocksFeves;  // La qualite totale de stock de feves 
 	protected Variable totalStocksChoco;  // La qualite totale de stock de chocolat 
-	protected Variable totalStocksChocoMarque;  // La qualite totale de stock de chocolat de marque 
 	protected Variable VolumeTotalDeStock;
 
 	public Transformateur1Acteur() {
 		this.journal = new Journal("Journal " + this.getNom(), this);
-		this.chocosProduits = new LinkedList<ChocolatDeMarque>();
 		this.totalStocksFeves = new VariablePrivee("Eq4TStockFeves", "<html>Quantite totale de feves en stock</html>",this, 0.0, 1000000.0, 0.0);
 		this.totalStocksChoco = new VariablePrivee("Eq4TStockChoco", "<html>Quantite totale de chocolat en stock</html>",this, 0.0, 1000000.0, 0.0);
 	}
 	
 	public void initialiser() {
 		this.lesFeves = new LinkedList<Feve>();
+		for (Feve f : Feve.values()) {
+			this.lesFeves.add(f);
+		}
 
+		//Test stock de fèves
 		this.stockFeves=new HashMap<Feve,Double>();
 		for (Feve f : this.lesFeves) {
 			this.stockFeves.put(f, 20000.0);
 			this.totalStocksFeves.ajouter(this, 20000.0, this.cryptogramme);
+			this.journal.ajouter("ajout de 20000 de "+f+" au stock de feves --> total="+this.totalStocksFeves.getValeur(this.cryptogramme));
 		}
 
+		//Test stock de choco
 		this.stockChoco=new HashMap<Chocolat,Double>();
 		for (Chocolat c : Chocolat.values()) {
 			this.stockChoco.put(c, 20000.0);
 			this.totalStocksChoco.ajouter(this, 20000.0, this.cryptogramme);
+			this.journal.ajouter("ajout de 20000 de "+c+" au stock de chocolat --> total="+this.totalStocksChoco.getValeur(this.cryptogramme));
 		}
 	}
 
@@ -68,7 +72,9 @@ public class Transformateur1Acteur implements IActeur {
 
 	public void next() {
 		
-		journal.ajouter("N° Etape " + Filiere.LA_FILIERE.getEtape());
+		this.journal.ajouter("N° Etape " + Filiere.LA_FILIERE.getEtape());
+		this.journal.ajouter("Stock de fèves : " + this.totalStocksFeves.getValeur(this.cryptogramme));
+		this.journal.ajouter("Stock de chocolat : " + this.totalStocksChoco.getValeur(this.cryptogramme));
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
@@ -96,7 +102,7 @@ public class Transformateur1Acteur implements IActeur {
 	// Renvoie les journaux
 	public List<Journal> getJournaux() {
 		List<Journal> res=new ArrayList<Journal>();
-		res.add(journal);
+		res.add(this.journal);
 		return res;
 	}
 
