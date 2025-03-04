@@ -21,11 +21,13 @@ public class Distributeur1 extends Distributeur1Acteur  {
 	private Journal journal;  // Déclaration du journal
 	protected Map<ChocolatDeMarque, Variable> stocksChocolats; // Table de hachage pour stocker les quantités de chocolat
 	protected List<ChocolatDeMarque> chocolats;
+	private List<Double> prix;
 
     public Distributeur1() { // par Alexiho
         super();
         
         this.journal = new Journal("Journal de EQ7", this); // Initialisation du journal
+
         this.stocksChocolats = new HashMap<>();
         
         // Initialisation des stocks à 0.0
@@ -38,10 +40,22 @@ public class Distributeur1 extends Distributeur1Acteur  {
 		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_BQ_E, "Hexafridge", 50));
 		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_BQ, "Hexafridge", 50));
 
+		this.prix = new ArrayList<Double>();
+
 		for (int i=0; i<this.chocolats.size(); i++) {
+			this.prix.add(10.0);
 			this.stocksChocolats.put(chocolats.get(i), new Variable(this.getNom()+"Stock"+chocolats.get(i).getNom(), this, 0.0));
 		}
     }
+
+	public double prix(ChocolatDeMarque choco) {
+		int pos= (chocolats.indexOf(choco));
+		if (pos<0) {
+			return 0.0;
+		} else {
+			return prix.get(pos);
+		}
+	}
 
 	public void next() // par Alexiho
 	{
