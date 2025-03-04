@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
+import java.util.LinkedList;
 
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.filiere.Filiere;
@@ -18,21 +19,28 @@ public class Distributeur1 extends Distributeur1Acteur  {
 	
 	// défi 1 et 2 par Alexiho
 	private Journal journal;  // Déclaration du journal
-	private Map<Chocolat, Double> stockChocolat; // Table de hachage pour stocker les quantités de chocolat
+	protected Map<ChocolatDeMarque, Variable> stocksChocolats; // Table de hachage pour stocker les quantités de chocolat
+	protected List<ChocolatDeMarque> chocolats;
 
     public Distributeur1() { // par Alexiho
         super();
         
         this.journal = new Journal("Journal de EQ7", this); // Initialisation du journal
-        this.stockChocolat = new HashMap<>();
+        this.stocksChocolats = new HashMap<>();
         
         // Initialisation des stocks à 0.0
-        stockChocolat.put(Chocolat.C_HQ_BE, 0.0); // CHOCOLAT HAUTE QUALITE BIO EQUITABLE
-        stockChocolat.put(Chocolat.C_HQ_E, 0.0);  // CHOCOLAT HAUTE QUALITE EQUITABLE
-        stockChocolat.put(Chocolat.C_MQ_E, 0.0);  // CHOCOLAT MOYENNE QUALITE EQUITABLE
-        stockChocolat.put(Chocolat.C_MQ, 0.0);   // CHOCOLAT MOYENNE QUALITE (NI BIO NI EQUITABLE)
-        stockChocolat.put(Chocolat.C_BQ_E, 0.0);  // CHOCOLAT BASSE QUALITE EQUITABLE
-        stockChocolat.put(Chocolat.C_BQ, 0.0);   // CHOCOLAT BASSE QUALITE (NI BIO NI EQUITABLE)
+
+		this.chocolats = new ArrayList<ChocolatDeMarque>();
+		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_HQ_BE, "Hexafridge", 50));
+		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_HQ_E, "Hexafridge", 50));
+		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_MQ_E, "Hexafridge", 50));
+		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_MQ, "Hexafridge", 50));
+		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_BQ_E, "Hexafridge", 50));
+		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_BQ, "Hexafridge", 50));
+
+		for (int i=0; i<this.chocolats.size(); i++) {
+			this.stocksChocolats.put(chocolats.get(i), new Variable(this.getNom()+"Stock"+chocolats.get(i).getNom(), this, 0.0));
+		}
     }
 
 	public void next() // par Alexiho
@@ -48,7 +56,7 @@ public class Distributeur1 extends Distributeur1Acteur  {
         // Mettre en rayon (ajouter au stock)
         //this.stockC_MQ += quantiteAjoutee;
 
-		stockChocolat.put(Chocolat.C_MQ, stockChocolat.get(Chocolat.C_MQ) + quantiteAjoutee);
+		//stockChocolat.put(Chocolat.C_MQ, stockChocolat.get(Chocolat.C_MQ) + quantiteAjoutee);
 
         // Enregistrement dans le journal
         journal.ajouter("Étape " + etape + " : Ajout de " + quantiteAjoutee + " t de " + produit + " en rayon.");
@@ -57,11 +65,20 @@ public class Distributeur1 extends Distributeur1Acteur  {
 		//System.out.println(stockChocolat.get(Chocolat.C_MQ));
 	}
 
+	public Variable getStock(ChocolatDeMarque c) { // par Alexiho
+		return this.stocksChocolats.get(c);
+	}
+
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) { // par Alexiho
-		if (this.cryptogramme == cryptogramme) { // Vérification que l'accès est autorisé
-			return stockChocolat.get(p);
+		if (this.cryptogramme==cryptogramme) {
+			for (ChocolatDeMarque c : this.stocksChocolats.keySet()) {
+				if (c.equals(p)) {
+					return this.stocksChocolats.get(c).getValeur();
+				}
+			}
+			return 0;
 		} else {
-			return 0; // Les acteurs non assermentés n'ont pas à connaître notre stock
+			return 0;
 		}
 	}
 
