@@ -1,13 +1,5 @@
 package abstraction.eq3Producteur3;
-
-import abstraction.eqXRomu.bourseCacao.BourseCacao;
-import abstraction.eqXRomu.bourseCacao.IVendeurBourse;
-import abstraction.eqXRomu.filiere.Filiere;
-import abstraction.eqXRomu.produits.Feve;
-
-
-//Classe écrite par Zoé
-public class Producteur3Vente extends Producteur3Stock implements IVendeurBourse{
+public class Producteur3Vente extends Producteur3Stock /*implements IVendeurBourse*/{
 
    
    
@@ -19,7 +11,7 @@ public class Producteur3Vente extends Producteur3Stock implements IVendeurBourse
 
 
 
-
+/*
     //Pour vendre en bourse
     @Override
     public double offre(Feve f, double cours) {
@@ -47,7 +39,7 @@ public class Producteur3Vente extends Producteur3Stock implements IVendeurBourse
 
 
 
-
+*/
 
     
     

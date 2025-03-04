@@ -19,6 +19,7 @@ public class Producteur3Acteur implements IActeur {
 	
 	protected int cryptogramme;
 	protected Journal defiJournal = new Journal("Journal Eq3",this);
+	protected List<Variable> res = new ArrayList<Variable>();
 	protected VariablePrivee stock;
 
 	public Producteur3Acteur() {
@@ -53,14 +54,12 @@ public class Producteur3Acteur implements IActeur {
 
 	// Renvoie les indicateurs
 	public List<Variable> getIndicateurs() {
-		List<Variable> res = new ArrayList<Variable>();
-		res.add(this.stock);
 		return res;
 	}
 
 	// Renvoie les parametres
 	public List<Variable> getParametres() {
-		List<Variable> res=new ArrayList<Variable>();
+		List<Variable> rese=new ArrayList<Variable>();
 		return res;
 	}
 

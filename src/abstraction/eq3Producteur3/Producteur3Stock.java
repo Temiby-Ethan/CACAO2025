@@ -6,9 +6,8 @@ import java.util.HashMap;
 
 
 public class Producteur3Stock extends Producteur3GestionTerrains {
-    protected VariablePrivee stockFeve;
-	protected Feve feve;
-    protected HashMap<Feve,Double> stock;
+    //protected VariablePrivee stockFeve;
+    protected HashMap<Feve,VariablePrivee> stockFeve = new HashMap<Feve,VariablePrivee>();
 
 
     public Producteur3Stock(){
@@ -20,13 +19,14 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
         if (feve==null ||stock<=0) {
 			throw new IllegalArgumentException("creation d'une instance de Producteur3Stock avec des arguments non valides");
 		}		
-		this.stockFeve=new VariablePrivee(this.getNom()+"Stock"+feve, this, 0.0, 1000000.0,stock);
-		this.feve = feve;
-        stockFeve.setValeur(this, 1000000);
-        defiJournal.ajouter(Double.toString(stockFeve.getHistorique().getValeur()));
+		VariablePrivee tmp = new VariablePrivee(this.getNom()+"Stock"+feve, this, 0.0, 1000000000.0,stock);
+        tmp.setValeur(this, 1000000.0);
+        defiJournal.ajouter(Double.toString(tmp.getHistorique().getValeur()));
+        stockFeve.put(feve,tmp);
+        getIndicateurs().add(tmp);
     }
 
-    public void ajouterStock(double delta){
+    /*public void ajouterStock(double delta){
         stockFeve.ajouter(this,delta);
         
     }
