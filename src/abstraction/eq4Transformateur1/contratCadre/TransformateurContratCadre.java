@@ -29,6 +29,8 @@ public class TransformateurContratCadre implements IActeur {
 		NB_INSTANCES++;
 		this.numero=NB_INSTANCES;
 		this.produit=produit;
+		//A MODIFIER APRES CREATION GESTION DES STOCKS
+		//Il faudra un stock de fève ou de chocolat selon si notre acteur est vendeur ou acheteur
 		this.stock=new Variable(getNom()+" stock ", null, this, 0, 1000, 300);
 		this.journal = new Journal(this.getNom()+" activites", this);
 	}

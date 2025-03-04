@@ -25,9 +25,11 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 	protected HashMap<Feve, Double> stockFeves;
 	protected HashMap<Chocolat, Double> stockChoco;
 	protected HashMap<ChocolatDeMarque, Double> stockChocoMarque;
+
 	protected Variable totalStocksFeves;  // La qualite totale de stock de feves 
 	protected Variable totalStocksChoco;  // La qualite totale de stock de chocolat 
 	protected Variable totalStocksChocoMarque;  // La qualite totale de stock de chocolat de marque 
+	protected Variable VolumeTotalDeStock;
 
 	public Transformateur1Acteur() {
 		this.journal = new Journal("Journal " + this.getNom(), this);
