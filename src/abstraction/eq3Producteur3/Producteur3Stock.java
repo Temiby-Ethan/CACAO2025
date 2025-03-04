@@ -20,7 +20,7 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
 			throw new IllegalArgumentException("creation d'une instance de Producteur3Stock avec des arguments non valides");
 		}		
 		VariablePrivee tmp = new VariablePrivee(this.getNom()+"Stock"+feve, this, 0.0, 1000000000.0,stock);
-        tmp.setValeur(this, 1000000.0);
+        tmp.setValeur(this, 1000000.0, cryptogramme);
         defiJournal.ajouter(Double.toString(tmp.getHistorique().getValeur()));
         stockFeve.put(feve,tmp);
         getIndicateurs().add(tmp);
