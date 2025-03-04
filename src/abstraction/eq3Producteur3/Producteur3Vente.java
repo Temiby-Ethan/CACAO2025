@@ -36,6 +36,7 @@ public class Producteur3Vente extends Producteur3Stock implements IVendeurBourse
     public double notificationVente(Feve f, double coursEnEuroParT, double quantiteEnT) {
         double livrable = Math.min(this.stockFeve.get(f).getValeur(cryptogramme), quantiteEnT);
 		this.stockFeve.get(f).setValeur(this, stockFeve.get(f).getValeur(cryptogramme)-livrable,cryptogramme);
+        calculTotalStock();
 		return livrable;
     }
 
