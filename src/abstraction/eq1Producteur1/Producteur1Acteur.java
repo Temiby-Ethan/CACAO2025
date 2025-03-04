@@ -13,21 +13,26 @@ import abstraction.eqXRomu.produits.IProduit;
 public class Producteur1Acteur implements IActeur {
     
     protected int cryptogramme;
-    private Journal journal; // Journal pour enregistrer les étapes
+    
+	// Adrien BUECHER --> Stocks ; Adam SEBIANE --> journal
+	private Journal journal; // Journal pour enregistrer les étapes
     private Variable stockTotal; // Indicateur du volume total du stock
     private Variable stockFMQ; // Indicateur du stock de fève moyenne qualité
     private Variable stockFBQ; // Indicateur du stock de fève bonne qualité
     private Variable stockFHQ; // Indicateur du stock de fève haute qualité
     
+
     public Producteur1Acteur() {
-        this.journal = new Journal(this.getNom() + " Journal", this);
+		// Adrien BUECHER --> Stocks ; Adam SEBIANE --> journal
+		this.journal = new Journal(this.getNom() + " Journal", this);
         this.stockTotal = new Variable("Stock Total", this, 0.0); // Initialisation du stock total à 0
-		this.stockFBQ = new Variable("Stock FBQ", this, 0.0); // Initialisation du stock de fève bonne qualité à 0
+		this.stockFBQ = new Variable("Stock FBQ", this, 0.0); // Initialisation du stock de fève basse qualité à 0
         this.stockFMQ = new Variable("Stock FMQ", this, 0.0); // Initialisation du stock de fève moyenne qualité à 0
         this.stockFHQ = new Variable("Stock FHQ", this, 0.0); // Initialisation du stock de fève haute qualité à 0
     }
     
     public void initialiser() {
+		// Adam SEBIANE
         journal.ajouter("Initialisation du producteur");
     }
 
@@ -40,6 +45,7 @@ public class Producteur1Acteur implements IActeur {
     }
 
     public void next() {
+		// Adrien BUECHER --> Étape ; adam SEBIANE --> Journal
         int etape = Filiere.LA_FILIERE.getEtape(); // Récupération du numéro de l'étape
         journal.ajouter("Étape " + etape); // Ajout uniquement du numéro de l'étape dans le journal
 
