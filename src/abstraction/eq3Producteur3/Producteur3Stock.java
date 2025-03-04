@@ -9,10 +9,13 @@ import java.util.HashMap;
 public class Producteur3Stock extends Producteur3GestionTerrains {
     //protected VariablePrivee stockFeve;
     protected HashMap<Feve,VariablePrivee> stockFeve = new HashMap<Feve,VariablePrivee>();
+    protected VariablePrivee totalStock;
 
 
     public Producteur3Stock(){
         super();
+        totalStock = new VariablePrivee(this.getNom()+"Stock Total", this, 0.0, 100000000000000.0, 0);
+        getIndicateurs().add(totalStock);
     }
   
     //Zoé
@@ -25,6 +28,18 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
         journal.ajouter(Double.toString(tmp.getHistorique().getValeur()));
         stockFeve.put(feve,tmp);
         getIndicateurs().add(tmp);
+    }
+
+    public void calculTotalStock(){
+        double total = 0;
+        total+= stockFeve.get(Feve.F_BQ).getValeur(cryptogramme);
+        total+= stockFeve.get(Feve.F_BQ_E).getValeur(cryptogramme);
+        total+= stockFeve.get(Feve.F_MQ).getValeur(cryptogramme);
+        total+= stockFeve.get(Feve.F_MQ_E).getValeur(cryptogramme);
+        total+= stockFeve.get(Feve.F_HQ_E).getValeur(cryptogramme);
+        total+= stockFeve.get(Feve.F_HQ_BE).getValeur(cryptogramme);
+        totalStock.setValeur(this, total, cryptogramme);
+
     }
     
     
