@@ -30,10 +30,10 @@ public class Producteur2VendeurBourse extends Producteur2Acteur implements IVend
 	
 	public double offre(Feve f, double cours) {
 		if (f.getGamme()==Gamme.MQ) {
-			double offre = 100;
+			double offre = 120.0;
 			journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+offre+" T de "+f);
 			return offre;
-		}else { // normalement impossible vu que le HQ n'est pas en bourse
+		}else { 
 			journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente 0.0 T de "+f);
 			return 0.0;
 		}
