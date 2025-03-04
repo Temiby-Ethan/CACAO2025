@@ -48,7 +48,7 @@ public class Distributeur1 extends Distributeur1Acteur  {
 		for (int i=0; i<this.chocolats.size(); i++) {
 			this.prix.add(10.0);
 			this.capaciteDeVente.add(0.0);
-			this.stocksChocolats.put(chocolats.get(i), new Variable(this.getNom()+"Stock"+chocolats.get(i).getNom(), this, 0.0));
+			this.stocksChocolats.put(chocolats.get(i), new Variable(this.getNom()+"Stock"+chocolats.get(i).getNom(), this, 1000.0));
 		}
     }
 
@@ -75,6 +75,8 @@ public class Distributeur1 extends Distributeur1Acteur  {
         //this.stockC_MQ += quantiteAjoutee;
 
 		//stockChocolat.put(Chocolat.C_MQ, stockChocolat.get(Chocolat.C_MQ) + quantiteAjoutee);
+
+		capaciteDeVente.set(3, 100.0);
 
         // Enregistrement dans le journal
         journal.ajouter("Étape " + etape + " : Ajout de " + quantiteAjoutee + " t de " + produit + " en rayon.");
