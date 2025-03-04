@@ -8,123 +8,97 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
-import abstraction.eqXRomu.general.VariablePrivee;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Producteur1Acteur implements IActeur {
+    
+    protected int cryptogramme;
+    private Journal journal; // Ajout du journal
+    private Variable stockTotal; // Ajout de l'indicateur du stock total
+    
+    public Producteur1Acteur() {
+        this.journal = new Journal(this.getNom() + " Journal", this);
+        this.stockTotal = new Variable("Stock Total", this, 0.0);
+    }
+    
+    public void initialiser() {
+        journal.ajouter("Initialisation du producteur");
+    }
 
-	private Journal journal_next = new Journal("journal EQ1", this);
+    public String getNom() {
+        return "EQ1";
+    }
+    
+    public String toString() {
+        return this.getNom();
+    }
 
-	protected int cryptogramme;
-	protected int stock;
+    public void next() {
+        int etape = Filiere.LA_FILIERE.getEtape();
+        journal.ajouter("Étape " + etape + " - Stock total : " + stockTotal.getValeur());
+    }
 
-	public Producteur1Acteur() {
-		
-		this.stock = 0;
-	}
-	
-	public void initialiser() {
-	}
+    public Color getColor() {
+        return new Color(243, 165, 175); 
+    }
 
-	public String getNom() {// NE PAS MODIFIER
-		return "EQ1";
-	}
-	
-	public String toString() {// NE PAS MODIFIER
-		return this.getNom();
-	}
+    public String getDescription() {
+        return "Bla bla bla";
+    }
 
-
-	////////////////////////////////////////////////////////
-	//         En lien avec l'interface graphique         //
-	////////////////////////////////////////////////////////
-
-	public void next() {
-	
-		journal_next.ajouter("" + Filiere.LA_FILIERE.getEtape());
-	}
-
-	public Journal getJournal(){
-		return this.journal_next;
-	}
-
-	public Color getColor() {// NE PAS MODIFIER
-		return new Color(243, 165, 175); 
-	}
-
-	public String getDescription() {
-		return "Bla bla bla";
-	}
-
-
-	// Renvoie les indicateurs
     public List<Variable> getIndicateurs() {
-        List<Variable> res = new ArrayList<Variable>();
-        res.add(new Variable("Stock actuel", "Quantité de stock disponible", this, 0, 1000, this.stock));
+        List<Variable> res = new ArrayList<>();
+        res.add(stockTotal);
         return res;
     }
 
-	// Renvoie les parametres
-	public List<Variable> getParametres() {
-		List<Variable> res=new ArrayList<Variable>();
-		return res;
-	}
+    public List<Variable> getParametres() {
+        return new ArrayList<>();
+    }
 
-	 // Renvoie les journaux
-	 public List<Journal> getJournaux() {
-        List<Journal> res = new ArrayList<Journal>();
-        res.add(journal_next);
+    public List<Journal> getJournaux() {
+        List<Journal> res = new ArrayList<>();
+        res.add(journal);
         return res;
     }
 
-	////////////////////////////////////////////////////////
-	//               En lien avec la Banque               //
-	////////////////////////////////////////////////////////
+    public void setCryptogramme(Integer crypto) {
+        this.cryptogramme = crypto;
+    }
 
-	// Appelee en debut de simulation pour vous communiquer 
-	// votre cryptogramme personnel, indispensable pour les
-	// transactions.
-	public void setCryptogramme(Integer crypto) {
-		this.cryptogramme = crypto;
-	}
+    public void notificationFaillite(IActeur acteur) {
+        journal.ajouter("Notification de faillite de " + acteur.getNom());
+    }
 
-	// Appelee lorsqu'un acteur fait faillite (potentiellement vous)
-	// afin de vous en informer.
-	public void notificationFaillite(IActeur acteur) {
-	}
+    public void notificationOperationBancaire(double montant) {
+        journal.ajouter("Opération bancaire : " + montant);
+    }
 
-	// Apres chaque operation sur votre compte bancaire, cette
-	// operation est appelee pour vous en informer
-	public void notificationOperationBancaire(double montant) {
-	}
-	
-	// Renvoie le solde actuel de l'acteur
-	protected double getSolde() {
-		return Filiere.LA_FILIERE.getBanque().getSolde(Filiere.LA_FILIERE.getActeur(getNom()), this.cryptogramme);
-	}
+    protected double getSolde() {
+        return Filiere.LA_FILIERE.getBanque().getSolde(Filiere.LA_FILIERE.getActeur(getNom()), this.cryptogramme);
+    }
 
-	////////////////////////////////////////////////////////
-	//        Pour la creation de filieres de test        //
-	////////////////////////////////////////////////////////
+    public List<String> getNomsFilieresProposees() {
+        return new ArrayList<>();
+    }
 
-	// Renvoie la liste des filieres proposees par l'acteur
-	public List<String> getNomsFilieresProposees() {
-		ArrayList<String> filieres = new ArrayList<String>();
-		return(filieres);
-	}
+    public Filiere getFiliere(String nom) {
+        return Filiere.LA_FILIERE;
+    }
 
-	// Renvoie une instance d'une filiere d'apres son nom
-	public Filiere getFiliere(String nom) {
-		return Filiere.LA_FILIERE;
-	}
+    public double getQuantiteEnStock(IProduit p, int cryptogramme) {
+        if (this.cryptogramme == cryptogramme) {
+            return stockTotal.getValeur();
+        } else {
+            return 0;
+        }
+    }
 
-	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
-		if (this.cryptogramme==cryptogramme && this.stock>0) {
-			return this.stock;
-			} else {
-			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
-		}
-	}
+    public void mettreAJourStock(double nouvelleValeur) {
+        stockTotal.setValeur(this, nouvelleValeur);
+        journal.ajouter("Mise à jour du stock : " + nouvelleValeur);
+    }
 }
+
 
 
