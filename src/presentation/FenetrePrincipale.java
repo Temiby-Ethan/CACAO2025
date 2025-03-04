@@ -78,21 +78,32 @@ public class FenetrePrincipale extends JFrame {
 			Filiere.LA_FILIERE = new FiliereParDefaut();
 		} else {
 			String filiereChoisie = args[0];
-			System.out.println(filiereChoisie);
-			IActeur[] equipes = { new Producteur1(), new Producteur2(), new Producteur3(), new Transformateur1(), new Transformateur2(), new Transformateur3(), new Distributeur1(), new Distributeur2(), new Distributeur3(), new Romu()};
-			int i=0; 
-			while (i<equipes.length && !equipes[i].getNomsFilieresProposees().contains(filiereChoisie)) {
-				i++;
+			long seed=0;
+			boolean estSeed=false;
+			try {
+				seed = Long.parseLong(args[0]);
+				estSeed=true;
+			} catch (Exception e) {
 			}
-			if (i<equipes.length) {
-				Filiere.LA_FILIERE = equipes[i].getFiliere(filiereChoisie);
+			if (estSeed) {
+				Filiere.LA_FILIERE = new FiliereParDefaut(seed);
 			} else {
-				System.out.println("Aucune equipe ne propose la filiere \""+filiereChoisie+"\"");
-				System.out.println("Les filieres proposees sont : ");
-				for (IActeur eq : equipes) {
-					System.out.println("equipe "+eq.getNom()+" : "+eq.getNomsFilieresProposees());
+				System.out.println(filiereChoisie);
+				IActeur[] equipes = { new Producteur1(), new Producteur2(), new Producteur3(), new Transformateur1(), new Transformateur2(), new Transformateur3(), new Distributeur1(), new Distributeur2(), new Distributeur3(), new Romu()};
+				int i=0; 
+				while (i<equipes.length && !equipes[i].getNomsFilieresProposees().contains(filiereChoisie)) {
+					i++;
 				}
-				System.exit(0);
+				if (i<equipes.length) {
+					Filiere.LA_FILIERE = equipes[i].getFiliere(filiereChoisie);
+				} else {
+					System.out.println("Aucune equipe ne propose la filiere \""+filiereChoisie+"\"");
+					System.out.println("Les filieres proposees sont : ");
+					for (IActeur eq : equipes) {
+						System.out.println("equipe "+eq.getNom()+" : "+eq.getNomsFilieresProposees());
+					}
+					System.exit(0);
+				}
 			}
 		}
 		Filiere.LA_FILIERE.initialiser();
