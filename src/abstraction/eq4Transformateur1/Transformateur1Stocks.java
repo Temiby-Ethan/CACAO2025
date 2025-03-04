@@ -7,12 +7,13 @@ import java.util.List;
 
 import abstraction.eqXRomu.acteurs.Romu;
 import abstraction.eqXRomu.filiere.Filiere;
+import abstraction.eqXRomu.filiere.IFabricantChocolatDeMarque;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
 
-public class Transformateur1Stocks extends Transformateur1Acteur {
+public class Transformateur1Stocks extends Transformateur1Acteur implements IFabricantChocolatDeMarque {
 
 	private double coutStockage;
 
