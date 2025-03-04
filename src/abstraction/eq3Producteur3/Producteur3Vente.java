@@ -64,7 +64,7 @@ public class Producteur3Vente extends Producteur3Stock implements IVendeurBourse
         }
         return false;
     }
-
+    /* 
     @Override
     public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
         // TODO Auto-generated method stub
@@ -98,7 +98,7 @@ public class Producteur3Vente extends Producteur3Stock implements IVendeurBourse
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'livrer'");
     }
-
+    */
 
     
 
