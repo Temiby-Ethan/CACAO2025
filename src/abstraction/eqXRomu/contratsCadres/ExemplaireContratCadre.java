@@ -1,5 +1,6 @@
 package abstraction.eqXRomu.contratsCadres;
 
+import abstraction.eqXRomu.produits.IProduit;
 import java.util.List;
 
 
@@ -35,7 +36,7 @@ public final class ExemplaireContratCadre {
 	/**
 	 * @return Retourne le produit indique sur le contrat cadre
 	 */
-	public Object getProduit() {
+	public IProduit getProduit() {
 		return this.contratCadre.getProduit();
 	}
 	

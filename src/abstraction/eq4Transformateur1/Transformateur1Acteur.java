@@ -11,10 +11,14 @@ import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Transformateur1Acteur implements IActeur {
-	
+
+	protected Journal journal;
+	protected Variable indicateur;	
 	protected int cryptogramme;
 
 	public Transformateur1Acteur() {
+		this.journal = new Journal("Journal " + this.getNom(), this);
+		this.indicateur=new Variable("Stock" + this.getNom(), this);
 	}
 	
 	public void initialiser() {
@@ -33,6 +37,9 @@ public class Transformateur1Acteur implements IActeur {
 	////////////////////////////////////////////////////////
 
 	public void next() {
+		
+		journal.ajouter("N° Etape " + Filiere.LA_FILIERE.getEtape());
+		indicateur.setValeur(this, this.getQuantiteEnStock(null,this.cryptogramme) ,this.cryptogramme);
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
@@ -40,12 +47,13 @@ public class Transformateur1Acteur implements IActeur {
 	}
 
 	public String getDescription() {
-		return "Bla bla bla";
+		return "Transformateur spécialisé dans le chocolat équitable à petits prix";
 	}
 
 	// Renvoie les indicateurs
 	public List<Variable> getIndicateurs() {
 		List<Variable> res = new ArrayList<Variable>();
+		res.add(indicateur);
 		return res;
 	}
 
@@ -58,6 +66,7 @@ public class Transformateur1Acteur implements IActeur {
 	// Renvoie les journaux
 	public List<Journal> getJournaux() {
 		List<Journal> res=new ArrayList<Journal>();
+		res.add(journal);
 		return res;
 	}
 
