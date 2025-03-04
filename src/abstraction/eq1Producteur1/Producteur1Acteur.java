@@ -56,11 +56,13 @@ public class Producteur1Acteur implements IActeur {
 		return "Bla bla bla";
 	}
 
+
 	// Renvoie les indicateurs
-	public List<Variable> getIndicateurs() {
-		List<Variable> res = new ArrayList<Variable>();
-		return res;
-	}
+    public List<Variable> getIndicateurs() {
+        List<Variable> res = new ArrayList<Variable>();
+        res.add(new Variable("Stock actuel", "Quantité de stock disponible", this, 0, 1000, this.stock));
+        return res;
+    }
 
 	// Renvoie les parametres
 	public List<Variable> getParametres() {
@@ -68,11 +70,12 @@ public class Producteur1Acteur implements IActeur {
 		return res;
 	}
 
-	// Renvoie les journaux
-	public List<Journal> getJournaux() {
-		List<Journal> res=new ArrayList<Journal>();
-		return res;
-	}
+	 // Renvoie les journaux
+	 public List<Journal> getJournaux() {
+        List<Journal> res = new ArrayList<Journal>();
+        res.add(journal_next);
+        return res;
+    }
 
 	////////////////////////////////////////////////////////
 	//               En lien avec la Banque               //
