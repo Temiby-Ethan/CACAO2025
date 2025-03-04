@@ -64,6 +64,13 @@ public class Producteur2Acteur implements IActeur {
 	public void next() {
 		num.ajouter("Numero : " + numero);
 		numero++;
+		SetStock();
+	
+	}
+
+
+	public void SetStock(){
+
 		double totalStock=0.0;
 
 
@@ -73,11 +80,8 @@ public class Producteur2Acteur implements IActeur {
 			this.stockTotal.setValeur(this, totalStock);
 		}
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", totalStock*this.coutStockage);
-
-
+		
 	}
-
-
 
 	public Color getColor() {// NE PAS MODIFIER
 		return new Color(244, 198, 156); 
