@@ -1,9 +1,9 @@
 package abstraction.eq3Producteur3;
 
-import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.bourseCacao.BourseCacao;
 import abstraction.eqXRomu.bourseCacao.IVendeurBourse;
 import abstraction.eqXRomu.filiere.Filiere;
+import abstraction.eqXRomu.produits.Feve;
 
 
 public class Producteur3Vente extends Producteur3Stock implements IVendeurBourse{
@@ -41,7 +41,7 @@ public class Producteur3Vente extends Producteur3Stock implements IVendeurBourse
 
     @Override
     public void notificationBlackList(int dureeEnStep) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        
     }
 
 
