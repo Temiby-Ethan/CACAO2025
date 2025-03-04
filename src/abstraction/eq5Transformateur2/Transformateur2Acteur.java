@@ -50,7 +50,7 @@ public class Transformateur2Acteur implements IActeur {
 	}
 
 	public String getDescription() {
-		return "Bla bla bla";
+		return "Un transformateur reconnu pour son éthique et sa qualité haut de gamme";
 	}
 
 	// Renvoie les indicateurs
