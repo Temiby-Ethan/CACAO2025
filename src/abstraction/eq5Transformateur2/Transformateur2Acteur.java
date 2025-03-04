@@ -2,7 +2,6 @@ package abstraction.eq5Transformateur2;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import abstraction.eqXRomu.filiere.Filiere;
@@ -11,9 +10,8 @@ import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
-import abstraction.eqXRomu.bourseCacao.IAcheteurBourse;
 
-public class Transformateur2Acteur implements IActeur, IAcheteurBourse {
+public class Transformateur2Acteur implements IActeur {
 	
 	protected int cryptogramme;
 	protected Journal journal;
@@ -25,23 +23,6 @@ public class Transformateur2Acteur implements IActeur, IAcheteurBourse {
 		this.stocktotal = new Variable("Stock Equipe 5", this);
 		this.feve = Feve.F_MQ;
 	}
-
-	public void notificationAchat(Feve f, double quantiteEnT, double coursEnEuroParT) {
-		this.stocktotal.setValeur(this, this.stocktotal.getValeur()+quantiteEnT);
-		System.out.println("on a un stock total de " + this.stocktotal.getValeur() + " tonnes de " + f);
-
-	}
-
-	public void notificationBlackList(int dureeEnStep) {
-        System.out.println("Attention ! Nous sommes exclus de la bourse pour " + dureeEnStep + " étapes.");
-    }
-
-	public double demande(Feve f, double cours) {
-        if (f == Feve.F_MQ) { 
-            System.out.println("[Bourse] Demande de 80 tonnes de " + f + " au prix de " + cours + " €/T");
-            return 80.0; // Achat de 80 tonnes de F_MQ à chaque next
-        }
-        return 0.0;
 	
 	public void initialiser() {
 	}
@@ -61,7 +42,7 @@ public class Transformateur2Acteur implements IActeur, IAcheteurBourse {
 	public void next() {
 		int etape = Filiere.LA_FILIERE.getEtape();
 		this.journal.ajouter("Etape numéro : " + etape);
-		this.stocktotal.setValeur(this, this.getQuantiteEnStock(null, this.cryptogramme), this.cryptogramme);
+		//this.stocktotal.setValeur(this, this.getQuantiteEnStock(null, this.cryptogramme), this.cryptogramme);
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
