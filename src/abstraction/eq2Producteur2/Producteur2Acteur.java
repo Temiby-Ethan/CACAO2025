@@ -22,7 +22,7 @@ public class Producteur2Acteur implements IActeur {
 	private static final double PART=0.1;  // La part de marche initiale
 	private double coutStockage;
 	private int numero = 0;
-	private Journal num = new Journal("Journal Eq2", this);
+	protected Journal num = new Journal("Journal Eq2", this);
 
 	public Producteur2Acteur() {
 
@@ -56,7 +56,7 @@ public class Producteur2Acteur implements IActeur {
 	public String toString() {// NE PAS MODIFIER
 		return this.getNom();
 	}
-
+	
 	////////////////////////////////////////////////////////
 	//         En lien avec l'interface graphique         //
 	////////////////////////////////////////////////////////
@@ -65,6 +65,8 @@ public class Producteur2Acteur implements IActeur {
 		num.ajouter("Numero : " + numero);
 		numero++;
 		double totalStock=0.0;
+
+
 		for (Feve f : Feve.values()) {
 			this.stock.get(f).ajouter(this, this.prodParStep.get(f), cryptogramme);
 			if (this.stock.get(f).getValeur(cryptogramme)>10*this.prodParStep.get(f)) { // on jette si trop de stock
@@ -75,7 +77,10 @@ public class Producteur2Acteur implements IActeur {
 		}
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", totalStock*this.coutStockage);
 
+
 	}
+
+
 
 	public Color getColor() {// NE PAS MODIFIER
 		return new Color(244, 198, 156); 
@@ -100,11 +105,11 @@ public class Producteur2Acteur implements IActeur {
 	}
 
 	// Renvoie les journaux
-	public List<Journal> getJournaux() {
-		List<Journal> res=new ArrayList<Journal>();
-		res.add(num);
-		return res;
-	}
+	//public List<Journal> getJournaux() {
+	//	List<Journal> res=new ArrayList<Journal>();
+	//	res.add(num);;
+	//	return res;
+	//}
 
 	////////////////////////////////////////////////////////
 	//               En lien avec la Banque               //
@@ -153,5 +158,11 @@ public class Producteur2Acteur implements IActeur {
 		} else {
 			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
 		}
+	}
+
+	@Override
+	public List<Journal> getJournaux() {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'getJournaux'");
 	}
 }
