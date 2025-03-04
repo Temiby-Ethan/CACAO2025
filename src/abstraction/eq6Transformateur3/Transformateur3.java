@@ -45,12 +45,12 @@ public class Transformateur3 extends Transformateur3Acteur{
 		this.eq6_Q_Hypo = new Variable(this.getNom()+": quantité de tablette Hypocritolat", this, 300);
 		this.eq6_Q_ingre = new Variable(this.getNom()+": quantité d'ingédient secondaire", this, 300);
 		this.eq6_Q_machine = new Variable(this.getNom()+": quantité de machine", this, 300);
-		this.eq6_capacite_machine = new Variable(this.getNom()+": capacité de production d'une machine", this, 300);
+		this.eq6_capacite_machine = new Variable(this.getNom()+": capacité de production des machines", this, 300);
 		this.eq6_jours_decouvert = new Variable(this.getNom()+": nombre de jours à découvert", this, 300);
 		this.eq6_nb_employe = new Variable(this.getNom()+": nombre d'employés", this, 300);
 		this.eq6_cout_stockage = new Variable(this.getNom()+": coûts de stockage pour ce step", this, 300);
 		this.eq6_Q_cacao_CC = new Variable(this.getNom()+": quantité de cacaco que l'on reçoit ", this, 300);
-		this.eq6_Q_tablette_CC = new Variable(this.getNom()+": quantité d'ingédient secondaire", this, 300);
+		this.eq6_Q_tablette_CC = new Variable(this.getNom()+": quantité de tablette à produire", this, 300);
 	}
 
 	public void next(){
