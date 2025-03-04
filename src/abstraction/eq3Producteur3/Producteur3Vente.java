@@ -1,24 +1,29 @@
 package abstraction.eq3Producteur3;
-public class Producteur3Vente extends Producteur3Stock /*implements IVendeurBourse*/{
+
+import abstraction.eqXRomu.produits.Feve;
+import abstraction.eqXRomu.bourseCacao.BourseCacao;
+import abstraction.eqXRomu.bourseCacao.IVendeurBourse;
+import abstraction.eqXRomu.filiere.Filiere;
+
+
+public class Producteur3Vente extends Producteur3Stock implements IVendeurBourse{
 
    
-   
-    public Producteur3Vente() {
-        super();
-    }
+        public Producteur3Vente() {
+            super();
+
+        }
 
 
-
-
-
-/*
     //Pour vendre en bourse
     @Override
-    public double offre(Feve f, double cours) {
-        if(this.feve.equals(f)){
+    public double offre(Feve feve, double cours) {
+       
+        if (this.stockFeve.get(feve).getValeur(cryptogramme)>0){
             BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
             double pourcentage = (bourse.getCours(feve).getValeur()-bourse.getCours(feve).getMin())/(bourse.getCours(feve).getMax()-bourse.getCours(feve).getMin());
-			return this.stockFeve.getValeur()*pourcentage;
+            return this.stockFeve.get(feve).getValeur(cryptogramme)*pourcentage;
+
         }else{
             return 0.0;
         }
@@ -26,9 +31,9 @@ public class Producteur3Vente extends Producteur3Stock /*implements IVendeurBour
     }
 
     @Override
-    public double notificationVente(Feve f, double quantiteEnT, double coursEnEuroParT) {
-        double livrable = Math.min(quantiteEnT, this.stockFeve.getValeur());
-		this.stockFeve.setValeur(this, this.stockFeve.getValeur()-livrable);
+    public double notificationVente(Feve f, double coursEnEuroParT, double quantiteEnT) {
+        double livrable = Math.min(this.stockFeve.get(f).getValeur(cryptogramme), quantiteEnT);
+		this.stockFeve.get(f).setValeur(this, stockFeve.get(f).getValeur(cryptogramme)-livrable,cryptogramme);
 		return livrable;
     }
 
@@ -39,7 +44,7 @@ public class Producteur3Vente extends Producteur3Stock /*implements IVendeurBour
 
 
 
-*/
+
 
     
     
