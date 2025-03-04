@@ -1,5 +1,6 @@
 package abstraction.eq3Producteur3;
 
+//Zoé
 public class QualiteHQ  extends Qualite{
     public boolean bio;
     

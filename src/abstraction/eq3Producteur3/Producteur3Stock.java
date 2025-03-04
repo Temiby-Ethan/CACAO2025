@@ -14,7 +14,7 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
         super();
     }
   
-
+    //Zoé
     public void initStock(Feve feve, double stock){
         if (feve==null ||stock<=0) {
 			throw new IllegalArgumentException("creation d'une instance de Producteur3Stock avec des arguments non valides");

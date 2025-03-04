@@ -1,5 +1,6 @@
 package abstraction.eq3Producteur3;
 
+//Zoé
 public class QualiteMQ extends Qualite {
     
     

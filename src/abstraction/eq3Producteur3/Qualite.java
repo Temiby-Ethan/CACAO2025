@@ -1,9 +1,10 @@
 package abstraction.eq3Producteur3;
 
+//Zoé
 public abstract class Qualite {
 
     protected final int densité;
-    protected final int longévité;
+    protected final int longevite;
     protected final int croissance;
     protected  final int mainOeuvre;
     protected final int nbCabosses;
@@ -15,9 +16,9 @@ public abstract class Qualite {
     protected boolean equitable;
 
 
-    public Qualite(int densité, int longévité, int croissance, int mainOeuvre, int nbCabosses, int pousse, int sechage, int achat, int replanter, int vente, boolean equitable) {
+    public Qualite(int densité, int longevite, int croissance, int mainOeuvre, int nbCabosses, int pousse, int sechage, int achat, int replanter, int vente, boolean equitable) {
         this.densité = densité;
-        this.longévité = longévité;
+        this.longevite = longevite;
         this.croissance = croissance;
         this.mainOeuvre = mainOeuvre;
         this.nbCabosses = nbCabosses;
