@@ -1,4 +1,4 @@
-// Henri ROTH
+// Henri ROTH, Florian MALVEAU
 package abstraction.eq6Transformateur3;
 import java.util.ArrayList;
 import java.util.HashMap;
