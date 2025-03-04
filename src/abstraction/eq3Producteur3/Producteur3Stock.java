@@ -25,7 +25,6 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
         journal.ajouter(Double.toString(tmp.getHistorique().getValeur()));
         stockFeve.put(feve,tmp);
         getIndicateurs().add(tmp);
-        System.out.println(tmp.getValeur(cryptogramme));
     }
     
     

@@ -90,6 +90,7 @@ public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
 		List<IAcheteurContratCadre> acheteurs = new LinkedList<IAcheteurContratCadre>();
 		List<IActeur> acteurs = Filiere.LA_FILIERE.getActeursSolvables();
 		for (IActeur acteur : acteurs) {
+			//System.out.println("SupCC "+acteur.getNom()+""+(acteur instanceof IAcheteurContratCadre)+" "+(acteur instanceof IAcheteurContratCadre? ((IAcheteurContratCadre)acteur).achete(produit):"nan"));
 			if (acteur instanceof IAcheteurContratCadre && ((IAcheteurContratCadre)acteur).achete(produit)) {
 				acheteurs.add(((IAcheteurContratCadre)acteur));
 			}

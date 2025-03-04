@@ -44,6 +44,8 @@ public class Producteur3Vente extends Producteur3Stock implements IVendeurBourse
         
     }
 
+    // CONTRAT CADRE //
+    
 
 
 
