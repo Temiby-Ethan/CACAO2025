@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
-import java.util.LinkedList;
 
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.filiere.Filiere;
@@ -12,6 +11,7 @@ import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.clients.ClientFinal;
+import abstraction.eqXRomu.general.Variable;
 
 public class Distributeur1 extends Distributeur1Acteur  {
 	
