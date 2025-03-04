@@ -16,6 +16,7 @@ public class DistributeurXDistributeur extends DistributeurXActeur implements ID
 		default:
 			return 0.0;
 		}
+
 	}
 
 	public double quantiteEnVente(ChocolatDeMarque choco, int crypto) {
