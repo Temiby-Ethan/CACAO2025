@@ -1,5 +1,5 @@
 package abstraction.eq6Transformateur3;
-
+// @author Henri Roth
 import java.util.ArrayList;
 import java.util.List;
 
