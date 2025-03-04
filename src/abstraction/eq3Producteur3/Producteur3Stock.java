@@ -26,12 +26,14 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
         getIndicateurs().add(tmp);
     }
 
-    /*public void ajouterStock(double delta){
-        stockFeve.ajouter(this,delta);
+    public void ajouterStock(Feve feve,double delta){
+        stockFeve.get(feve).ajouter(this,delta);
+        /*defiJournal.ajouter("Ajout de " + delta + " au stock de " + feve + ". Nouveau stock : " + stockFeve.get(feve).getValeur());*/
         
     }
-    public void retirerStock(double delta){
-        stockFeve.retirer(this,delta);
+    public void retirerStock(Feve feve,double delta){
+        stockFeve.get(feve).retirer(this,delta);
+        /*defiJournal.ajouter("Retrait de " + delta + " du stock de " + feve + ". Nouveau stock : " + stockFeve.get(feve).getValeur());*/
     }
     /*protected Feve getFeve() {
 		return this.feve;
