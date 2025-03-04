@@ -1,19 +1,15 @@
 package abstraction.eq3Producteur3;
 
-import java.util.List;
-
 import abstraction.eqXRomu.bourseCacao.BourseCacao;
 import abstraction.eqXRomu.bourseCacao.IVendeurBourse;
-import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
-import abstraction.eqXRomu.contratsCadres.IVendeurContratCadre;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.produits.Feve;
-import abstraction.eqXRomu.produits.Gamme;
-import abstraction.eqXRomu.produits.IProduit;
+import java.util.List;
 
 
-public class Producteur3Vente extends Producteur3Stock implements IVendeurBourse,IVendeurContratCadre{
+public class Producteur3Vente extends Producteur3Stock implements IVendeurBourse/*,IVendeurContratCadre*/{
+    protected List<ExemplaireContratCadre> mesContratEnTantQueVendeur;
 
    
         public Producteur3Vente() {
@@ -54,9 +50,9 @@ public class Producteur3Vente extends Producteur3Stock implements IVendeurBourse
 
     // CONTRAT CADRE //
 
-    protected List<ExemplaireContratCadre> mesContratEnTantQueVendeur;
+   
 
-    @Override
+   /* @Override
     public boolean vend(IProduit produit) {
         if (produit instanceof Feve) {
             Feve feve = (Feve)produit;
