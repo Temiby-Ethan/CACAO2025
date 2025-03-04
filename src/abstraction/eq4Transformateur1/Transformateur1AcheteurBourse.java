@@ -5,8 +5,8 @@ import abstraction.eqXRomu.produits.Feve;
 
 public class Transformateur1AcheteurBourse extends Transformateur1Acteur implements IAcheteurBourse{
 	
-	private Feve feve;
-	private double T;
+	private Feve feve;	//Type de feve voulue
+	private double T;	//Quantité de feve en tonne
 
 	public Transformateur1AcheteurBourse() {
 		super();

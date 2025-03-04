@@ -26,8 +26,8 @@ public class Transformateur1Acteur implements IActeur {
 	protected HashMap<Feve, Double> stockFeves;
 	protected HashMap<Chocolat, Double> stockChoco;
 	protected HashMap<ChocolatDeMarque, Double> stockChocoMarque;
-	protected Variable totalStocksFeves;  // La qualite totale de stock de feves 
-	protected Variable totalStocksChoco;  // La qualite totale de stock de chocolat 
+	protected Variable totalStocksFeves;  // La quantité totale de stock de feves 
+	protected Variable totalStocksChoco;  // La qunatité totale de stock de chocolat 
 	protected Variable VolumeTotalDeStock;
 
 	public Transformateur1Acteur() {

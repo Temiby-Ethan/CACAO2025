@@ -18,12 +18,12 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 	protected List<ExemplaireContratCadre> mesContratEnTantQueVendeur;//Contient tous les contrats de vente
 	protected double qttInitialementVoulue;	
 	protected double prixInitialementVoulu;
-	protected double epsilon; 
+	protected double epsilon;
 	
 	public Transformateur1ContratCadreVendeur(IProduit produit) {
 		super(produit);
 		this.mesContratEnTantQueVendeur=new LinkedList<ExemplaireContratCadre>();
-		this.qttInitialementVoulue = stock.getValeur() * 0.90;  //On cherche à vendre 75% de notre stock total actuel
+		this.qttInitialementVoulue = stock.getValeur() * 0.90;  //On cherche à vendre 90% de notre stock total actuel
 		this.epsilon = 0.1;  //Pourcentage d'erreur entre la quantite voulue et celle du contrat actuel
 
 	}
@@ -42,17 +42,18 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 				if (Math.abs(delta) <= epsilon*qtt_totale_voulue ) {
 					return contrat.getEcheancier(); // on ne cherche pas a negocier sur le previsionnel de livraison
 				} 
-				else {//Si la proposition n'est pas dans la fourchette voulue, on contre-propose
+				else {
+					//Mise à jour de l'échéancier pour prendre en compte ces modifications
 					Echeancier e = contrat.getEcheancier();
 					//On procède par dichotomie en augmentant ou diminuant le volume de vente de nos produits
-
-					qtt_totale_voulue = qtt_totale_voulue + delta/8;//si detla<0, proposition trop faible donc on diminue notre demande
-																	//si delta>0, proposition trop forte donc on augmante notre demande
-
+					double signe = delta/Math.abs(delta);
+					this.qttInitialementVoulue = this.qttInitialementVoulue * (1 + signe*0.125);//si detla<0, proposition trop faible donc on diminue notre demande
+																								//si delta>0, proposition trop forte donc on augmante notre demande
+		
 					//Redistribution uniforme de la hausse ou de la baisse des qtt vendues 
 					for(int i = e.getStepDebut() ; i< e.getStepFin() ; i++){
-						double qtti = e.getQuantite(i-e.getStepDebut());
-						e.set(i, qtti*1.125);
+						double qtti = e.getQuantite(i);
+						e.set(i, qtti*(1+signe*0.125));
 					}
 					return e;
 				}
@@ -64,18 +65,48 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 		}
 	}
 
+
 	//A MODIFIER
+	// Cette proposition doit mettre en place une réduction pour des quantités élevées par rapport à 
+	//un seuil définissant ces quantités élevées. Le prix proposé est un prix à la tonne. 
+	//Le prix moyen d'une tonne de chocolat est de 5226eur 
+	//On se base la dessus pour une première version, il faudra prendre en compte le produit dont il est question et 
+	//adopter une stratégie selon celui-ci
 	public double propositionPrix(ExemplaireContratCadre contrat) {
-		return 0.5 + (5000.0-contrat.getQuantiteTotale());// plus la quantite est elevee, plus le prix est interessant
+		if(contrat.getQuantiteTotale() >= 2000){
+			this.prixInitialementVoulu = 0.75*5226;
+			return 0.75*5226; 
+		}
+		this.prixInitialementVoulu = 5226*(1 - 0.25*contrat.getQuantiteTotale()/2000);
+		return 5226*(1 - 0.25*contrat.getQuantiteTotale()/2000);// plus la quantite est elevee, plus le prix est interessant
 	}
 
 
 	//A MODIFIER
+	//Comme précédemment, la stratégie à adopter dépend du produit dont il est question (et le prix négocié aussi)
+	//Pour le moment on s'appuie sur le prix moyen de la tonne de chocolat
 	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
-		if (Filiere.random.nextDouble()<0.1) {
-			return contrat.getPrix(); // on ne cherche pas a negocier dans 10% des cas
-		} else {//dans 90% des cas on fait une contreproposition differente
-			return 0.5 + (5000.0-(contrat.getQuantiteTotale()*Filiere.random.nextDouble()));
+		//Si le prix est beaucoup trop faible, l'algorithme par dichotomie risque de ne pas fonctionner 
+		// et de nous faire vendre à perte. On arrête donc les négociations.
+		if (contrat.getPrix() < 0.65*5226){
+			return -1;
+		}
+		else{
+			//On procède par dichotomie sur le prix proposé et notre prix voulu.
+			//Si le prix proposé est supérieur à notre prix, on accepte le contrat
+			if(contrat.getPrix() > this.prixInitialementVoulu){
+				return contrat.getPrix(); 
+			}
+
+			//Sinon on vérifie si le prix est cohérent avec le notre d'un seuil epsilon
+			if (Math.abs((contrat.getPrix()-prixInitialementVoulu)/prixInitialementVoulu) <= this.epsilon ){
+				return contrat.getPrix();
+			}
+			//Sinon on contre-porpose un prix intermédiaire par rapport au prix proposé
+			else{
+				this.prixInitialementVoulu = this.prixInitialementVoulu + (contrat.getPrix()-prixInitialementVoulu)*0.2;
+				return this.prixInitialementVoulu;
+			}
 		}
 	}
 
