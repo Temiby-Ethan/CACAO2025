@@ -11,6 +11,7 @@ import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.general.VariableReadOnly;
 import abstraction.eqXRomu.produits.Feve;
+import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
 /**
@@ -19,7 +20,7 @@ import abstraction.eqXRomu.produits.IProduit;
  * d'en acheter sans attendre que les realisations des equipes 1 a 3 soient operationnelles.
  * 
  * (*) trop trivial puisqu'il ne respecte pas toutes les contraintes imposees,
- * notamment en termes de couts, de replantation, de maladies, de pe
+ * notamment en termes de couts, de replantation, de maladies, de perissabilite, ...
  * et c'est pourquoi sa part de marche initiale est faible.
  */
 public class ProducteurXActeur  implements IActeur {
@@ -36,16 +37,16 @@ public class ProducteurXActeur  implements IActeur {
 		// faites par les clients finaux lors de la precedente annee, mais dans cette version basique
 		// on ne s'appuie que sur des moyennes
 		this.prodParStep = new HashMap<Feve, Double>();
-		this.prodParStep.put(Feve.F_HQ_BE, PART*20830.0);
-		this.prodParStep.put(Feve.F_HQ_E, PART*41600.0);
+		this.prodParStep.put(Feve.F_HQ_BE, PART*11215.0);
+		this.prodParStep.put(Feve.F_HQ_E, PART*11215.0);
 		this.prodParStep.put(Feve.F_MQ_E, PART*10400.0);
 		this.prodParStep.put(Feve.F_MQ, PART*52000.0);
-		this.prodParStep.put(Feve.F_BQ_E, PART*21100.0);
-		this.prodParStep.put(Feve.F_BQ, PART*83320.0);
-		
+		this.prodParStep.put(Feve.F_BQ_E, PART*2000.0);
+		this.prodParStep.put(Feve.F_BQ, PART*63320.0);
+
 		this.stock = new HashMap<Feve, Variable>();
 		for (Feve f : Feve.values()) {
-		    this.stock.put(f, new VariableReadOnly(this+"Stock"+f.toString().substring(2), "<html>Stock de feves "+f+"</html>",this, 0.0, prodParStep.get(f)*24, prodParStep.get(f)*6));
+		    this.stock.put(f, new VariableReadOnly(this.getNom()+"Stock"+f.toString().substring(2), "<html>Stock de feves "+f+"</html>",this, 0.0, prodParStep.get(f)*24, prodParStep.get(f)*6));
 		}
 	}
 	
