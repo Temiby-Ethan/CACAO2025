@@ -52,7 +52,7 @@ public class Distributeur1 extends Distributeur1Acteur  {
 		}
     }
 
-	public double prix(ChocolatDeMarque choco) {
+	public double prix(ChocolatDeMarque choco) { // par Alexiho
 		int pos= (chocolats.indexOf(choco));
 		if (pos<0) {
 			return 0.0;
@@ -85,7 +85,13 @@ public class Distributeur1 extends Distributeur1Acteur  {
 		//System.out.println(stockChocolat.get(Chocolat.C_MQ));
 	}
 
-	public double quantiteEnVente(ChocolatDeMarque choco, int crypto) {
+	public List<String> getMarquesChocolat() { // par Alexiho
+		List<String> marques = new ArrayList<String>();
+		marques.add("Hexafridge");
+		return marques;
+	}
+
+	public double quantiteEnVente(ChocolatDeMarque choco, int crypto) { // par Alexiho
 		if (crypto!=this.cryptogramme) {
 			journal.ajouter("Quelqu'un essaye de me pirater !");
 			return 0.0;
@@ -101,7 +107,7 @@ public class Distributeur1 extends Distributeur1Acteur  {
 
 	// On met 10% de ce tout ce qu'on met en vente (on pourrait mettre l'accente sur
 	// un produit a promouvoir mais il s'agit ici d'un exemple simpliste
-	public double quantiteEnVenteTG(ChocolatDeMarque choco, int crypto) {
+	public double quantiteEnVenteTG(ChocolatDeMarque choco, int crypto) { // par Alexiho
 		if (crypto!=this.cryptogramme) {
 			journal.ajouter("Quelqu'un essaye de me pirater !");
 			return 0.0;
@@ -115,7 +121,7 @@ public class Distributeur1 extends Distributeur1Acteur  {
 		}
 	}
 
-	public void vendre(ClientFinal client, ChocolatDeMarque choco, double quantite, double montant, int crypto) {
+	public void vendre(ClientFinal client, ChocolatDeMarque choco, double quantite, double montant, int crypto) { // par Alexiho
 		int pos= (chocolats.indexOf(choco));
 		if (pos>=0) {
 			this.getStock(choco).retirer(this, quantite);
