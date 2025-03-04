@@ -26,16 +26,17 @@ public class Transformateur1Acteur implements IActeur {
 	protected HashMap<Feve, Double> stockFeves;
 	protected HashMap<Chocolat, Double> stockChoco;
 	protected HashMap<ChocolatDeMarque, Double> stockChocoMarque;
-	protected Variable totalStocksFeves;  // La quantité totale de stock de feves 
-	protected Variable totalStocksChoco;  // La qunatité totale de stock de chocolat 
+	protected Variable totalStocksFeves;  // La qualite totale de stock de feves 
+	protected Variable totalStocksChoco;  // La qualite totale de stock de chocolat 
 	protected Variable VolumeTotalDeStock;
 
 	public Transformateur1Acteur() {
 		this.journal = new Journal("Journal " + this.getNom(), this);
 		this.totalStocksFeves = new VariablePrivee("Eq4TStockFeves", "<html>Quantite totale de feves en stock</html>",this, 0.0, 1000000.0, 0.0);
 		this.totalStocksChoco = new VariablePrivee("Eq4TStockChoco", "<html>Quantite totale de chocolat en stock</html>",this, 0.0, 1000000.0, 0.0);
+		this.VolumeTotalDeStock = new VariablePrivee("Eq4TStockChoco", "<html>Volume totral de stock</html>",this, 0.0, 1000000.0, 0.0);
 	}
-	
+
 	public void initialiser() {
 		this.lesFeves = new LinkedList<Feve>();
 		for (Feve f : Feve.values()) {
@@ -47,6 +48,7 @@ public class Transformateur1Acteur implements IActeur {
 		for (Feve f : this.lesFeves) {
 			this.stockFeves.put(f, 20000.0);
 			this.totalStocksFeves.ajouter(this, 20000.0, this.cryptogramme);
+			this.VolumeTotalDeStock.ajouter(this, 20000.0, this.cryptogramme);
 			this.journal.ajouter("ajout de 20000 de "+f+" au stock de feves --> total="+this.totalStocksFeves.getValeur(this.cryptogramme));
 		}
 
@@ -55,6 +57,7 @@ public class Transformateur1Acteur implements IActeur {
 		for (Chocolat c : Chocolat.values()) {
 			this.stockChoco.put(c, 20000.0);
 			this.totalStocksChoco.ajouter(this, 20000.0, this.cryptogramme);
+			this.VolumeTotalDeStock.ajouter(this, 20000.0, this.cryptogramme);
 			this.journal.ajouter("ajout de 20000 de "+c+" au stock de chocolat --> total="+this.totalStocksChoco.getValeur(this.cryptogramme));
 		}
 	}
@@ -76,6 +79,7 @@ public class Transformateur1Acteur implements IActeur {
 		this.journal.ajouter("N° Etape " + Filiere.LA_FILIERE.getEtape());
 		this.journal.ajouter("Stock de fèves : " + this.totalStocksFeves.getValeur(this.cryptogramme));
 		this.journal.ajouter("Stock de chocolat : " + this.totalStocksChoco.getValeur(this.cryptogramme));
+		this.journal.ajouter("Volume total de stock : " + this.VolumeTotalDeStock.getValeur(this.cryptogramme));
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
@@ -91,6 +95,7 @@ public class Transformateur1Acteur implements IActeur {
 		List<Variable> res = new ArrayList<Variable>();
 		res.add(this.totalStocksFeves);
 		res.add(this.totalStocksChoco);
+		res.add(this.VolumeTotalDeStock);
 		return res;
 	}
 
