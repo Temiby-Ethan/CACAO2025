@@ -3,6 +3,7 @@ package abstraction.eq4Transformateur1.contratCadre;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.contratsCadres.*;
+import abstraction.eqXRomu.produits.Feve;
 
 import java.util.List;
 import java.util.LinkedList;
@@ -126,7 +127,10 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 	}
 
 	public void receptionner(IProduit produit, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
-		stock.ajouter(this, quantiteEnTonnes); 
+		totalStocksFeves.ajouter(this, quantiteEnTonnes); 
+        double currStockFeves = stockFeves.get((Feve) produit);
+        stockFeves.put((Feve) produit, currStockFeves+quantiteEnTonnes);
+        journal.ajouter("Reception de " + quantiteEnTonnes +"feves " + ((Feve)produit).getGamme());
 	}
 
 	public boolean achete(IProduit produit) {

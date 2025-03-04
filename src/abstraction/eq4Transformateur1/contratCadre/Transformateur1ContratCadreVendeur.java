@@ -5,6 +5,7 @@ import java.util.List;
 
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.produits.IProduit;
+import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.contratsCadres.*;
 
 
@@ -23,7 +24,7 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 	public Transformateur1ContratCadreVendeur(IProduit produit) {
 		super(produit);
 		this.mesContratEnTantQueVendeur=new LinkedList<ExemplaireContratCadre>();
-		this.qttInitialementVoulue = super.stock.getValeur() * 0.90;  //On cherche à vendre 90% de notre stock total actuel
+		this.qttInitialementVoulue = stockChoco.get((Chocolat) produit) * 0.90;  //On cherche à vendre 90% de notre stock total actuel
 		this.epsilon = 0.1;  //Pourcentage d'erreur entre la quantite voulue et celle du contrat actuel
 
 	}
@@ -34,7 +35,7 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 		if (contrat.getProduit().equals(produit)) {
 			double qtt_totale_voulue = qttInitialementVoulue;
 
-			if (contrat.getEcheancier().getQuantiteTotale()<super.stock.getValeur()) {  //On chercher à honorer le contrat sur les qtts
+			if (contrat.getEcheancier().getQuantiteTotale()< stockChoco.get((Chocolat) produit)) {  //On chercher à honorer le contrat sur les qtts
 
 				//On vérifie que le contrat propose met en jeu suffisemment de quantite par rapport aux quantite voulues par notre acteur, a plus ou moins epsilon pres
 				double delta = contrat.getEcheancier().getQuantiteTotale() - qtt_totale_voulue;
@@ -130,9 +131,11 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 	}
 
 	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
-		double livre = Math.min(super.stock.getValeur(), quantite);
+		double livre = Math.min(stockChoco.get((Chocolat) produit), quantite);
 		if (livre>0.0) {
-			super.stock.retirer(this,  livre);
+			totalStocksChoco.retirer(this,  livre);
+			double currStockChoco = stockChoco.get(produit);
+			stockChoco.put((Chocolat) produit, currStockChoco-livre);
 		}
 		return livre;
 	}

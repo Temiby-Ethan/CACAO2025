@@ -8,12 +8,13 @@ import abstraction.eqXRomu.filiere.*;
 import abstraction.eqXRomu.general.*;
 import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.contratsCadres.*;
+import abstraction.eq4Transformateur1.Transformateur1Stocks;
 
 /*
  * @author MURY Julien
  * Cette classe décrit le comportement de Transfromateur1 lors d'un contrat cadre
  */
-public class TransformateurContratCadre implements IActeur {
+public class TransformateurContratCadre extends Transformateur1Stocks implements IActeur {
 	private static int NB_INSTANCES = 0; // Afin d'attribuer un nom different a toutes les instances
 	protected int numero;
 	protected Variable stock;
