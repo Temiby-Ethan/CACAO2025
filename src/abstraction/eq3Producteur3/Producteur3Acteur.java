@@ -18,7 +18,7 @@ import abstraction.eqXRomu.produits.IProduit;
 public class Producteur3Acteur implements IActeur {
 	
 	protected int cryptogramme;
-	protected Journal defiJournal = new Journal("Journal Eq3",this);
+	protected Journal journal = new Journal("Journal Eq3",this);
 	protected List<Variable> res = new ArrayList<Variable>();
 	protected VariablePrivee stock;
 
@@ -66,7 +66,7 @@ public class Producteur3Acteur implements IActeur {
 	// Renvoie les journaux
 	public List<Journal> getJournaux() {
 		List<Journal> res=new ArrayList<Journal>();
-		res.add(defiJournal);
+		res.add(journal);
 		return res;
 	}
 
