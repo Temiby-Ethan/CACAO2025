@@ -3,6 +3,7 @@ package abstraction.eq3Producteur3;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.produits.Feve;
 
+//Zoé
 public class Producteur3 extends Producteur3GestionDesCoûts  {
 
 	
@@ -23,7 +24,7 @@ public class Producteur3 extends Producteur3GestionDesCoûts  {
 
 	@Override
 	public void next() {
-		defiJournal.ajouter(Filiere.LA_FILIERE.getEtape()+"\n");
+		journal.ajouter(Filiere.LA_FILIERE.getEtape()+"\n");
 		//defiJournal.ajouter(Double.toString(stockFeve.getValeur()));
 		
 
