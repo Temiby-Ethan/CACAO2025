@@ -13,12 +13,12 @@ import abstraction.eqXRomu.produits.IProduit;
 public class Producteur1Acteur implements IActeur {
     
     protected int cryptogramme;
-    private Journal journal; // Ajout du journal
-    private Variable stockTotal; // Ajout de l'indicateur du stock total
+    private Journal journal; // Journal pour enregistrer les étapes
+    private Variable stockTotal; // Indicateur du volume total du stock
     
     public Producteur1Acteur() {
         this.journal = new Journal(this.getNom() + " Journal", this);
-        this.stockTotal = new Variable("Stock Total", this, 0.0);
+        this.stockTotal = new Variable("Stock Total", this, 0.0); // Initialisation du stock à 0
     }
     
     public void initialiser() {
@@ -34,8 +34,12 @@ public class Producteur1Acteur implements IActeur {
     }
 
     public void next() {
-        int etape = Filiere.LA_FILIERE.getEtape();
-        journal.ajouter("Étape " + etape + " - Stock total : " + stockTotal.getValeur());
+        int etape = Filiere.LA_FILIERE.getEtape(); // Récupération du numéro de l'étape
+        journal.ajouter("Étape " + etape); // Ajout uniquement du numéro de l'étape dans le journal
+
+        // Mise à jour aléatoire du stock total
+        double ajoutStock = 10; 
+        stockTotal.setValeur(this, stockTotal.getValeur() + ajoutStock);
     }
 
     public Color getColor() {
@@ -48,7 +52,7 @@ public class Producteur1Acteur implements IActeur {
 
     public List<Variable> getIndicateurs() {
         List<Variable> res = new ArrayList<>();
-        res.add(stockTotal);
+        res.add(stockTotal); // Ajout de l'indicateur du stock total
         return res;
     }
 
@@ -87,18 +91,14 @@ public class Producteur1Acteur implements IActeur {
     }
 
     public double getQuantiteEnStock(IProduit p, int cryptogramme) {
-        if (this.cryptogramme == cryptogramme) {
-            return stockTotal.getValeur();
+        if (this.cryptogramme == cryptogramme) { // Vérification d'accès sécurisé
+            return stockTotal.getValeur(); // Renvoie la valeur de l'indicateur
         } else {
-            return 0;
+            return 0; // Accès refusé
         }
     }
-
-    public void mettreAJourStock(double nouvelleValeur) {
-        stockTotal.setValeur(this, nouvelleValeur);
-        journal.ajouter("Mise à jour du stock : " + nouvelleValeur);
-    }
 }
+
 
 
 
