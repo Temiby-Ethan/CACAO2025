@@ -14,6 +14,7 @@ import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
+import abstraction.eqXRomu.clients.ClientFinal;
 
 public class Distributeur1 extends Distributeur1Acteur  {
 	
@@ -22,6 +23,7 @@ public class Distributeur1 extends Distributeur1Acteur  {
 	protected Map<ChocolatDeMarque, Variable> stocksChocolats; // Table de hachage pour stocker les quantités de chocolat
 	protected List<ChocolatDeMarque> chocolats;
 	private List<Double> prix;
+	private List<Double> capaciteDeVente;
 
     public Distributeur1() { // par Alexiho
         super();
@@ -41,9 +43,11 @@ public class Distributeur1 extends Distributeur1Acteur  {
 		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_BQ, "Hexafridge", 50));
 
 		this.prix = new ArrayList<Double>();
+		this.capaciteDeVente = new ArrayList<Double>();
 
 		for (int i=0; i<this.chocolats.size(); i++) {
 			this.prix.add(10.0);
+			this.capaciteDeVente.add(0.0);
 			this.stocksChocolats.put(chocolats.get(i), new Variable(this.getNom()+"Stock"+chocolats.get(i).getNom(), this, 0.0));
 		}
     }
@@ -77,6 +81,43 @@ public class Distributeur1 extends Distributeur1Acteur  {
 
 		//System.out.println(journal);
 		//System.out.println(stockChocolat.get(Chocolat.C_MQ));
+	}
+
+	public double quantiteEnVente(ChocolatDeMarque choco, int crypto) {
+		if (crypto!=this.cryptogramme) {
+			journal.ajouter("Quelqu'un essaye de me pirater !");
+			return 0.0;
+		} else {
+			int pos= (chocolats.indexOf(choco));
+			if (pos<0) {
+				return 0.0;
+			} else {
+				return Math.min(capaciteDeVente.get(pos), this.getStock(choco).getValeur());
+			}
+		}
+	}
+
+	// On met 10% de ce tout ce qu'on met en vente (on pourrait mettre l'accente sur
+	// un produit a promouvoir mais il s'agit ici d'un exemple simpliste
+	public double quantiteEnVenteTG(ChocolatDeMarque choco, int crypto) {
+		if (crypto!=this.cryptogramme) {
+			journal.ajouter("Quelqu'un essaye de me pirater !");
+			return 0.0;
+		} else {
+			int pos= (chocolats.indexOf(choco));
+			if (pos<0) {
+				return 0.0;
+			} else {
+				return Math.min(capaciteDeVente.get(pos), this.getStock(choco).getValeur())/10.0;
+			}
+		}
+	}
+
+	public void vendre(ClientFinal client, ChocolatDeMarque choco, double quantite, double montant, int crypto) {
+		int pos= (chocolats.indexOf(choco));
+		if (pos>=0) {
+			this.getStock(choco).retirer(this, quantite);
+		}
 	}
 
 	public Variable getStock(ChocolatDeMarque c) { // par Alexiho
