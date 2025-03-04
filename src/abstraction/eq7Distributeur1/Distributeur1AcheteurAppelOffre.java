@@ -27,28 +27,50 @@ public class Distributeur1AcheteurAppelOffre implements IAcheteurAO  {
 	private Color color;
 	private String name;
 	private List<Double> stock;
+	private List<Double> priceProduct;
 
-	public Distributeur1AcheteurAppelOffre(List<Double> requiredQuantities, IAcheteurAO identity,Color color,String name,List<Double> stock) {
+	public Distributeur1AcheteurAppelOffre(List<Double> requiredQuantities, IAcheteurAO identity,Color color,String name,List<Double> stock, List<Double> priceProduct) {
 		super();
 		this.requiredQuantities = requiredQuantities;
 		this.identity = identity;
 		this.color = color;
 		this.name = name;
 		this.stock = stock;
+		this.priceProduct = priceProduct;
 
 	}
 
+	public int getInt(Chocolat product){
+        int idProduct = 0;
+        switch(product.getGamme()){
+            case BQ : idProduct=0;
+            case MQ : idProduct=2;
+            case HQ : idProduct=4;
+        }
+        if (product.isBio()){
+            idProduct++;
+        }
+        if (product.isEquitable()){
+            idProduct++;
+        }
+        return(idProduct);
+    }
 	
 	public OffreVente choisirOV(List<OffreVente> propositions){
 		int indice = -1;
-		double price = 0 ;
-		for (int i=0; i<propositions.size(); i++){
-			double priceProposed = propositions.get(i).getPrixT();
-			if (priceProposed>price){
-				indice = i;
-				price = priceProposed;
+		IProduit product = propositions.get(0).getProduit();
+		if (product instanceof ChocolatDeMarque) {
+        	ChocolatDeMarque chocolat = (ChocolatDeMarque) product;
+			int idProduct = getInt(chocolat.getChocolat());
+			double price = 1.03*this.priceProduct.get(idProduct) ;
+			for (int i=0; i<propositions.size(); i++){
+				double priceProposed = propositions.get(i).getPrixT();
+				if (priceProposed<price){
+					indice = i;
+					price = priceProposed;
+					}
+				}
 			}
-		}
 		
 		if (indice == -1){
 			return(null);
@@ -131,7 +153,7 @@ public class Distributeur1AcheteurAppelOffre implements IAcheteurAO  {
 		if (this.cryptogramme == cryptogramme){
 			if (p instanceof ChocolatDeMarque){
 				ChocolatDeMarque chocolat = (ChocolatDeMarque) p;
-				return(stock.get((int) chocolat.getChocolat().qualite()));
+				return(stock.get(getInt(chocolat.getChocolat())));
 			}
 			return(0);
 		}
