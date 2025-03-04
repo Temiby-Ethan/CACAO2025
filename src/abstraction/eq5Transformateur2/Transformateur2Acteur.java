@@ -62,13 +62,13 @@ public class Transformateur2Acteur implements IActeur {
 
 	// Renvoie les parametres
 	public List<Variable> getParametres() {
-		List<Variable> res=new ArrayList<Variable>();
+		List<Variable> res = new ArrayList<Variable>();
 		return res;
 	}
 
 	// Renvoie les journaux
 	public List<Journal> getJournaux() {
-		List<Journal> res=new ArrayList<Journal>();
+		List<Journal> res = new ArrayList<Journal>();
 		res.add(journal);
 		return res;
 	}
