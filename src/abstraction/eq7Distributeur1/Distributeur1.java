@@ -53,8 +53,8 @@ public class Distributeur1 extends Distributeur1Acteur  {
         // Enregistrement dans le journal
         journal.ajouter("Étape " + etape + " : Ajout de " + quantiteAjoutee + " t de " + produit + " en rayon.");
 
-		System.out.println(journal);
-		System.out.println(stockChocolat.get(Chocolat.C_MQ));
+		//System.out.println(journal);
+		//System.out.println(stockChocolat.get(Chocolat.C_MQ));
 	}
 
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) { // par Alexiho
