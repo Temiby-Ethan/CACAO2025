@@ -49,6 +49,36 @@ public class Producteur3GestionTerrains extends Producteur3Acteur{
         }
     }
 
+    void initVie(){
+
+    }
+
+    void initRecolte(){
+
+    }
+
+
+    void replanter(){
+        LinkedList<Terrain> tmp = vie.get(0);
+        for(Terrain t : tmp){
+            deficteTerrain.add(t.qualite.replanter);
+        } 
+    }
+
+
+    void cleanDeficite(){
+        deficteTerrain.clear();
+    }
+    void cleanBenefice(){
+        beneficeTerrain.clear();
+    }
+    void cleanCout(){
+        cleanBenefice();
+        cleanDeficite();
+    }
+
+    
+
 
 
 
