@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.text.AttributeSet.ColorAttribute;
 
 import abstraction.eqXRomu.encheres.Enchere;
 import abstraction.eqXRomu.encheres.IAcheteurAuxEncheres;
@@ -13,7 +12,6 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
-import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.IProduit;
 
@@ -36,24 +34,8 @@ public class Distributeur1AcheteurEncheres implements IAcheteurAuxEncheres  {
 		this.stock = stock;
 	}
 
-	public int getInt(ChocolatDeMarque product){
-        int idProduct = 0;
-        switch(product.getGamme()){
-            case BQ : idProduct=0;
-            case MQ : idProduct=2;
-            case HQ : idProduct=4;
-        }
-        if (product.isBio()){
-            idProduct++;
-        }
-        if (product.isEquitable()){
-            idProduct++;
-        }
-        return(idProduct);
-    }
-
 	public Boolean tooManyVolume(ChocolatDeMarque product, double volume){
-		int idProduct = getInt(product);
+		int idProduct = (int) product.getChocolat().qualite();
 		return(this.requiredQuantities.get(idProduct)<volume);
 	}
 
@@ -62,7 +44,7 @@ public class Distributeur1AcheteurEncheres implements IAcheteurAuxEncheres  {
 		if (product instanceof ChocolatDeMarque) {
         	ChocolatDeMarque chocolat = (ChocolatDeMarque) product;
 			double volume = encheres.getQuantiteT();
-			int idProduct = getInt(chocolat);
+			int idProduct = (int) chocolat.getChocolat().qualite();
 			double price = this.priceProduct.get(idProduct);
 			double wantedquantity = this.requiredQuantities.get(idProduct);
 			int numberSuccessedSell = this.succesedSell.get(idProduct);
@@ -133,7 +115,7 @@ public class Distributeur1AcheteurEncheres implements IAcheteurAuxEncheres  {
 	}
 
 	public Filiere getFiliere(String nom){
-		Filiere test = new Filiere();
+		Filiere test = new Filiere(0);
 		return(test);
 	}
 
@@ -141,7 +123,7 @@ public class Distributeur1AcheteurEncheres implements IAcheteurAuxEncheres  {
 		if (this.cryptogramme == cryptogramme){
 			if (p instanceof ChocolatDeMarque){
 				ChocolatDeMarque chocolat = (ChocolatDeMarque) p;
-				return(stock.get((int) getInt(chocolat)));
+				return(stock.get((int) chocolat.getChocolat().qualite()));
 			}
 			return(0);
 		}
