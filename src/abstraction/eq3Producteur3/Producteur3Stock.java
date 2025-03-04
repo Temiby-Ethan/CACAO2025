@@ -21,26 +21,21 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
 		}		
 		VariablePrivee tmp = new VariablePrivee(this.getNom()+"Stock"+feve, this, 0.0, 1000000000.0,stock);
         tmp.setValeur(this, 1000000.0, cryptogramme);
-        defiJournal.ajouter(Double.toString(tmp.getHistorique().getValeur()));
+        journal.ajouter(Double.toString(tmp.getHistorique().getValeur()));
         stockFeve.put(feve,tmp);
         getIndicateurs().add(tmp);
     }
 
     public void ajouterStock(Feve feve,double delta){
         stockFeve.get(feve).ajouter(this,delta);
-        /*defiJournal.ajouter("Ajout de " + delta + " au stock de " + feve + ". Nouveau stock : " + stockFeve.get(feve).getValeur());*/
+        journal.ajouter("Ajout de " + delta + " au stock de " + feve + ". Nouveau stock : " + stockFeve.get(feve).getValeur());
         
     }
     public void retirerStock(Feve feve,double delta){
         stockFeve.get(feve).retirer(this,delta);
-        /*defiJournal.ajouter("Retrait de " + delta + " du stock de " + feve + ". Nouveau stock : " + stockFeve.get(feve).getValeur());*/
+        journal.ajouter("Retrait de " + delta + " du stock de " + feve + ". Nouveau stock : " + stockFeve.get(feve).getValeur());
     }
-    /*protected Feve getFeve() {
-		return this.feve;
-	}
-    protected Variable getStock() {
-		return this.stockFeve;
-	}*/
+
     
     
 }

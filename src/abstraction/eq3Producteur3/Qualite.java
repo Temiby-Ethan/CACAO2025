@@ -2,17 +2,17 @@ package abstraction.eq3Producteur3;
 
 public abstract class Qualite {
 
-    public final int densité;
-    public final int longévité;
-    public final int croissance;
-    public final int mainOeuvre;
-    public final int nbCabosses;
-    public final int pousse;
-    public final int sechage;
-    public final int achat;
-    public final int replanter;
-    public final int vente;
-    public boolean equitable;
+    protected final int densité;
+    protected final int longévité;
+    protected final int croissance;
+    protected  final int mainOeuvre;
+    protected final int nbCabosses;
+    protected final int pousse;
+    protected final int sechage;
+    protected final int achat;
+    protected final int replanter;
+    protected final int vente;
+    protected boolean equitable;
 
 
     public Qualite(int densité, int longévité, int croissance, int mainOeuvre, int nbCabosses, int pousse, int sechage, int achat, int replanter, int vente, boolean equitable) {
