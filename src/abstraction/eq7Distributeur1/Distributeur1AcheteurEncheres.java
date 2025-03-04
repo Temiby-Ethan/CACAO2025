@@ -12,6 +12,7 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
+import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.IProduit;
 
@@ -20,7 +21,7 @@ public class Distributeur1AcheteurEncheres implements IAcheteurAuxEncheres  {
 	protected Integer cryptogramme;
 	private List<Double> priceProduct;
 	private List<Double> requiredQuantities;
-	private List<Integer> succesedSell;
+	private List<Integer> successedSell;
 	private String name;
 	private Color color;
 	private List<Double> stock;
@@ -34,21 +35,32 @@ public class Distributeur1AcheteurEncheres implements IAcheteurAuxEncheres  {
 		this.stock = stock;
 	}
 
-	public Boolean tooManyVolume(ChocolatDeMarque product, double volume){
-		int idProduct = (int) product.getChocolat().qualite();
-		return(this.requiredQuantities.get(idProduct)<volume);
-	}
+	    public int getInt(Chocolat product){
+        int idProduct = 0;
+        switch(product.getGamme()){
+            case BQ : idProduct=0;
+            case MQ : idProduct=2;
+            case HQ : idProduct=4;
+        }
+        if (product.isBio()){
+            idProduct++;
+        }
+        if (product.isEquitable()){
+            idProduct++;
+        }
+        return(idProduct);
+    }
 
 	public double proposerPrix(MiseAuxEncheres encheres){
 		IProduit product = encheres.getProduit();
 		if (product instanceof ChocolatDeMarque) {
         	ChocolatDeMarque chocolat = (ChocolatDeMarque) product;
 			double volume = encheres.getQuantiteT();
-			int idProduct = (int) chocolat.getChocolat().qualite();
+			int idProduct = getInt(chocolat.getChocolat());
 			double price = this.priceProduct.get(idProduct);
 			double wantedquantity = this.requiredQuantities.get(idProduct);
-			int numberSuccessedSell = this.succesedSell.get(idProduct);
-			if (tooManyVolume(chocolat, volume)){
+			int numberSuccessedSell = this.successedSell.get(idProduct);
+			if (wantedquantity<volume){
 				return(price*(90+10*(1-Math.exp(-1*numberSuccessedSell/5))*(1-Math.exp((wantedquantity-volume)/1000))));
 			}
 		return(price*(1.1+0.02*numberSuccessedSell));
@@ -123,7 +135,7 @@ public class Distributeur1AcheteurEncheres implements IAcheteurAuxEncheres  {
 		if (this.cryptogramme == cryptogramme){
 			if (p instanceof ChocolatDeMarque){
 				ChocolatDeMarque chocolat = (ChocolatDeMarque) p;
-				return(stock.get((int) chocolat.getChocolat().qualite()));
+				return(stock.get(getInt(chocolat.getChocolat())));
 			}
 			return(0);
 		}
