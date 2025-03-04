@@ -6,7 +6,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-import abstraction.eqXRomu.appelDOffre.AppelDOffre;
+
 import abstraction.eqXRomu.appelDOffre.SuperviseurVentesAO;
 import abstraction.eqXRomu.appelDOffre.IAcheteurAO;
 import abstraction.eqXRomu.appelDOffre.OffreVente;
@@ -38,42 +38,36 @@ public class Distributeur1AcheteurAppelOffre implements IAcheteurAO  {
 
 	}
 
-	public AppelDOffre appelOffre(IProduit product, int idProduit){
-		AppelDOffre proposition = new AppelDOffre(this.identity, product, this.requiredQuantities.get(idProduit));
-		return(proposition);
-	}
 	
 	public OffreVente choisirOV(List<OffreVente> propositions){
-		return(propositions.get(0));
-	}
+		int indice = -1;
+		double price = 0 ;
+		for (int i=0; i<propositions.size(); i++){
+			double priceProposed = propositions.get(i).getPrixT();
+			if (priceProposed>price){
+				indice = i;
+				price = priceProposed;
+			}
+		}
+		
+		if (indice == -1){
+			return(null);
+		}
+		return(propositions.get(indice));
+		}
+	
 
 
 	public void initialiser(){
 
 	}
 
-	public int getInt(ChocolatDeMarque product){
-        int idProduct = 0;
-        switch(product.getGamme()){
-            case BQ : idProduct=0;
-            case MQ : idProduct=2;
-            case HQ : idProduct=3;
-        }
-        if (product.isBio()){
-            idProduct++;
-        }
-        if (product.isEquitable()){
-            idProduct++;
-        }
-        return(idProduct);
-    }
-
 	public void notifierAchatAuxEncheres(Enchere enchereRetenue){
 
 	}
 	public void notifierEnchereNonRetenue(Enchere enchereNonRetenue){
 		
-	};
+	}
 
 	public String getNom(){
 		return(this.name);
@@ -88,7 +82,7 @@ public class Distributeur1AcheteurAppelOffre implements IAcheteurAO  {
 	}
 
 	public void next(){
-		SuperviseurVentesAO superviseur = new SuperviseurVentesAO()
+		SuperviseurVentesAO superviseur = new SuperviseurVentesAO();
 		superviseur.acheterParAO(this.identity,this.cryptogramme, Chocolat.C_BQ , this.requiredQuantities.get(0));
 		superviseur.acheterParAO(this.identity,this.cryptogramme, Chocolat.C_BQ_E , this.requiredQuantities.get(1));
 		superviseur.acheterParAO(this.identity,this.cryptogramme, Chocolat.C_MQ , this.requiredQuantities.get(2));
@@ -137,7 +131,7 @@ public class Distributeur1AcheteurAppelOffre implements IAcheteurAO  {
 		if (this.cryptogramme == cryptogramme){
 			if (p instanceof ChocolatDeMarque){
 				ChocolatDeMarque chocolat = (ChocolatDeMarque) p;
-				return(stock.get((int) getInt(chocolat)));
+				return(stock.get((int) chocolat.getChocolat().qualite()));
 			}
 			return(0);
 		}
