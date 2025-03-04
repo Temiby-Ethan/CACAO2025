@@ -6,9 +6,9 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import abstraction.eqXRomu.bourseCacao.IAcheteurBourse;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
+import abstraction.eqXRomu.filiere.IMarqueChocolat;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.general.VariablePrivee;
@@ -17,7 +17,7 @@ import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class Transformateur1Acteur implements IActeur {
+public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 
 	protected Journal journal;	
 	protected int cryptogramme;
@@ -28,6 +28,7 @@ public class Transformateur1Acteur implements IActeur {
 	protected HashMap<ChocolatDeMarque, Double> stockChocoMarque;
 	protected Variable totalStocksFeves;  // La qualite totale de stock de feves 
 	protected Variable totalStocksChoco;  // La qualite totale de stock de chocolat 
+	protected Variable totalStocksChocoMarque;  // La qualite totale de stock de chocolat de marque 
 	protected Variable VolumeTotalDeStock;
 
 	public Transformateur1Acteur() {
@@ -35,6 +36,7 @@ public class Transformateur1Acteur implements IActeur {
 		this.totalStocksFeves = new VariablePrivee("Eq4TStockFeves", "<html>Quantite totale de feves en stock</html>",this, 0.0, 1000000.0, 0.0);
 		this.totalStocksChoco = new VariablePrivee("Eq4TStockChoco", "<html>Quantite totale de chocolat en stock</html>",this, 0.0, 1000000.0, 0.0);
 		this.VolumeTotalDeStock = new VariablePrivee("Eq4TStockChoco", "<html>Volume totral de stock</html>",this, 0.0, 1000000.0, 0.0);
+		this.totalStocksChocoMarque = new VariablePrivee("Eq4TStockChocoMarque", "<html>Quantite totale de chocolat de marque en stock</html>",this, 0.0, 1000000.0, 0.0);
 	}
 
 	public void initialiser() {
@@ -63,7 +65,7 @@ public class Transformateur1Acteur implements IActeur {
 	}
 
 	public String getNom() {// NE PAS MODIFIER
-		return "EQ4";
+		return "EQ4T";
 	}
 	
 	public String toString() {// NE PAS MODIFIER
@@ -80,6 +82,8 @@ public class Transformateur1Acteur implements IActeur {
 		this.journal.ajouter("Stock de fèves : " + this.totalStocksFeves.getValeur(this.cryptogramme));
 		this.journal.ajouter("Stock de chocolat : " + this.totalStocksChoco.getValeur(this.cryptogramme));
 		this.journal.ajouter("Volume total de stock : " + this.VolumeTotalDeStock.getValeur(this.cryptogramme));
+		this.journal.ajouter("Stock de chocolat de marque : " + this.totalStocksChocoMarque.getValeur(this.cryptogramme));
+		this.journal.ajouter("Solde : " + this.getSolde());
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
@@ -96,6 +100,7 @@ public class Transformateur1Acteur implements IActeur {
 		res.add(this.totalStocksFeves);
 		res.add(this.totalStocksChoco);
 		res.add(this.VolumeTotalDeStock);
+		res.add(this.totalStocksChocoMarque);
 		return res;
 	}
 
@@ -153,9 +158,35 @@ public class Transformateur1Acteur implements IActeur {
 		return Filiere.LA_FILIERE;
 	}
 
+	@Override
+	public List<String> getMarquesChocolat() {
+		LinkedList<String> marques = new LinkedList<String>();
+		marques.add("LimDt");
+		return marques;
+	}
+
+	@Override
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
 		if (this.cryptogramme==cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
-			return 0; // A modifier
+			if (p instanceof Feve) {
+				if (this.stockFeves.keySet().contains(p)) {
+					return this.stockFeves.get(p);
+				} else {
+					return 0.0;
+				}
+			} else if (p instanceof Chocolat) {
+				if (this.stockChoco.keySet().contains(p)) {
+					return this.stockChoco.get(p);
+				} else {
+					return 0.0;
+				}
+			} else {
+				if (this.stockChocoMarque.keySet().contains(p)) {
+					return this.stockChocoMarque.get(p);
+				} else {
+					return 0.0;
+				}
+			}
 		} else {
 			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
 		}
