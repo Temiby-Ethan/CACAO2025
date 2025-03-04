@@ -15,7 +15,9 @@ public class Producteur3Vente extends Producteur3Stock implements IVendeurBourse
         }
 
 
-    //Pour vendre en bourse
+    // VENTE EN BOURSE //
+
+    // Paul
     @Override
     public double offre(Feve feve, double cours) {
        
