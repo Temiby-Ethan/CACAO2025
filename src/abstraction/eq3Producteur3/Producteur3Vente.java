@@ -44,6 +44,8 @@ public class Producteur3Vente extends Producteur3Stock implements IVendeurBourse
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    // CONTRAT CADRE //
+    
 
 
 
