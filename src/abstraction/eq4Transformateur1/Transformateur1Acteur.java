@@ -37,7 +37,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 		this.journal = new Journal("Journal " + this.getNom(), this);
 		this.totalStocksFeves = new VariablePrivee("Eq4TStockFeves", "<html>Quantite totale de feves en stock</html>",this, 0.0, 1000000.0, 0.0);
 		this.totalStocksChoco = new VariablePrivee("Eq4TStockChoco", "<html>Quantite totale de chocolat en stock</html>",this, 0.0, 1000000.0, 0.0);
-		this.VolumeTotalDeStock = new VariablePrivee("Eq4TStockChoco", "<html>Volume totral de stock</html>",this, 0.0, 1000000.0, 0.0);
+		this.VolumeTotalDeStock = new VariablePrivee("Eq4TStockTotalChoco", "<html>Volume total de stock</html>",this, 0.0, 1000000.0, 0.0);
 		this.totalStocksChocoMarque = new VariablePrivee("Eq4TStockChocoMarque", "<html>Quantite totale de chocolat de marque en stock</html>",this, 0.0, 1000000.0, 0.0);
 	}
 

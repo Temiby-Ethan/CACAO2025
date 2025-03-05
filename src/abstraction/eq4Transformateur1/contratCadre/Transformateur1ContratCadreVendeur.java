@@ -3,7 +3,7 @@ package abstraction.eq4Transformateur1.contratCadre;
 import java.util.LinkedList;
 import java.util.List;
 
-import abstraction.eqXRomu.filiere.Filiere;
+
 import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.contratsCadres.*;
