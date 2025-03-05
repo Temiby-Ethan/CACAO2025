@@ -11,102 +11,130 @@ import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Producteur1Acteur implements IActeur {
-	
-	protected int cryptogramme;
+    
+    protected int cryptogramme;
+    
+	// Adrien BUECHER --> Stocks ; Adam SEBIANE --> journal
+	private Journal journal; // Journal pour enregistrer les étapes
+    private Variable stockTotal; // Indicateur du volume total du stock
+    private Variable stockFMQ; // Indicateur du stock de fève moyenne qualité
+    private Variable stockFBQ; // Indicateur du stock de fève bonne qualité
+    private Variable stockFHQ; // Indicateur du stock de fève haute qualité
+    
 
-	public Producteur1Acteur() {
-	}
-	
-	public void initialiser() {
-	}
+    public Producteur1Acteur() {
+		// Adrien BUECHER --> Stocks ; Adam SEBIANE --> journal
+		this.journal = new Journal(this.getNom() + " Journal", this);
+        this.stockTotal = new Variable("Stock Total", this, 0.0); // Initialisation du stock total à 0
+		this.stockFBQ = new Variable("Stock FBQ", this, 0.0); // Initialisation du stock de fève basse qualité à 0
+        this.stockFMQ = new Variable("Stock FMQ", this, 0.0); // Initialisation du stock de fève moyenne qualité à 0
+        this.stockFHQ = new Variable("Stock FHQ", this, 0.0); // Initialisation du stock de fève haute qualité à 0
+    }
+    
+    public void initialiser() {
+		// Adam SEBIANE
+        journal.ajouter("Initialisation du producteur");
+    }
 
-	public String getNom() {// NE PAS MODIFIER
-		return "EQ1";
-	}
-	
-	public String toString() {// NE PAS MODIFIER
-		return this.getNom();
-	}
+    public String getNom() {
+        return "EQ1";
+    }
+    
+    public String toString() {
+        return this.getNom();
+    }
 
-	////////////////////////////////////////////////////////
-	//         En lien avec l'interface graphique         //
-	////////////////////////////////////////////////////////
+    public void next() {
+		// Adrien BUECHER --> Étape ; adam SEBIANE --> Journal
+        int etape = Filiere.LA_FILIERE.getEtape(); // Récupération du numéro de l'étape
+        journal.ajouter("Étape " + etape); // Ajout uniquement du numéro de l'étape dans le journal
 
-	public void next() {
-	}
+        // Mise à jour des stocks de fèves
+        double ajoutStock = 10;
+        stockFMQ.setValeur(this, stockFMQ.getValeur() + ajoutStock); // Augmentation de 10 du stock FMQ
+        stockFBQ.setValeur(this, stockFBQ.getValeur() + ajoutStock); // Augmentation de 10 du stock FBQ
+        stockFHQ.setValeur(this, stockFHQ.getValeur() + ajoutStock); // Augmentation de 10 du stock FHQ
 
-	public Color getColor() {// NE PAS MODIFIER
-		return new Color(243, 165, 175); 
-	}
+        // Mise à jour du stock total en tant que somme des trois stocks
+        double totalStock = stockFMQ.getValeur() + stockFBQ.getValeur() + stockFHQ.getValeur();
+        stockTotal.setValeur(this, totalStock); // Mise à jour du stock total
 
-	public String getDescription() {
-		return "Bla bla bla";
-	}
+        // Vendre 120 tonnes de fève moyenne qualité si le stock le permet
+        double quantiteARechercher = 120.0; // Quantité de fève moyenne qualité à vendre
 
-	// Renvoie les indicateurs
-	public List<Variable> getIndicateurs() {
-		List<Variable> res = new ArrayList<Variable>();
-		return res;
-	}
+        if (stockFMQ.getValeur() >= quantiteARechercher) {
+            // Effectuer la vente
+            stockFMQ.setValeur(this, stockFMQ.getValeur() - quantiteARechercher); // Réduire le stock de fève moyenne qualité
+            journal.ajouter("Vente de " + quantiteARechercher + " tonnes de fève moyenne qualité en bourse");
+        } else {
+            journal.ajouter("Stock de fève moyenne qualité insuffisant pour vendre " + quantiteARechercher + " tonnes.");
+        }
+    }
 
-	// Renvoie les parametres
-	public List<Variable> getParametres() {
-		List<Variable> res=new ArrayList<Variable>();
-		return res;
-	}
+    public Color getColor() {
+        return new Color(243, 165, 175); 
+    }
 
-	// Renvoie les journaux
-	public List<Journal> getJournaux() {
-		List<Journal> res=new ArrayList<Journal>();
-		return res;
-	}
+    public String getDescription() {
+        return "Bla bla bla";
+    }
 
-	////////////////////////////////////////////////////////
-	//               En lien avec la Banque               //
-	////////////////////////////////////////////////////////
+    public List<Variable> getIndicateurs() {
+        List<Variable> res = new ArrayList<>();
+        res.add(stockTotal); // Ajout de l'indicateur du stock total
+        res.add(stockFMQ); // Ajout de l'indicateur du stock de fève moyenne qualité
+        res.add(stockFBQ); // Ajout de l'indicateur du stock de fève bonne qualité
+        res.add(stockFHQ); // Ajout de l'indicateur du stock de fève haute qualité
+        return res;
+    }
 
-	// Appelee en debut de simulation pour vous communiquer 
-	// votre cryptogramme personnel, indispensable pour les
-	// transactions.
-	public void setCryptogramme(Integer crypto) {
-		this.cryptogramme = crypto;
-	}
+    public List<Variable> getParametres() {
+        return new ArrayList<>();
+    }
 
-	// Appelee lorsqu'un acteur fait faillite (potentiellement vous)
-	// afin de vous en informer.
-	public void notificationFaillite(IActeur acteur) {
-	}
+    public List<Journal> getJournaux() {
+        List<Journal> res = new ArrayList<>();
+        res.add(journal);
+        return res;
+    }
 
-	// Apres chaque operation sur votre compte bancaire, cette
-	// operation est appelee pour vous en informer
-	public void notificationOperationBancaire(double montant) {
-	}
-	
-	// Renvoie le solde actuel de l'acteur
-	protected double getSolde() {
-		return Filiere.LA_FILIERE.getBanque().getSolde(Filiere.LA_FILIERE.getActeur(getNom()), this.cryptogramme);
-	}
+    public void setCryptogramme(Integer crypto) {
+        this.cryptogramme = crypto;
+    }
 
-	////////////////////////////////////////////////////////
-	//        Pour la creation de filieres de test        //
-	////////////////////////////////////////////////////////
+    public void notificationFaillite(IActeur acteur) {
+        journal.ajouter("Notification de faillite de " + acteur.getNom());
+    }
 
-	// Renvoie la liste des filieres proposees par l'acteur
-	public List<String> getNomsFilieresProposees() {
-		ArrayList<String> filieres = new ArrayList<String>();
-		return(filieres);
-	}
+    public void notificationOperationBancaire(double montant) {
+        journal.ajouter("Opération bancaire : " + montant);
+    }
 
-	// Renvoie une instance d'une filiere d'apres son nom
-	public Filiere getFiliere(String nom) {
-		return Filiere.LA_FILIERE;
-	}
+    protected double getSolde() {
+        return Filiere.LA_FILIERE.getBanque().getSolde(Filiere.LA_FILIERE.getActeur(getNom()), this.cryptogramme);
+    }
 
-	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
-		if (this.cryptogramme==cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
-			return 0; // A modifier
-		} else {
-			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
-		}
-	}
+    public List<String> getNomsFilieresProposees() {
+        return new ArrayList<>();
+    }
+
+    public Filiere getFiliere(String nom) {
+        return Filiere.LA_FILIERE;
+    }
+
+    public double getQuantiteEnStock(IProduit p, int cryptogramme) {
+        if (this.cryptogramme == cryptogramme) { // Vérification d'accès sécurisé
+            return stockTotal.getValeur(); // Renvoie la valeur du stock total
+        } else {
+            return 0; // Accès refusé
+        }
+    }
 }
+
+
+
+
+
+
+
+
