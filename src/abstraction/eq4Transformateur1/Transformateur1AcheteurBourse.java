@@ -38,3 +38,5 @@ public class Transformateur1AcheteurBourse extends Transformateur1Stocks impleme
 		this.journal.ajouter("Aie... je suis blackliste... j'aurais du verifier que j'avais assez d'argent avant de passer une trop grosse commande en bourse...");
 	}
 }
+
+
