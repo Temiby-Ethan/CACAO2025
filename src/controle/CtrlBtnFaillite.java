@@ -1,12 +1,11 @@
 package controle;
 
+import abstraction.eqXRomu.filiere.Filiere;
+import abstraction.eqXRomu.filiere.IActeur;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
-
-import abstraction.eqXRomu.filiere.Filiere;
-import abstraction.eqXRomu.filiere.IActeur;
 
 public class CtrlBtnFaillite implements ActionListener {
 	private JButton boutonFaillite;
@@ -27,7 +26,7 @@ public class CtrlBtnFaillite implements ActionListener {
 				options,
 				options[0]);
 		if (choix==JOptionPane.YES_OPTION) {
-			Filiere.LA_FILIERE.getBanque().faireFaillite(this.acteur);
+			Filiere.LA_FILIERE.getBanque().faireFaillite(this.acteur, this, 0);
 			boutonFaillite.setEnabled(false);
 		}
 	}
