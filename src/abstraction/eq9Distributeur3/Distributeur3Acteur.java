@@ -9,20 +9,25 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
+import abstraction.eqXRomu.general.VariablePrivee;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Distributeur3Acteur implements IActeur {
 	
 	protected int cryptogramme;
-	private Journal journalActeur;
+	protected Journal journalActeur;
+
+	private VariablePrivee stockTotal;
 
 	protected HashMap<ChocolatDeMarque, Double> stockChocoMarque;
-	protected List<ChocolatDeMarque> chocolatsVillors;
+	//protected List<ChocolatDeMarque> chocolatsVillors;
 
 
 	public Distributeur3Acteur() {
-		Journal journalActeur = new Journal("journal d'acteur",this);
+
+		this.journalActeur = new Journal("journal Chocomax",this);
+		this.stockTotal = new VariablePrivee("stockTotal",this);
 	}
 	
 	public void initialiser() {
