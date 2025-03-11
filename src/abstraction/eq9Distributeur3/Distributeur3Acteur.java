@@ -17,6 +17,7 @@ public class Distributeur3Acteur implements IActeur {
 	
 	protected int cryptogramme;
 	protected Journal journalActeur;
+	protected Journal journalDeVente;
 
 
 	protected HashMap<ChocolatDeMarque, Double> stockChocoMarque;
@@ -25,7 +26,8 @@ public class Distributeur3Acteur implements IActeur {
 
 	public Distributeur3Acteur() {
 
-		this.journalActeur = new Journal("journal Chocomax",this);
+		this.journalActeur = new Journal("journal équipe 9 stocks",this);
+		this.journalDeVente = new Journal("journal de vente équipe 9",this);
 	}
 	
 	public void initialiser() {
@@ -72,6 +74,7 @@ public class Distributeur3Acteur implements IActeur {
 	public List<Journal> getJournaux() {
 		List<Journal> res=new ArrayList<Journal>();
 		res.add(journalActeur);
+		res.add(journalDeVente);
 		return res;
 	}
 
@@ -83,7 +86,10 @@ public class Distributeur3Acteur implements IActeur {
 	// votre cryptogramme personnel, indispensable pour les
 	// transactions.
 	public void setCryptogramme(Integer crypto) {
+
 		this.cryptogramme = crypto;
+		System.out.println("set crypto : "+this.cryptogramme);
+
 	}
 
 	// Appelee lorsqu'un acteur fait faillite (potentiellement vous)
