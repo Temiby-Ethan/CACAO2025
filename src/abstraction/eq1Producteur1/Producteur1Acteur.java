@@ -1,4 +1,4 @@
-package abstraction.eq1Producteur1; 
+package abstraction.eq1Producteur1;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -10,29 +10,32 @@ import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.IProduit;
 
+
 public class Producteur1Acteur implements IActeur {
     
     protected int cryptogramme;
     
-	// Adrien BUECHER --> Stocks ; Adam SEBIANE --> journal
-	protected Journal journal; // Journal pour enregistrer les étapes
-    private Variable stockTotal; // Indicateur du volume total du stock
-    private Variable stockFMQ; // Indicateur du stock de fève moyenne qualité
-    private Variable stockFBQ; // Indicateur du stock de fève bonne qualité
-    private Variable stockFHQ; // Indicateur du stock de fève haute qualité
+    private Journal journal; // Journal pour enregistrer les étapes
+    private Stock stock; // Utilisation de la classe Stock
     
-
+    // Variables pour les indicateurs
+    private Variable stockTotal;
+    private Variable stockFMQ;
+    private Variable stockFBQ;
+    private Variable stockFHQ;
+    
     public Producteur1Acteur() {
-		// Adrien BUECHER --> Stocks ; Adam SEBIANE --> journal
-		this.journal = new Journal(this.getNom() + " Journal", this);
-        this.stockTotal = new Variable("Stock Total", this, 0.0); // Initialisation du stock total à 0
-		this.stockFBQ = new Variable("Stock FBQ", this, 0.0); // Initialisation du stock de fève basse qualité à 0
-        this.stockFMQ = new Variable("Stock FMQ", this, 0.0); // Initialisation du stock de fève moyenne qualité à 0
-        this.stockFHQ = new Variable("Stock FHQ", this, 0.0); // Initialisation du stock de fève haute qualité à 0
+        this.journal = new Journal(this.getNom() + " Journal", this);
+        this.stock = new Stock(); // Initialisation du stock
+        
+        // Initialisation des indicateurs avec les valeurs initiales des stocks
+        this.stockTotal = new Variable("Stock Total", this, stock.getStockTotal());
+        this.stockFMQ = new Variable("Stock FMQ", this, stock.getStockFMQ());
+        this.stockFBQ = new Variable("Stock FBQ", this, stock.getStockFBQ());
+        this.stockFHQ = new Variable("Stock FHQ", this, stock.getStockFHQ());
     }
     
     public void initialiser() {
-		// Adam SEBIANE
         journal.ajouter("Initialisation du producteur");
     }
 
@@ -45,26 +48,23 @@ public class Producteur1Acteur implements IActeur {
     }
 
     public void next() {
-		// Adrien BUECHER --> Étape ; adam SEBIANE --> Journal
         int etape = Filiere.LA_FILIERE.getEtape(); // Récupération du numéro de l'étape
         journal.ajouter("Étape " + etape); // Ajout uniquement du numéro de l'étape dans le journal
 
         // Mise à jour des stocks de fèves
         double ajoutStock = 10;
-        stockFMQ.setValeur(this, stockFMQ.getValeur() + ajoutStock); // Augmentation de 10 du stock FMQ
-        stockFBQ.setValeur(this, stockFBQ.getValeur() + ajoutStock); // Augmentation de 10 du stock FBQ
-        stockFHQ.setValeur(this, stockFHQ.getValeur() + ajoutStock); // Augmentation de 10 du stock FHQ
+        stock.ajouterStock(ajoutStock, ajoutStock, ajoutStock); // Ajout de 10 pour chaque type de fève
 
-        // Mise à jour du stock total en tant que somme des trois stocks
-        double totalStock = stockFMQ.getValeur() + stockFBQ.getValeur() + stockFHQ.getValeur();
-        stockTotal.setValeur(this, totalStock); // Mise à jour du stock total
+        // Mise à jour des indicateurs avec les nouvelles valeurs des stocks
+        stockTotal.setValeur(this, stock.getStockTotal());
+        stockFMQ.setValeur(this, stock.getStockFMQ());
+        stockFBQ.setValeur(this, stock.getStockFBQ());
+        stockFHQ.setValeur(this, stock.getStockFHQ());
 
         // Vendre 120 tonnes de fève moyenne qualité si le stock le permet
         double quantiteARechercher = 120.0; // Quantité de fève moyenne qualité à vendre
 
-        if (stockFMQ.getValeur() >= quantiteARechercher) {
-            // Effectuer la vente
-            stockFMQ.setValeur(this, stockFMQ.getValeur() - quantiteARechercher); // Réduire le stock de fève moyenne qualité
+        if (stock.vendreStockFMQ(quantiteARechercher)) {
             journal.ajouter("Vente de " + quantiteARechercher + " tonnes de fève moyenne qualité en bourse");
         } else {
             journal.ajouter("Stock de fève moyenne qualité insuffisant pour vendre " + quantiteARechercher + " tonnes.");
@@ -81,10 +81,10 @@ public class Producteur1Acteur implements IActeur {
 
     public List<Variable> getIndicateurs() {
         List<Variable> res = new ArrayList<>();
-        res.add(stockTotal); // Ajout de l'indicateur du stock total
-        res.add(stockFMQ); // Ajout de l'indicateur du stock de fève moyenne qualité
-        res.add(stockFBQ); // Ajout de l'indicateur du stock de fève bonne qualité
-        res.add(stockFHQ); // Ajout de l'indicateur du stock de fève haute qualité
+        res.add(stockTotal); // Indicateur du stock total
+        res.add(stockFMQ); // Indicateur du stock de fève moyenne qualité
+        res.add(stockFBQ); // Indicateur du stock de fève bonne qualité
+        res.add(stockFHQ); // Indicateur du stock de fève haute qualité
         return res;
     }
 
@@ -124,12 +124,13 @@ public class Producteur1Acteur implements IActeur {
 
     public double getQuantiteEnStock(IProduit p, int cryptogramme) {
         if (this.cryptogramme == cryptogramme) { // Vérification d'accès sécurisé
-            return stockTotal.getValeur(); // Renvoie la valeur du stock total
+            return stock.getStockTotal(); // Renvoie la valeur du stock total
         } else {
             return 0; // Accès refusé
         }
     }
 }
+
 
 
 
