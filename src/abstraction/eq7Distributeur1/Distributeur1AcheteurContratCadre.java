@@ -6,38 +6,29 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import abstraction.eqXRomu.appelDOffre.IAcheteurAO;
-import abstraction.eqXRomu.appelDOffre.IVendeurAO;
-import abstraction.eqXRomu.contratsCadres.ContratCadre;
 import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 import abstraction.eqXRomu.contratsCadres.IAcheteurContratCadre;
-import abstraction.eqXRomu.encheres.Enchere;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
-import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Distributeur1AcheteurContratCadre implements IAcheteurContratCadre  {
 
 	protected Integer cryptogramme;
-	private Integer product;
 	private List<Double> priceProduct;
-	private IAcheteurAO identity;
 	private List<Double> requiredQuantities;
 	private String name;
 	private Color color;
 	private List<Double> predictionsVentesPourcentage;
 	private HashMap<ChocolatDeMarque,Variable> stock;
 
-	public Distributeur1AcheteurContratCadre(List<Double> predictionsVentesPourcentage, List<Double> priceProduct, List<Double> requiredQuantities, int cryptogramme, int step, IAcheteurAO identity, int product,String name,Color color) {
+	public Distributeur1AcheteurContratCadre(HashMap<ChocolatDeMarque,Variable> stock, List<Double> predictionsVentesPourcentage, List<Double> priceProduct, List<Double> requiredQuantities, int cryptogramme, int step, int product,String name,Color color) {
 		super();
 		this.predictionsVentesPourcentage = predictionsVentesPourcentage;
-		this.product = product;
-		this.identity = identity;
 		this.priceProduct = priceProduct;
 		this.requiredQuantities = requiredQuantities;
 		this.cryptogramme = cryptogramme;
@@ -49,9 +40,9 @@ public class Distributeur1AcheteurContratCadre implements IAcheteurContratCadre 
 	    public int getInt(ChocolatDeMarque product){
         int idProduct = 0;
         switch(product.getGamme()){
-            case BQ : idProduct=0;
-            case MQ : idProduct=2;
-            case HQ : idProduct=4;
+            case BQ : idProduct=0;break;
+            case MQ : idProduct=2;break;
+            case HQ : idProduct=4;break;
         }
         if (product.isBio()){
             idProduct++;
@@ -72,12 +63,20 @@ public class Distributeur1AcheteurContratCadre implements IAcheteurContratCadre 
 
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat){
 		List<Echeancier> listeEcheancier = contrat.getEcheanciers();
-		int tour = listeEcheancier.size();
+		int tour = 0;
 		ChocolatDeMarque chocolat = (ChocolatDeMarque) contrat.getProduit();
-		Echeancier echeancierActuel = contrat.getEcheancier();
+		Echeancier echeancierActuel = null;
+		if (listeEcheancier.isEmpty()){
+			tour = 0;
+			echeancierActuel = new Echeancier(0, 12, requiredQuantities.get(getInt(chocolat)));
+		}
+		else {
+			tour = listeEcheancier.size();
+			echeancierActuel = listeEcheancier.get(listeEcheancier.size());
+		}
 		for (int step = echeancierActuel.getStepDebut(); step<=echeancierActuel.getStepFin() ; step++){
 			double quantiteDemandee = echeancierActuel.getQuantite(step);
-			double quantiteVoulue = requiredQuantities.get(getInt(chocolat));
+			double quantiteVoulue = requiredQuantities.get(getInt(chocolat))/predictionsVentesPourcentage.get(0)*predictionsVentesPourcentage.get(step);
 			if (quantiteDemandee > quantiteVoulue*(1+0.01*tour)){
 				echeancierActuel.set(step, quantiteVoulue*(1+0.01*tour));
 			}
@@ -90,14 +89,23 @@ public class Distributeur1AcheteurContratCadre implements IAcheteurContratCadre 
 
 	public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat){
 		List<Double> listePrix = contrat.getListePrix();
-		int tour = listePrix.size();
 		ChocolatDeMarque chocolat = (ChocolatDeMarque) contrat.getProduit();
-		double prixProposé = priceProduct.get(getInt(chocolat))*(0.87+0.04*tour);
-		if (tour<6 && listePrix.getLast()>prixProposé){
-			return(prixProposé);
+		int tour = 0;
+		Double dernierPrix = 0.0;
+		if (listePrix.isEmpty()){
+			tour = 0;
+			dernierPrix = 10 * priceProduct.get(getInt(chocolat));
 		}
-		if (listePrix.getLast()<=prixProposé){
-			return(listePrix.getLast());
+		else {
+			tour = listePrix.size();
+			dernierPrix = listePrix.get(listePrix.size());
+		}
+		double prixPropose = priceProduct.get(getInt(chocolat))*(0.87+0.04*tour);
+		if (tour<6 && dernierPrix>prixPropose){
+			return(prixPropose);
+		}
+		if (dernierPrix<=prixPropose){
+			return(listePrix.get(listePrix.size()));
 		}
 		return(priceProduct.get(getInt(chocolat)));
 	}
@@ -115,7 +123,7 @@ public class Distributeur1AcheteurContratCadre implements IAcheteurContratCadre 
 	}
 
 	public String getDescription(){
-		return("Acheteur aux encheres de l'equipe 7");
+		return("Acheteur contrat cadre de l'equipe 7");
 	}
 
 	public void next(){
@@ -163,7 +171,9 @@ public class Distributeur1AcheteurContratCadre implements IAcheteurContratCadre 
 		if (this.cryptogramme == cryptogramme){
 			if (p instanceof ChocolatDeMarque){
 				ChocolatDeMarque chocolat = (ChocolatDeMarque) p;
-				return(this.stock.get((chocolat)).getValeur());
+				if (this.stock != null && this.stock.containsKey(chocolat)){
+					return(this.stock.get((chocolat)).getValeur());
+				}
 			}
 			return(0);
 		}
@@ -171,7 +181,7 @@ public class Distributeur1AcheteurContratCadre implements IAcheteurContratCadre 
 	}
 
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat){
-
+		
 	}
 	
 	public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat){

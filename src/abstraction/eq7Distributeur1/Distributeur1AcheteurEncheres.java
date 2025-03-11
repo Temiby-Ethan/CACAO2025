@@ -61,7 +61,7 @@ public class Distributeur1AcheteurEncheres implements IAcheteurAuxEncheres  {
 			double wantedquantity = this.requiredQuantities.get(idProduct);
 			int numberSuccessedSell = this.successedSell.get(idProduct);
 			if (wantedquantity<volume){
-				return(price*(90+10*(1-Math.exp(-1*numberSuccessedSell/5))*(1-Math.exp((wantedquantity-volume)/1000))));
+				return(price*(0.9+0.1*(1-Math.exp(-1*numberSuccessedSell/5))*(1-Math.exp((wantedquantity-volume)/1000))));
 			}
 		return(price*(1.1+0.02*numberSuccessedSell));
 		}
