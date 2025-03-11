@@ -9,22 +9,20 @@ public class Producteur1ContratCadre extends Producteur1Acteur implements IVende
 
     @Override
     public boolean vend(IProduit produit) {
-        // Vérifiez si vous avez suffisamment de stock pour vendre 25% de votre production
-        double stockDisponible = getStock(produit); // Supposons que vous avez une méthode getStock pour obtenir le stock disponible
-        double productionTotale = getProductionTotale(produit); // Supposons que vous avez une méthode getProductionTotale pour obtenir la production totale
-        double quantiteVoulue = 0.25 * productionTotale;
-
-        // Si le stock disponible est suffisant pour vendre 25% de la production, retournez true
-        return stockDisponible >= quantiteVoulue;
-    } {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'vend'");
+       return true;
     }
 
     @Override
     public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'contrePropositionDuVendeur'");
+        // Récupère l'échéancier proposé par l'acheteur
+        Echeancier echeancierPropose = contrat.getEcheancier();
+
+        // Récupère le stock disponible et le stock total pour le produit concerné
+        double stockDisponible = getStock(contrat.getProduit());
+        double stockTotal = getStockTotal(contrat.getProduit());
+
+        // Calcule 25% du stock total
+        double quantiteMaximale = 0.25 * stockTotal;
     }
 
     @Override
