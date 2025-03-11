@@ -26,27 +26,55 @@ public class Producteur1ContratCadre extends Producteur1Acteur implements IVende
     }
 
     @Override
+    
     public double propositionPrix(ExemplaireContratCadre contrat) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'propositionPrix'");
+        // Amal Moncer
+        return contrat.getPrix();
     }
 
     @Override
+    	/**
+	 * Methode appelee par le SuperviseurVentesContratCadre apres une contreproposition
+	 * de prix different de la part de l'acheteur, afin de connaitre la contreproposition
+	 * de prix du vendeur.
+	 * @param contrat
+	 * @return Retourne un nombre inferieur ou egal a 0.0 si le vendeur souhaite mettre fin
+	 * aux negociation en renoncant a ce contrat. Retourne le prix actuel a la tonne du 
+	 * contrat (contrat.getPrix()) si le vendeur est d'accord avec ce prix.
+	 * Sinon, retourne une contreproposition de prix.
+	 */
     public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'contrePropositionPrixVendeur'");
+        // Amal Moncer
+        if (contrePropositionDuVendeur(contrat)==null){
+            return 0.0;
+        }
+        else{
+            return contrat.getPrix();
+        }
     }
+        
 
     @Override
+    
     public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'notificationNouveauContratCadre'");
+        // Amal Moncer
+        journal.ajouter("Nouveau contrat cadre : "+contrat);
     }
 
     @Override
+
     public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'livrer'");
+        // Amal Moncer
+        if (quantite > getQuantiteEnStock(produit, cryptogramme)) {
+            journal.ajouter("Le vendeur n'a pas pu livrer la quantite demandee");
+            return getQuantiteEnStock(produit, cryptogramme);
+        }
+        else {
+            journal.ajouter("Le vendeur a livre la quantite demandee");
+            double quantiteEnStock = getQuantiteEnStock(produit, cryptogramme);
+            quantiteEnStock -= quantite;
+            return quantiteEnStock;
+        }
     } 
 
 }
