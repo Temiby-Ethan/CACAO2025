@@ -13,11 +13,11 @@ import abstraction.eqXRomu.produits.IProduit;
 public class Transformateur3Acteur implements IActeur {
 	
 	protected int cryptogramme;
-	private Journal journalTransfo;
+	protected Journal journal;
 	private int nEtape = 0;
 
 	public Transformateur3Acteur() {
-		this.journalTransfo = new Journal("Activites Transfo_6", this);
+		this.journal = new Journal("Activites Transfo_6", this);
 	}
 	
 	public void initialiser() {
@@ -37,7 +37,7 @@ public class Transformateur3Acteur implements IActeur {
 
 	public void next() {
 		//"agios \"autorises\" de "+Journal.texteColore(a.getColor(), Color.BLACK, Journal.texteSurUneLargeurDe(a.getNom(),10))+" d'un mondant de "+Journal.doubleSur(montantAgiosAutorises, 15,3))
-		this.journalTransfo.ajouter("Étape n°"+this.nEtape);
+		this.journal.ajouter("Étape n°"+this.nEtape);
 		this.nEtape++;
 	}
 
@@ -64,6 +64,7 @@ public class Transformateur3Acteur implements IActeur {
 	// Renvoie les journaux
 	public List<Journal> getJournaux() {
 		List<Journal> res=new ArrayList<Journal>();
+		res.add(this.journal);
 		return res;
 	}
 

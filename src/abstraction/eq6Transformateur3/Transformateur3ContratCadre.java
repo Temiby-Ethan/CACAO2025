@@ -12,7 +12,7 @@ import abstraction.eqXRomu.produits.IProduit;
 
 import abstraction.eqXRomu.contratsCadres.SuperviseurVentesContratCadre;
 
-public class Transformateur3ContratCadre implements IActeur {
+public class Transformateur3ContratCadre extends Transformateur3Fabriquant implements IActeur {
 	private static int NB_INSTANCES = 0; // Afin d'attribuer un nom different a toutes les instances
 	protected int numero;
 	protected Variable stock;

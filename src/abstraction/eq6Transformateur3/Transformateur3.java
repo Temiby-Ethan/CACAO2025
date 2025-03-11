@@ -73,6 +73,7 @@ public class Transformateur3 extends Transformateur3Acteur{
 	}
 
 	public void next(){
+		super.next();
 		etape = Filiere.LA_FILIERE.getEtape();
 		jdb.ajouter("Etape " + etape);
 		this.displayStock();
@@ -114,6 +115,7 @@ public class Transformateur3 extends Transformateur3Acteur{
 		res.add(this.jdb);
 		res.add(this.journalStock);
 		res.add(this.journalTransac);
+		res.add(super.journal);
 		return res;
 	}
 

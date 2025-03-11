@@ -15,10 +15,10 @@ import abstraction.eqXRomu.contratsCadres.SuperviseurVentesContratCadre;
 
 // @author EricSCHILTZ
 
-public class Transformateur3_acheteur_CC extends Transformateur3ContratCadreVendeur implements IAcheteurContratCadre{
+public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratCadreVendeur implements IAcheteurContratCadre{
 	protected List<ExemplaireContratCadre> mesContratEnTantQuAcheteur;
 
-	public Transformateur3_acheteur_CC(IProduit produit) {
+	public Transformateur3ContratCadreAcheteur(IProduit produit) {
 		super(produit);
 		this.mesContratEnTantQuAcheteur=new LinkedList<ExemplaireContratCadre>();
 	}
@@ -41,6 +41,7 @@ public class Transformateur3_acheteur_CC extends Transformateur3ContratCadreVend
 		}
 	}
 	public void next() {
+		journal.ajouter("TEST CONTRAT CADRE");
 		// On enleve les contrats obsolete (nous pourrions vouloir les conserver pour "archive"...)
 		List<ExemplaireContratCadre> contratsObsoletes=new LinkedList<ExemplaireContratCadre>();
 		for (ExemplaireContratCadre contrat : this.mesContratEnTantQuAcheteur) {

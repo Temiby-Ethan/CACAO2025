@@ -7,7 +7,7 @@ import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.filiere.IFabricantChocolatDeMarque;
 
-public class Transformateur3_fabriquant extends Transformateur3_marques implements IFabricantChocolatDeMarque{
+public class Transformateur3Fabriquant extends Transformateur3Marques implements IFabricantChocolatDeMarque{
     
     private List<ChocolatDeMarque> chocolatDeMarques;
     private ChocolatDeMarque fraud;
@@ -15,7 +15,7 @@ public class Transformateur3_fabriquant extends Transformateur3_marques implemen
     private ChocolatDeMarque arna;
     private ChocolatDeMarque bollo;
 
-    public Transformateur3_fabriquant(){
+    public Transformateur3Fabriquant(){
         this.chocolatDeMarques = new ArrayList<ChocolatDeMarque>();
         this.fraud = new ChocolatDeMarque(Chocolat.C_BQ, "Fraudolat", 30);
         this.hypo = new ChocolatDeMarque(Chocolat.C_HQ_E, "Hypocritolat", 100);
