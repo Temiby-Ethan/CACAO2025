@@ -9,6 +9,7 @@ import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.filiere.IActeur;
+import abstraction.eqXRomu.produits.IProduit;
 
 public class Distributeur1Stock {
     protected Map<ChocolatDeMarque, Variable> stocksChocolats;
@@ -30,4 +31,12 @@ public class Distributeur1Stock {
 			this.stocksChocolats.put(chocolats.get(i), new Variable("Stock"+chocolats.get(i).getNom(), IAct, 1000.0));
 		}
     }
+
+    public Variable getStock(ChocolatDeMarque c) { // par Alexiho
+		return this.stocksChocolats.get(c);
+	}
+
+	public Map<ChocolatDeMarque, Variable> getStocksChocolats() { // par Alexiho
+		return this.stocksChocolats;
+	}
 }
