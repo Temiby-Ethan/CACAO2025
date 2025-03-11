@@ -159,9 +159,10 @@ public class Echeancier {
 	 * Si quantite<0.0, leve une IllegalArgumentException.
 	 * Sinon, ajoute en fin d'echeancier une echeance supplementaire correspondant 
 	 * a la quantite passee en parametre
+	 * @param quantiteStep 
 	 * @param quantite, quantite>=0.0
 	 */
-	public void ajouter(double quantite) {
+	public void ajouter(double quantite, double quantiteStep) {
 		if (quantite<0.0) {
 			throw new IllegalArgumentException("La methode ajouter(quantite) d'Echeancier est appelee avec quantite<0.0");
 		}
@@ -246,4 +247,14 @@ public class Echeancier {
 			}
 		}
 	}
+
+    public void ajouter(int step, double quantiteMaximale) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'ajouter'");
+    }
+
+    public void ajouter(int step, double quantiteStep) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'ajouter'");
+    }
 }

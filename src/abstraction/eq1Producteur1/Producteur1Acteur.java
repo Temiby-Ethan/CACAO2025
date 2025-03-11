@@ -20,6 +20,7 @@ public class Producteur1Acteur implements IActeur {
     private Variable stockFMQ; // Indicateur du stock de fève moyenne qualité
     private Variable stockFBQ; // Indicateur du stock de fève bonne qualité
     private Variable stockFHQ; // Indicateur du stock de fève haute qualité
+    protected Stock stock;
     
 
     public Producteur1Acteur() {
@@ -29,7 +30,7 @@ public class Producteur1Acteur implements IActeur {
 		this.stockFBQ = new Variable("Stock FBQ", this, 0.0); // Initialisation du stock de fève basse qualité à 0
         this.stockFMQ = new Variable("Stock FMQ", this, 0.0); // Initialisation du stock de fève moyenne qualité à 0
         this.stockFHQ = new Variable("Stock FHQ", this, 0.0); // Initialisation du stock de fève haute qualité à 0
-    }
+        this.stock =new Stock();  }
     
     public void initialiser() {
 		// Adam SEBIANE

@@ -28,6 +28,8 @@ public class Stock {
         return false;
     }
 
+    
+
     // Méthode pour calculer et retourner le stock total
     public double getStockTotal() {
         return this.stockFMQ + this.stockFBQ + this.stockFHQ;

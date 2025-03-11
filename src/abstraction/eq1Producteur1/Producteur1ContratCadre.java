@@ -4,6 +4,9 @@ import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 import abstraction.eqXRomu.contratsCadres.IVendeurContratCadre;
 import abstraction.eqXRomu.produits.IProduit;
+import abstraction.eq1Producteur1.Stock;
+
+
 
 public class Producteur1ContratCadre extends Producteur1Acteur implements IVendeurContratCadre{
 
@@ -18,11 +21,28 @@ public class Producteur1ContratCadre extends Producteur1Acteur implements IVende
         Echeancier echeancierPropose = contrat.getEcheancier();
 
         // Récupère le stock disponible et le stock total pour le produit concerné
-        double stockDisponible = getStock(contrat.getProduit());
-        double stockTotal = getStockTotal(contrat.getProduit());
+        double stockDisponible = stock.getQuantiteEnStock(contrat.getProduit());
+        double stockTotal = stock.getStockTotal();
 
         // Calcule 25% du stock total
         double quantiteMaximale = 0.25 * stockTotal;
+
+        // Si la quantité demandée dépasse la quantité maximale, proposer un nouvel échéancier
+        if (echeancierPropose.getQuantiteTotale() > quantiteMaximale) {
+            Echeancier echeancierContrePropose = new Echeancier(echeancierPropose.getStepDebut());
+            for (int step = echeancierPropose.getStepDebut(); step <= echeancierPropose.getStepFin(); step++) { 
+                double quantiteStep = echeancierPropose.getQuantite(step);
+                if (quantiteStep > quantiteMaximale) {
+                    echeancierContrePropose.ajouter(step, quantiteMaximale);
+                } else {
+                    echeancierContrePropose.ajouter(step, quantiteStep);
+                }
+            }
+            return echeancierContrePropose;
+        }
+
+        // Si la quantité demandée est acceptable, accepter l'échéancier proposé
+        return echeancierPropose;
     }
 
     @Override
