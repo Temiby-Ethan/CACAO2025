@@ -18,7 +18,7 @@ import abstraction.eqXRomu.produits.Feve;
  */
 
 public class Transformateur1Stocks extends Transformateur1Acteur implements IFabricantChocolatDeMarque {
-
+ 
 	private double coutStockage;
 
 	private List<ChocolatDeMarque> chocosProduits;
