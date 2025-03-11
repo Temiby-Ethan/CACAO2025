@@ -22,7 +22,7 @@ public class Distributeur3Distributeur extends Distributeur3Acteur implements ID
         stocks = new HashMap<>();
         prix = new HashMap<>();
         this.stockTotal = new VariablePrivee("stockTotal",this);
-        this.stockTotal.setValeur(this,300.0);
+        this.stockTotal.setValeur(this,300.0,this.cryptogramme);
     }
 
 
@@ -64,7 +64,7 @@ public class Distributeur3Distributeur extends Distributeur3Acteur implements ID
         for(ChocolatDeMarque choco : stocks.keySet()){
             total+=stocks.get(choco);
         }
-        this.stockTotal.setValeur(this,total);
+        this.stockTotal.setValeur(this,total,this.cryptogramme);
     }
 
     public List<Variable> getIndicateurs() {
