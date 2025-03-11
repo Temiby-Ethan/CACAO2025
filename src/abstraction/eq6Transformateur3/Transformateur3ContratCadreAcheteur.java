@@ -14,7 +14,7 @@ import abstraction.eqXRomu.contratsCadres.SuperviseurVentesContratCadre;
 
 // @author EricSCHILTZ
 
-public class Transformateur3ContratCadreAcheteur extends Transformateur3_fabriquant implements IAcheteurContratCadre{
+public class Transformateur3ContratCadreAcheteur extends Transformateur3Fabriquant implements IAcheteurContratCadre{
 	protected List<ExemplaireContratCadre> mesContratEnTantQuAcheteur;
 	private IProduit produit;
 
@@ -41,6 +41,7 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3_fabriqu
 		}
 	}
 	public void next() {
+		journal.ajouter("TEST CONTRAT CADRE");
 		// On enleve les contrats obsolete (nous pourrions vouloir les conserver pour "archive"...)
 		List<ExemplaireContratCadre> contratsObsoletes=new LinkedList<ExemplaireContratCadre>();
 		for (ExemplaireContratCadre contrat : this.mesContratEnTantQuAcheteur) {
