@@ -15,7 +15,7 @@ public class Producteur1Acteur implements IActeur {
     protected int cryptogramme;
     
 	// Adrien BUECHER --> Stocks ; Adam SEBIANE --> journal
-	private Journal journal; // Journal pour enregistrer les étapes
+	public Journal journal; // Journal pour enregistrer les étapes
     private Variable stockTotal; // Indicateur du volume total du stock
     private Variable stockFMQ; // Indicateur du stock de fève moyenne qualité
     private Variable stockFBQ; // Indicateur du stock de fève bonne qualité
