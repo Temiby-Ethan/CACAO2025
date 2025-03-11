@@ -25,10 +25,10 @@ public class Producteur1Acteur implements IActeur {
     public Producteur1Acteur() {
 		// Adrien BUECHER --> Stocks ; Adam SEBIANE --> journal
 		this.journal = new Journal(this.getNom() + " Journal", this);
-        this.eq1_stockTotal = new Variable("Stock Total", this, 0.0); // Initialisation du stock total à 0
-		this.eq1_stockFBQ = new Variable("Stock FBQ", this, 0.0); // Initialisation du stock de fève basse qualité à 0
-        this.eq1_stockFMQ = new Variable("Stock FMQ", this, 0.0); // Initialisation du stock de fève moyenne qualité à 0
-        this.eq1_stockFHQ = new Variable("Stock FHQ", this, 0.0); // Initialisation du stock de fève haute qualité à 0
+        this.eq1_stockTotal = new Variable("eq1_Stock Total", this, 0.0); // Initialisation du stock total à 0
+		this.eq1_stockFBQ = new Variable("eq1_Stock FBQ", this, 0.0); // Initialisation du stock de fève basse qualité à 0
+        this.eq1_stockFMQ = new Variable("eq1_Stock FMQ", this, 0.0); // Initialisation du stock de fève moyenne qualité à 0
+        this.eq1_stockFHQ = new Variable("eq1_Stock FHQ", this, 0.0); // Initialisation du stock de fève haute qualité à 0
     }
     
     public void initialiser() {
