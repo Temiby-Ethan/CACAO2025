@@ -31,6 +31,9 @@ public class Transformateur1AcheteurBourse extends Transformateur1Stocks impleme
 		
 		this.stockFeves.put(f, stockFeves.get(f) + quantiteEnT);
 		this.journalTransactions.ajouter("J'ai maintenant " + this.stockFeves.get(f) + " tonnes de " + f + " en stock.");
+
+		this.VolumeTotalDeStock.setValeur(this, this.VolumeTotalDeStock.getValeur(this.cryptogramme) + quantiteEnT, this.cryptogramme);
+		this.journalTransactions.ajouter("J'ai maintenant " + this.VolumeTotalDeStock.getValeur(this.cryptogramme) + " tonnes de feves en stock.");
 	}
 
 	@Override
