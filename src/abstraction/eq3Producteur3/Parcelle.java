@@ -1,15 +1,15 @@
 package abstraction.eq3Producteur3;
 
 //Zoé
-public class Terrain {
+public class Parcelle {
 
     protected Qualite qualite;
     protected int dateDebut;
 
-    //Un terrain = 100ha
+    //Une parcelle = 100ha
 
 
-    public Terrain(Qualite qualite, int dateDebut){
+    public Parcelle(Qualite qualite, int dateDebut){
         this.qualite = qualite;
         this.dateDebut = dateDebut;
     }

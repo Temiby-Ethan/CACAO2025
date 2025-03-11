@@ -2,24 +2,41 @@ package abstraction.eq8Distributeur2;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
+import abstraction.eqXRomu.produits.Chocolat;
+import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Distributeur2Acteur implements IActeur {
 	
+
 	//stockTotal et journal par Tidiane
 	private Journal journal_next = new Journal("journal Eq8", this);
 	
 	protected Variable stockTotal;
 	protected int cryptogramme;
+	protected double coutStockage;
+	protected IProduit produit;
+	protected List<ChocolatDeMarque> chocolats;
+	protected HashMap<ChocolatDeMarque, Double> stock_Choco;
+	protected HashMap<Chocolat,Integer> nombreMarquesParType;
+	protected HashMap<Chocolat, Variable> variables;
+	protected List<ChocolatDeMarque> chocoProduits;
 
 	public Distributeur2Acteur() {
 		stockTotal = new Variable("Volume total du stock de l'EQ8", "Volume total du stock", this);
+		this.chocolats = new LinkedList<ChocolatDeMarque>();
+		this.chocoProduits = new LinkedList<ChocolatDeMarque>();
+		this.variables= new HashMap<Chocolat, Variable>();
+		for (Chocolat c : Chocolat.values()) {
+			this.variables.put(c,new Variable ("EQ8 stock de : "+c,this,0));}
 	}
 	
 	public void initialiser() {
