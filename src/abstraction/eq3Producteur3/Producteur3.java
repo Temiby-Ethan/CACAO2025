@@ -20,6 +20,7 @@ public class Producteur3 extends Producteur3GestionDesCoûts  {
 		initStock(Feve.F_HQ_E, 1000000 );
 		initStock(Feve.F_HQ_BE, 1000000 );
 		calculTotalStock();
+		initTerrain();
 	}
 
 
