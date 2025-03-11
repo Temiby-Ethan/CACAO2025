@@ -159,4 +159,3 @@ package abstraction.eqXRomu.acteurs;
 			return this.chocosProduits;
 		}
 	}
-	
