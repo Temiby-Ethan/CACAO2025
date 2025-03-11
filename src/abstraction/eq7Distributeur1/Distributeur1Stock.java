@@ -39,4 +39,17 @@ public class Distributeur1Stock extends Distributeur1Acteur{
 	public Map<ChocolatDeMarque, Variable> getStocksChocolats() { // par Alexiho
 		return this.stocksChocolats;
 	}
+
+	public double getQuantiteEnStock(IProduit p, int cryptogramme) { // par Alexiho
+		if (this.cryptogramme==cryptogramme) {
+			for (ChocolatDeMarque c : this.stocksChocolats.keySet()) {
+				if (c.equals(p)) {
+					return this.stocksChocolats.get(c).getValeur();
+				}
+			}
+			return 0;
+		} else {
+			return 0;
+		}
+	}
 }
