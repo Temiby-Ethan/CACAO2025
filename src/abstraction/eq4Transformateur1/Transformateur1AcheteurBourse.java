@@ -11,7 +11,7 @@ public class Transformateur1AcheteurBourse extends Transformateur1Stocks impleme
 	
 	private Feve feve;
 	private double T;
-
+ 
 	public Transformateur1AcheteurBourse() {
 		super();
 		this.feve = Feve.F_MQ;
