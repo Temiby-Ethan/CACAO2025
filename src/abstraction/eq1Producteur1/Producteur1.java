@@ -15,6 +15,6 @@ public class Producteur1 extends Producteur1Acteur  {
     private void vendreEnBourse(int quantite, String produit) {
         // Implémentation de la vente en bourse
         journal.ajouter("Vente de " + quantite + " tonnes de " + produit + " en bourse.");
-        // Ajoutez ici le code pour interagir avec la bourse
+        
     }
 }
