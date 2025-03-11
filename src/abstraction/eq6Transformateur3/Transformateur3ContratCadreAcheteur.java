@@ -10,16 +10,16 @@ import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.IVendeurContratCadre; 
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 import abstraction.eqXRomu.contratsCadres.IAcheteurContratCadre;
-import abstraction.eq6Transformateur3.Transformateur3ContratCadreVendeur;
 import abstraction.eqXRomu.contratsCadres.SuperviseurVentesContratCadre;
 
 // @author EricSCHILTZ
 
-public class Transformateur3_acheteur_CC extends Transformateur3ContratCadreVendeur implements IAcheteurContratCadre{
+public class Transformateur3ContratCadreAcheteur extends Transformateur3_fabriquant implements IAcheteurContratCadre{
 	protected List<ExemplaireContratCadre> mesContratEnTantQuAcheteur;
+	private IProduit produit;
 
-	public Transformateur3_acheteur_CC(IProduit produit) {
-		super(produit);
+	public Transformateur3ContratCadreAcheteur(IProduit produit) {
+		this.produit = produit;
 		this.mesContratEnTantQuAcheteur=new LinkedList<ExemplaireContratCadre>();
 	}
 
@@ -107,6 +107,12 @@ public class Transformateur3_acheteur_CC extends Transformateur3ContratCadreVend
 	public int fixerPourcentageRSE(IAcheteurContratCadre acheteur, IVendeurContratCadre vendeur, IProduit produit,
 			Echeancier echeancier, long cryptogramme, boolean tg) {
 		return 5;
+	}
+
+	@Override
+	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'notificationNouveauContratCadre'");
 	}
 
 
