@@ -74,6 +74,8 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 
 
 	public void next() {
+		super.next();
+
 		// On enleve les contrats obsolete (nous pourrions vouloir les conserver pour "archive"...)
 		List<ExemplaireContratCadre> contratsObsoletes=new LinkedList<ExemplaireContratCadre>();
 		for (ExemplaireContratCadre contrat : this.mesContratEnTantQuAcheteur) {

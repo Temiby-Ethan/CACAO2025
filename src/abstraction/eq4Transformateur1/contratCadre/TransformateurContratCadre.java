@@ -9,12 +9,13 @@ import abstraction.eqXRomu.general.*;
 import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.contratsCadres.*;
 import abstraction.eq4Transformateur1.Transformateur1Stocks;
+import abstraction.eq4Transformateur1.Transformateur1AcheteurBourse;
 
 /*
  * @author MURY Julien
  * Cette classe décrit le comportement de Transfromateur1 lors d'un contrat cadre
  */
-public class TransformateurContratCadre extends Transformateur1Stocks {
+public class TransformateurContratCadre extends Transformateur1AcheteurBourse {
 	private static int NB_INSTANCES = 0; // Afin d'attribuer un nom different a toutes les instances
 	protected int numero;
 	protected Variable stock;
@@ -49,10 +50,12 @@ public class TransformateurContratCadre extends Transformateur1Stocks {
 	}
 
 	public void initialiser() {
+		super.initialiser();
 		this.supCCadre = (SuperviseurVentesContratCadre) (Filiere.LA_FILIERE.getActeur("Sup.CCadre")); //Creation d'un superviseur pour la négociation du contrat cadre
 	}
 
 	public void next() {
+		super.next();
 	}
 
 	public List<String> getNomsFilieresProposees() {

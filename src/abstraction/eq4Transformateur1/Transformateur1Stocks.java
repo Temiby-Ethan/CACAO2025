@@ -26,27 +26,36 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 	protected List<ChocolatDeMarque> chocolatsLimDt; // la liste des chocolats de marque "LimDt" que l'acteur produit
 
 	public Transformateur1Stocks() {
+		super();
 		this.chocosProduits = new LinkedList<ChocolatDeMarque>();
+		this.pourcentageTransfo = new HashMap<Feve, HashMap<Chocolat, Double>>();
+		this.chocolatsLimDt=new LinkedList<ChocolatDeMarque>();
 	}
 	
 	public void initialiser() {
 
+		super.initialiser();
+
 		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*4;
 
-		this.stockFeves=new HashMap<Feve,Double>();
+		this.lesFeves = new LinkedList<Feve>();
+		for (Feve f : Feve.values()) {
+			this.lesFeves.add(f);
+		}
+		
 		for (Feve f : this.lesFeves) {
 			this.stockFeves.put(f, 20000.0);
 			this.totalStocksFeves.ajouter(this, 20000.0, this.cryptogramme);
 			this.journalStock.ajouter("ajout de 20000 de "+f+" au stock de feves --> total="+this.totalStocksFeves.getValeur(this.cryptogramme));
 		}
-		this.stockChoco=new HashMap<Chocolat,Double>();
+		
 		for (Chocolat c : Chocolat.values()) {
 			this.stockChoco.put(c, 20000.0);
 			this.totalStocksChoco.ajouter(this, 20000.0, this.cryptogramme);
 			this.journalStock.ajouter("ajout de 20000 de "+c+" au stock de chocolat --> total="+this.totalStocksFeves.getValeur(this.cryptogramme));
 		}
-		this.stockChocoMarque=new HashMap<ChocolatDeMarque,Double>();
-		this.pourcentageTransfo = new HashMap<Feve, HashMap<Chocolat, Double>>();
+		
+		
 		this.pourcentageTransfo.put(Feve.F_HQ_BE, new HashMap<Chocolat, Double>());
 		double conversion = 1.0 + (100.0 - Filiere.LA_FILIERE.getParametre("pourcentage min cacao HQ").getValeur())/100.0;
 		this.pourcentageTransfo.get(Feve.F_HQ_BE).put(Chocolat.C_HQ_BE, conversion);// la masse de chocolat obtenue est plus importante que la masse de feve vue l'ajout d'autres ingredients
@@ -60,7 +69,7 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 		this.pourcentageTransfo.get(Feve.F_BQ).put(Chocolat.C_BQ, conversion);
 
 		this.journalStock.ajouter(Romu.COLOR_LLGRAY, Color.PINK, "Stock initial chocolat de marque : ");
-		this.chocolatsLimDt=new LinkedList<ChocolatDeMarque>();
+		
 		for (Feve f : Feve.values()) {
 			if (this.pourcentageTransfo.keySet().contains(f)) {
 				for (Chocolat c : this.pourcentageTransfo.get(f).keySet()) {
@@ -79,6 +88,14 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 	////////////////////////////////////////////////////////
 
 	public void next() {
+		super.next();
+
+		this.journal.ajouter("N° Etape " + Filiere.LA_FILIERE.getEtape());
+		this.journal.ajouter("Solde : " + this.getSolde());
+
+		this.journalStock.ajouter("N° Etape " + Filiere.LA_FILIERE.getEtape());
+		this.journalCC.ajouter("N° Etape " + Filiere.LA_FILIERE.getEtape());
+		this.journalTransactions.ajouter("N° Etape " + Filiere.LA_FILIERE.getEtape());
 		
 		this.journalStock.ajouter("Stock de fèves : " + this.totalStocksFeves.getValeur(this.cryptogramme));
 		this.journalStock.ajouter("Stock de chocolat : " + this.totalStocksChoco.getValeur(this.cryptogramme));
@@ -100,10 +117,17 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 
 		for (Feve f : this.pourcentageTransfo.keySet()) {
 			for (Chocolat c : this.pourcentageTransfo.get(f).keySet()) {
-				int transfo = (int) (Math.min(this.stockFeves.get(f), Filiere.random.nextDouble()*30));
+				int transfo;
+				if (this.stockFeves.get(f) == null){
+					transfo = (int) Filiere.random.nextDouble()*30;
+				}
+				else{
+					transfo = (int) (Math.min(this.stockFeves.get(f), Filiere.random.nextDouble()*30));
+				}
 				if (transfo>0) {
 					this.stockFeves.put(f, this.stockFeves.get(f)-transfo);
 					this.totalStocksFeves.retirer(this, transfo, this.cryptogramme);
+
 					// La moitie sera stockee sous forme de chocolat, l'autre moitie directement etiquetee "LimDt"
 					this.stockChoco.put(c, this.stockChoco.get(c)+((transfo/2.0)*this.pourcentageTransfo.get(f).get(c)));
 					int pourcentageCacao =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+c.getGamme()).getValeur());
