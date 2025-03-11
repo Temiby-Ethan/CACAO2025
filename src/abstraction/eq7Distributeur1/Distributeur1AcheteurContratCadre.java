@@ -72,7 +72,7 @@ public class Distributeur1AcheteurContratCadre implements IAcheteurContratCadre 
 		}
 		else {
 			tour = listeEcheancier.size();
-			echeancierActuel = listeEcheancier.get(listeEcheancier.size());
+			echeancierActuel = listeEcheancier.get(listeEcheancier.size()-1);
 		}
 		for (int step = echeancierActuel.getStepDebut(); step<=echeancierActuel.getStepFin() ; step++){
 			double quantiteDemandee = echeancierActuel.getQuantite(step);
@@ -98,14 +98,14 @@ public class Distributeur1AcheteurContratCadre implements IAcheteurContratCadre 
 		}
 		else {
 			tour = listePrix.size();
-			dernierPrix = listePrix.get(listePrix.size());
+			dernierPrix = listePrix.get(listePrix.size()-1);
 		}
 		double prixPropose = priceProduct.get(getInt(chocolat))*(0.87+0.04*tour);
 		if (tour<6 && dernierPrix>prixPropose){
 			return(prixPropose);
 		}
 		if (dernierPrix<=prixPropose){
-			return(listePrix.get(listePrix.size()));
+			return(listePrix.get(listePrix.size()-1));
 		}
 		return(priceProduct.get(getInt(chocolat)));
 	}
