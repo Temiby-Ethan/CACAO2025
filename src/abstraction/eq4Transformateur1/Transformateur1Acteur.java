@@ -20,6 +20,7 @@ import abstraction.eqXRomu.produits.IProduit;
 public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 
 	protected Journal journal;	
+	protected Journal journalStock;
 	protected int cryptogramme;
 
 	protected List<Feve> lesFeves;
@@ -35,6 +36,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 
 	public Transformateur1Acteur() {
 		this.journal = new Journal("Journal " + this.getNom(), this);
+		this.journalStock = new Journal("Journal Stock" + this.getNom(), this);
 		this.totalStocksFeves = new VariablePrivee("Eq4TStockFeves", "<html>Quantite totale de feves en stock</html>",this, 0.0, 1000000.0, 0.0);
 		this.totalStocksChoco = new VariablePrivee("Eq4TStockChoco", "<html>Quantite totale de chocolat en stock</html>",this, 0.0, 1000000.0, 0.0);
 		this.VolumeTotalDeStock = new VariablePrivee("Eq4TStockTotalChoco", "<html>Volume total de stock</html>",this, 0.0, 1000000.0, 0.0);

@@ -26,7 +26,7 @@ public class Transformateur1AcheteurBourse extends Transformateur1Stocks impleme
 
 	@Override
 	public void notificationAchat(Feve f, double quantiteEnT, double coursEnEuroParT) {
-		this.totalStocksFeves.setValeur(this, this.totalStocksFeves.getValeur() +quantiteEnT, this.cryptogramme);
+		this.totalStocksFeves.setValeur(this, this.totalStocksFeves.getValeur(this.cryptogramme) +quantiteEnT, this.cryptogramme);
 		this.journal.ajouter("J'ai achete " + quantiteEnT + " tonnes de " + f + " au cours de " + coursEnEuroParT + " euros par tonne.");
 		
 		this.stockFeves.put(f, stockFeves.get(f) + quantiteEnT);
