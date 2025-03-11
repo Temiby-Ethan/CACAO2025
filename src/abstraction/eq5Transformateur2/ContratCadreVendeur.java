@@ -12,7 +12,7 @@ import abstraction.eqXRomu.produits.IProduit;
 
 public class ContratCadreVendeur extends Transformateur2Acteur implements IVendeurContratCadre{
     public ContratCadreVendeur() {
-    super();
+    	super();
     }
 
     /**
@@ -26,8 +26,7 @@ public class ContratCadreVendeur extends Transformateur2Acteur implements IVende
 	public boolean vend(IProduit produit){
             return false;
         }
-    }
-	
+
 	/**
 	 * Methode appelee par le SuperviseurVentesContratCadre lors de la phase de negociation
 	 * sur l'echeancier afin de connaitre la contreproposition du vendeur. Le vendeur
@@ -89,8 +88,8 @@ public class ContratCadreVendeur extends Transformateur2Acteur implements IVende
 	 *  est inferieure a celle precisee en parametre
 	 */
 	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat){
-        return quantite;
-        super.stockChoco.get(produit).retirer(this, quantite,super.cryptogramme);
-    }
+		super.stockChoco.get(produit).retirer(this, quantite,super.cryptogramme);
+		return quantite;
+	}
 
 }
