@@ -35,7 +35,6 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
         journal.ajouter(Double.toString(tmp.getHistorique().getValeur()));
         stockFeve.put(feve,tmp);
         getIndicateurs().add(tmp);
-        calculTotalStock();
     }
 
     public void calculTotalStock(){
@@ -64,13 +63,13 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
     }
 
     public void calculCoutStock() {
-        double totalCout = 0;
+        /*double totalCout = 0;
         for (VariablePrivee p : stockFeve.values()) {
             double stockEnTonnes = stockFeve.get(p).getValeur(cryptogramme) / 1000; // Conversion kg → tonnes
             totalCout += stockEnTonnes * 7.5;// 7,5 €/tonne par step
         }
         coutStock.setValeur(this, totalCout, cryptogramme);
-        journal.ajouter("Coût total du stockage : " + totalCout + " €");
+        journal.ajouter("Coût total du stockage : " + totalCout + " €");*/
     }
 
     public int getStepActuel() {

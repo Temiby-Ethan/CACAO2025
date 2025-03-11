@@ -133,7 +133,6 @@ public class Producteur3GestionTerrains extends Producteur3Acteur{
                 feveProduites+=((10*nbFeve)*0.765)*p.qualite.densité;
             }   
         }
-        System.out.println(feveProduites);
     }
 
 
