@@ -8,7 +8,7 @@ public class Producteur3Employés extends Producteur3Vente {
     public Producteur3Employés() {
         super();
     }
-    
+    // Paul
     private double getMasseSalariale(){
         double masseSalariale = 0;
         double[] salaires = {6,15,37.5};
