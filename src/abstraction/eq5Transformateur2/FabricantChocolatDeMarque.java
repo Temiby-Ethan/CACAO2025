@@ -14,9 +14,7 @@ public class FabricantChocolatDeMarque extends AcheteurBourse implements IFabric
     private List<ChocolatDeMarque> chocolatsProduits;
 
     public FabricantChocolatDeMarque() {
-        this.chocolatsProduits = new ArrayList<>();
-
-        this.chocolatsProduits.add(new ChocolatDeMarque(getChocolat(),getMarque()));
+        super();
     }
 
     @Override
