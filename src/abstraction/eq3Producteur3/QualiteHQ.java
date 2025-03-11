@@ -8,5 +8,14 @@ public class QualiteHQ  extends Qualite{
         super(densité, longévité, croissance, mainOeuvre, nbCabosses, pousse, sechage, achat, replanter, vente, equitable);
         this.bio=bio;
     }
+
+    public QualiteHQ(boolean equitable){
+        super(50000,960,120,4,20,12,1,700000,235000,465000, equitable);
+    }
+
+    public QualiteHQ(boolean equitable, boolean bio){
+        super(35000,960,120,4,20,12,1,700000,235000,465000, equitable);
+        this.bio = bio;
+    }
     
 }
