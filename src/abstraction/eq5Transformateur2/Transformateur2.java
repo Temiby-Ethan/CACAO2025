@@ -8,12 +8,11 @@ public class Transformateur2 extends Transformateur2Acteur implements IAcheteurB
     
 	protected Variable stocktotal;
 
-    public Transformateur2() {
+    public Transformateur2(){
         super();
 		
 
 		
-
     }
 
    
@@ -26,14 +25,16 @@ public class Transformateur2 extends Transformateur2Acteur implements IAcheteurB
 
     
     public void notificationAchat(Feve f, double quantiteEnT, double coursEnEuroParT) {
-		super.stocktotal.setValeur(this, super.stocktotal.getValeur()+quantiteEnT);
-		System.out.println("on a un stock total de " + this.stocktotal.getValeur() + " tonnes de " + f);
+		super.stockFeve.get(f).ajouter(this, quantiteEnT, cryptogramme);
+		
 
 	}
 
 
    
     public void notificationBlackList(int dureeEnStep) {
-        System.out.println("Attention ! Nous sommes exclus de la bourse pour " + dureeEnStep + " étapes.");
+        super.journal.ajouter("Blacklist de la bourse pour " + dureeEnStep + " steps");
     }
 }
+    
+
