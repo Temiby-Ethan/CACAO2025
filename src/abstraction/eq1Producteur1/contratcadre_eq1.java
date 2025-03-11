@@ -40,6 +40,7 @@ public class contratcadre_eq1 extends Producteur1Acteur implements IVendeurContr
 	 */
     public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
 
+
     }
         
 
@@ -70,7 +71,7 @@ public class contratcadre_eq1 extends Producteur1Acteur implements IVendeurContr
             journal.ajouter("Le vendeur a livre la quantite demandee");
             double quantiteEnStock = getQuantiteEnStock(produit, cryptogramme);
             quantiteEnStock -= quantite;
-            return quantite;
+            return quantiteEnStock;
         }
     } 
 
