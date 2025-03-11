@@ -2,25 +2,101 @@ package abstraction.eq6Transformateur3;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
+import abstraction.eqXRomu.produits.Chocolat;
+import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
+import abstraction.eq6Transformateur3.eq6Transformateur3Stock;
+
 
 public class Transformateur3Acteur implements IActeur {
 	
 	protected int cryptogramme;
-	protected Journal journal;
-	private int nEtape = 0;
+	protected int etape;
+	protected double coutStockage;
+
+	protected Journal jdb;
+	protected Journal journalStock;
+	protected Journal journalTransac;
+
+	protected List<IProduit> lesFeves;
+	protected HashMap<IProduit, Variable> dicoIndicateurFeves;
+	protected eq6Transformateur3Stock stockFeves;
+	protected HashMap<Chocolat, Double> stockChoco;
+
+	protected Variable eq6_Q_MQ_0;
+	protected Variable eq6_Q_MQ_1;
+	protected Variable eq6_Q_BQ_0;
+	protected Variable eq6_Q_BQ_1;
+	protected Variable eq6_Q_HQ_1;
+	protected Variable eq6_Q_HQ_2;
+	protected Variable eq6_Q_Fraudo;
+	protected Variable eq6_Q_Bollo;
+	protected Variable eq6_Q_Arna;
+	protected Variable eq6_Q_Hypo;
+	protected Variable eq6_Q_ingre;
+	protected Variable eq6_Q_machine;
+	protected Variable eq6_capacite_machine;
+	protected Variable eq6_nb_employe;
+	protected Variable eq6_jours_decouvert;
+	protected Variable eq6_cout_stockage;
+	protected Variable eq6_Q_cacao_CC;
+	protected Variable eq6_Q_tablette_CC;
 
 	public Transformateur3Acteur() {
-		this.journal = new Journal("Activites Transfo_6", this);
+		this.jdb = new Journal("Journal de bord", this);
+		this.journalStock = new Journal("Journal des stocks", this);
+		this.journalTransac = new Journal("Journal des transactions", this);
+
+		this.eq6_Q_BQ_0 = new Variable(this.getNom()+": quantité de cacao de BQ non labellisé", this, 300);
+		this.eq6_Q_BQ_1 = new Variable(this.getNom()+": quantité de cacao de BQ équitable", this, 300);
+		this.eq6_Q_MQ_0 = new Variable(this.getNom()+": quantité de cacao de MQ non labellisé", this, 300);
+		this.eq6_Q_MQ_1 = new Variable(this.getNom()+": quantité de cacao de MQ équitable", this, 300);
+		this.eq6_Q_HQ_1 = new Variable(this.getNom()+": quantité de cacao de HQ équitable", this, 300);
+		this.eq6_Q_HQ_2 = new Variable(this.getNom()+": quantité de cacao de HQ bio & équitable", this, 300);
+		this.eq6_Q_Fraudo = new Variable(this.getNom()+": quantité de tablette Fraudolat", this, 300);
+		this.eq6_Q_Bollo = new Variable(this.getNom()+": quantité de tablette Bollorolat", this, 300);
+		this.eq6_Q_Arna = new Variable(this.getNom()+": quantité de tablette Arnaquolat", this, 300);
+		this.eq6_Q_Hypo = new Variable(this.getNom()+": quantité de tablette Hypocritolat", this, 300);
+		this.eq6_Q_ingre = new Variable(this.getNom()+": quantité d'ingédient secondaire", this, 300);
+		this.eq6_Q_machine = new Variable(this.getNom()+": quantité de machine", this, 300);
+		this.eq6_capacite_machine = new Variable(this.getNom()+": capacité de production des machines", this, 300);
+		this.eq6_jours_decouvert = new Variable(this.getNom()+": nombre de jours à découvert", this, 300);
+		this.eq6_nb_employe = new Variable(this.getNom()+": nombre d'employés", this, 300);
+		this.eq6_cout_stockage = new Variable(this.getNom()+": coûts de stockage pour ce step", this, 300);
+		this.eq6_Q_cacao_CC = new Variable(this.getNom()+": quantité de cacaco que l'on reçoit ", this, 300);
+		this.eq6_Q_tablette_CC = new Variable(this.getNom()+": quantité de tablette à produire", this, 300);
+	
+		//Dico d'indicateur
+		this.dicoIndicateurFeves = new HashMap<IProduit, Variable>();
+		this.dicoIndicateurFeves.put(abstraction.eqXRomu.produits.Feve.F_BQ,eq6_Q_BQ_0);
+		this.dicoIndicateurFeves.put(abstraction.eqXRomu.produits.Feve.F_BQ_E,eq6_Q_BQ_1);
+		this.dicoIndicateurFeves.put(abstraction.eqXRomu.produits.Feve.F_MQ,eq6_Q_MQ_0);
+		this.dicoIndicateurFeves.put(abstraction.eqXRomu.produits.Feve.F_MQ_E,eq6_Q_MQ_1);
+		this.dicoIndicateurFeves.put(abstraction.eqXRomu.produits.Feve.F_HQ_E,eq6_Q_HQ_1);
+		this.dicoIndicateurFeves.put(abstraction.eqXRomu.produits.Feve.F_HQ_BE,eq6_Q_HQ_2);
+
 	}
 	
 	public void initialiser() {
+		// Initialisation stock
+		this.lesFeves = new ArrayList<IProduit>();
+		for (Feve f : Feve.values()) {
+			this.lesFeves.add(f);
+		}
+		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*4;
+
+		journalStock.ajouter("Initialisation du stock");
+		stockFeves = new eq6Transformateur3Stock(this, journalStock, lesFeves, dicoIndicateurFeves);
+		stockFeves.addToStock(abstraction.eqXRomu.produits.Feve.F_BQ, 200.0);
+		stockFeves.display();
 	}
 
 	public String getNom() {// NE PAS MODIFIER
@@ -36,9 +112,8 @@ public class Transformateur3Acteur implements IActeur {
 	////////////////////////////////////////////////////////
 
 	public void next() {
-		//"agios \"autorises\" de "+Journal.texteColore(a.getColor(), Color.BLACK, Journal.texteSurUneLargeurDe(a.getNom(),10))+" d'un mondant de "+Journal.doubleSur(montantAgiosAutorises, 15,3))
-		this.journal.ajouter("Étape n°"+this.nEtape);
-		this.nEtape++;
+		etape = Filiere.LA_FILIERE.getEtape();
+		jdb.ajouter("Etape " + etape);
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
@@ -64,7 +139,6 @@ public class Transformateur3Acteur implements IActeur {
 	// Renvoie les journaux
 	public List<Journal> getJournaux() {
 		List<Journal> res=new ArrayList<Journal>();
-		res.add(this.journal);
 		return res;
 	}
 
