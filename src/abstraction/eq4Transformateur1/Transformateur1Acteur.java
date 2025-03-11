@@ -20,19 +20,20 @@ import abstraction.eqXRomu.produits.IProduit;
 public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 
 	protected Journal journal;	
-	protected Journal journalStock;
+	protected Journal journalStock; 
+	protected Journal journalTransactions; 
 	protected int cryptogramme;
 
-	protected List<Feve> lesFeves;
-	protected HashMap<Feve, Double> stockFeves;
-	protected HashMap<Chocolat, Double> stockChoco;
-	protected HashMap<ChocolatDeMarque, Double> stockChocoMarque;
+	protected List<Feve> lesFeves; // les feves que le transformateur peut acheter
+	protected HashMap<Feve, Double> stockFeves; // Donne le nombre de chaque fève en stock
+	protected HashMap<Chocolat, Double> stockChoco; // Donne le nombre de chaque chocolat en stock
+	protected HashMap<ChocolatDeMarque, Double> stockChocoMarque; // Donne le nombre de chaque chocolat de marque en stock
 
 	protected Variable totalStocksFeves;  // La quantite totale de stock de feves 
 	protected Variable totalStocksChoco;  // La quantite totale de stock de chocolat 
 
-	protected Variable totalStocksChocoMarque;  // La qualite totale de stock de chocolat de marque 
-	protected Variable VolumeTotalDeStock;
+	protected Variable totalStocksChocoMarque;  // La quantite totale de stock de chocolat de marque 
+	protected Variable VolumeTotalDeStock; // Le volume total de stock
 
 	public Transformateur1Acteur() {
 		this.journal = new Journal("Journal " + this.getNom(), this);
