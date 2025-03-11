@@ -3,7 +3,7 @@ package abstraction.eq5Transformateur2;
 import abstraction.eqXRomu.bourseCacao.IAcheteurBourse;
 import abstraction.eqXRomu.produits.Feve;
 
-public class AcheteurBourse extends Transformateur2Acteur implements IAcheteurBourse {
+public class AcheteurBourse extends ContratCadreAcheteur implements IAcheteurBourse {
 
     public AcheteurBourse(){
         super();

@@ -9,6 +9,7 @@ import java.util.HashMap;
 
 
 public class Stock extends FabricantChocolatDeMarque{
+
     private HashMap<Feve, Variable> stockFeve;
     private HashMap<Chocolat, Variable> stockChoco;
     private HashMap<ChocolatDeMarque, Variable> stockChocoMarque;
@@ -30,4 +31,42 @@ public class Stock extends FabricantChocolatDeMarque{
         this.stockFeveTotal = new Variable("Stock Feve Total", null, 0.0);
         this.stockChocoTotal = new Variable("Stock Chocolat Total", null, 0.0);
     }
+
+    
+    public void ajouterStock(IProduit produit, double quantite) {
+        if (quantite > 0) {
+            if (produit instanceof Feve) {
+                stockFeve.get(produit).ajouter(null, quantite);
+            } else if (produit instanceof Chocolat) {
+                stockChoco.get(produit).ajouter(null, quantite);
+            } else if (produit instanceof ChocolatDeMarque) {
+                stockChocoMarque.putIfAbsent((ChocolatDeMarque) produit, new Variable("Stock Chocolat Marque " + produit, null, 0.0));
+                stockChocoMarque.get(produit).ajouter(null, quantite);
+            }
+        }
+    }
+    
+    public void retirerStock(IProduit produit, double quantite) {
+        if (quantite > 0) {
+            if (produit instanceof Feve) {
+                stockFeve.get(produit).retirer(null, quantite);
+            } else if (produit instanceof Chocolat) {
+                stockChoco.get(produit).retirer(null, quantite);
+            } else if (produit instanceof ChocolatDeMarque) {
+                stockChocoMarque.get(produit).retirer(null, quantite);
+            }
+        }
+    }
+    
+    public double getQuantite(IProduit produit) {
+        if (produit instanceof Feve) {
+            return stockFeve.get(produit).getValeur();
+        } else if (produit instanceof Chocolat) {
+            return stockChoco.get(produit).getValeur();
+        } else if (produit instanceof ChocolatDeMarque) {
+            return stockChocoMarque.getOrDefault(produit, new Variable("Temp", null, 0.0)).getValeur();
+        }
+        return 0;
+    }
+
 }
