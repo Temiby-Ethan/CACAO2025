@@ -116,7 +116,6 @@ public class Producteur3GestionTerrains extends Producteur3Acteur{
             recolte.get(mois).add(p);
 
         }
-
     }
 
     void recolte(){

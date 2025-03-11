@@ -31,6 +31,7 @@ public class Producteur3 extends Producteur3GestionDesCoûts  {
 		calculTotalStock();
 		//defiJournal.ajouter(Double.toString(stockFeve.getValeur()));
 		recolte();
+		getMasseSalariale();
 		
 
 
