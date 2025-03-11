@@ -113,6 +113,7 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
 		this.mesContratEnTantQueVendeur.add(contrat);
+		this.journal.ajouter("Nouveau contrat cadre obtenu avec" + contrat.getAcheteur());
 	}
 	
 
