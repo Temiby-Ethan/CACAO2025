@@ -52,15 +52,7 @@ public class contratcadre_eq1 extends Producteur1Acteur implements IVendeurContr
     }
 
     @Override
-    /**
-	 * Methode appelee par le SuperviseurVentesContratCadre lorsque le vendeur doit livrer 
-	 * quantite tonnes de produit afin d'honorer le contrat precise en parametre. 
-	 * @param produit
-	 * @param quantite
-	 * @param contrat
-	 * @return Retourne la quantite livree. Une penalite est prevue si cette quantite
-	 *  est inferieure a celle precisee en parametre
-	 */
+
     public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
         // Amal Moncer
         if (quantite > getQuantiteEnStock(produit, cryptogramme)) {
