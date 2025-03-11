@@ -129,6 +129,10 @@ public class Distributeur1 extends Distributeur1Acteur  {
 		return this.stocksChocolats.get(c);
 	}
 
+	public Map<ChocolatDeMarque, Variable> getStocksChocolats() { // par Alexiho
+		return this.stocksChocolats;
+	}
+
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) { // par Alexiho
 		if (this.cryptogramme==cryptogramme) {
 			for (ChocolatDeMarque c : this.stocksChocolats.keySet()) {
@@ -140,6 +144,10 @@ public class Distributeur1 extends Distributeur1Acteur  {
 		} else {
 			return 0;
 		}
+	}
+
+	public void notificationRayonVide(ChocolatDeMarque choco) {
+		journal.ajouter(" Aie... j'aurais du mettre davantage de "+choco.getNom()+" en vente");
 	}
 
 	// Renvoie les journaux
