@@ -7,7 +7,7 @@ import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import java.util.HashMap;
 
 public class Distributeur3Distributeur extends Distributeur3Acteur implements IDistributeurChocolatDeMarque {
-
+    // Implémenter par Héloïse
     HashMap<ChocolatDeMarque, Double> stocks;
     HashMap<ChocolatDeMarque, Float> prix;
 
