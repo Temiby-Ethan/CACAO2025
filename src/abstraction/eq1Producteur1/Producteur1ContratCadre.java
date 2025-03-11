@@ -33,16 +33,7 @@ public class Producteur1ContratCadre extends Producteur1Acteur implements IVende
     }
 
     @Override
-    	/**
-	 * Methode appelee par le SuperviseurVentesContratCadre apres une contreproposition
-	 * de prix different de la part de l'acheteur, afin de connaitre la contreproposition
-	 * de prix du vendeur.
-	 * @param contrat
-	 * @return Retourne un nombre inferieur ou egal a 0.0 si le vendeur souhaite mettre fin
-	 * aux negociation en renoncant a ce contrat. Retourne le prix actuel a la tonne du 
-	 * contrat (contrat.getPrix()) si le vendeur est d'accord avec ce prix.
-	 * Sinon, retourne une contreproposition de prix.
-	 */
+
     public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
         // Amal Moncer
         if (contrePropositionDuVendeur(contrat)==null){
