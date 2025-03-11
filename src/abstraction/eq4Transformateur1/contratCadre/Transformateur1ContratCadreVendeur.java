@@ -23,15 +23,18 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 	protected double prixInitialementVoulu;
 	protected double epsilon;
 	
-	public Transformateur1ContratCadreVendeur(IProduit produit) {
-		super(produit);
+	public Transformateur1ContratCadreVendeur() {
+		super();
 		this.mesContratEnTantQueVendeur=new LinkedList<ExemplaireContratCadre>();
 		this.qttInitialementVoulue = stockChoco.get((Chocolat) produit) * 0.90;  //On cherche à vendre 90% de notre stock total actuel
 		this.epsilon = 0.1;  //Pourcentage d'erreur entre la quantite voulue et celle du contrat actuel
 
 	}
 
-
+	//A MODIFIER
+	//Il faut remplacer produit par les fèves voulues par contrat cadre : on se limitera aux fèves équitables
+	//Le problème est qu'on supprime la notion de produit comme variable de classe pour généraliser
+	//Les stratégies de négociations restent les mêmes
 	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
 
 		if (contrat.getProduit().equals(produit)) {
@@ -121,7 +124,7 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 
 	public void next() {
 		super.next();
-		
+
 		List<ExemplaireContratCadre> contratsObsoletes=new LinkedList<ExemplaireContratCadre>();
 		for (ExemplaireContratCadre contrat : this.mesContratEnTantQueVendeur) {
 			if (contrat.getQuantiteRestantALivrer()==0.0 && contrat.getMontantRestantARegler()==0.0) {
@@ -131,6 +134,8 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 		this.mesContratEnTantQueVendeur.removeAll(contratsObsoletes);
 	}
 
+	//A MODIFIER
+	//Meme problème que précédemment, on a supprimé la notion de produit de la classe
 	public boolean vend(IProduit produi) {
 		return super.produit==produi;
 	}
@@ -146,6 +151,8 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 		return livre;
 	}
 
+	//A MODIFIER
+	//Meme problème que précédemment, on a supprimé la notion de produit de la classe
 	public boolean peutVendre(IProduit produit) {
 		return super.produit.equals(produit);
 	}

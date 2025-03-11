@@ -15,8 +15,11 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 	protected double prixInitialementVoulu;
 	protected double epsilon;
 
+
+	//A MODIFIER 
+	//Adapater l'écriture pour prendre en compte la nouvelle gestion des stocks
 	public Transformateur1ContratCadreVendeurAcheteur(IProduit produit) {
-		super(produit);
+		super();
 		this.mesContratEnTantQuAcheteur=new LinkedList<ExemplaireContratCadre>();
         this.epsilon  = 0.1;
         this.qttInitialementVoulue = 0.5*stock.getMax();//On cherche à acheter de quoi remplir notre stock à hauteur de 50%

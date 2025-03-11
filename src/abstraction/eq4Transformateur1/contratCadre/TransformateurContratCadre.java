@@ -17,24 +17,18 @@ import abstraction.eq4Transformateur1.Transformateur1AcheteurBourse;
  */
 public class TransformateurContratCadre extends Transformateur1AcheteurBourse {
 	private static int NB_INSTANCES = 0; // Afin d'attribuer un nom different a toutes les instances
-	protected int numero;
-	protected Variable stock;
-	protected Integer cryptogramme;
-	protected IProduit produit;
+	private int numero;
+	private IProduit produit;
 	protected Journal journal;
 	protected SuperviseurVentesContratCadre supCCadre;
 
-	public TransformateurContratCadre(IProduit produit) {	
-		if (produit==null) {
-			throw new IllegalArgumentException("creation d'une instance de TransformateurContratCadre avec produit==null");
-		}		
+	public TransformateurContratCadre() {	
+		super();
+	
 		NB_INSTANCES++;
 		this.numero=NB_INSTANCES;
-		this.produit=produit;
-		//A MODIFIER APRES CREATION GESTION DES STOCKS
-		//Il faudra un stock de fève ou de chocolat selon si notre acteur est vendeur ou acheteur
-		this.stock=new Variable(getNom()+" stock ", null, this, 0, 1000, 300);
-		this.journal = new Journal(this.getNom()+" activites", this);
+		
+
 	}
 	
 	public String getNom() {
@@ -67,13 +61,12 @@ public class TransformateurContratCadre extends Transformateur1AcheteurBourse {
 	}
 
 	public List<Variable> getIndicateurs() {
-		List<Variable> res=new ArrayList<Variable>();
-		res.add(this.stock);
+		List<Variable> res= super.getIndicateurs();
 		return res;
 	}
 
 	public List<Variable> getParametres() {
-		List<Variable> res=new ArrayList<Variable>();
+		List<Variable> res= super.getParametres();
 		return res;
 	}
 
@@ -97,15 +90,5 @@ public class TransformateurContratCadre extends Transformateur1AcheteurBourse {
 		return this.getNom();
 	}
 	
-	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
-		if (this.cryptogramme==cryptogramme) {
-			if (p.equals(this.produit)) {
-				return this.stock.getValeur();
-			} else{
-				return 0;
-			}
-		} else {
-			return 0;
-		}
-	}
+	
 }
