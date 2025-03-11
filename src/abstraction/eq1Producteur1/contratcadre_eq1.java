@@ -39,8 +39,13 @@ public class contratcadre_eq1 extends Producteur1Acteur implements IVendeurContr
 	 * Sinon, retourne une contreproposition de prix.
 	 */
     public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
-
-
+        // Amal Moncer
+        if (contrePropositionDuVendeur(contrat)==null){
+            return 0.0;
+        }
+        else{
+            return contrat.getPrix();
+        }
     }
         
 
