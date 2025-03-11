@@ -21,6 +21,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 
 	protected Journal journal;	
 	protected Journal journalStock;
+	protected Journal journalTransactions;
 	protected int cryptogramme;
 
 	protected List<Feve> lesFeves;
@@ -55,7 +56,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 			this.stockFeves.put(f, 20000.0);
 			this.totalStocksFeves.ajouter(this, 20000.0, this.cryptogramme);
 			this.VolumeTotalDeStock.ajouter(this, 20000.0, this.cryptogramme);
-			this.journal.ajouter("ajout de 20000 de "+f+" au stock de feves --> total="+this.totalStocksFeves.getValeur(this.cryptogramme));
+			this.journalStock.ajouter("ajout de 20000 de "+f+" au stock de feves --> total="+this.totalStocksFeves.getValeur(this.cryptogramme));
 		}
 
 		//Test stock de choco
@@ -83,10 +84,10 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 	public void next() {
 		
 		this.journal.ajouter("N° Etape " + Filiere.LA_FILIERE.getEtape());
-		this.journal.ajouter("Stock de fèves : " + this.totalStocksFeves.getValeur(this.cryptogramme));
-		this.journal.ajouter("Stock de chocolat : " + this.totalStocksChoco.getValeur(this.cryptogramme));
-		this.journal.ajouter("Volume total de stock : " + this.VolumeTotalDeStock.getValeur(this.cryptogramme));
-		this.journal.ajouter("Stock de chocolat de marque : " + this.totalStocksChocoMarque.getValeur(this.cryptogramme));
+		this.journalStock.ajouter("Stock de fèves : " + this.totalStocksFeves.getValeur(this.cryptogramme));
+		this.journalStock.ajouter("Stock de chocolat : " + this.totalStocksChoco.getValeur(this.cryptogramme));
+		this.journalStock.ajouter("Volume total de stock : " + this.VolumeTotalDeStock.getValeur(this.cryptogramme));
+		this.journalStock.ajouter("Stock de chocolat de marque : " + this.totalStocksChocoMarque.getValeur(this.cryptogramme));
 		this.journal.ajouter("Solde : " + this.getSolde());
 	}
 
@@ -118,6 +119,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 	public List<Journal> getJournaux() {
 		List<Journal> res=new ArrayList<Journal>();
 		res.add(this.journal);
+		res.add(this.journalStock);
 		return res;
 	}
 

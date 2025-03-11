@@ -113,7 +113,7 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
 		this.mesContratEnTantQueVendeur.add(contrat);
-		this.journal.ajouter("Nouveau contrat cadre obtenu avec" + contrat.getAcheteur());
+		this.journalTransactions.ajouter("Nouveau contrat cadre obtenu avec" + contrat.getAcheteur());
 	}
 	
 
@@ -135,6 +135,7 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 		double livre = Math.min(stockChoco.get((Chocolat) produit), quantite);
 		if (livre>0.0) {
 			totalStocksChoco.retirer(this,  livre);
+			this.journalStock.ajouter("Vente de " + livre + "chocola  à ");
 			double currStockChoco = stockChoco.get(produit);
 			stockChoco.put((Chocolat) produit, currStockChoco-livre);
 		}
