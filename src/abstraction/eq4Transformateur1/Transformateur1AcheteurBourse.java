@@ -3,6 +3,10 @@ package abstraction.eq4Transformateur1;
 import abstraction.eqXRomu.bourseCacao.IAcheteurBourse;
 import abstraction.eqXRomu.produits.Feve;
 
+/**
+ * @author YAOU Reda
+ */
+
 public class Transformateur1AcheteurBourse extends Transformateur1Stocks implements IAcheteurBourse{
 	
 	private Feve feve;
