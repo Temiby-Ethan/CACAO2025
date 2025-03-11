@@ -2,13 +2,18 @@ package abstraction.eq3Producteur3;
 
 import abstraction.eqXRomu.bourseCacao.BourseCacao;
 import abstraction.eqXRomu.bourseCacao.IVendeurBourse;
+import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
+import abstraction.eqXRomu.contratsCadres.IVendeurContratCadre;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.produits.Feve;
+import abstraction.eqXRomu.produits.Gamme;
+import abstraction.eqXRomu.produits.IProduit;
+
 import java.util.List;
 
 
-public class Producteur3Vente extends Producteur3Stock implements IVendeurBourse/*,IVendeurContratCadre*/{
+public class Producteur3Vente extends Producteur3Stock implements IVendeurBourse, IVendeurContratCadre{
     protected List<ExemplaireContratCadre> mesContratEnTantQueVendeur;
 
    
@@ -52,7 +57,7 @@ public class Producteur3Vente extends Producteur3Stock implements IVendeurBourse
 
    
 
-   /* @Override
+    @Override
     public boolean vend(IProduit produit) {
         if (produit instanceof Feve) {
             Feve feve = (Feve)produit;
@@ -60,47 +65,57 @@ public class Producteur3Vente extends Producteur3Stock implements IVendeurBourse
         }
         return false;
     }
-    /* 
+    
     @Override
     public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'contrePropositionDuVendeur'");
+        Echeancier echeancier = contrat.getEcheancier();
+        double qteTotale = contrat.getQuantiteTotale();
+        double qteInit = contrat.getEcheanciers().get(0).getQuantiteTotale();
+        if (qteTotale >= qteInit*1.1) {
+            return echeancier;
+        }
+        int stepDebut = contrat.getEcheancier().getStepDebut();
+        int stepFin = contrat.getEcheancier().getStepFin();
+        int nbStep = stepFin - stepDebut;
+        return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, nbStep,(int)(qteInit*1.2/nbStep));
     }
 
 
     @Override
     public double propositionPrix(ExemplaireContratCadre contrat) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'propositionPrix'");
+        Feve feve = (Feve)contrat.getProduit();
+        BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
+        double cours = bourse.getCours(feve).getValeur();
+        return cours*1.5*contrat.getQuantiteTotale();
     }
 
 
     @Override
     public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'contrePropositionPrixVendeur'");
+        Feve feve = (Feve)contrat.getProduit();
+        Double prixProp = contrat.getPrix();
+        BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
+        double cours = bourse.getCours(feve).getValeur();
+        if (prixProp >= cours*1.1*contrat.getQuantiteTotale()) {
+            return prixProp;
+        }
+        return cours*1.1*contrat.getQuantiteTotale();
     }
 
 
     @Override
     public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'notificationNouveauContratCadre'");
+        this.mesContratEnTantQueVendeur.add(contrat);
+        System.out.println("NOUVEAU CONTRAT CADRE");
     }
 
 
     @Override
     public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'livrer'");
+        double stockActuel = this.stockFeve.get((Feve)produit).getValeur(cryptogramme);
+        double qteALivrer = Math.min(stockActuel, quantite);
+        this.stockFeve.get((Feve)produit).setValeur(this, stockActuel-qteALivrer, cryptogramme);
+        return qteALivrer;
     }
-    */
-
-    
-
-
-
-
-    
     
 }
