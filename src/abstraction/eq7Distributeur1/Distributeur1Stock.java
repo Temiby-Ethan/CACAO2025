@@ -11,11 +11,11 @@ import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class Distributeur1Stock {
+public class Distributeur1Stock extends Distributeur1Acteur{
     protected Map<ChocolatDeMarque, Variable> stocksChocolats;
     protected List<ChocolatDeMarque> chocolats;
 
-    public Distributeur1Stock(IActeur IAct)
+    public Distributeur1Stock()
     {
         this.stocksChocolats = new HashMap<>();
 
@@ -28,7 +28,7 @@ public class Distributeur1Stock {
 		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_BQ, "Hexafridge", 50));
 
         for (int i=0; i<this.chocolats.size(); i++) {
-			this.stocksChocolats.put(chocolats.get(i), new Variable("Stock"+chocolats.get(i).getNom(), IAct, 1000.0));
+			this.stocksChocolats.put(chocolats.get(i), new Variable("Stock"+chocolats.get(i).getNom(), this, 1000.0));
 		}
     }
 
