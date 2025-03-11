@@ -13,12 +13,13 @@ import abstraction.eqXRomu.contratsCadres.IVendeurContratCadre;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 import abstraction.eqXRomu.contratsCadres.Echeancier;
 
-public class Transformateur3ContratCadreVendeur extends Transformateur3ContratCadre implements IVendeurContratCadre {
+public class Transformateur3ContratCadreVendeur extends Transformateur3_fabriquant implements IVendeurContratCadre {
 
 	protected List<ExemplaireContratCadre> mesContratEnTantQueVendeur;
+	private IProduit produit;
 	
 	public Transformateur3ContratCadreVendeur(IProduit produit) {
-		super(produit);
+		this.produit = produit;
 		this.mesContratEnTantQueVendeur=new LinkedList<ExemplaireContratCadre>();
 	}
 
