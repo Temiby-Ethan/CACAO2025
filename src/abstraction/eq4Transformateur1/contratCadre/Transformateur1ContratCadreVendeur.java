@@ -1,5 +1,6 @@
 package abstraction.eq4Transformateur1.contratCadre;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -7,6 +8,7 @@ import java.util.List;
 import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.contratsCadres.*;
+import abstraction.eqXRomu.general.Journal;
 
 
 /*
@@ -113,7 +115,7 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
 		this.mesContratEnTantQueVendeur.add(contrat);
-		this.journalTransactions.ajouter("Nouveau contrat cadre obtenu avec" + contrat.getAcheteur());
+		this.journalCC.ajouter("Nouveau contrat cadre obtenu avec" + contrat.getAcheteur());
 	}
 	
 
@@ -135,7 +137,7 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 		double livre = Math.min(stockChoco.get((Chocolat) produit), quantite);
 		if (livre>0.0) {
 			totalStocksChoco.retirer(this,  livre);
-			this.journalStock.ajouter("Vente de " + livre + "chocola  à ");
+			this.journalStock.ajouter("Retrait de " + livre + "T" + contrat.getProduit() + "(CC avec "+ contrat.getAcheteur() + ")");
 			double currStockChoco = stockChoco.get(produit);
 			stockChoco.put((Chocolat) produit, currStockChoco-livre);
 		}

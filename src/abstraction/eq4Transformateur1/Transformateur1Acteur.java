@@ -21,6 +21,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 
 	protected Journal journal;	
 	protected Journal journalStock;
+	protected Journal journalCC;
 	protected Journal journalTransactions;
 	protected int cryptogramme;
 
@@ -38,6 +39,9 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 	public Transformateur1Acteur() {
 		this.journal = new Journal("Journal " + this.getNom(), this);
 		this.journalStock = new Journal("Journal Stock" + this.getNom(), this);
+		this.journalCC = new Journal("Journal CC" + this.getNom(), this);
+		this.journalTransactions = new Journal("Journal Transactions" + this.getNom(), this);
+
 		this.totalStocksFeves = new VariablePrivee("Eq4TStockFeves", "<html>Quantite totale de feves en stock</html>",this, 0.0, 1000000.0, 0.0);
 		this.totalStocksChoco = new VariablePrivee("Eq4TStockChoco", "<html>Quantite totale de chocolat en stock</html>",this, 0.0, 1000000.0, 0.0);
 		this.VolumeTotalDeStock = new VariablePrivee("Eq4TStockTotalChoco", "<html>Volume total de stock</html>",this, 0.0, 1000000.0, 0.0);
@@ -65,7 +69,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 			this.stockChoco.put(c, 20000.0);
 			this.totalStocksChoco.ajouter(this, 20000.0, this.cryptogramme);
 			this.VolumeTotalDeStock.ajouter(this, 20000.0, this.cryptogramme);
-			this.journal.ajouter("ajout de 20000 de "+c+" au stock de chocolat --> total="+this.totalStocksChoco.getValeur(this.cryptogramme));
+			this.journalStock.ajouter("ajout de 20000 de "+c+" au stock de chocolat --> total="+this.totalStocksChoco.getValeur(this.cryptogramme));
 		}
 	}
 
@@ -120,6 +124,8 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 		List<Journal> res=new ArrayList<Journal>();
 		res.add(this.journal);
 		res.add(this.journalStock);
+		res.add(this.journalTransactions);
+		res.add(this.journalCC);
 		return res;
 	}
 
