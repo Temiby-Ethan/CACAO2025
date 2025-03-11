@@ -22,9 +22,10 @@ public class contratcadre_eq1 extends Producteur1Acteur implements IVendeurContr
     }
 
     @Override
+    
     public double propositionPrix(ExemplaireContratCadre contrat) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'propositionPrix'");
+        // Amal Moncer
+        return contrat.getPrix();
     }
 
     @Override
