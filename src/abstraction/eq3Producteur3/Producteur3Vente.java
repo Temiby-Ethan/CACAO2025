@@ -11,10 +11,11 @@ import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
 import java.util.List;
+import java.util.ArrayList;
 
 
 public class Producteur3Vente extends Producteur3Stock implements IVendeurBourse, IVendeurContratCadre{
-    protected List<ExemplaireContratCadre> mesContratEnTantQueVendeur;
+    protected List<ExemplaireContratCadre> mesContratCadres = new ArrayList<ExemplaireContratCadre>();
 
    
         public Producteur3Vente() {
@@ -84,29 +85,30 @@ public class Producteur3Vente extends Producteur3Stock implements IVendeurBourse
     @Override
     public double propositionPrix(ExemplaireContratCadre contrat) {
         Feve feve = (Feve)contrat.getProduit();
+        Gamme gamme = feve.getGamme();
         BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
-        double cours = bourse.getCours(feve).getValeur();
-        return cours*1.5*contrat.getQuantiteTotale();
+        double cours = bourse.getCours(Feve.get(gamme, false, false)).getValeur();
+        return cours*1.5;
     }
 
 
     @Override
     public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
         Feve feve = (Feve)contrat.getProduit();
+        Gamme gamme = feve.getGamme();
         Double prixProp = contrat.getPrix();
         BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
-        double cours = bourse.getCours(feve).getValeur();
-        if (prixProp >= cours*1.1*contrat.getQuantiteTotale()) {
+        double cours = bourse.getCours(Feve.get(gamme, false, false)).getValeur();
+        if (prixProp >= cours*1.1) {
             return prixProp;
         }
-        return cours*1.1*contrat.getQuantiteTotale();
+        return cours*1.1;
     }
 
 
     @Override
     public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
-        this.mesContratEnTantQueVendeur.add(contrat);
-        System.out.println("NOUVEAU CONTRAT CADRE");
+        this.mesContratCadres.add(contrat);
     }
 
 
