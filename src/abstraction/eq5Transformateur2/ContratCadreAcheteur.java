@@ -21,8 +21,7 @@ class ContratCadreAcheteur extends ContratCadreVendeur implements IAcheteurContr
 	 */
 	public boolean achete(IProduit produit){
             return false;
-        }
-    }
+		}
 
 	/**
 	 * Methode appelee par le SuperviseurVentesContratCadre lors des negociations
@@ -41,8 +40,7 @@ class ContratCadreAcheteur extends ContratCadreVendeur implements IAcheteurContr
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat){
         return contrat.getEcheancier();
     }
-
-
+	
 	/**
 	 * Methode appelee par le SuperviseurVentesContratCadre lors des negociations
 	 * sur le prix a la tonne afin de connaitre la contreproposition de l'acheteur.
