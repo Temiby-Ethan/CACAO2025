@@ -15,7 +15,7 @@ public class Producteur1Acteur implements IActeur {
     
     protected int cryptogramme;
     
-    private Journal journal; // Journal pour enregistrer les étapes
+    protected Journal journal; // Journal pour enregistrer les étapes
     private Stock stock; // Utilisation de la classe Stock
     
     // Variables pour les indicateurs
