@@ -21,9 +21,9 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 
 	private double coutStockage; 
 
-	private List<ChocolatDeMarque> chocosProduits; // la liste des chocolats produits par les transformateurs
+	private List<ChocolatDeMarque> chocosProduits; // la liste de toutes les sortes de ChocolatDeMarque que l'acteur produit et peut vendre
 	protected HashMap<Feve, HashMap<Chocolat, Double>> pourcentageTransfo; // pour les differentes feves, le chocolat qu'elles peuvent contribuer a produire avec le ratio
-	protected List<ChocolatDeMarque> chocolatsLimDt; // la liste des chocolats produits par notre transformateur
+	protected List<ChocolatDeMarque> chocolatsLimDt; // la liste des chocolats de marque "LimDt" que l'acteur produit
 
 	public Transformateur1Stocks() {
 		this.chocosProduits = new LinkedList<ChocolatDeMarque>();

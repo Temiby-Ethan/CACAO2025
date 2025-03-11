@@ -25,9 +25,9 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 	protected int cryptogramme;
 
 	protected List<Feve> lesFeves; // les feves que le transformateur peut acheter
-	protected HashMap<Feve, Double> stockFeves; // Donne le nombre de chaque fève en stock
-	protected HashMap<Chocolat, Double> stockChoco; // Donne le nombre de chaque chocolat en stock
-	protected HashMap<ChocolatDeMarque, Double> stockChocoMarque; // Donne le nombre de chaque chocolat de marque en stock
+	protected HashMap<Feve, Double> stockFeves; // Donne le nombre de chaque type de fève en stock
+	protected HashMap<Chocolat, Double> stockChoco; // Donne le nombre de chaque type de chocolat en stock
+	protected HashMap<ChocolatDeMarque, Double> stockChocoMarque; // Donne le nombre de chaque type de chocolat de marque en stock
 
 	protected Variable totalStocksFeves;  // La quantite totale de stock de feves 
 	protected Variable totalStocksChoco;  // La quantite totale de stock de chocolat 
