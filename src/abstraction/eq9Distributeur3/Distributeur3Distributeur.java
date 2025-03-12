@@ -56,7 +56,12 @@ public class Distributeur3Distributeur extends Distributeur3Acteur implements ID
 
     @Override
     public double prix(ChocolatDeMarque choco) {
-        return prix.get(choco);
+        System.out.println("demande de prix de "+choco.getNom());
+        if(this.stockChocoMarque.containsKey(choco)) {
+            return prix.get(choco);
+        }else{
+            return -1;
+        }
     }
 
 
@@ -64,11 +69,14 @@ public class Distributeur3Distributeur extends Distributeur3Acteur implements ID
     public double quantiteEnVente(ChocolatDeMarque choco, int crypto) {
         if (this.cryptogramme==crypto && this.stockChocoMarque.containsKey(choco)) {
             if(this.stockChocoMarque.get(choco)>=100) {
+                System.out.println("demande quantite vente "+choco.getNom()+" tonnes :"+100);
                 return 100;
             }else{
+                System.out.println("demande quantite vente "+choco.getNom()+" tonnes :"+this.stockChocoMarque.get(choco));
                 return this.stockChocoMarque.get(choco);
             }
         } else {
+            System.out.println("demande quantite vente "+choco.getNom()+" tonnes :"+0);
             return 0.0;
         }
     }
