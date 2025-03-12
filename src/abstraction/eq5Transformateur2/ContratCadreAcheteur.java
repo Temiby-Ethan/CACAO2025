@@ -3,7 +3,6 @@ package abstraction.eq5Transformateur2;
 import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 import abstraction.eqXRomu.contratsCadres.IAcheteurContratCadre;
-import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
 class ContratCadreAcheteur extends ContratCadreVendeur implements IAcheteurContratCadre{
@@ -82,7 +81,7 @@ class ContratCadreAcheteur extends ContratCadreVendeur implements IAcheteurContr
 	 * mettre ce produit dans son stock.
 	 */
 	public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat){
-        super.stockFeve.get(p).ajouter(this, quantiteEnTonnes, this.cryptogramme);
+        super.stock.ajouterStock(this, p, quantiteEnTonnes, super.cryptogramme);
     }
 
 }

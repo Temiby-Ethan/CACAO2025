@@ -1,11 +1,8 @@
 package abstraction.eq5Transformateur2;
 
-import abstraction.eqXRomu.contratsCadres.*;
 import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
-import abstraction.eqXRomu.contratsCadres.IAcheteurContratCadre;
 import abstraction.eqXRomu.contratsCadres.IVendeurContratCadre;
-import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.IProduit;
 
 
@@ -89,7 +86,7 @@ public class ContratCadreVendeur extends Transformateur2Acteur implements IVende
 	 *  est inferieure a celle precisee en parametre
 	 */
 	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat){
-		super.stockChoco.get(produit).retirer(this, quantite,super.cryptogramme);
+		super.stock.retirerStock(this, produit, quantite, super.cryptogramme);
 		return quantite;
 	}
 

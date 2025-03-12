@@ -21,7 +21,7 @@ public class AcheteurBourse extends ContratCadreAcheteur implements IAcheteurBou
     private int cryptogramme;
 
     public void notificationAchat(Feve f, double quantiteEnT, double coursEnEuroParT) {
-        super.stockFeve.get(f).ajouter(this, quantiteEnT, this.cryptogramme);
+        super.stock.ajouterStock(this,f,quantiteEnT, this.cryptogramme);
 		
 
 	}
