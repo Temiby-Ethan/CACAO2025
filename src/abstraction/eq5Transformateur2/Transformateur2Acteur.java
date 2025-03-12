@@ -4,7 +4,6 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
-import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 import java.awt.Color;
 import java.util.ArrayList;
@@ -16,7 +15,6 @@ public class Transformateur2Acteur implements IActeur {
     protected Stock stock;
 
     public Transformateur2Acteur() {
-        this.stock = new Stock();
         this.journal = new Journal("Journal Equipe 5", this);
     }
     
@@ -46,9 +44,6 @@ public class Transformateur2Acteur implements IActeur {
 
     public List<Variable> getIndicateurs() {
         List<Variable> res = new ArrayList<>();
-        res.add(this.stock.getstockChocoTotal());
-        res.add(this.stock.getstockFeveTotal());
-		res.add(stock.getstockFeve(Feve.F_MQ));
         return res;
     }
 

@@ -7,6 +7,7 @@ import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 import java.util.HashMap;
+import java.util.List;
 
 
 public class Stock extends Transformateur2Acteur{
@@ -15,11 +16,13 @@ public class Stock extends Transformateur2Acteur{
     private HashMap<ChocolatDeMarque, Variable> stockChocoMarque;
     private Variable stockFeveTotal;
     private Variable stockChocoTotal;
+    private Variable stockChocoMarqueTotal;
 
 
     public Stock() {
         this.stockFeve = new HashMap<Feve,Variable>();
         this.stockChoco = new HashMap<Chocolat, Variable>();
+        super.journal.ajouter("stock initialisé");
         
         for (Feve f : Feve.values()) {
             this.stockFeve.put(f, new Variable("Stock Feve " + f, this, 0.0));
@@ -28,8 +31,9 @@ public class Stock extends Transformateur2Acteur{
             this.stockChoco.put(c, new Variable("Stock Chocolat " + c, this, 0.0));
         }
         
-        this.stockFeveTotal = new Variable("Stock Feve Total", this, 0.0);
-        this.stockChocoTotal = new Variable("Stock Chocolat Total", this, 0.0);
+        this.stockFeveTotal = new Variable("EQ5TStockFeve", this, 0.0);
+        this.stockChocoTotal = new Variable("EQ5TStockChoco", this, 0.0);
+        this.stockChocoMarqueTotal = new Variable("EQ5TStockChocoMarque", this, 0.0);
     }
     public Variable getstockFeveTotal() {
         return this.stockFeveTotal;
@@ -37,6 +41,17 @@ public class Stock extends Transformateur2Acteur{
 
     public Variable getstockChocoTotal() {
         return this.stockChocoTotal;
+    }
+
+    public Variable getstock(IProduit p){
+        if (p instanceof Feve) {
+            Feve f = (Feve) p;
+            return this.stockFeve.get(f);
+        } else if (p instanceof Chocolat) {
+            Chocolat c = (Chocolat) p;
+            return this.stockChoco.get(c);
+        }
+        return null;
     }
 
     public Variable getstockFeve(Feve f) {
@@ -95,6 +110,20 @@ public class Stock extends Transformateur2Acteur{
        
     }
 
+    public List<Variable> getIndicateurs() { 
+		List<Variable> res = super.getIndicateurs();
+		res.add(this.stockChocoTotal);
+		res.add(this.stockFeveTotal);
+        res.add(this.stockChocoMarqueTotal);    
+		return res;
+    }
+
+    public void next(){
+        super.next();
+        this.journal.ajouter("ok");
+        ajouterStock(this,Feve.F_MQ,80, this.cryptogramme);
+        this.journal.ajouter(super.stock.getQuantiteStock(Feve.F_MQ)+"feve");
+    }
 
 
 }          
