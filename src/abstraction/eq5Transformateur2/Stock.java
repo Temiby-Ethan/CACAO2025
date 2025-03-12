@@ -9,7 +9,7 @@ import abstraction.eqXRomu.produits.IProduit;
 import java.util.HashMap;
 
 
-public class Stock extends FabricantChocolatDeMarque{
+public class Stock extends Transformateur2Acteur{
     private HashMap<Feve, Variable> stockFeve;
     private HashMap<Chocolat, Variable> stockChoco;
     private HashMap<ChocolatDeMarque, Variable> stockChocoMarque;
@@ -18,7 +18,6 @@ public class Stock extends FabricantChocolatDeMarque{
 
 
     public Stock() {
-        super();
         this.stockFeve = new HashMap<Feve,Variable>();
         this.stockChoco = new HashMap<Chocolat, Variable>();
         
@@ -98,4 +97,4 @@ public class Stock extends FabricantChocolatDeMarque{
 
 
 
-}
+}          

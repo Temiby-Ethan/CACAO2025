@@ -13,7 +13,6 @@ import java.util.List;
 public class Transformateur2Acteur implements IActeur {
     protected int cryptogramme;
     protected Journal journal;
-    protected Feve feve;
     protected Stock stock;
 
     public Transformateur2Acteur() {
