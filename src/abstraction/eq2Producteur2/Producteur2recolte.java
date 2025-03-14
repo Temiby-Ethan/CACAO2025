@@ -14,7 +14,7 @@ import abstraction.eqXRomu.produits.Feve;
 public class Producteur2recolte extends Producteur2stock {
 
     private List<Plantation> plantations;
-    private HashMap<Feve,Variable> feve_recolte;
+    protected HashMap<Feve,Variable> feve_recolte;
     private Journal Journalterrains;
     private Journal JournalRecolte;
 
