@@ -113,7 +113,7 @@ public class Producteur2stock extends Producteur2Acteur {
 
     public List<Variable> getIndicateurs() { //Modifie correctement les affichages
 		List<Variable> res = super.getIndicateurs();
-        System.out.println(this.stock.values());
+        //System.out.println(this.stock.values());
 		res.addAll(this.stock.values());
 		res.add(this.stockTotal);
 		return res;
