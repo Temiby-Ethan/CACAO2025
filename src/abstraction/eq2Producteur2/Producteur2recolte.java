@@ -79,7 +79,7 @@ public class Producteur2recolte extends Producteur2stock {
         this.feve_recolte.get(Feve.F_MQ_E).ajouter(this,Prod_MQ_E,cryptogramme);
         this.feve_recolte.get(Feve.F_HQ_E).ajouter(this,Prod_HQ_E,cryptogramme);
         this.feve_recolte.get(Feve.F_HQ_BE).ajouter(this,Prod_HQ_BE,cryptogramme);
-        JournalRecolte.ajouter(Filiere.LA_FILIERE.getEtape()+" : Production de "+Prod_BQ+" T de BQ, "+Prod_BQ_E+" T de BQ_E, "+Prod_MQ+" T de MQ, "+Prod_MQ_E+" T de HQ_E, "+Prod_HQ_E+" T de HQ_E et "+Prod_HQ_BE+" T de HQ_BE");
+        JournalRecolte.ajouter(Filiere.LA_FILIERE.getEtape()+" : Recolte de "+Prod_BQ+" feves de BQ, "+Prod_BQ_E+" feves de BQ_E, "+Prod_MQ+" feves de MQ, "+Prod_MQ_E+" feves de HQ_E, "+Prod_HQ_E+" feves de HQ_E et "+Prod_HQ_BE+" feves de HQ_BE");
     }
  
     /**
