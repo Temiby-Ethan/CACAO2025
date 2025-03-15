@@ -11,22 +11,22 @@ import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.general.VariableReadOnly;
 import abstraction.eqXRomu.produits.Feve;
 
-public class Producteur2recolte extends Producteur2stock {
+public class Producteur2recolte extends Producteur2Acteur {
 
     private List<Plantation> plantations;
-    protected HashMap<Feve,Variable> feve_recolte;
+    protected HashMap<Feve, Double> feve_recolte;
     private Journal Journalterrains;
     private Journal JournalRecolte;
 
     public Producteur2recolte() {
         super();
         this.plantations = new ArrayList<>();
-        this.feve_recolte = new HashMap<Feve, Variable>();
+        this.feve_recolte = new HashMap<Feve, Double>();
         this.JournalRecolte = new Journal("Journal Recolte Eq2",this);
         this.Journalterrains = new Journal("Journal Terrains Eq2",this);
 
         for (Feve f : Feve.values()) {
-            this.feve_recolte.put(f, new VariableReadOnly(this+"Recolte"+f.toString().substring(2), "<html>Recolte de feves "+f+"</html>",this, 0.0, Double.MAX_VALUE, 0.0));
+            this.feve_recolte.put(f, 0.0);
         }
     }
 
@@ -73,12 +73,12 @@ public class Producteur2recolte extends Producteur2stock {
                 }
             }
         }
-        this.feve_recolte.get(Feve.F_BQ).ajouter(this,Prod_BQ,cryptogramme);
-        this.feve_recolte.get(Feve.F_BQ_E).ajouter(this,Prod_BQ_E,cryptogramme);
-        this.feve_recolte.get(Feve.F_MQ).ajouter(this,Prod_MQ,cryptogramme);
-        this.feve_recolte.get(Feve.F_MQ_E).ajouter(this,Prod_MQ_E,cryptogramme);
-        this.feve_recolte.get(Feve.F_HQ_E).ajouter(this,Prod_HQ_E,cryptogramme);
-        this.feve_recolte.get(Feve.F_HQ_BE).ajouter(this,Prod_HQ_BE,cryptogramme);
+        this.feve_recolte.put(Feve.F_BQ,Prod_BQ);
+        this.feve_recolte.put(Feve.F_BQ_E,Prod_BQ_E);
+        this.feve_recolte.put(Feve.F_MQ,Prod_MQ);
+        this.feve_recolte.put(Feve.F_MQ_E,Prod_MQ_E);
+        this.feve_recolte.put(Feve.F_HQ_E,Prod_HQ_E);
+        this.feve_recolte.put(Feve.F_HQ_BE,Prod_HQ_BE);
         JournalRecolte.ajouter(Filiere.LA_FILIERE.getEtape()+" : Recolte de "+Prod_BQ+" feves de BQ, "+Prod_BQ_E+" feves de BQ_E, "+Prod_MQ+" feves de MQ, "+Prod_MQ_E+" feves de HQ_E, "+Prod_HQ_E+" feves de HQ_E et "+Prod_HQ_BE+" feves de HQ_BE");
     }
  

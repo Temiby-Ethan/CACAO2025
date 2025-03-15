@@ -17,7 +17,7 @@ import abstraction.eqXRomu.produits.IProduit;
 
 
 
-public class Producteur2VendeurBourse extends Producteur2recolte implements IVendeurBourse{
+public class Producteur2VendeurBourse extends Producteur2stock implements IVendeurBourse{
 
 	private Journal journalBourse;
 	

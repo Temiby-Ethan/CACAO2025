@@ -13,16 +13,16 @@ import abstraction.eqXRomu.general.VariableReadOnly;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class Producteur2stock extends Producteur2Acteur {
+public class Producteur2stock extends Producteur2sechage {
 
     protected HashMap<Feve,Double> prodParStep;
 	protected HashMap<Feve,Variable> stock;
 	protected Variable stockTotal;
-	private static final double PART=0.1;  // La part de marche initiale
     private Journal JournalStock;
 
 	public Producteur2stock() {
 
+        super();
         this.stock = new HashMap<Feve, Variable>();
 		this.prodParStep = new HashMap<Feve, Double>();
         this.JournalStock = new Journal("Journal Stock Eq2",this);
@@ -47,6 +47,7 @@ public class Producteur2stock extends Producteur2Acteur {
 
 
     public void initialiser(){
+        super.initialiser();
 
     }
 
@@ -75,7 +76,7 @@ public class Producteur2stock extends Producteur2Acteur {
 
     public void SetProdParStep(Feve f, double prod){  //Permet de modifier la production par next d'une fève en particulier
 
-        this.prodParStep.put(f,PART*prod);
+        this.prodParStep.put(f, prod);
 
     }
 
