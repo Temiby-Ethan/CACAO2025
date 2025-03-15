@@ -75,11 +75,30 @@ public class Producteur2sechage extends Producteur2recolte {
             fileSechage.put(f, nouveauxLots);
             fileSechageSteps.put(f, nouveauxSteps);
 
-            // Mise à jour des fèves sèches
-            fevesSeches.put(f, sechageFini.get(f));
+            // Mise à jour des fèves sèches et passage en tonnes
+            switch (f) {
+                case F_BQ:
+                    fevesSeches.put(f, sechageFini.get(f) * 0.000000753);
+                    break;
+                case F_BQ_E:
+                    fevesSeches.put(f, sechageFini.get(f) * 0.000000753);
+                    break;
+                case F_MQ:
+                    fevesSeches.put(f, sechageFini.get(f) * 0.00000075);
+                    break;
+                case F_MQ_E:
+                    fevesSeches.put(f, sechageFini.get(f) * 0.00000075);
+                    break;
+                case F_HQ_E:
+                    fevesSeches.put(f, sechageFini.get(f) * 0.000000765);
+                    break;
+                case F_HQ_BE:
+                    fevesSeches.put(f, sechageFini.get(f) * 0.000000765);
+                    break;
+            }
         }
 
-        journalSechage.ajouter("Step " + stepActuel + " : Nouvelles fèves sèches : " + fevesSeches);
+        journalSechage.ajouter("Step " + stepActuel + " : Nouvelles tonnes de fèves sèches : " + fevesSeches);
 
     }
 
