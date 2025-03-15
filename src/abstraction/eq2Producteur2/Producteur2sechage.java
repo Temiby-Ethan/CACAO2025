@@ -1,3 +1,4 @@
+//Maxime Philippon
 package abstraction.eq2Producteur2;
 
 import java.util.ArrayList;
