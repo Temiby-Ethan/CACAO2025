@@ -8,7 +8,6 @@ import java.util.List;
 import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.contratsCadres.*;
-import abstraction.eqXRomu.general.Journal;
 
 
 /*
@@ -26,19 +25,19 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 	public Transformateur1ContratCadreVendeur() {
 		super();
 		this.mesContratEnTantQueVendeur=new LinkedList<ExemplaireContratCadre>();
-		this.qttInitialementVoulue = stockChoco.get((Chocolat) produit) * 0.90;  //On cherche à vendre 90% de notre stock total actuel
-		this.epsilon = 0.1;  //Pourcentage d'erreur entre la quantite voulue et celle du contrat actuel
+		this.qttInitialementVoulue = 0.6; //A MODIFIER On cherche initialement à vendre 60% du stock du produit dont il est question
+		this.epsilon = 0.1;  //A MODIFIER Pourcentage d'erreur entre la quantite voulue et celle du contrat actuel
 
 	}
 
 	//A MODIFIER
-	//Il faut remplacer produit par les fèves voulues par contrat cadre : on se limitera aux fèves équitables
+	//Il faut balayer tous les types de chocolat que l'on a en stock
 	//Le problème est qu'on supprime la notion de produit comme variable de classe pour généraliser
 	//Les stratégies de négociations restent les mêmes
 	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
-
+		IProduit produit = contrat.getProduit();
 		if (contrat.getProduit().equals(produit)) {
-			double qtt_totale_voulue = qttInitialementVoulue;
+			double qtt_totale_voulue = qttInitialementVoulue*stockChoco.get(contrat.getProduit());
 
 			if (contrat.getEcheancier().getQuantiteTotale()< stockChoco.get((Chocolat) produit)) {  //On chercher à honorer le contrat sur les qtts
 
@@ -135,9 +134,11 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 	}
 
 	//A MODIFIER
-	//Meme problème que précédemment, on a supprimé la notion de produit de la classe
-	public boolean vend(IProduit produi) {
-		return super.produit==produi;
+	//Ici le problème est qu'on ne vérifie que s'il est possible de vendre à l'instant T
+	//On ne prend pas en compte le fait que l'on ait possiblement d'autre livraisons à réaliser sur la même période
+	//Il faudra s'assurer que l'on ait du stock pour cette transaction spécifiquement
+	public boolean vend(IProduit produit) {
+		return produit.getType().equals("Chocolat") && stockChoco.get(produit)>0;
 	}
 
 	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
@@ -151,10 +152,14 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 		return livre;
 	}
 
-	//A MODIFIER
-	//Meme problème que précédemment, on a supprimé la notion de produit de la classe
+	
 	public boolean peutVendre(IProduit produit) {
-		return super.produit.equals(produit);
+		for (IProduit produi : stockChoco.keySet()){
+			if (produi.equals(produit)){
+				return stockChoco.get(produi)>0.;
+			}
+		}
+		return false;
 	}
 	public String toString() {
 		return this.getNom();
