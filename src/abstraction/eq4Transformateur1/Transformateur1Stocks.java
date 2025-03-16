@@ -20,6 +20,7 @@ import abstraction.eqXRomu.produits.Feve;
 public class Transformateur1Stocks extends Transformateur1Acteur implements IFabricantChocolatDeMarque {
 
 	private double coutStockage; 
+	protected double STOCK_MAX_TOTAL_FEVES = 100000;
 
 	private List<ChocolatDeMarque> chocosProduits; // la liste de toutes les sortes de ChocolatDeMarque que l'acteur produit et peut vendre
 	protected HashMap<Feve, HashMap<Chocolat, Double>> pourcentageTransfo; // pour les differentes feves, le chocolat qu'elles peuvent contribuer a produire avec le ratio
