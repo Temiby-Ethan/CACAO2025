@@ -18,8 +18,6 @@ import abstraction.eq4Transformateur1.Transformateur1AcheteurBourse;
 public class TransformateurContratCadre extends Transformateur1AcheteurBourse {
 	private static int NB_INSTANCES = 0; // Afin d'attribuer un nom different a toutes les instances
 	private int numero;
-	private IProduit produit;
-	protected Journal journal;
 	protected SuperviseurVentesContratCadre supCCadre;
 
 	public TransformateurContratCadre() {	
@@ -32,11 +30,11 @@ public class TransformateurContratCadre extends Transformateur1AcheteurBourse {
 	}
 	
 	public String getNom() {
-		return "TCC"+this.numero+""+produit.toString();
+		return super.getNom();
 	}
 
 	public String getDescription() {
-		return "TransformateurContratCadre "+this.numero+" "+this.produit.toString();
+		return super.getDescription();
 	}
 
 	public Color getColor() {
@@ -71,9 +69,7 @@ public class TransformateurContratCadre extends Transformateur1AcheteurBourse {
 	}
 
 	public List<Journal> getJournaux() {
-		List<Journal> j= new ArrayList<Journal>();
-		j.add(this.journal);
-		return j;
+		return super.getJournaux();
 	}
 
 	public void setCryptogramme(Integer crypto) {

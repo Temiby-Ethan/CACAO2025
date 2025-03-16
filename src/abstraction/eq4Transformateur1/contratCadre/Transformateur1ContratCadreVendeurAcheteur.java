@@ -22,32 +22,39 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 		super();
 		this.mesContratEnTantQuAcheteur=new LinkedList<ExemplaireContratCadre>();
         this.epsilon  = 0.1;
-        this.qttInitialementVoulue = 0.5;//On cherche à acheter de quoi remplir notre stock à hauteur de 50%
+        this.qttInitialementVoulue = 11;//On cherche à acheter de quoi remplir notre stock //A MODIFIER
         this.prixInitialementVoulu = 0.75*9500; //Une valeur arbitraire s'appuyant sur le prix moyen des fèves de cacao en 2024
 	}
 
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {
-        //Si la qtt proposée est cohérente avec la quantité que nous voulions initialement, on accepte l'echeancier
-		if (Math.abs((this.qttInitialementVoulue*stockChoco.get(contrat.getProduit()) - contrat.getEcheancier().getQuantiteTotale())/(this.qttInitialementVoulue*stockChoco.get(contrat.getProduit()))) <= epsilon){
-            return contrat.getEcheancier();
-        }
-        //Sinon on négocie par dichotomie
-        else{
-            //Mise à jour de l'échéancier pour prendre en compte ces modifications
-            Echeancier e = contrat.getEcheancier();
-			//On procède par dichotomie en augmentant ou diminuant le volume de vente de nos produits
-            double delta = contrat.getEcheancier().getQuantiteTotale()- qttInitialementVoulue;
-            double signe = delta/Math.abs(delta);
-			this.qttInitialementVoulue = this.qttInitialementVoulue * (1 + signe*0.125);//si detla<0, proposition trop faible donc on diminue notre demande
-															                            //si delta>0, proposition trop forte donc on augmante notre demande
-
-			//Redistribution uniforme de la hausse ou de la baisse des qtt vendues 
-			for(int i = e.getStepDebut() ; i< e.getStepFin() ; i++){
-				double qtti = e.getQuantite(i);
-				e.set(i, qtti*(1+signe*0.125));
+		//On ne contrepropose que si la quantité figurant dans le contrat actuellement est supérieur au minimum de quantité totale de marchandise
+		if (contrat.getEcheancier().getQuantiteTotale() > SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER) {
+			//Si la qtt proposée est cohérente avec la quantité que nous voulions initialement, on accepte l'echeancier
+			if (Math.abs(this.qttInitialementVoulue-contrat.getEcheancier().getQuantiteTotale())/this.qttInitialementVoulue <= epsilon){
+				return contrat.getEcheancier();
 			}
-			return e;
-        }
+			//Sinon on négocie par dichotomie
+			else{
+				//Mise à jour de l'échéancier pour prendre en compte ces modifications
+				Echeancier e = contrat.getEcheancier();
+				//On procède par dichotomie en augmentant ou diminuant le volume de vente de nos produits
+				double delta = contrat.getEcheancier().getQuantiteTotale()- qttInitialementVoulue;
+				double signe = delta/Math.abs(delta);
+				this.qttInitialementVoulue = this.qttInitialementVoulue * (1 + signe*0.125);//si detla<0, proposition trop faible donc on diminue notre demande
+																							//si delta>0, proposition trop forte donc on augmante notre demande
+
+				//Redistribution uniforme de la hausse ou de la baisse des qtt vendues 
+				for(int i = e.getStepDebut() ; i< e.getStepFin() ; i++){
+					double qtti = e.getQuantite(i);
+					e.set(i, qtti*(1+signe*0.125));
+				}
+				if (e.getQuantiteTotale()>SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER) return e;
+				else return null;
+			}
+		}
+		else {
+			return null;
+		}
 	}
 	
 
@@ -89,7 +96,7 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 		this.mesContratEnTantQuAcheteur.removeAll(contratsObsoletes);
 		
 		//A MODIFIER
-		//Pour tous nos produits, on cherche des contrats cadre pouracheter des fèves
+		//Pour tous nos produits, on cherche des contrats cadre pour acheter des fèves
 		//Cette rechercche est systématique, il faudrait en réalité prendre en compte la nécessité de faire un CC
 		journalCC.ajouter("Recherche d'un vendeur aupres de qui acheter des fèves");
 		for(IProduit produit : stockFeves.keySet()){
@@ -108,7 +115,7 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 			}
 			if (vendeur!=null) {
 				journalCC.ajouter("Demande au superviseur de debuter les negociations pour un contrat cadre de "+produit+" avec le vendeur "+vendeur);
-				ExemplaireContratCadre cc = supCCadre.demandeAcheteur((IAcheteurContratCadre)this, vendeur, produit, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10, (SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER+10.0)/10), cryptogramme,false);
+				ExemplaireContratCadre cc = supCCadre.demandeAcheteur((IAcheteurContratCadre)this, vendeur, produit, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10, 20.), cryptogramme,false);
 				journalCC.ajouter("-->aboutit au contrat "+cc);
 			}
 			
@@ -140,7 +147,7 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 	}
 
 	public void receptionner(IProduit produit, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
-		totalStocksFeves.ajouter(this, quantiteEnTonnes); 
+		totalStocksFeves.ajouter(this, quantiteEnTonnes, cryptogramme); 
         double currStockFeves = stockFeves.get((Feve) produit);
         stockFeves.put((Feve) produit, currStockFeves+quantiteEnTonnes);
         journalStock.ajouter("Reception de " + quantiteEnTonnes +"feves " + ((Feve)produit).getGamme() + "(CC avec" + contrat.getVendeur() + ")");
