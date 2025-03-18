@@ -17,13 +17,14 @@ import abstraction.eqXRomu.produits.IProduit;
 
 
 
-public class Producteur2VendeurBourse extends Producteur2Acteur implements IVendeurBourse{
+public class Producteur2VendeurBourse extends Producteur2stock implements IVendeurBourse{
 
 	private Journal journalBourse;
 	
 	public Producteur2VendeurBourse() {
+
 		super();
-		this.journalBourse = new Journal(this.getNom()+" journal Bourse Eq2", this);
+		this.journalBourse = new Journal(" journal Bourse Eq2", this);
 
 	}
 
@@ -41,9 +42,9 @@ public class Producteur2VendeurBourse extends Producteur2Acteur implements IVend
 
 	public double notificationVente(Feve f, double quantiteEnT, double coursEnEuroParT) {
 		double retire = Math.min(this.stock.get(f).getValeur(), quantiteEnT);
-		this.stock.get(f).retirer(this, retire, cryptogramme);
-		journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : j'ai vendu "+quantiteEnT+" T de "+f+" -> je retire "+retire+" T du stock qui passe a "+this.stock.get(f).getValeur((Integer)cryptogramme));
-		super.SetStock();
+		journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : j'ai vendu "+quantiteEnT+" T de "+f);
+		DeleteStock(f,retire);
+
 		return retire;
 	}
 
@@ -51,14 +52,15 @@ public class Producteur2VendeurBourse extends Producteur2Acteur implements IVend
 		journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je suis blackliste pour une duree de "+dureeEnStep+" etapes");
 	}
 
-	public void next() {
-		super.next();
-	}
+
 
 	public List<Journal> getJournaux() {
-		List<Journal> res=new ArrayList<Journal>();
-		res.add(journalBourse);;
-		res.add(num);
+		List<Journal> res = super.getJournaux();
+		res.add(journalBourse);
 		return res;
+	}
+
+	public void next() {
+		super.next();
 	}
 }

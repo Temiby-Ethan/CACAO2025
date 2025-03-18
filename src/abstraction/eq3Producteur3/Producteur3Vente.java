@@ -2,14 +2,20 @@ package abstraction.eq3Producteur3;
 
 import abstraction.eqXRomu.bourseCacao.BourseCacao;
 import abstraction.eqXRomu.bourseCacao.IVendeurBourse;
+import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
+import abstraction.eqXRomu.contratsCadres.IVendeurContratCadre;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.produits.Feve;
+import abstraction.eqXRomu.produits.Gamme;
+import abstraction.eqXRomu.produits.IProduit;
+
 import java.util.List;
+import java.util.ArrayList;
 
-
-public class Producteur3Vente extends Producteur3Stock implements IVendeurBourse/*,IVendeurContratCadre*/{
-    protected List<ExemplaireContratCadre> mesContratEnTantQueVendeur;
+// Paul
+public class Producteur3Vente extends Producteur3Stock implements IVendeurBourse, IVendeurContratCadre{
+    protected List<ExemplaireContratCadre> mesContratCadres = new ArrayList<ExemplaireContratCadre>();
 
    
         public Producteur3Vente() {
@@ -20,7 +26,7 @@ public class Producteur3Vente extends Producteur3Stock implements IVendeurBourse
 
     // VENTE EN BOURSE //
 
-    // Paul
+    
     @Override
     public double offre(Feve feve, double cours) {
        
@@ -52,7 +58,7 @@ public class Producteur3Vente extends Producteur3Stock implements IVendeurBourse
 
    
 
-   /* @Override
+    @Override
     public boolean vend(IProduit produit) {
         if (produit instanceof Feve) {
             Feve feve = (Feve)produit;
@@ -60,47 +66,58 @@ public class Producteur3Vente extends Producteur3Stock implements IVendeurBourse
         }
         return false;
     }
-    /* 
+    
     @Override
     public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'contrePropositionDuVendeur'");
+        Echeancier echeancier = contrat.getEcheancier();
+        double qteTotale = contrat.getQuantiteTotale();
+        double qteInit = contrat.getEcheanciers().get(0).getQuantiteTotale();
+        if (qteTotale >= qteInit*1.1) {
+            return echeancier;
+        }
+        int stepDebut = contrat.getEcheancier().getStepDebut();
+        int stepFin = contrat.getEcheancier().getStepFin();
+        int nbStep = stepFin - stepDebut;
+        return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, nbStep,(int)(qteInit*1.2/nbStep));
     }
 
 
     @Override
     public double propositionPrix(ExemplaireContratCadre contrat) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'propositionPrix'");
+        Feve feve = (Feve)contrat.getProduit();
+        Gamme gamme = feve.getGamme();
+        BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
+        double cours = bourse.getCours(Feve.get(gamme, false, false)).getValeur();
+        return cours*1.5;
     }
 
 
     @Override
     public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'contrePropositionPrixVendeur'");
+        Feve feve = (Feve)contrat.getProduit();
+        Gamme gamme = feve.getGamme();
+        Double prixProp = contrat.getPrix();
+        BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
+        double cours = bourse.getCours(Feve.get(gamme, false, false)).getValeur();
+        if (prixProp >= cours*1.1) {
+            return prixProp;
+        }
+        return cours*1.1;
     }
 
 
     @Override
     public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'notificationNouveauContratCadre'");
+        this.mesContratCadres.add(contrat);
     }
 
 
     @Override
     public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'livrer'");
+        double stockActuel = this.stockFeve.get((Feve)produit).getValeur(cryptogramme);
+        double qteALivrer = Math.min(stockActuel, quantite);
+        this.stockFeve.get((Feve)produit).setValeur(this, stockActuel-qteALivrer, cryptogramme);
+        return qteALivrer;
     }
-    */
-
-    
-
-
-
-
-    
     
 }
