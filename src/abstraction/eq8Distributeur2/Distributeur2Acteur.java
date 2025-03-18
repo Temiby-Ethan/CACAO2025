@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import abstraction.eqXRomu.acteurs.Romu;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
@@ -20,7 +21,9 @@ public class Distributeur2Acteur implements IActeur {
 	//stockTotal et journal par Tidiane
 	private Journal journal_next = new Journal("journal Eq8", this);
 	
+
 	protected Variable stockTotal;
+	protected Journal journal;
 	protected int cryptogramme;
 	protected double coutStockage;
 	protected IProduit produit;
@@ -31,7 +34,7 @@ public class Distributeur2Acteur implements IActeur {
 	protected List<ChocolatDeMarque> chocoProduits;
 
 	public Distributeur2Acteur() {
-		stockTotal = new Variable("Volume total du stock de l'EQ8", "Volume total du stock", this);
+		
 		this.chocolats = new LinkedList<ChocolatDeMarque>();
 		this.chocoProduits = new LinkedList<ChocolatDeMarque>();
 		this.variables= new HashMap<Chocolat, Variable>();
@@ -39,8 +42,46 @@ public class Distributeur2Acteur implements IActeur {
 			this.variables.put(c,new Variable ("EQ8 stock de : "+c,this,0));}
 	}
 	
-	public void initialiser() {
+	
+    
+    public Variable getStockTotal(){
+		return stockTotal;
 	}
+
+    public void initialiser() {
+		
+		this.stock_Choco=new HashMap<ChocolatDeMarque,Double>();
+		this.nombreMarquesParType=new HashMap<Chocolat,Integer>();
+		
+		
+		chocolats= Filiere.LA_FILIERE.getChocolatsProduits();
+		
+		for (ChocolatDeMarque cm : chocolats) {
+		    Chocolat typeChoco = cm.getChocolat();
+		    nombreMarquesParType.put(typeChoco, nombreMarquesParType.getOrDefault(typeChoco, 0) + 1);
+	    }
+		
+		this.journal.ajouter("===== STOCK INITIALE =====");
+		for (ChocolatDeMarque cm : chocolats) {
+			double stock = 0;
+			
+			if (cm.getChocolat()==Chocolat.C_MQ_E) {
+				stock=12000;
+			}
+			
+			if (cm.getChocolat()==Chocolat.C_HQ_E) {
+				stock=12000;
+			}
+			if (cm.getChocolat()==Chocolat.C_HQ_BE)  {
+				stock=12000;
+			}
+			this.stock_Choco.put(cm, stock);
+			this.journal.ajouter(cm+"->"+this.stock_Choco.get(cm));
+			this.stockTotal.ajouter(this, stock, cryptogramme);
+		}
+		this.journal.ajouter("");
+	}
+
 
 	public String getNom() {// NE PAS MODIFIER
 		return "EQ8";
@@ -63,9 +104,7 @@ public class Distributeur2Acteur implements IActeur {
 		return this.journal_next;
 	}
 
-	public Variable getStockTotal(){
-		return stockTotal;
-	}
+	
 	
 	public Color getColor() {// NE PAS MODIFIER
 		return new Color(209, 179, 221); 
