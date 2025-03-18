@@ -43,8 +43,8 @@ public class Transformateur1VendeurAppelDoffre extends Transformateur1Stocks imp
 		totalStocksChocoMarque.setValeur(this, this.totalStocksChocoMarque.getValeur(this.cryptogramme) - propositionRetenue.getQuantiteT(), this.cryptogramme); 
 		this.journalTransactions.ajouter("J'ai maintenant " + this.totalStocksChocoMarque.getValeur(this.cryptogramme) + " tonnes de chocolat de marque en stock.");
 
-		VolumeTotalDeStock.setValeur(this, VolumeTotalDeStock.getValeur(this.cryptogramme) - propositionRetenue.getQuantiteT(), this.cryptogramme);
-		this.journalTransactions.ajouter("J'ai maintenant " + this.VolumeTotalDeStock.getValeur(this.cryptogramme) + " tonnes de chocolat en stock.");
+		totalStocksChoco.setValeur(this, totalStocksChoco.getValeur(this.cryptogramme) - propositionRetenue.getQuantiteT(), this.cryptogramme);
+		this.journalTransactions.ajouter("J'ai maintenant " + this.totalStocksChoco.getValeur(this.cryptogramme) + " tonnes de chocolat en stock.");
 	}
 	
 
