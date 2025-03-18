@@ -10,8 +10,7 @@ import abstraction.eqXRomu.filiere.IDistributeurChocolatDeMarque;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 
 import java.util.LinkedList;
-
-
+import java.util.List;
 
 import abstraction.eqXRomu.clients.ClientFinal;
 
@@ -72,7 +71,14 @@ public class Distributeur2Vendeur extends Distributeur2Acteur implements IDistri
     }
 
     public void notificationRayonVide(ChocolatDeMarque choco, int crypto){
-        journalVente.ajouter(" Aie... j'aurais du mettre davantage de "+choco.getNom()+" en vente");
+        journalVente.ajouter(" Aie... j'aurais du mettre davantage de " + choco.getNom() + " en vente");
     }
+
+
+	public List<Journal> getJournaux() {
+		List<Journal> jour = super.getJournaux();
+		jour.add(journalVente);
+		return jour;
+	}
 
 }
