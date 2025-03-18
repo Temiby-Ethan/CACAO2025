@@ -2,10 +2,7 @@ package abstraction.eq7Distributeur1;
 ///Maxime GUY///
 import java.awt.Color;
 import java.util.ArrayList;
-<<<<<<< HEAD
-=======
 import java.util.HashMap;
->>>>>>> 9992e9213b5e6215623ff0e38cec5819b349fc49
 import java.util.List;
 
 
@@ -16,52 +13,28 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
-<<<<<<< HEAD
-import abstraction.eqXRomu.produits.ChocolatDeMarque;
-import abstraction.eqXRomu.produits.IProduit;
-
-public class Distributeur1AcheteurEncheres implements IAcheteurAuxEncheres  {
-=======
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Distributeur1AcheteurEncheres extends Distributeur1AcheteurContratCadre implements IAcheteurAuxEncheres  {
->>>>>>> 9992e9213b5e6215623ff0e38cec5819b349fc49
 
-	protected Integer cryptogramme;
-	private List<Double> priceProduct;
-	private List<Double> requiredQuantities;
-<<<<<<< HEAD
-	private List<Integer> succesedSell;
-	private String name;
-	private Color color;
-	private List<Double> stock;
-
-	public Distributeur1AcheteurEncheres(List<Double> priceProduct, List<Double> requiredQuantities, String name, Color color, List<Double> stock) {
-=======
+	//protected Integer cryptogramme;
+	//private List<Double> priceProduct;
+	//private List<Double> requiredQuantities;
 	private List<Integer> successedSell;
-	private String name;
-	private Color color;
+	//private String name;
+	//private Color color;
 	//private HashMap<ChocolatDeMarque,Variable> stock;
 
-	public Distributeur1AcheteurEncheres(List<Double> priceProduct, List<Double> requiredQuantities, String name, Color color) {
->>>>>>> 9992e9213b5e6215623ff0e38cec5819b349fc49
-		super();
-		this.priceProduct = priceProduct;
-		this.name = name ;
-		this.color = color;
-		this.requiredQuantities = requiredQuantities;
-<<<<<<< HEAD
-		this.stock = stock;
-	}
-
-	public Boolean tooManyVolume(ChocolatDeMarque product, double volume){
-		int idProduct = (int) product.getChocolat().qualite();
-		return(this.requiredQuantities.get(idProduct)<volume);
-	}
-=======
+	public Distributeur1AcheteurEncheres(List<Integer> successedSell,List<Double> predictionsVentesPourcentage, List<Double> priceProduct, List<Double> requiredQuantities, int cryptogramme, int step, int product,String name,Color color) {
+		super(predictionsVentesPourcentage, priceProduct, requiredQuantities, cryptogramme, step, product, name, color);
+		//this.priceProduct = priceProduct;
+		//this.name = name ;
+		//this.color = color;
+		//this.requiredQuantities = requiredQuantities;
 		//this.stock = stock;
+		this.successedSell = successedSell;
 	}
 
 	    public int getInt(Chocolat product){
@@ -79,28 +52,18 @@ public class Distributeur1AcheteurEncheres extends Distributeur1AcheteurContratC
         }
         return(idProduct);
     }
->>>>>>> 9992e9213b5e6215623ff0e38cec5819b349fc49
 
 	public double proposerPrix(MiseAuxEncheres encheres){
 		IProduit product = encheres.getProduit();
 		if (product instanceof ChocolatDeMarque) {
         	ChocolatDeMarque chocolat = (ChocolatDeMarque) product;
 			double volume = encheres.getQuantiteT();
-<<<<<<< HEAD
-			int idProduct = (int) chocolat.getChocolat().qualite();
-			double price = this.priceProduct.get(idProduct);
-			double wantedquantity = this.requiredQuantities.get(idProduct);
-			int numberSuccessedSell = this.succesedSell.get(idProduct);
-			if (tooManyVolume(chocolat, volume)){
-				return(price*(90+10*(1-Math.exp(-1*numberSuccessedSell/5))*(1-Math.exp((wantedquantity-volume)/1000))));
-=======
 			int idProduct = getInt(chocolat.getChocolat());
 			double price = this.priceProduct.get(idProduct);
 			double wantedquantity = this.requiredQuantities.get(idProduct);
 			int numberSuccessedSell = this.successedSell.get(idProduct);
 			if (wantedquantity<volume){
 				return(price*(0.9+0.1*(1-Math.exp(-1*numberSuccessedSell/5))*(1-Math.exp((wantedquantity-volume)/1000))));
->>>>>>> 9992e9213b5e6215623ff0e38cec5819b349fc49
 			}
 		return(price*(1.1+0.02*numberSuccessedSell));
 		}
@@ -174,11 +137,9 @@ public class Distributeur1AcheteurEncheres extends Distributeur1AcheteurContratC
 		if (this.cryptogramme == cryptogramme){
 			if (p instanceof ChocolatDeMarque){
 				ChocolatDeMarque chocolat = (ChocolatDeMarque) p;
-<<<<<<< HEAD
-				return(stock.get((int) chocolat.getChocolat().qualite()));
-=======
-				return(stock.get(chocolat));
->>>>>>> 9992e9213b5e6215623ff0e38cec5819b349fc49
+				if (this.stocksChocolats != null && this.stocksChocolats.containsKey(chocolat)){
+					return(this.stocksChocolats.get((chocolat)).getValeur());
+				}
 			}
 			return(0);
 		}

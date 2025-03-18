@@ -19,38 +19,28 @@ import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.IProduit;
 
-<<<<<<< HEAD
-public class Distributeur1AcheteurAppelOffre implements IAcheteurAO  {
-=======
 public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurEncheres implements IAcheteurAO  {
->>>>>>> 9992e9213b5e6215623ff0e38cec5819b349fc49
 
-	protected Integer cryptogramme;
-	private IAcheteurAO identity;
-	private List<Double> requiredQuantities;
-	private Color color;
-	private String name;
-	private List<Double> stock;
-	private List<Double> priceProduct;
+	//protected Integer cryptogramme;
+	protected IAcheteurAO identity;
+	//private List<Double> requiredQuantities;
+	//private Color color;
+	//private String name;
+	//private List<Double> stock;
+	//private List<Double> priceProduct;
 
-<<<<<<< HEAD
-	public Distributeur1AcheteurAppelOffre(List<Double> requiredQuantities, IAcheteurAO identity,Color color,String name,List<Double> stock) {
-=======
-	public Distributeur1AcheteurAppelOffre(List<Double> requiredQuantities, IAcheteurAO identity,Color color,String name,List<Double> stock, List<Double> priceProduct) {
->>>>>>> 9992e9213b5e6215623ff0e38cec5819b349fc49
-		super();
-		this.requiredQuantities = requiredQuantities;
+	public Distributeur1AcheteurAppelOffre(IAcheteurAO identity,List<Integer> successedSell,List<Double> predictionsVentesPourcentage, List<Double> priceProduct, List<Double> requiredQuantities, int cryptogramme, int step, int product,String name,Color color) {
+		super(successedSell,predictionsVentesPourcentage, priceProduct, requiredQuantities, cryptogramme, step, product, name, color);
+		//this.requiredQuantities = requiredQuantities;
+		//this.identity = identity;
+		//this.color = color;
+		//this.name = name;
+		//this.stock = stock;
+		//this.priceProduct = priceProduct;
 		this.identity = identity;
-		this.color = color;
-		this.name = name;
-		this.stock = stock;
-		this.priceProduct = priceProduct;
 
 	}
-<<<<<<< HEAD
-=======
 
->>>>>>> 9992e9213b5e6215623ff0e38cec5819b349fc49
 	public int getInt(Chocolat product){
         int idProduct = 0;
         switch(product.getGamme()){
@@ -82,14 +72,6 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurEncher
 					}
 				}
 			}
-<<<<<<< HEAD
-			if (indice == -1){
-				return(null);
-			}
-			return(propositions.get(indice));
-			}
-
-=======
 		
 		if (indice == -1){
 			return(null);
@@ -97,26 +79,10 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurEncher
 		return(propositions.get(indice));
 		}
 	
->>>>>>> 9992e9213b5e6215623ff0e38cec5819b349fc49
 
 
 	public void initialiser(){
 
-	}
-
-	public void notifierAchatAuxEncheres(Enchere enchereRetenue){
-
-	}
-	public void notifierEnchereNonRetenue(Enchere enchereNonRetenue){
-		
-	}
-
-	public String getNom(){
-		return(this.name);
-	}
-
-	public Color getColor(){
-		return(this.color);
 	}
 
 	public String getDescription(){
@@ -147,43 +113,10 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurEncher
 		return(journaux);
 	}
 
-	public void setCryptogramme(Integer crypto){
-		this.cryptogramme = crypto;
-	}
-
-	public void notificationFaillite(IActeur acteur){
-
-	}
-
-	public void notificationOperationBancaire(double montant){
-
-	}
-
 	public List<String> getNomsFilieresProposees(){
 		List<String> noms = new ArrayList<String>();
 		return(noms);
 	}
 
-	public Filiere getFiliere(String nom){
-		Filiere test = new Filiere(0);
-		return(test);
-	}
-
-	public double getQuantiteEnStock(IProduit p, int cryptogramme ){
-		if (this.cryptogramme == cryptogramme){
-			if (p instanceof ChocolatDeMarque){
-				ChocolatDeMarque chocolat = (ChocolatDeMarque) p;
-<<<<<<< HEAD
-				return(stock.get((int) chocolat.getChocolat().qualite()));
-=======
-				return(stock.get(getInt(chocolat.getChocolat())));
->>>>>>> 9992e9213b5e6215623ff0e38cec5819b349fc49
-			}
-			return(0);
-		}
-		return(0);
-	}
 	
 }
-
-
