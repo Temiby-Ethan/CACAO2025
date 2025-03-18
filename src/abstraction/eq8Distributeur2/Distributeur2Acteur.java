@@ -11,6 +11,7 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
+import abstraction.eqXRomu.general.VariablePrivee;
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.IProduit;
@@ -35,8 +36,10 @@ public class Distributeur2Acteur implements IActeur {
 
 	public Distributeur2Acteur() {
 		
+		this.journal= new Journal(this.getNom()+" journal", this);
 		this.chocolats = new LinkedList<ChocolatDeMarque>();
 		this.chocoProduits = new LinkedList<ChocolatDeMarque>();
+		this.stockTotal = new VariablePrivee("Eq8DStockChocoMarque","Quantite totale de chocolat de marque en stock",this,0);
 		this.variables= new HashMap<Chocolat, Variable>();
 		for (Chocolat c : Chocolat.values()) {
 			this.variables.put(c,new Variable ("EQ8 stock de : "+c,this,0));}
