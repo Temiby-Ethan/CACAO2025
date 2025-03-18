@@ -18,12 +18,10 @@ import abstraction.eqXRomu.produits.Feve;
 public class Transformateur3ContratCadreAcheteur extends Transformateur3Fabriquant implements IAcheteurContratCadre{
 	protected List<ExemplaireContratCadre> ContratsAcheteur;
 	protected List<ExemplaireContratCadre> contratsObsoletes;
-	protected SuperviseurVentesContratCadre supCCadre;
 
 	public Transformateur3ContratCadreAcheteur() {
 		this.ContratsAcheteur=new LinkedList<ExemplaireContratCadre>();
 		this.contratsObsoletes =new LinkedList<ExemplaireContratCadre>();
-		this.supCCadre = (SuperviseurVentesContratCadre) Filiere.LA_FILIERE.getActeur("Sup.CCadre");
 	}
 
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {
@@ -34,6 +32,8 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3Fabriqua
 		return contrat.getPrix();
 	}
 	public void next() {
+		SuperviseurVentesContratCadre supCCadre = (SuperviseurVentesContratCadre) Filiere.LA_FILIERE.getActeur("Sup.CCadre");
+
 		journalCC.ajouter("======= Contrats cadres finis période"+Filiere.LA_FILIERE.getEtape()+"=======");
 		// On enleve les contrats obsolete (nous pourrions vouloir les conserver pour "archive"...)
 		for (ExemplaireContratCadre contrat : this.ContratsAcheteur) {
