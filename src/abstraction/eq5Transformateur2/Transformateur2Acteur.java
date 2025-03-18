@@ -12,10 +12,11 @@ import java.util.List;
 public class Transformateur2Acteur implements IActeur {
     protected int cryptogramme;
     protected Journal journal;
-    protected Stock stock;
+    //protected Stock stock;
 
     public Transformateur2Acteur() {
         this.journal = new Journal("Journal Equipe 5", this);
+    //    this.stock = new Stock();
     }
     
     public void initialiser() {}

@@ -81,7 +81,7 @@ class ContratCadreAcheteur extends ContratCadreVendeur implements IAcheteurContr
 	 * mettre ce produit dans son stock.
 	 */
 	public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat){
-        super.stock.ajouterStock(this, p, quantiteEnTonnes, super.cryptogramme);
+        this.ajouterStock(this, p, quantiteEnTonnes, super.cryptogramme);
     }
 
 }

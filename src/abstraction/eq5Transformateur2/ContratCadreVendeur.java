@@ -86,7 +86,7 @@ public class ContratCadreVendeur extends Stock implements IVendeurContratCadre{
 	 *  est inferieure a celle precisee en parametre
 	 */
 	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat){
-		super.stock.retirerStock(this, produit, quantite, super.cryptogramme);
+		this.retirerStock(this, produit, quantite, super.cryptogramme);
 		return quantite;
 	}
 

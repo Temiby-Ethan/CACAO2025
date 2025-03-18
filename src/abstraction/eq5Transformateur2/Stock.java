@@ -54,13 +54,7 @@ public class Stock extends Transformateur2Acteur{
         return null;
     }
 
-    public Variable getstockFeve(Feve f) {
-        return this.stockFeve.get(f);
-    }
-
-    public Variable getstockChoco(Chocolat c) {
-        return this.stockChoco.get(c);
-    }
+    
 
     public void ajouterStock(IActeur auteur,IProduit p, double quantite, Integer cryptogramme) {
         if (p instanceof Feve) {
@@ -114,14 +108,12 @@ public class Stock extends Transformateur2Acteur{
 		List<Variable> res = super.getIndicateurs();
 		res.add(this.stockChocoTotal);
 		res.add(this.stockFeveTotal);
-        res.add(this.stockChocoMarqueTotal);    		return res;
+        res.add(this.stockChocoMarqueTotal);    		
+        return res;
     }
 
     public void next(){
         super.next();
-        this.journal.ajouter("ok");
-        ajouterStock(this,Feve.F_MQ,80, this.cryptogramme);
-        this.journal.ajouter(super.stock.getQuantiteStock(Feve.F_MQ)+"feve");
     }
 
 

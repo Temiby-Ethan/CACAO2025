@@ -23,9 +23,8 @@ public class AcheteurBourse extends ContratCadreAcheteur implements IAcheteurBou
 
     public void notificationAchat(Feve f, double quantiteEnT, double coursEnEuroParT) {
         super.journal.ajouter("achat effectues");
-        super.stock.ajouterStock(this,f,quantiteEnT, this.cryptogramme);
-        super.journal.ajouter("");
-        super.journal.ajouter("Achat de " + quantiteEnT + " tonnes de " + f + " à " + coursEnEuroParT + " euros par tonne");
+        this.ajouterStock(this,f,quantiteEnT, this.cryptogramme);
+        super.journal.ajouter("ajout de " + quantiteEnT + " tonnes de " + f + " à notre stock");
 		
 
 	}
