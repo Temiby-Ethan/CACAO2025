@@ -1,8 +1,7 @@
 package abstraction.eqXRomu.filiere;
 
-import java.util.List;
-
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
+import java.util.List;
 
 /**
  * Interface implementee par tous les acteurs produisant des chocolats de marque
@@ -17,4 +16,3 @@ public interface IFabricantChocolatDeMarque extends IActeur {
 	public List<ChocolatDeMarque> getChocolatsProduits();
 
 }
-
