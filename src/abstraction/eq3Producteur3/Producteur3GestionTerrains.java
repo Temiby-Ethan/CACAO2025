@@ -183,7 +183,7 @@ public class Producteur3GestionTerrains extends Producteur3Acteur{
 
     // Paul
     void actualiserTerrain(){
-        if (Filiere.LA_FILIERE.getNumeroMois() == 0){
+        if (Filiere.LA_FILIERE.getNumeroMois() == 1 && Filiere.LA_FILIERE.getJour() == 1){
             LinkedList<Parcelle> aReplanter = vie.get(39);
             // On fait vieillir toutes les parcelles d'un an
             for (int i = 38; i >= 0; i--){

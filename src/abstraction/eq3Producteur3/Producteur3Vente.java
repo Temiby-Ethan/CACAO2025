@@ -79,7 +79,7 @@ public class Producteur3Vente extends Producteur3Stock implements IVendeurBourse
     public boolean vend(IProduit produit) {
         if (produit instanceof Feve) {
             Feve feve = (Feve)produit;
-            return feve.getGamme().equals(Gamme.MQ);
+            return feve.getGamme().equals(Gamme.MQ) && feve.isEquitable();
         }
         return false;
     }
