@@ -133,6 +133,9 @@ public class Distributeur1 extends Distributeur1Acteur  {
 			return 0;
 		}
 	}
+	public void notificationRayonVide(ChocolatDeMarque choco) {
+		journal.ajouter(" Aie... j'aurais du mettre davantage de "+choco.getNom()+" en vente");
+	}
 
 	// Renvoie les journaux
 	public List<Journal> getJournaux() { // par Alexiho
