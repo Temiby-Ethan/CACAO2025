@@ -34,8 +34,8 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 	protected Variable totalStocksFeves;  // La quantite totale de stock de feves 
 	protected Variable totalStocksChoco;  // La quantite totale de stock de chocolat 
 
-	protected Variable totalStocksChocoMarque;  // La quantite totale de stock de chocolat de marque 
-	protected Variable VolumeTotalDeStock; // Le volume total de stock
+	protected Variable totalStocksChocoMarque;  // La quantite totale de stock de chocolat de marque
+	protected Variable totalStocksChocoNonMarquee; // La quantie totale de stock de chocolat non marquee
 
 	public Transformateur1Acteur() {
 		
@@ -45,9 +45,9 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 		this.journalTransactions = new Journal("Journal Transactions " + this.getNom(), this);
 
 		this.totalStocksFeves = new VariablePrivee("Eq4TStockFeves", "<html>Quantite totale de feves en stock</html>",this, 0.0, 1000000.0, 0.0);
-		this.totalStocksChoco = new VariablePrivee("Eq4TStockChoco", "<html>Quantite totale de chocolat en stock</html>",this, 0.0, 1000000.0, 0.0);
-		this.VolumeTotalDeStock = new VariablePrivee("Eq4TStockTotalChoco", "<html>Volume total de stock</html>",this, 0.0, 1000000.0, 0.0);
+		this.totalStocksChoco = new VariablePrivee("Eq4TStockTotalChoco", "<html>Quantite totale de chocolat en stock</html>",this, 0.0, 1000000.0, 0.0);
 		this.totalStocksChocoMarque = new VariablePrivee("Eq4TStockChocoMarque", "<html>Quantite totale de chocolat de marque en stock</html>",this, 0.0, 1000000.0, 0.0);
+		this.totalStocksChocoNonMarquee = new VariablePrivee("Eq4TStockChocoNonMarquee", "<html>Quantite totale de chocolat non marquee en stock</html>",this, 0.0, 1000000.0, 0.0);
 	}
 
 	public void initialiser() {
@@ -62,17 +62,15 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 		for (Feve f : this.lesFeves) {
 			this.stockFeves.put(f, 20000.0);
 			this.totalStocksFeves.ajouter(this, 20000.0, this.cryptogramme);
-			this.VolumeTotalDeStock.ajouter(this, 20000.0, this.cryptogramme);
 			this.journalStock.ajouter("ajout de 20000 de "+f+" au stock de feves --> total="+this.totalStocksFeves.getValeur(this.cryptogramme));
 		}
 
 		//Test stock de choco
 		this.stockChoco=new HashMap<Chocolat,Double>();
 		for (Chocolat c : Chocolat.values()) {
-			this.stockChoco.put(c, 20000.0);
-			this.totalStocksChoco.ajouter(this, 20000.0, this.cryptogramme);
-			this.VolumeTotalDeStock.ajouter(this, 20000.0, this.cryptogramme);
-			this.journalStock.ajouter("ajout de 20000 de "+c+" au stock de chocolat --> total="+this.totalStocksChoco.getValeur(this.cryptogramme));
+			this.stockChoco.put(c, 0.0);
+			this.totalStocksChoco.ajouter(this, 0.0, this.cryptogramme);
+			this.journalStock.ajouter("Initialisation de 0 de "+c+" au stock de chocolat --> total="+this.totalStocksChoco.getValeur(this.cryptogramme));
 		}
 	}
 
@@ -102,7 +100,6 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 
 		this.journalStock.ajouter("Stock de fèves : " + this.totalStocksFeves.getValeur(this.cryptogramme));
 		this.journalStock.ajouter("Stock de chocolat : " + this.totalStocksChoco.getValeur(this.cryptogramme));
-		this.journalStock.ajouter("Volume total de stock : " + this.VolumeTotalDeStock.getValeur(this.cryptogramme));
 		this.journalStock.ajouter("Stock de chocolat de marque : " + this.totalStocksChocoMarque.getValeur(this.cryptogramme));
 		this.journal.ajouter("Solde : " + this.getSolde());
 	}
@@ -120,8 +117,8 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 		List<Variable> res = new ArrayList<Variable>();
 		res.add(this.totalStocksFeves);
 		res.add(this.totalStocksChoco);
-		res.add(this.VolumeTotalDeStock);
 		res.add(this.totalStocksChocoMarque);
+		res.add(this.totalStocksChocoNonMarquee);
 		return res;
 	}
 
