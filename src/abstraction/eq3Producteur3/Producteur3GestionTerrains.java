@@ -183,7 +183,7 @@ public class Producteur3GestionTerrains extends Producteur3Acteur{
 
     // Paul
     void actualiserTerrain(){
-        if (Filiere.LA_FILIERE.getNumeroMois() == 1 && Filiere.LA_FILIERE.getJour() == 1){
+        if (Filiere.LA_FILIERE.getNumeroMois() == 1 /*&& Filiere.LA_FILIERE.getJour() == 1*/){
             LinkedList<Parcelle> aReplanter = vie.get(39);
             // On fait vieillir toutes les parcelles d'un an
             for (int i = 38; i >= 0; i--){
@@ -192,7 +192,6 @@ public class Producteur3GestionTerrains extends Producteur3Acteur{
             // On replante toutes les parcelles de 40 ans
             for(Parcelle t : aReplanter){
                 deficteTerrain.add(t.qualite.replanter);
-                aReplanter.remove(t);
                 vie.get(0).add(t);
             }
         }
