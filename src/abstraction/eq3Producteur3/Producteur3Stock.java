@@ -20,6 +20,12 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
     protected HashMap<Integer,VariablePrivee> stockFeveHQ = new HashMap<Integer,VariablePrivee>();
     protected HashMap<Integer,VariablePrivee> stockFeveHQ_B = new HashMap<Integer,VariablePrivee>();
     protected VariablePrivee totalStock;
+    protected VariablePrivee totalStockBQ;
+    protected VariablePrivee totalStockBQ_E;
+    protected VariablePrivee totalStockMQ;
+    protected VariablePrivee totalStockMQ_E;
+    protected VariablePrivee totalStockHQ;
+    protected VariablePrivee totalStockHQ_B;
     protected VariablePrivee coutStock;
 
 
@@ -41,9 +47,21 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
             stockFeveHQ_B.put(i, new VariablePrivee(getNom()+"Stock HQ_B de "+i,this));
         }
         totalStock = new VariablePrivee(this.getNom()+"Stock Total", this, 0.0, 100000000000000.0, 0);
+        totalStockBQ = new VariablePrivee(this.getNom()+"Stock Total BQ", this);
+        totalStockBQ_E = new VariablePrivee(this.getNom()+"Stock Total BQ_E", this);
+        totalStockMQ = new VariablePrivee(this.getNom()+"Stock Total MQ", this);
+        totalStockMQ_E = new VariablePrivee(this.getNom()+"Stock Total MQ_E", this);
+        totalStockHQ = new VariablePrivee(this.getNom()+"Stock Total HQ", this);
+        totalStockHQ_B = new VariablePrivee(this.getNom()+"Stock Total HQ_B", this);
         coutStock = new VariablePrivee(this.getNom() + "Cout Stockage", this, 0.0, 1000000000.0, 0);
         getIndicateurs().add(totalStock);
         getIndicateurs().add(coutStock);
+        getIndicateurs().add(totalStockBQ);
+        getIndicateurs().add(totalStockBQ_E);
+        getIndicateurs().add(totalStockMQ);
+        getIndicateurs().add(totalStockMQ_E);
+        getIndicateurs().add(totalStockHQ);
+        getIndicateurs().add(totalStockHQ_B);
     }
   
     
@@ -62,6 +80,13 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
             total+=stockFeveHQ_B.get(i).getValeur(cryptogramme);
         }
         totalStock.setValeur(this, total, cryptogramme);
+        calculTotalStockBQ();
+        calculTotalStockBQ_E();
+        calculTotalStockMQ();
+        calculTotalStockMQ_E();
+        calculTotalStockHQ();
+        calculTotalStockHQ_B();
+
         return total;
 
     }
@@ -71,6 +96,7 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
         for(int i = 0; i < 8; i++){
             total+=stockFeveBQ.get(i).getValeur(cryptogramme);
         }
+        totalStockBQ.setValeur(this, total, cryptogramme);
 
         return total;
     }
@@ -80,7 +106,7 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
         for(int i = 0; i < 8; i++){
             total+=stockFeveBQ_E.get(i).getValeur(cryptogramme);
         }
-
+        totalStockBQ_E.setValeur(this, total, cryptogramme);
         return total;
     }
     double calculTotalStockMQ(){
@@ -88,7 +114,7 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
         for(int i = 0; i < 8; i++){
             total+=stockFeveMQ.get(i).getValeur(cryptogramme);
         }
-
+        totalStockMQ.setValeur(this, total, cryptogramme);
         return total;
     }
 
@@ -97,7 +123,7 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
         for(int i = 0; i < 8; i++){
             total+=stockFeveMQ_E.get(i).getValeur(cryptogramme);
         }
-
+        totalStockMQ_E.setValeur(this, total, cryptogramme);
         return total;
     }
     double calculTotalStockHQ(){
@@ -105,7 +131,7 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
         for(int i = 0; i < 8; i++){
             total+=stockFeveHQ.get(i).getValeur(cryptogramme);
         }
-
+        totalStockHQ.setValeur(this, total, cryptogramme);
         return total;
     }
     double calculTotalStockHQ_B(){
@@ -113,7 +139,7 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
         for(int i = 0; i < 8; i++){
             total+=stockFeveHQ_B.get(i).getValeur(cryptogramme);
         }
-
+        totalStockHQ_B.setValeur(this, total, cryptogramme);
         return total;
     }
 
@@ -144,12 +170,18 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
     void vieillirStock(){
         for(int i = 7; i > 0; i--){
             stockFeveBQ.get(i).setValeur(this, stockFeveBQ.get(i-1).getValeur(cryptogramme), cryptogramme);
+            stockFeveBQ_E.get(i).setValeur(this, stockFeveBQ_E.get(i-1).getValeur(cryptogramme), cryptogramme);
             stockFeveMQ.get(i).setValeur(this, stockFeveMQ.get(i-1).getValeur(cryptogramme), cryptogramme);
+            stockFeveMQ_E.get(i).setValeur(this, stockFeveMQ_E.get(i-1).getValeur(cryptogramme), cryptogramme);
             stockFeveHQ.get(i).setValeur(this, stockFeveHQ.get(i-1).getValeur(cryptogramme), cryptogramme);
+            stockFeveHQ_B.get(i).setValeur(this, stockFeveHQ.get(i-1).getValeur(cryptogramme), cryptogramme);
         }
         stockFeveBQ.get(0).setValeur(this, sechageBQ[0], cryptogramme);
+        stockFeveBQ_E.get(0).setValeur(this, sechageBQ_E[0], cryptogramme);
         stockFeveMQ.get(0).setValeur(this, sechageMQ[0], cryptogramme);
+        stockFeveMQ_E.get(0).setValeur(this, sechageMQ_E[0], cryptogramme);
         stockFeveHQ.get(0).setValeur(this, sechageHQ[0], cryptogramme);
+        stockFeveHQ_B.get(0).setValeur(this, sechageHQ_B[0], cryptogramme);
     }
     
     
@@ -157,26 +189,32 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
     public void ajouterStockBQ(Feve feve,double delta){
         stockFeveBQ.get(0).ajouter(this,delta,cryptogramme);
         journal.ajouter("Ajout de " + delta + " au stock de " + feve + ". Nouveau stock : " + stockFeveBQ.get(0).getValeur(cryptogramme));
+        calculTotalStock();
     }
     public void ajouterStockBQ_E(Feve feve,double delta){
         stockFeveBQ_E.get(0).ajouter(this,delta,cryptogramme);
         journal.ajouter("Ajout de " + delta + " au stock de " + feve + ". Nouveau stock : " + stockFeveBQ_E.get(0).getValeur(cryptogramme));
+        calculTotalStock();
     }
     public void ajouterStockMQ(Feve feve,double delta){
         stockFeveMQ.get(0).ajouter(this,delta,cryptogramme);
         journal.ajouter("Ajout de " + delta + " au stock de " + feve + ". Nouveau stock : " + stockFeveMQ.get(0).getValeur(cryptogramme));
+        calculTotalStock();
     }
     public void ajouterStockMQ_E(Feve feve,double delta){
         stockFeveMQ.get(0).ajouter(this,delta,cryptogramme);
         journal.ajouter("Ajout de " + delta + " au stock de " + feve + ". Nouveau stock : " + stockFeveMQ_E.get(0).getValeur(cryptogramme));
+        calculTotalStock();
     }
     public void ajouterStockHQ(Feve feve,double delta){
         stockFeveHQ.get(0).ajouter(this,delta,cryptogramme);
         journal.ajouter("Ajout de " + delta + " au stock de " + feve + ". Nouveau stock : " + stockFeveHQ.get(0).getValeur(cryptogramme));
+        calculTotalStock();
     }
     public void ajouterStockHQ_B(Feve feve,double delta){
         stockFeveHQ.get(0).ajouter(this,delta,cryptogramme);
         journal.ajouter("Ajout de " + delta + " au stock de " + feve + ". Nouveau stock : " + stockFeveHQ_B.get(0).getValeur(cryptogramme));
+        calculTotalStock();
     }
 
     public void retirerStockBQ(Feve feve,double delta){
@@ -186,6 +224,7 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
             if(val>=qte){
                 stockFeveBQ.get(i).retirer(this, delta, cryptogramme);
                 journal.ajouter("Retrait de " + delta + " du stock de " + feve + ". Nouveau stock : " + calculTotalStockBQ());
+                calculTotalStock();
                 return;
             }else{
                 stockFeveBQ.get(i).retirer(this, val, cryptogramme);
@@ -193,6 +232,7 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
             }
         }
         journal.ajouter("Retrait de " + delta + " du stock de " + feve + ". Nouveau stock : " + calculTotalStockBQ());
+        calculTotalStock();
     }
 
     public void retirerStockBQ_E(Feve feve,double delta){
@@ -202,6 +242,7 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
             if(val>=qte){
                 stockFeveBQ_E.get(i).retirer(this, delta, cryptogramme);
                 journal.ajouter("Retrait de " + delta + " du stock de " + feve + ". Nouveau stock : " + calculTotalStockBQ_E());
+                calculTotalStock();
                 return;
             }else{
                 stockFeveBQ_E.get(i).retirer(this, val, cryptogramme);
@@ -209,6 +250,7 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
             }
         }
         journal.ajouter("Retrait de " + delta + " du stock de " + feve + ". Nouveau stock : " + calculTotalStockBQ_E());
+        calculTotalStock();
     }
 
     public void retirerStockMQ(Feve feve,double delta){
@@ -218,6 +260,7 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
             if(val>=qte){
                 stockFeveMQ.get(i).retirer(this, delta, cryptogramme);
                 journal.ajouter("Retrait de " + delta + " du stock de " + feve + ". Nouveau stock : " + calculTotalStockMQ());
+                calculTotalStock();
                 return;
             }else{
                 stockFeveMQ.get(i).retirer(this, val, cryptogramme);
@@ -225,6 +268,7 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
             }
         }
         journal.ajouter("Retrait de " + delta + " du stock de " + feve + ". Nouveau stock : " + calculTotalStockMQ());
+        calculTotalStock();
     }
 
     public void retirerStockMQ_E(Feve feve,double delta){
@@ -234,6 +278,7 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
             if(val>=qte){
                 stockFeveMQ_E.get(i).retirer(this, delta, cryptogramme);
                 journal.ajouter("Retrait de " + delta + " du stock de " + feve + ". Nouveau stock : " + calculTotalStockMQ_E());
+                calculTotalStock();
                 return;
             }else{
                 stockFeveMQ_E.get(i).retirer(this, val, cryptogramme);
@@ -241,6 +286,7 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
             }
         }
         journal.ajouter("Retrait de " + delta + " du stock de " + feve + ". Nouveau stock : " + calculTotalStockMQ_E());
+        calculTotalStock();
     }
 
     public void retirerStockHQ(Feve feve,double delta){
@@ -250,6 +296,7 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
             if(val>=qte){
                 stockFeveHQ.get(i).retirer(this, delta, cryptogramme);
                 journal.ajouter("Retrait de " + delta + " du stock de " + feve + ". Nouveau stock : " + calculTotalStockHQ());
+                calculTotalStock();
                 return;
             }else{
                 stockFeveHQ.get(i).retirer(this, val, cryptogramme);
@@ -257,6 +304,7 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
             }
         }
         journal.ajouter("Retrait de " + delta + " du stock de " + feve + ". Nouveau stock : " + calculTotalStockHQ());
+        calculTotalStock();
     }
 
     public void retirerStockHQ_B(Feve feve,double delta){
@@ -266,6 +314,7 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
             if(val>=qte){
                 stockFeveHQ_B.get(i).retirer(this, delta, cryptogramme);
                 journal.ajouter("Retrait de " + delta + " du stock de " + feve + ". Nouveau stock : " + calculTotalStockHQ_B());
+                calculTotalStock();
                 return;
             }else{
                 stockFeveHQ_B.get(i).retirer(this, val, cryptogramme);
@@ -273,6 +322,7 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
             }
         }
         journal.ajouter("Retrait de " + delta + " du stock de " + feve + ". Nouveau stock : " + calculTotalStockHQ_B());
+        calculTotalStock();
     }
 
     public double calculCoutStock() {

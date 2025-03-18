@@ -27,6 +27,7 @@ public class Producteur3 extends Producteur3GestionDesCoûts  {
 		actualiserTerrain();
 		vieillirStock();
 		recolte();
+		calculTotalStock();
 		
 
 
