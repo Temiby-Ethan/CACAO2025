@@ -1,8 +1,7 @@
 package abstraction.eq4Transformateur1;
 
-public class Transformateur1 extends Transformateur1AcheteurBourse {
+import abstraction.eq4Transformateur1.contratCadre.Transformateur1ContratCadreVendeurAcheteur;
+
+public class Transformateur1 extends Transformateur1ContratCadreVendeurAcheteur {
 	
-	public Transformateur1() {
-		super();
-	}
 }
