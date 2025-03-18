@@ -16,9 +16,7 @@ public class Transformateur1VendeurAppelDoffre extends Transformateur1AcheteurBo
 
 	double prix_BQ = 2100;
 	double prix_BQ_E = 2200;
-	double prix_MQ = 2250;
 	double prix_MQ_E = 2350;
-	double prix_HQ_E = 2550;
 	double prix_HQ_BE = 2700;
 
     public Transformateur1VendeurAppelDoffre() {
@@ -35,12 +33,8 @@ public class Transformateur1VendeurAppelDoffre extends Transformateur1AcheteurBo
 				prix = prix_BQ * T * pourcentageTransfo.get(Feve.F_BQ).get(Chocolat.C_BQ);
 			} else if (((ChocolatDeMarque) offre.getProduit()).getChocolat() == Chocolat.C_BQ_E) {
 				prix = prix_BQ_E * T * pourcentageTransfo.get(Feve.F_BQ_E).get(Chocolat.C_BQ_E);
-			} else if (((ChocolatDeMarque) offre.getProduit()).getChocolat() == Chocolat.C_MQ) {
-				prix = prix_MQ * T * pourcentageTransfo.get(Feve.F_MQ).get(Chocolat.C_MQ);
 			} else if (((ChocolatDeMarque) offre.getProduit()).getChocolat() == Chocolat.C_MQ_E) {
-				prix = prix_HQ_E * T * pourcentageTransfo.get(Feve.F_MQ_E).get(Chocolat.C_MQ_E);
-			} else if (((ChocolatDeMarque) offre.getProduit()).getChocolat() == Chocolat.C_HQ_E) {
-				prix = prix_HQ_E * T * pourcentageTransfo.get(Feve.F_HQ_E).get(Chocolat.C_HQ_E);
+				prix = prix_MQ_E * T * pourcentageTransfo.get(Feve.F_MQ_E).get(Chocolat.C_MQ_E);
 			} else if (((ChocolatDeMarque) offre.getProduit()).getChocolat() == Chocolat.C_HQ_BE) {
 				prix = prix_HQ_BE * T * pourcentageTransfo.get(Feve.F_HQ_BE).get(Chocolat.C_HQ_BE);
 			}
@@ -76,12 +70,8 @@ public class Transformateur1VendeurAppelDoffre extends Transformateur1AcheteurBo
 			prix_BQ -= 50;
 		} else if (((ChocolatDeMarque) propositionRefusee.getProduit()).getChocolat() == Chocolat.C_BQ_E) {
 			prix_BQ_E -= 50;
-		} else if (((ChocolatDeMarque) propositionRefusee.getProduit()).getChocolat() == Chocolat.C_MQ) {
-			prix_MQ -= 50;
 		} else if (((ChocolatDeMarque) propositionRefusee.getProduit()).getChocolat() == Chocolat.C_MQ_E) {
 			prix_MQ_E -= 50;
-		} else if (((ChocolatDeMarque) propositionRefusee.getProduit()).getChocolat() == Chocolat.C_HQ_E) {
-			prix_HQ_E -= 50;
 		} else if (((ChocolatDeMarque) propositionRefusee.getProduit()).getChocolat() == Chocolat.C_HQ_BE) {
 			prix_HQ_BE -= 50;
 		}
