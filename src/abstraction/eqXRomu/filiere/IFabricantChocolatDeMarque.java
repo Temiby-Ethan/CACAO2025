@@ -1,6 +1,5 @@
 package abstraction.eqXRomu.filiere;
 
-
 import java.util.List;
 
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
