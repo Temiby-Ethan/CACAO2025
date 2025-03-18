@@ -16,7 +16,7 @@ import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class Distributeur1AcheteurEncheres implements IAcheteurAuxEncheres  {
+public class Distributeur1AcheteurEncheres extends Distributeur1AcheteurContratCadre implements IAcheteurAuxEncheres  {
 
 	protected Integer cryptogramme;
 	private List<Double> priceProduct;
@@ -24,7 +24,7 @@ public class Distributeur1AcheteurEncheres implements IAcheteurAuxEncheres  {
 	private List<Integer> successedSell;
 	private String name;
 	private Color color;
-	private List<Double> stock;
+	//private List<Double> stock;
 
 	public Distributeur1AcheteurEncheres(List<Double> priceProduct, List<Double> requiredQuantities, String name, Color color, List<Double> stock) {
 		super();
@@ -32,7 +32,7 @@ public class Distributeur1AcheteurEncheres implements IAcheteurAuxEncheres  {
 		this.name = name ;
 		this.color = color;
 		this.requiredQuantities = requiredQuantities;
-		this.stock = stock;
+		//this.stock = stock;
 	}
 
 	    public int getInt(Chocolat product){

@@ -19,7 +19,7 @@ import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class Distributeur1AcheteurAppelOffre implements IAcheteurAO  {
+public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurEncheres implements IAcheteurAO  {
 
 	protected Integer cryptogramme;
 	private IAcheteurAO identity;
