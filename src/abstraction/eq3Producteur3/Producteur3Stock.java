@@ -27,6 +27,8 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
         
     }
 
+
+    //Zoé
     public void initStock(){
         for(int i = 0; i < 8; i++){
             stockFeveBQ.put(i, new VariablePrivee(getNom()+"Stock BQ de "+i,this));
@@ -42,19 +44,23 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
         getIndicateurs().add(coutStock);
     }
   
-    //Zoé
+    
 
 
     
 
-    public void calculTotalStock(){
+    public double calculTotalStock(){
         double total = 0;
         for(int i = 0; i < 8; i++){
             total+=stockFeveBQ.get(i).getValeur(cryptogramme);
+            total+=stockFeveBQ_E.get(i).getValeur(cryptogramme);
             total+=stockFeveMQ.get(i).getValeur(cryptogramme);
+            total+=stockFeveMQ_E.get(i).getValeur(cryptogramme);
             total+=stockFeveHQ.get(i).getValeur(cryptogramme);
+            total+=stockFeveHQ_B.get(i).getValeur(cryptogramme);
         }
         totalStock.setValeur(this, total, cryptogramme);
+        return total;
 
     }
 
@@ -245,14 +251,9 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
         journal.ajouter("Retrait de " + delta + " du stock de " + feve + ". Nouveau stock : " + calculTotalStockHQ_B());
     }
 
-    public void calculCoutStock() {
-        /*double totalCout = 0;
-        for (VariablePrivee p : stockFeve.values()) {
-            double stockEnTonnes = stockFeve.get(p).getValeur(cryptogramme) / 1000; // Conversion kg → tonnes
-            totalCout += stockEnTonnes * 7.5;// 7,5 €/tonne par step
-        }
-        coutStock.setValeur(this, totalCout, cryptogramme);
-        journal.ajouter("Coût total du stockage : " + totalCout + " €");*/
+    public double calculCoutStock() {
+        return  7.5 * calculTotalStock(); 
+        
     }
 
     public int getStepActuel() {
@@ -260,10 +261,7 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
     }
 
 
-  /*public int getDureeConservation(Feve feve) {
-        int dateAjout = stockFeve.get(feve).dateAjout; // Date d'ajout du lot le plus ancien
-        return getStepActuel() - dateAjout; // Différence entre le step actuel et la date d'ajout
-    }*/
+  
 
 
 
