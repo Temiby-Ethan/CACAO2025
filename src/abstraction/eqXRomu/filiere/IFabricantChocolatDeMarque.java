@@ -1,8 +1,9 @@
 package abstraction.eqXRomu.filiere;
 
-import abstraction.eqXRomu.produits.ChocolatDeMarque;
 
 import java.util.List;
+
+import abstraction.eqXRomu.produits.ChocolatDeMarque;
 
 /**
  * Interface implementee par tous les acteurs produisant des chocolats de marque
