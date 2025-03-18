@@ -10,24 +10,26 @@ import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.Feve;
+import abstraction.eqXRomu.produits.IProduit;
 
-public class Transformateur3 extends Transformateur3Fabriquant{
+public class Transformateur3 extends Transformateur3ContratCadreAcheteur{
 
 	public Transformateur3() {
-		super();
 	}
 
 	public void initialiser(){
-		//stockChoco.display();
 		super.initialiser();
-		super.stockChoco.addToStock(super.lesChocolats.get(0), 500.0);
-
 	}
 
 	public void next(){
 		super.next();
-		//super.stockChoco.addToStock(super.lesChocolats.get(0), 500.0);
-		//super.stockChoco.addToStock(super.lesChocolats.get(0), 200.0);
+		stockChoco.addToStock(super.lesChocolats.get(0), 500.0);
+		stockChoco.addToStock(lesChocolats.get(1), 800.0);
+
+		stockFeves.remove(lesFeves.get(0), 100.0);
+
+		stockFeves.display();
+		stockChoco.display();
 	}
 
 	public List<Journal> getJournaux() {
@@ -35,6 +37,7 @@ public class Transformateur3 extends Transformateur3Fabriquant{
 		res.add(super.jdb);
 		res.add(super.journalStock);
 		res.add(super.journalTransac);
+		res.add(super.journalCC);
 		return res;
 	}
 
