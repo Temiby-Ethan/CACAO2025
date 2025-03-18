@@ -114,9 +114,7 @@ public class Stock extends Transformateur2Acteur{
 		List<Variable> res = super.getIndicateurs();
 		res.add(this.stockChocoTotal);
 		res.add(this.stockFeveTotal);
-        res.add(this.stockChocoMarqueTotal); 
-        res.add(this.stockFeve.get(F_MQ));   
-		return res;
+        res.add(this.stockChocoMarqueTotal);    		return res;
     }
 
     public void next(){
