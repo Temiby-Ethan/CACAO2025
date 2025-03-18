@@ -1,9 +1,7 @@
 package abstraction.eq1Producteur1;
 
-import java.util.Random;
 
 import abstraction.eqXRomu.general.Journal;
-import abstraction.eqXRomu.produits.Feve;
 
 // Amal Moncer
 public class plantation extends Producteur1Acteur {
