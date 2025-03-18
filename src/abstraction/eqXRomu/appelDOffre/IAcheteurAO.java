@@ -13,3 +13,4 @@ public interface IAcheteurAO extends IActeur {
 	public OffreVente choisirOV(List<OffreVente> propositions);
 
 }
+     
