@@ -13,7 +13,7 @@ import java.util.List;
 
 public class Distributeur3Distributeur extends Distributeur3Acteur implements IDistributeurChocolatDeMarque {
     // Implémentée par Héloïse
-    //protected HashMap<ChocolatDeMarque, Double> stocks;
+    // protected HashMap<ChocolatDeMarque, Double> stocks;
     protected HashMap<ChocolatDeMarque, Float> prix;
     private VariablePrivee stockTotal;
     private VariablePrivee stockBQ;
@@ -44,10 +44,10 @@ public class Distributeur3Distributeur extends Distributeur3Acteur implements ID
                 if(cm.getChocolat().isEquitable()){
                     stockBQ_E.ajouter(this,quantiteinit,this.cryptogramme);
 
-                    this.prix.put(cm, 400.0F);
+                    this.prix.put(cm, 1500.0F);
                 }else{
                     stockBQ.ajouter(this,quantiteinit,this.cryptogramme);
-                    this.prix.put(cm, 350.0F);
+                    this.prix.put(cm, 2000.0F);
                 }
             }
         }
@@ -69,14 +69,16 @@ public class Distributeur3Distributeur extends Distributeur3Acteur implements ID
     public double quantiteEnVente(ChocolatDeMarque choco, int crypto) {
         if (this.cryptogramme==crypto && this.stockChocoMarque.containsKey(choco)) {
             if(this.stockChocoMarque.get(choco)>=100) {
-                System.out.println("demande quantite vente "+choco.getNom()+" tonnes :"+100);
+                this.journalActeur.ajouter("Mise en rayon de 100 tonnes de "+choco.getNom());
+                //System.out.println("demande quantite vente "+choco.getNom()+" tonnes :"+100);
                 return 100;
             }else{
-                System.out.println("demande quantite vente "+choco.getNom()+" tonnes :"+this.stockChocoMarque.get(choco));
+                //System.out.println("demande quantite vente "+choco.getNom()+" tonnes :"+this.stockChocoMarque.get(choco));
+                this.journalActeur.ajouter("Mise en rayon de "+this.stockChocoMarque.get(choco)+" (max) de "+choco.getNom());
                 return this.stockChocoMarque.get(choco);
             }
         } else {
-            System.out.println("demande quantite vente "+choco.getNom()+" tonnes :"+0);
+            //System.out.println("demande quantite vente "+choco.getNom()+" tonnes :"+0);
             return 0.0;
         }
     }
@@ -91,17 +93,30 @@ public class Distributeur3Distributeur extends Distributeur3Acteur implements ID
         if(crypto==this.cryptogramme){
             stockChocoMarque.put(choco,Double.valueOf(this.stockChocoMarque.get(choco)-quantite));
             this.MAJStocks();
-            journalActeur.ajouter("Vente de "+quantite+" tonnes de "+choco.toString()+" à "+client.getNom()+" pour "+montant+" euros");
+            journalDeVente.ajouter("Vente de "+quantite+" tonnes de "+choco.toString()+" à "+client.getNom()+" pour "+montant+" euros");
         }
     }
 
     // A éventuellement supprimer
     public void MAJStocks(){
         double total = 0.0;
+        double BQ = 0.0;
+        double BQ_E = 0.0;
         for(ChocolatDeMarque choco : stockChocoMarque.keySet()){
             total+=stockChocoMarque.get(choco);
+            if(choco.getGamme().equals(Gamme.BQ)) {
+                if (choco.isEquitable()){
+                    BQ_E += stockChocoMarque.get(choco);
+                }else{
+                    BQ += stockChocoMarque.get(choco);
+                }
+            }
+
+
         }
         this.stockTotal.setValeur(this,total,this.cryptogramme);
+        this.stockBQ.setValeur(this,BQ,this.cryptogramme);
+        this.stockBQ_E.setValeur(this,BQ_E,this.cryptogramme);
     }
 
     public List<Variable> getIndicateurs() {
