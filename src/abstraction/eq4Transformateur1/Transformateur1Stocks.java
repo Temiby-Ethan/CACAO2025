@@ -105,7 +105,7 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 				if (transfo>0) {
 					this.stockFeves.put(f, this.stockFeves.get(f)-transfo);
 					this.totalStocksFeves.retirer(this, transfo, this.cryptogramme);
-					double PourcentageMarque = 0.5;  //Modifiable
+					double PourcentageMarque = 0.8;  //Modifiable
 					// La Pourcentage ainsi definie sera stockee sous forme de marquee, la quantité restante sera alors stockee comme non marquee
 
 					this.stockChoco.put(c, this.stockChoco.get(c)+((transfo*PourcentageMarque)*this.pourcentageTransfo.get(f).get(c)));
@@ -115,7 +115,7 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 					this.stockChocoMarque.put(cm, scm+((transfo*PourcentageMarque)*this.pourcentageTransfo.get(f).get(c)));
 					this.totalStocksChocoMarque.ajouter(this, ((transfo*PourcentageMarque)*this.pourcentageTransfo.get(f).get(c)), this.cryptogramme);
 					this.totalStocksChoco.ajouter(this, ((transfo)*this.pourcentageTransfo.get(f).get(c)), this.cryptogramme);
-					this.totalStocksChocoNonMarquee.ajouter(this, ((transfo*PourcentageMarque)*this.pourcentageTransfo.get(f).get(c)), this.cryptogramme);
+					this.totalStocksChocoNonMarquee.ajouter(this, ((transfo*(1-PourcentageMarque))*this.pourcentageTransfo.get(f).get(c)), this.cryptogramme);
 					this.journal.ajouter(Romu.COLOR_LLGRAY, Color.PINK, "Transfo de "+(transfo<10?" "+transfo:transfo)+" T de "+f+" en "+Journal.doubleSur(transfo*this.pourcentageTransfo.get(f).get(c),3,2)+" T de "+c);
 					this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN," stock("+f+")->"+this.stockFeves.get(f));
 					this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN," stock("+c+")->"+this.stockChoco.get(c));
