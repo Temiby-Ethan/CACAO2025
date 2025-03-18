@@ -15,6 +15,7 @@ import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
 
+//Adam Sebiane
 
 
 public class Producteur1Bourse extends Producteur1Acteur implements IVendeurBourse{
@@ -29,8 +30,8 @@ public class Producteur1Bourse extends Producteur1Acteur implements IVendeurBour
     
         @Override
         public double offre(Feve typeFeve, double prixCourant) {
-            if (typeFeve.getGamme() == Gamme.HQ) { // On vend uniquement des fèves de haute qualité (HQ)
-                double quantiteOfferte = 150.0; // Quantité fixe à offrir
+            if (typeFeve.getGamme() == stockFBQ) { // On vend uniquement des fèves de haute qualité (HQ)
+                double quantiteOfferte = 980.0; // Quantité fixe à offrir
                 journalTransactions.ajouter(Filiere.LA_FILIERE.getEtape() + " : Offre de " + quantiteOfferte + " tonnes de " + typeFeve + " à " + prixCourant + " €/tonne");
                 return quantiteOfferte;
             } else {

@@ -7,7 +7,7 @@ import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eq1Producteur1.Stock;
 
 
-
+// ADAM Sebiane
 public class Producteur1ContratCadre extends Producteur1Acteur implements IVendeurContratCadre{
 
     @Override
