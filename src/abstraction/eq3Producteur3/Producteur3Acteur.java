@@ -59,7 +59,7 @@ public class Producteur3Acteur implements IActeur {
 
 	// Renvoie les parametres
 	public List<Variable> getParametres() {
-		List<Variable> rese=new ArrayList<Variable>();
+		List<Variable> res =new ArrayList<Variable>();
 		return res;
 	}
 
