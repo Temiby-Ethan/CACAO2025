@@ -12,7 +12,8 @@ public class Producteur3 extends Producteur3GestionDesCoûts  {
 	public Producteur3() {
 		super();
 		
-		
+
+		initStock();
 		initStock(Feve.F_BQ, 1000000 );
 		initStock(Feve.F_BQ_E, 1000000 );
 		initStock(Feve.F_MQ, 1000000 );
@@ -21,6 +22,8 @@ public class Producteur3 extends Producteur3GestionDesCoûts  {
 		initStock(Feve.F_HQ_BE, 1000000 );
 		calculTotalStock();
 		initTerrain();
+
+		
 	}
 
 
@@ -29,6 +32,8 @@ public class Producteur3 extends Producteur3GestionDesCoûts  {
 		journal.ajouter(Filiere.LA_FILIERE.getEtape()+"\n");
 		calculTotalStock();
 		//defiJournal.ajouter(Double.toString(stockFeve.getValeur()));
+		recolte();
+		getMasseSalariale();
 		
 
 
