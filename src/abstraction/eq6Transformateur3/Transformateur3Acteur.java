@@ -27,9 +27,10 @@ public class Transformateur3Acteur implements IActeur {
 	protected Journal journalTransac;
 
 	protected List<IProduit> lesFeves;
+	protected List<IProduit> lesChocolats;
 	protected HashMap<IProduit, Variable> dicoIndicateurFeves;
 	protected eq6Transformateur3Stock stockFeves;
-	protected HashMap<Chocolat, Double> stockChoco;
+	protected eq6Transformateur3Stock stockChoco;
 
 	protected Variable eq6_Q_MQ_0;
 	protected Variable eq6_Q_MQ_1;
@@ -74,7 +75,7 @@ public class Transformateur3Acteur implements IActeur {
 		this.eq6_Q_cacao_CC = new Variable(this.getNom()+": quantité de cacaco que l'on reçoit ", this, 300);
 		this.eq6_Q_tablette_CC = new Variable(this.getNom()+": quantité de tablette à produire", this, 300);
 	
-		//Dico d'indicateur
+		//Dico d'indicateur fèves
 		this.dicoIndicateurFeves = new HashMap<IProduit, Variable>();
 		this.dicoIndicateurFeves.put(abstraction.eqXRomu.produits.Feve.F_BQ,eq6_Q_BQ_0);
 		this.dicoIndicateurFeves.put(abstraction.eqXRomu.produits.Feve.F_BQ_E,eq6_Q_BQ_1);
@@ -92,11 +93,13 @@ public class Transformateur3Acteur implements IActeur {
 			this.lesFeves.add(f);
 		}
 		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*4;
-
-		journalStock.ajouter("Initialisation du stock");
-		stockFeves = new eq6Transformateur3Stock(this, journalStock, lesFeves, dicoIndicateurFeves);
+		
+		stockFeves = new eq6Transformateur3Stock(this, journalStock, "fèves", lesFeves, dicoIndicateurFeves);
 		stockFeves.addToStock(abstraction.eqXRomu.produits.Feve.F_BQ, 200.0);
 		stockFeves.display();
+
+		//stockFeves.addToStock(lesChocolats.get(0), 500.0);
+		stockChoco.display();
 	}
 
 	public String getNom() {// NE PAS MODIFIER
@@ -113,7 +116,7 @@ public class Transformateur3Acteur implements IActeur {
 
 	public void next() {
 		etape = Filiere.LA_FILIERE.getEtape();
-		jdb.ajouter("Etape " + etape);
+		jdb.ajouter("Accteur Etape " + etape);
 	}
 
 	public Color getColor() {// NE PAS MODIFIER

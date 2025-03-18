@@ -14,13 +14,15 @@ public class eq6Transformateur3Stock {
     private HashMap<IProduit, Variable> dicoIndicateur;
     private Journal journalStock;
     private IActeur monActeur;
+    private String nomProduit;
 
-    public eq6Transformateur3Stock(Transformateur3Acteur acteur, Journal journal, List<IProduit> listProduit, HashMap<IProduit, Variable> indicateurs){
+    public eq6Transformateur3Stock(Transformateur3Acteur acteur, Journal journal, String nomProduit, List<IProduit> listProduit, HashMap<IProduit, Variable> indicateurs){
     //eq6Transformateur3Stock(IActeur acteur,Journal journalStock, List<IProduit> listProduit, HashMap<IProduit, Variable> dicoIndicateur){
         // Récupère le journal des stocks
         this.journalStock = journal;
         this.monActeur = acteur;
         this.dicoIndicateur = indicateurs;
+        this.nomProduit = nomProduit;
         
         // Initialise le stockProduit
         this.stockProduit = new HashMap<IProduit, Double>();
@@ -28,8 +30,11 @@ public class eq6Transformateur3Stock {
         // Initialise les quantitée pour chaque produit
         this.stockTotal = 0.0;
         for (IProduit prod : listProduit) {
+            
 			stockProduit.put(prod, 0.0);
 		}
+
+        journalStock.ajouter("Initialisation du stock de "+this.nomProduit);
     }
 
     public double getQuantityOf(IProduit prod){
@@ -46,6 +51,7 @@ public class eq6Transformateur3Stock {
             stockProduit.put(prod, stockProduit.get(prod)+quantity);
             this.stockTotal += quantity;
             //Mise à jour indicateur
+            
             dicoIndicateur.get(prod).setValeur(monActeur, stockProduit.get(prod));
 
         }
@@ -55,9 +61,15 @@ public class eq6Transformateur3Stock {
     }
 
     protected void display() {
-		journalStock.ajouter("STOCK DE FEVES DE CACAO");
+        if (nomProduit=="fèves"){
+            journalStock.ajouter("STOCK DE FEVES DE CACAO");
+        }
+        else{
+            journalStock.ajouter("STOCK DE CHOCOLAT");
+        }
+		
 		for (IProduit prod : this.stockProduit.keySet()) {
-			int nbspace = 10-prod.toString().length();
+			int nbspace = 20-prod.toString().length();
 			String space = "";
 			for(int i=0;i<nbspace;i++){
 				space=space+".";

@@ -11,14 +11,23 @@ import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.Feve;
 
-public class Transformateur3 extends Transformateur3Acteur{
+public class Transformateur3 extends Transformateur3Fabriquant{
 
 	public Transformateur3() {
 		super();
 	}
 
+	public void initialiser(){
+		//stockChoco.display();
+		super.initialiser();
+		super.stockChoco.addToStock(super.lesChocolats.get(0), 500.0);
+
+	}
+
 	public void next(){
 		super.next();
+		//super.stockChoco.addToStock(super.lesChocolats.get(0), 500.0);
+		//super.stockChoco.addToStock(super.lesChocolats.get(0), 200.0);
 	}
 
 	public List<Journal> getJournaux() {

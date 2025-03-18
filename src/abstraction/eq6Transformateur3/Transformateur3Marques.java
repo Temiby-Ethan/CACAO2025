@@ -9,11 +9,12 @@ public class Transformateur3Marques extends Transformateur3Acteur implements IMa
     protected List<String> marques;
     
     public Transformateur3Marques(){
+        super();
         this.marques = new ArrayList<String>();
         this.marques.add("Fraudolat");
         this.marques.add("Bollorolat");
         this.marques.add("Hypocritolat");
-        this.marques.add("Anonymolat");
+        this.marques.add("Arnaquolat");
     }
 
     public List<String> getMarquesChocolat(){
