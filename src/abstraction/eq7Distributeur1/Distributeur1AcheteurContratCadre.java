@@ -16,7 +16,11 @@ import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.IProduit;
 
+<<<<<<< HEAD
 public class Distributeur1AcheteurContratCadre implements IAcheteurContratCadre  {
+=======
+public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implements IAcheteurContratCadre{
+>>>>>>> 9992e9213b5e6215623ff0e38cec5819b349fc49
 
 	protected Integer cryptogramme;
 	private List<Double> priceProduct;
@@ -24,9 +28,15 @@ public class Distributeur1AcheteurContratCadre implements IAcheteurContratCadre 
 	private String name;
 	private Color color;
 	private List<Double> predictionsVentesPourcentage;
+<<<<<<< HEAD
 	private HashMap<ChocolatDeMarque,Variable> stock;
 
 	public Distributeur1AcheteurContratCadre(HashMap<ChocolatDeMarque,Variable> stock, List<Double> predictionsVentesPourcentage, List<Double> priceProduct, List<Double> requiredQuantities, int cryptogramme, int step, int product,String name,Color color) {
+=======
+	//private HashMap<ChocolatDeMarque,Variable> stock;
+
+	public Distributeur1AcheteurContratCadre(List<Double> predictionsVentesPourcentage, List<Double> priceProduct, List<Double> requiredQuantities, int cryptogramme, int step, int product,String name,Color color) {
+>>>>>>> 9992e9213b5e6215623ff0e38cec5819b349fc49
 		super();
 		this.predictionsVentesPourcentage = predictionsVentesPourcentage;
 		this.priceProduct = priceProduct;
@@ -34,7 +44,11 @@ public class Distributeur1AcheteurContratCadre implements IAcheteurContratCadre 
 		this.cryptogramme = cryptogramme;
 		this.name = name;
 		this.color = color;
+<<<<<<< HEAD
 		this.stock = stock;
+=======
+		//this.stock = stock;
+>>>>>>> 9992e9213b5e6215623ff0e38cec5819b349fc49
 	}
 
 	    public int getInt(ChocolatDeMarque product){
@@ -171,8 +185,13 @@ public class Distributeur1AcheteurContratCadre implements IAcheteurContratCadre 
 		if (this.cryptogramme == cryptogramme){
 			if (p instanceof ChocolatDeMarque){
 				ChocolatDeMarque chocolat = (ChocolatDeMarque) p;
+<<<<<<< HEAD
 				if (this.stock != null && this.stock.containsKey(chocolat)){
 					return(this.stock.get((chocolat)).getValeur());
+=======
+				if (this.stocksChocolats != null && this.stocksChocolats.containsKey(chocolat)){
+					return(this.stocksChocolats.get((chocolat)).getValeur());
+>>>>>>> 9992e9213b5e6215623ff0e38cec5819b349fc49
 				}
 			}
 			return(0);
@@ -187,4 +206,9 @@ public class Distributeur1AcheteurContratCadre implements IAcheteurContratCadre 
 	public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat){
 
 	}
+<<<<<<< HEAD
 }
+=======
+}
+
+>>>>>>> 9992e9213b5e6215623ff0e38cec5819b349fc49

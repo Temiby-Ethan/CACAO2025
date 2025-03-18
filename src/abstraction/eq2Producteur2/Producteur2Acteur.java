@@ -2,24 +2,32 @@ package abstraction.eq2Producteur2;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
+import abstraction.eqXRomu.general.VariableReadOnly;
+import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Producteur2Acteur implements IActeur {
 	
+	protected HashMap<Feve,Double> prodParStep;
+	protected HashMap<Feve,Variable> stock;
 	protected int cryptogramme;
+	protected Variable stockTotal;
 	private int numero = 0;
-	private Journal num = new Journal("Journal Eq2", this);
+	protected Journal num = new Journal("Journal Eq2", this);
 
 	public Producteur2Acteur() {
-	}
+		// A REMPLIR
+    }
 	
 	public void initialiser() {
+		
 	}
 
 	public String getNom() {// NE PAS MODIFIER
@@ -29,15 +37,20 @@ public class Producteur2Acteur implements IActeur {
 	public String toString() {// NE PAS MODIFIER
 		return this.getNom();
 	}
-
+	
 	////////////////////////////////////////////////////////
 	//         En lien avec l'interface graphique         //
 	////////////////////////////////////////////////////////
 
 	public void next() {
+		
 		num.ajouter("Numero : " + numero);
 		numero++;
+	
 	}
+
+
+
 
 	public Color getColor() {// NE PAS MODIFIER
 		return new Color(244, 198, 156); 
@@ -60,11 +73,11 @@ public class Producteur2Acteur implements IActeur {
 	}
 
 	// Renvoie les journaux
-	public List<Journal> getJournaux() {
-		List<Journal> res=new ArrayList<Journal>();
-		res.add(num);
-		return res;
-	}
+	//public List<Journal> getJournaux() {
+	//	List<Journal> res=new ArrayList<Journal>();
+	//	res.add(num);;
+	//	return res;
+	//}
 
 	////////////////////////////////////////////////////////
 	//               En lien avec la Banque               //
@@ -74,7 +87,7 @@ public class Producteur2Acteur implements IActeur {
 	// votre cryptogramme personnel, indispensable pour les
 	// transactions.
 	public void setCryptogramme(Integer crypto) {
-		this.cryptogramme = crypto;
+		this.cryptogramme = crypto;System.out.println(cryptogramme);
 	}
 
 	// Appelee lorsqu'un acteur fait faillite (potentiellement vous)
@@ -108,10 +121,16 @@ public class Producteur2Acteur implements IActeur {
 	}
 
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
-		if (this.cryptogramme==cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
-			return 0; // A modifier
+		if (this.cryptogramme==cryptogramme && this.stock.keySet().contains(p)) { 
+			return this.stock.get(p).getValeur((Integer)cryptogramme);
 		} else {
 			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
 		}
+	}
+
+	public List<Journal> getJournaux() {
+		List<Journal> res=new ArrayList<Journal>();
+		res.add(num);
+		return res;
 	}
 }
