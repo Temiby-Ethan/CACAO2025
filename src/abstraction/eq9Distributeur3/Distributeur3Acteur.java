@@ -2,22 +2,36 @@ package abstraction.eq9Distributeur3;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
+import abstraction.eqXRomu.general.VariablePrivee;
+import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Distributeur3Acteur implements IActeur {
 	
 	protected int cryptogramme;
+	protected Journal journalActeur;
+	protected Journal journalDeVente;
+
+
+	protected HashMap<ChocolatDeMarque, Double> stockChocoMarque;
+	//protected List<ChocolatDeMarque> chocolatsVillors;
+
 
 	public Distributeur3Acteur() {
+
+		this.journalActeur = new Journal("journal équipe 9 stocks",this);
+		this.journalDeVente = new Journal("journal de vente équipe 9",this);
 	}
 	
 	public void initialiser() {
+
 	}
 
 	public String getNom() {// NE PAS MODIFIER
@@ -33,6 +47,7 @@ public class Distributeur3Acteur implements IActeur {
 	////////////////////////////////////////////////////////
 
 	public void next() {
+		journalActeur.ajouter("étape : "+Filiere.LA_FILIERE.getEtape());
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
@@ -58,6 +73,8 @@ public class Distributeur3Acteur implements IActeur {
 	// Renvoie les journaux
 	public List<Journal> getJournaux() {
 		List<Journal> res=new ArrayList<Journal>();
+		res.add(journalActeur);
+		res.add(journalDeVente);
 		return res;
 	}
 
@@ -69,7 +86,10 @@ public class Distributeur3Acteur implements IActeur {
 	// votre cryptogramme personnel, indispensable pour les
 	// transactions.
 	public void setCryptogramme(Integer crypto) {
+
 		this.cryptogramme = crypto;
+		System.out.println("set crypto : "+this.cryptogramme);
+
 	}
 
 	// Appelee lorsqu'un acteur fait faillite (potentiellement vous)

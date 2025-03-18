@@ -9,39 +9,32 @@ import abstraction.eqXRomu.general.*;
 import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.contratsCadres.*;
 import abstraction.eq4Transformateur1.Transformateur1Stocks;
+import abstraction.eq4Transformateur1.Transformateur1AcheteurBourse;
 
 /*
  * @author MURY Julien
  * Cette classe décrit le comportement de Transfromateur1 lors d'un contrat cadre
  */
-public class TransformateurContratCadre extends Transformateur1Stocks {
+public class TransformateurContratCadre extends Transformateur1AcheteurBourse {
 	private static int NB_INSTANCES = 0; // Afin d'attribuer un nom different a toutes les instances
-	protected int numero;
-	protected Variable stock;
-	protected Integer cryptogramme;
-	protected IProduit produit;
-	protected Journal journal;
+	private int numero;
 	protected SuperviseurVentesContratCadre supCCadre;
 
-	public TransformateurContratCadre(IProduit produit) {	
-		if (produit==null) {
-			throw new IllegalArgumentException("creation d'une instance de TransformateurContratCadre avec produit==null");
-		}		
+	public TransformateurContratCadre() {	
+		super();
+	
 		NB_INSTANCES++;
 		this.numero=NB_INSTANCES;
-		this.produit=produit;
-		//A MODIFIER APRES CREATION GESTION DES STOCKS
-		//Il faudra un stock de fève ou de chocolat selon si notre acteur est vendeur ou acheteur
-		this.stock=new Variable(getNom()+" stock ", null, this, 0, 1000, 300);
-		this.journal = new Journal(this.getNom()+" activites", this);
+		
+
 	}
 	
 	public String getNom() {
-		return "TCC"+this.numero+""+produit.toString();
+		return super.getNom();
 	}
 
 	public String getDescription() {
-		return "TransformateurContratCadre "+this.numero+" "+this.produit.toString();
+		return super.getDescription();
 	}
 
 	public Color getColor() {
@@ -49,10 +42,12 @@ public class TransformateurContratCadre extends Transformateur1Stocks {
 	}
 
 	public void initialiser() {
+		super.initialiser();
 		this.supCCadre = (SuperviseurVentesContratCadre) (Filiere.LA_FILIERE.getActeur("Sup.CCadre")); //Creation d'un superviseur pour la négociation du contrat cadre
 	}
 
 	public void next() {
+		super.next();
 	}
 
 	public List<String> getNomsFilieresProposees() {
@@ -64,20 +59,17 @@ public class TransformateurContratCadre extends Transformateur1Stocks {
 	}
 
 	public List<Variable> getIndicateurs() {
-		List<Variable> res=new ArrayList<Variable>();
-		res.add(this.stock);
+		List<Variable> res= super.getIndicateurs();
 		return res;
 	}
 
 	public List<Variable> getParametres() {
-		List<Variable> res=new ArrayList<Variable>();
+		List<Variable> res= super.getParametres();
 		return res;
 	}
 
 	public List<Journal> getJournaux() {
-		List<Journal> j= new ArrayList<Journal>();
-		j.add(this.journal);
-		return j;
+		return super.getJournaux();
 	}
 
 	public void setCryptogramme(Integer crypto) {
@@ -94,15 +86,5 @@ public class TransformateurContratCadre extends Transformateur1Stocks {
 		return this.getNom();
 	}
 	
-	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
-		if (this.cryptogramme==cryptogramme) {
-			if (p.equals(this.produit)) {
-				return this.stock.getValeur();
-			} else{
-				return 0;
-			}
-		} else {
-			return 0;
-		}
-	}
+	
 }
