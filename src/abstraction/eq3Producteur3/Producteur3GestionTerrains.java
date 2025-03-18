@@ -125,17 +125,19 @@ public class Producteur3GestionTerrains extends Producteur3Acteur{
     void recolte(){
         LinkedList<Parcelle> prete = new LinkedList<>();
         prete = recolte.get(Filiere.LA_FILIERE.getNumeroMois());
-        for (Parcelle p : prete) {
-            if(p.qualite instanceof QualiteBQ){
-                int nbFeve = Filiere.random.nextInt(5)+23;
-                feveProduites+=((16*nbFeve)*0.753)*p.qualite.densité;
-            }else if( p.qualite instanceof QualiteMQ){
-                int nbFeve = Filiere.random.nextInt(4)+25;
-                feveProduites+=((15*nbFeve)*0.750)*p.qualite.densité;
-            }else if(p.qualite instanceof QualiteHQ){
-                int nbFeve = Filiere.random.nextInt(3)+29;
-                feveProduites+=((10*nbFeve)*0.765)*p.qualite.densité;
-            }   
+        if(prete != null){
+            for (Parcelle p : prete) {
+                if(p.qualite instanceof QualiteBQ){
+                    int nbFeve = Filiere.random.nextInt(5)+23;
+                    feveProduites+=((16*nbFeve)*0.753)*p.qualite.densité;
+                }else if( p.qualite instanceof QualiteMQ){
+                    int nbFeve = Filiere.random.nextInt(4)+25;
+                    feveProduites+=((15*nbFeve)*0.750)*p.qualite.densité;
+                }else if(p.qualite instanceof QualiteHQ){
+                    int nbFeve = Filiere.random.nextInt(3)+29;
+                    feveProduites+=((10*nbFeve)*0.765)*p.qualite.densité;
+                }   
+            }
         }
     }
 
