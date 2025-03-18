@@ -29,14 +29,14 @@ public class Producteur2stock extends Producteur2sechage {
 
         double totalInitialStock = 0.0;
 
-        for(Feve f : Feve.values()){ // On initialise la prod de chaque fève
-            SetProdParStep(f,2000.0); // A MODIFIER
+        for(Feve f : Feve.values()){ // On initialise la prod de chaque fève à 0 car on a rien de séché au step 1
+            SetProdParStep(f,0); 
         }
         
         this.stockTotal = new Variable("Stock total", "Quantité totale de fèves en stock", this, totalInitialStock);
         		
-        for (Feve f : Feve.values()) {
-            double initialStock = prodParStep.get(f) * 6;
+       for (Feve f : Feve.values()) {
+            double initialStock = 12000; //On commence avec 12000T de chaque fèves
             this.stock.put(f, new VariableReadOnly(this+"Stock"+f.toString().substring(2), "<html>Stock de feves "+f+"</html>",this, 0.0, prodParStep.get(f)*24, initialStock));
             totalInitialStock += initialStock;
         }
@@ -54,9 +54,12 @@ public class Producteur2stock extends Producteur2sechage {
 	
 
     public void next(){
-
-        ProdParStep();
+        
         super.next();
+        UpdateProd();
+        ProdParStep();
+        
+        
 
 
     }
@@ -81,6 +84,15 @@ public class Producteur2stock extends Producteur2sechage {
     }
 
 
+    public void UpdateProd(){ //Récupère les fèves sechées et les envoie dans le stock
+
+        for(Feve f : Feve.values()){
+
+            double feve_seche = fevesSeches.get(f);
+            this.prodParStep.put(f,feve_seche);
+
+        }
+    }
  
 	public void AddStock(Feve f, double prod){ //On ajouter un stock d'une fève en particulier
         

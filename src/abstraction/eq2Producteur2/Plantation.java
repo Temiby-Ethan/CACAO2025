@@ -14,6 +14,9 @@ public class Plantation extends Producteur2recolte {
     private final int dureeDeVie;   // Durée de vie maximale avant remplacement
     private final int tempsAvantProduction; // Temps nécessaire avant production
     private final int productionParParcelle; // Nombre de cabosses par parcelle a chaque step
+    private int prix_achat; // Prix d'achat de la plantation
+    private int prix_vente; // Prix de vente de la plantation
+    private int prix_replantation; // Prix de replantation de la plantation
 
     
     public Plantation(Feve typeFeve, int parcelles, int age) {
@@ -28,26 +31,41 @@ public class Plantation extends Producteur2recolte {
                 this.dureeDeVie = 960;  // 40 ans
                 this.tempsAvantProduction = 72;  // 3 ans
                 this.productionParParcelle = 126666; // 126666 cabosses par parcelle a chaque next
+                this.prix_achat = 2250000;
+                this.prix_vente = 1450000;
+                this.prix_replantation = 800000;
                 break;
             case F_BQ_E:
                 this.dureeDeVie = 960;  // 40 ans
                 this.tempsAvantProduction = 72;  // 3 ans
                 this.productionParParcelle = 126666; // 126666 cabosses par parcelle a chaque next
+                this.prix_achat = 2250000;
+                this.prix_vente = 1450000;
+                this.prix_replantation = 800000;
                 break;
             case F_MQ:
                 this.dureeDeVie = 960;
                 this.tempsAvantProduction = 96; // 4 ans
                 this.productionParParcelle = 93750;
+                this.prix_achat = 4250000;
+                this.prix_vente = 2850000;
+                this.prix_replantation = 1400000;
                 break;
             case F_MQ_E:
                 this.dureeDeVie = 960;
                 this.tempsAvantProduction = 96; // 4 ans
                 this.productionParParcelle = 93750;
+                this.prix_achat = 4250000;
+                this.prix_vente = 2850000;
+                this.prix_replantation = 1400000;
                 break;
             case F_HQ_E:
                 this.dureeDeVie = 960;
                 this.tempsAvantProduction = 120; // 5 ans
                 this.productionParParcelle = 41666;
+                this.prix_achat = 7000000;
+                this.prix_vente = 4650000;
+                this.prix_replantation = 2350000;
                 break;
             case F_HQ_BE:
                 this.dureeDeVie = 960;
