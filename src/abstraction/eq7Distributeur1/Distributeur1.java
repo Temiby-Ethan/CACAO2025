@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
+import java.awt.Color;
 
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.IProduit;
+import abstraction.eqXRomu.appelDOffre.IAcheteurAO;
 import abstraction.eqXRomu.clients.ClientFinal;
 import abstraction.eqXRomu.general.Variable;
 
@@ -22,8 +24,8 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre  {
 	private List<Double> prix;
 	private List<Double> capaciteDeVente;
 
-    public Distributeur1() { // par Alexiho
-        super();
+    public Distributeur1(IAcheteurAO identity,List<Integer> successedSell,List<Double> predictionsVentesPourcentage, List<Double> priceProduct, List<Double> requiredQuantities, int cryptogramme, int step, int product,String name,Color color) {
+		super(identity, successedSell,predictionsVentesPourcentage, priceProduct, requiredQuantities, cryptogramme, step, product, name, color);
         
         this.journal = new Journal("Journal de EQ7", this); // Initialisation du journal
 		/*

@@ -19,21 +19,22 @@ import abstraction.eqXRomu.produits.IProduit;
 
 public class Distributeur1AcheteurEncheres extends Distributeur1AcheteurContratCadre implements IAcheteurAuxEncheres  {
 
-	protected Integer cryptogramme;
-	private List<Double> priceProduct;
-	private List<Double> requiredQuantities;
+	//protected Integer cryptogramme;
+	//private List<Double> priceProduct;
+	//private List<Double> requiredQuantities;
 	private List<Integer> successedSell;
-	private String name;
-	private Color color;
+	//private String name;
+	//private Color color;
 	//private HashMap<ChocolatDeMarque,Variable> stock;
 
-	public Distributeur1AcheteurEncheres(List<Double> priceProduct, List<Double> requiredQuantities, String name, Color color) {
-		super();
-		this.priceProduct = priceProduct;
-		this.name = name ;
-		this.color = color;
-		this.requiredQuantities = requiredQuantities;
+	public Distributeur1AcheteurEncheres(List<Integer> successedSell,List<Double> predictionsVentesPourcentage, List<Double> priceProduct, List<Double> requiredQuantities, int cryptogramme, int step, int product,String name,Color color) {
+		super(predictionsVentesPourcentage, priceProduct, requiredQuantities, cryptogramme, step, product, name, color);
+		//this.priceProduct = priceProduct;
+		//this.name = name ;
+		//this.color = color;
+		//this.requiredQuantities = requiredQuantities;
 		//this.stock = stock;
+		this.successedSell = successedSell;
 	}
 
 	    public int getInt(Chocolat product){
@@ -136,7 +137,9 @@ public class Distributeur1AcheteurEncheres extends Distributeur1AcheteurContratC
 		if (this.cryptogramme == cryptogramme){
 			if (p instanceof ChocolatDeMarque){
 				ChocolatDeMarque chocolat = (ChocolatDeMarque) p;
-				return(stock.get(chocolat));
+				if (this.stocksChocolats != null && this.stocksChocolats.containsKey(chocolat)){
+					return(this.stocksChocolats.get((chocolat)).getValeur());
+				}
 			}
 			return(0);
 		}

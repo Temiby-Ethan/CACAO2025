@@ -21,22 +21,23 @@ import abstraction.eqXRomu.produits.IProduit;
 
 public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurEncheres implements IAcheteurAO  {
 
-	protected Integer cryptogramme;
-	private IAcheteurAO identity;
-	private List<Double> requiredQuantities;
-	private Color color;
-	private String name;
-	private List<Double> stock;
-	private List<Double> priceProduct;
+	//protected Integer cryptogramme;
+	protected IAcheteurAO identity;
+	//private List<Double> requiredQuantities;
+	//private Color color;
+	//private String name;
+	//private List<Double> stock;
+	//private List<Double> priceProduct;
 
-	public Distributeur1AcheteurAppelOffre(List<Double> requiredQuantities, IAcheteurAO identity,Color color,String name,List<Double> stock, List<Double> priceProduct) {
-		super();
-		this.requiredQuantities = requiredQuantities;
+	public Distributeur1AcheteurAppelOffre(IAcheteurAO identity,List<Integer> successedSell,List<Double> predictionsVentesPourcentage, List<Double> priceProduct, List<Double> requiredQuantities, int cryptogramme, int step, int product,String name,Color color) {
+		super(successedSell,predictionsVentesPourcentage, priceProduct, requiredQuantities, cryptogramme, step, product, name, color);
+		//this.requiredQuantities = requiredQuantities;
+		//this.identity = identity;
+		//this.color = color;
+		//this.name = name;
+		//this.stock = stock;
+		//this.priceProduct = priceProduct;
 		this.identity = identity;
-		this.color = color;
-		this.name = name;
-		this.stock = stock;
-		this.priceProduct = priceProduct;
 
 	}
 
@@ -84,21 +85,6 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurEncher
 
 	}
 
-	public void notifierAchatAuxEncheres(Enchere enchereRetenue){
-
-	}
-	public void notifierEnchereNonRetenue(Enchere enchereNonRetenue){
-		
-	}
-
-	public String getNom(){
-		return(this.name);
-	}
-
-	public Color getColor(){
-		return(this.color);
-	}
-
 	public String getDescription(){
 		return("Appelleur d'offre de l'equipe 7");
 	}
@@ -127,38 +113,11 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurEncher
 		return(journaux);
 	}
 
-	public void setCryptogramme(Integer crypto){
-		this.cryptogramme = crypto;
-	}
-
-	public void notificationFaillite(IActeur acteur){
-
-	}
-
-	public void notificationOperationBancaire(double montant){
-
-	}
-
 	public List<String> getNomsFilieresProposees(){
 		List<String> noms = new ArrayList<String>();
 		return(noms);
 	}
 
-	public Filiere getFiliere(String nom){
-		Filiere test = new Filiere(0);
-		return(test);
-	}
-
-	public double getQuantiteEnStock(IProduit p, int cryptogramme ){
-		if (this.cryptogramme == cryptogramme){
-			if (p instanceof ChocolatDeMarque){
-				ChocolatDeMarque chocolat = (ChocolatDeMarque) p;
-				return(stock.get(getInt(chocolat.getChocolat())));
-			}
-			return(0);
-		}
-		return(0);
-	}
 	
 }
 

@@ -19,11 +19,11 @@ import abstraction.eqXRomu.produits.IProduit;
 public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implements IAcheteurContratCadre{
 
 	protected Integer cryptogramme;
-	private List<Double> priceProduct;
-	private List<Double> requiredQuantities;
-	private String name;
-	private Color color;
-	private List<Double> predictionsVentesPourcentage;
+	protected List<Double> priceProduct;
+	protected List<Double> requiredQuantities;
+	protected String name;
+	protected Color color;
+	protected List<Double> predictionsVentesPourcentage;
 	//private HashMap<ChocolatDeMarque,Variable> stock;
 
 	public Distributeur1AcheteurContratCadre(List<Double> predictionsVentesPourcentage, List<Double> priceProduct, List<Double> requiredQuantities, int cryptogramme, int step, int product,String name,Color color) {
