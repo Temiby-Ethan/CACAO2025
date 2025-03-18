@@ -1,5 +1,5 @@
 package abstraction.eq6Transformateur3;
-// @author Henri Roth
+// @author Henri Roth & Florian Malveau
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +22,7 @@ public class Transformateur3Fabriquant extends Transformateur3Marques implements
     public Transformateur3Fabriquant(){
         super();
 
+        //Liste des chocolat de marque (pour matcher avec l'interface)
         this.chocolatDeMarques = new ArrayList<ChocolatDeMarque>();
         this.fraud = new ChocolatDeMarque(Chocolat.C_BQ, "Fraudolat", 30);
         this.hypo = new ChocolatDeMarque(Chocolat.C_HQ_E, "Hypocritolat", 100);
@@ -46,8 +47,8 @@ public class Transformateur3Fabriquant extends Transformateur3Marques implements
         this.dicoIndicateurChoco.put(arna,super.eq6_Q_Arna);
         this.dicoIndicateurChoco.put(bollo,super.eq6_Q_Bollo);
 
-        
-		super.stockChoco = new eq6Transformateur3Stock(this, super.journalStock, "chocolat", super.lesChocolats, this.dicoIndicateurChoco);
+        //Création du stock de chocolat
+		super.stockChoco = new eq6Transformateur3Stock(this, super.journalStock, "chocolat", 200.0, super.lesChocolats, this.dicoIndicateurChoco);
     }
 
     public List<ChocolatDeMarque> getChocolatsProduits(){
