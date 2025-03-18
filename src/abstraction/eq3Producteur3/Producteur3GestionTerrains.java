@@ -132,31 +132,43 @@ public class Producteur3GestionTerrains extends Producteur3Acteur{
     void recolte(){
         LinkedList<Parcelle> prete = new LinkedList<>();
         prete = recolte.get(Filiere.LA_FILIERE.getNumeroMois());
+
+        // Actualisation des sechages durant 2 nexts
+        sechageBQ_E[0] = sechageBQ_E[1];
+        sechageBQ[0] = sechageBQ[1];
+
         if(prete != null){
             for (Parcelle p : prete) {
                 if(p.qualite instanceof QualiteBQ){
-                    if(p.qualite.equitable){
-                        int nbFeve = Filiere.random.nextInt(5)+23;
-                        sechageBQ_E[0]=sechageBQ_E[1];
-                        sechageBQ_E[1]=((16*nbFeve)*0.753)*p.qualite.densité;
-                    }
                     int nbFeve = Filiere.random.nextInt(5)+23;
-                    sechageBQ[0]=sechageBQ[1];
-                    sechageBQ[1]=((16*nbFeve)*0.753)*p.qualite.densité;
-                }else if( p.qualite instanceof QualiteMQ){
                     if(p.qualite.equitable){
-                        int nbFeve = Filiere.random.nextInt(4)+25;
-                        sechageMQ_E[0]=((15*nbFeve)*0.750)*p.qualite.densité;
+                        sechageBQ_E[1] += ((16*nbFeve)*0.753)*p.qualite.densité/1000000;
                     }
+                    else{
+                        sechageBQ[1] += ((16*nbFeve)*0.753)*p.qualite.densité/1000000;
+                    }
+                }else if( p.qualite instanceof QualiteMQ){
                     int nbFeve = Filiere.random.nextInt(4)+25;
-                    sechageMQ[0]=((15*nbFeve)*0.750)*p.qualite.densité;
+                    if(p.qualite.equitable){
+                        sechageMQ_E[0] += ((15*nbFeve)*0.750)*p.qualite.densité/1000000;
+                    }
+                    else {
+                        sechageMQ[0] += ((15*nbFeve)*0.750)*p.qualite.densité/1000000;
+                    }
+                    
                 }else if(p.qualite instanceof QualiteHQ){
                     int nbFeve = Filiere.random.nextInt(3)+29;
-                    sechageHQ[0]=((10*nbFeve)*0.765)*p.qualite.densité;
-                }   
+                    QualiteHQ qualite = (QualiteHQ) p.qualite;
+                    if (qualite.bio){
+                        sechageHQ_B[0] += ((10*nbFeve)*0.765)*p.qualite.densité/1000000;
+                    }
+                    else{
+                        sechageHQ[0] += ((10*nbFeve)*0.765)*p.qualite.densité/1000000;
+                    }   
             }
             
-        }
+            }
+        } 
     }
 
 
