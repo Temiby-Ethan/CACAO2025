@@ -110,7 +110,7 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
     }
 
 
-    
+
     void vieillirStock(){
         for(int i = 7; i > 0; i++){
             stockFeveBQ.get(i).setValeur(this, stockFeveBQ.get(i+1).getValeur(cryptogramme), cryptogramme);
@@ -150,9 +150,99 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
     }
 
     public void retirerStockBQ(Feve feve,double delta){
-        stockFeveBQ.get().retirer(this,delta,cryptogramme);
-        journal.ajouter("Retrait de " + delta + " du stock de " + feve + ". Nouveau stock : " + stockFeve.get(feve).getValeur(cryptogramme));
+        double qte = delta;
+        for(int i = 0; i < 8; i++){
+            double val = stockFeveBQ.get(i).getValeur(cryptogramme);
+            if(val>=qte){
+                stockFeveBQ.get(i).retirer(this, delta, cryptogramme);
+                journal.ajouter("Retrait de " + delta + " du stock de " + feve + ". Nouveau stock : " + calculTotalStockBQ());
+                return;
+            }else{
+                stockFeveBQ.get(i).retirer(this, val, cryptogramme);
+                qte-=val;
+            }
+        }
+        journal.ajouter("Retrait de " + delta + " du stock de " + feve + ". Nouveau stock : " + calculTotalStockBQ());
+    }
 
+    public void retirerStockBQ_E(Feve feve,double delta){
+        double qte = delta;
+        for(int i = 0; i < 8; i++){
+            double val = stockFeveBQ_E.get(i).getValeur(cryptogramme);
+            if(val>=qte){
+                stockFeveBQ_E.get(i).retirer(this, delta, cryptogramme);
+                journal.ajouter("Retrait de " + delta + " du stock de " + feve + ". Nouveau stock : " + calculTotalStockBQ_E());
+                return;
+            }else{
+                stockFeveBQ_E.get(i).retirer(this, val, cryptogramme);
+                qte-=val;
+            }
+        }
+        journal.ajouter("Retrait de " + delta + " du stock de " + feve + ". Nouveau stock : " + calculTotalStockBQ_E());
+    }
+
+    public void retirerStockMQ(Feve feve,double delta){
+        double qte = delta;
+        for(int i = 0; i < 8; i++){
+            double val = stockFeveMQ.get(i).getValeur(cryptogramme);
+            if(val>=qte){
+                stockFeveMQ.get(i).retirer(this, delta, cryptogramme);
+                journal.ajouter("Retrait de " + delta + " du stock de " + feve + ". Nouveau stock : " + calculTotalStockMQ());
+                return;
+            }else{
+                stockFeveMQ.get(i).retirer(this, val, cryptogramme);
+                qte-=val;
+            }
+        }
+        journal.ajouter("Retrait de " + delta + " du stock de " + feve + ". Nouveau stock : " + calculTotalStockMQ());
+    }
+
+    public void retirerStockMQ_E(Feve feve,double delta){
+        double qte = delta;
+        for(int i = 0; i < 8; i++){
+            double val = stockFeveMQ_E.get(i).getValeur(cryptogramme);
+            if(val>=qte){
+                stockFeveMQ_E.get(i).retirer(this, delta, cryptogramme);
+                journal.ajouter("Retrait de " + delta + " du stock de " + feve + ". Nouveau stock : " + calculTotalStockMQ_E());
+                return;
+            }else{
+                stockFeveMQ_E.get(i).retirer(this, val, cryptogramme);
+                qte-=val;
+            }
+        }
+        journal.ajouter("Retrait de " + delta + " du stock de " + feve + ". Nouveau stock : " + calculTotalStockMQ_E());
+    }
+
+    public void retirerStockHQ(Feve feve,double delta){
+        double qte = delta;
+        for(int i = 0; i < 8; i++){
+            double val = stockFeveHQ.get(i).getValeur(cryptogramme);
+            if(val>=qte){
+                stockFeveHQ.get(i).retirer(this, delta, cryptogramme);
+                journal.ajouter("Retrait de " + delta + " du stock de " + feve + ". Nouveau stock : " + calculTotalStockHQ());
+                return;
+            }else{
+                stockFeveHQ.get(i).retirer(this, val, cryptogramme);
+                qte-=val;
+            }
+        }
+        journal.ajouter("Retrait de " + delta + " du stock de " + feve + ". Nouveau stock : " + calculTotalStockHQ());
+    }
+
+    public void retirerStockHQ_B(Feve feve,double delta){
+        double qte = delta;
+        for(int i = 0; i < 8; i++){
+            double val = stockFeveHQ_B.get(i).getValeur(cryptogramme);
+            if(val>=qte){
+                stockFeveHQ_B.get(i).retirer(this, delta, cryptogramme);
+                journal.ajouter("Retrait de " + delta + " du stock de " + feve + ". Nouveau stock : " + calculTotalStockHQ_B());
+                return;
+            }else{
+                stockFeveHQ_B.get(i).retirer(this, val, cryptogramme);
+                qte-=val;
+            }
+        }
+        journal.ajouter("Retrait de " + delta + " du stock de " + feve + ". Nouveau stock : " + calculTotalStockHQ_B());
     }
 
     public void calculCoutStock() {
