@@ -19,6 +19,10 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
 
     public Producteur3Stock(){
         super();
+        
+    }
+
+    public void initStock(){
         totalStock = new VariablePrivee(this.getNom()+"Stock Total", this, 0.0, 100000000000000.0, 0);
         coutStock = new VariablePrivee(this.getNom() + "Cout Stockage", this, 0.0, 1000000000.0, 0);
         getIndicateurs().add(totalStock);
