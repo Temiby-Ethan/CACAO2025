@@ -15,3 +15,4 @@ import java.util.ArrayList;
 
 
 public class Producteur2Vente extends Producteur2Stock implements IVendeurBourse, IVendeurContratCadre{
+}
