@@ -101,7 +101,15 @@ public class Producteur2recolte extends Producteur2Acteur {
         this.cout_recolte.put(Feve.F_HQ_BE,cout_HQ_BE);
         JournalRecolte.ajouter(Filiere.LA_FILIERE.getEtape()+" : Recolte de "+Prod_BQ+" feves de BQ, "+Prod_BQ_E+" feves de BQ_E, "+Prod_MQ+" feves de MQ, "+Prod_MQ_E+" feves de HQ_E, "+Prod_HQ_E+" feves de HQ_E et "+Prod_HQ_BE+" feves de HQ_BE");
     }
- 
+    
+    public void cout_employe() {
+        double cout = 0;
+        for (Feve f : Feve.values()) {
+            cout += cout_recolte.get(f);
+        }
+        Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Salaire main d'oeuvre", cout);
+        JournalBanque.ajouter(Filiere.LA_FILIERE.getEtape()+" : Cout total des employes : "+cout);
+    }
     /**
      * Retourne le nombre de parcelles par type de feve.
      */
@@ -157,6 +165,7 @@ public class Producteur2recolte extends Producteur2Acteur {
             p.add_age();
         }
         recolteParStep();
+        cout_employe();
         get_nb_plantations();
         super.next();
     }
@@ -165,6 +174,7 @@ public class Producteur2recolte extends Producteur2Acteur {
 		List<Journal> res = super.getJournaux();
 		res.add(JournalRecolte);
         res.add(Journalterrains);
+        res.add(JournalBanque);
 		return res;
 	}
 }

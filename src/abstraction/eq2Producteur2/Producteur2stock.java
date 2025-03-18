@@ -23,7 +23,6 @@ public class Producteur2stock extends Producteur2sechage {
     protected HashMap<Feve,Variable> stockvar;
 	protected Variable stockTotal;
     private Journal JournalStock;
-    private Journal JournalBanque;
     double cout_stockage = 7.5;
 
 
@@ -34,7 +33,7 @@ public class Producteur2stock extends Producteur2sechage {
         this.stockvar = new HashMap<Feve,Variable>();
 		this.prodParStep = new HashMap<Feve, Double>();
         this.JournalStock = new Journal("Journal Stock Eq2",this);
-        this.JournalBanque = new Journal("Journal Banque Eq2", this);
+        
 
         double totalInitialStock = 0.0;
 
@@ -249,7 +248,6 @@ public class Producteur2stock extends Producteur2sechage {
 	public List<Journal> getJournaux() { //Mets à jour les journaux
 		List<Journal> res = super.getJournaux();
 		res.add(JournalStock);
-        res.add(JournalBanque);
 		return res;
 	}
 

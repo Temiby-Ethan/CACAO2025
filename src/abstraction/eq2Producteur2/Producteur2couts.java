@@ -1,41 +1,24 @@
 //Maxime Philippon
 package abstraction.eq2Producteur2;
 
+import java.util.HashMap;
+
 import abstraction.eqXRomu.produits.Feve;
 
 public class Producteur2couts extends Producteur2stock {
 
-    private double cout_tot;
-    private double cout_unit_F_BQ;
-    private double cout_unit_F_BQ_E;
-    private double cout_unit_F_MQ;
-    private double cout_unit_F_MQ_E;
-    private double cout_unit_F_HQ_E;
-    private double cout_unit_F_HQ_BE;
-    private double prix_F_BQ;
-    private double prix_F_BQ_E;
-    private double prix_F_MQ;
-    private double prix_F_MQ_E;
-    private double prix_F_HQ_E;
-    private double prix_F_HQ_BE;
-    private double cout_stockage;
+    protected HashMap<Feve, Double> cout_unit_t;
+    protected HashMap<Feve, Double> prix;
     
     public Producteur2couts() {
         super();
-        this.cout_tot = 0;
-        this.cout_unit_F_BQ = 0;
-        this.cout_unit_F_BQ_E = 0;
-        this.cout_unit_F_MQ = 0;
-        this.cout_unit_F_MQ_E = 0;
-        this.cout_unit_F_HQ_E = 0;
-        this.cout_unit_F_HQ_BE = 0;
-        this.prix_F_BQ = 0;
-        this.prix_F_BQ_E = 0;
-        this.prix_F_MQ = 0;
-        this.prix_F_MQ_E = 0;
-        this.prix_F_HQ_E = 0;
-        this.prix_F_HQ_BE = 0;
-        this.cout_stockage = 0;
+        this.cout_unit_t = new HashMap<Feve, Double>();
+        this.prix = new HashMap<Feve, Double>();
+
+        for (Feve f : Feve.values()) {
+            this.cout_unit_t.put(f, 0.0);
+            this.prix.put(f,0.0);
+        }
     }
 
     public void initialiser() {
@@ -44,18 +27,57 @@ public class Producteur2couts extends Producteur2stock {
 
     public void next() {
         super.next();
-        calculCout();
+        calcul_cout_unit();
     }
 
-    public void calculCout() {
-
-        this.cout_unit_F_BQ = cout_unit_t.get(Feve.F_BQ);
-        this.cout_unit_F_BQ_E = cout_unit_t.get(Feve.F_BQ_E);
-        this.cout_unit_F_MQ = cout_unit_t.get(Feve.F_MQ);
-        this.cout_unit_F_MQ_E = cout_unit_t.get(Feve.F_MQ_E);
-        this.cout_unit_F_HQ_E = cout_unit_t.get(Feve.F_HQ_E);
-        this.cout_unit_F_HQ_BE = cout_unit_t.get(Feve.F_HQ_BE);
-        
+    /*
+     * Calcul des couts unitaires de production de chaque tonne de feve
+     */
+    public void calcul_cout_unit() {
+        for (Feve f : Feve.values()) {
+            double cout_r = cout_recolte.get(f);
+            switch (f) {
+                case F_BQ:
+                    double quantite_T_BQ = feve_recolte.get(f) * 0.000000753;
+                    double cout_unit_BQ = cout_r + 8 * cout_stockage * quantite_T_BQ;
+                    cout_unit_t.put(f, cout_unit_BQ / quantite_T_BQ);
+                    break;
+                case F_BQ_E:
+                    double quantite_T_BQ_E = feve_recolte.get(f) * 0.000000753;
+                    double cout_unit_BQ_E = cout_r + 8 * cout_stockage * quantite_T_BQ_E; 
+                    cout_unit_t.put(f, cout_unit_BQ_E / quantite_T_BQ_E);
+                    break;
+                case F_MQ:
+                    double quantite_T_MQ = feve_recolte.get(f) * 0.00000075;
+                    double cout_unit_MQ = cout_r + 8 * cout_stockage * quantite_T_MQ; 
+                    cout_unit_t.put(f, cout_unit_MQ / quantite_T_MQ);
+                    break;
+                case F_MQ_E:
+                    double quantite_T_MQ_E = feve_recolte.get(f) * 0.00000075;
+                    double cout_unit_MQ_E = cout_r + 8 * cout_stockage * quantite_T_MQ_E;
+                    cout_unit_t.put(f, cout_unit_MQ_E / quantite_T_MQ_E);
+                    break;
+                case F_HQ_E:
+                    double quantite_T_HQ_E = feve_recolte.get(f) * 0.000000765;
+                    double cout_unit_HQ_E = cout_r + 8 * cout_stockage * quantite_T_HQ_E; 
+                    cout_unit_t.put(f, cout_unit_HQ_E / quantite_T_HQ_E);
+                    break;
+                case F_HQ_BE:
+                    double quantite_T_HQ_BE = feve_recolte.get(f) * 0.000000765;
+                    double cout_unit_HQ_BE = cout_r + 8 * cout_stockage * quantite_T_HQ_BE; 
+                    cout_unit_t.put(f, cout_unit_HQ_BE / quantite_T_HQ_BE);
+                    break;
+            }
+            
+        }
     }
-    
+
+    /*
+     * Calcul des prix unitaires de chaque tonne de feve
+     */
+    public void calcul_prix() {
+        for (Feve f : Feve.values()) {
+            prix.put(f, cout_unit_t.get(f) * 1.2); //Fixe le prix telle que la marge soit de 20%
+        }
+    }
 }

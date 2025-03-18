@@ -21,8 +21,11 @@ public class Producteur2Acteur implements IActeur {
 	protected Variable stockTotal;
 	private int numero = 0;
 	protected Journal num = new Journal("Journal Eq2", this);
+	protected Journal JournalBanque;
 
 	public Producteur2Acteur() {
+
+		this.JournalBanque = new Journal("Journal Banque Eq2", this);
 		// A REMPLIR
     }
 	
