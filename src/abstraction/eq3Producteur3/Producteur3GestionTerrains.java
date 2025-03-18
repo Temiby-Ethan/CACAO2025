@@ -151,7 +151,8 @@ public class Producteur3GestionTerrains extends Producteur3Acteur{
             vie.get(0).add(t);
         } 
     }
-
+    
+    // Paul
     void actualiserTerrain(){
         if (Filiere.LA_FILIERE.getNumeroMois() == 0){
             LinkedList<Parcelle> aReplanter = vie.get(39);
