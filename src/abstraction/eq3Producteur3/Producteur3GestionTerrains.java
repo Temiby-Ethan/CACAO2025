@@ -152,6 +152,21 @@ public class Producteur3GestionTerrains extends Producteur3Acteur{
         } 
     }
 
+    void actualiserTerrain(){
+        if (Filiere.LA_FILIERE.getNumeroMois() == 0){
+            LinkedList<Parcelle> aReplanter = vie.get(39);
+            // On fait vieillir toutes les parcelles d'un an
+            for (int i = 38; i >= 0; i--){
+                vie.put(i+1,vie.get(i));
+            }
+            // On replante toutes les parcelles de 40 ans
+            for(Parcelle t : aReplanter){
+                deficteTerrain.add(t.qualite.replanter);
+                aReplanter.remove(t);
+                vie.get(0).add(t);
+            }
+        }
+    }
 
 
     void cleanDeficite(){
