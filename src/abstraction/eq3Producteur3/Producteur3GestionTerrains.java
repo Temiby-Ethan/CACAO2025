@@ -101,7 +101,7 @@ public class Producteur3GestionTerrains extends Producteur3Acteur{
 
             effectifs[2]+=400;
 
-            Parcelle p = new Parcelle(new QualiteHQ(true), annee);
+            Parcelle p = new Parcelle(new QualiteHQ(true,true), annee);
             vie.get(annee).add(p);
             recolte.get(mois).add(p);
         }
