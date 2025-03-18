@@ -25,6 +25,7 @@ public class Transformateur3Acteur implements IActeur {
 	protected Journal jdb;
 	protected Journal journalStock;
 	protected Journal journalTransac;
+	protected Journal journalCC;
 
 	protected List<IProduit> lesFeves;
 	protected List<IProduit> lesChocolats;
@@ -55,6 +56,8 @@ public class Transformateur3Acteur implements IActeur {
 		this.jdb = new Journal("Journal de bord", this);
 		this.journalStock = new Journal("Journal des stocks", this);
 		this.journalTransac = new Journal("Journal des transactions", this);
+		this.journalCC = new Journal("Journal des contrats cadre", this);
+
 
 		this.eq6_Q_BQ_0 = new Variable(this.getNom()+": quantité de cacao de BQ non labellisé", this, 300);
 		this.eq6_Q_BQ_1 = new Variable(this.getNom()+": quantité de cacao de BQ équitable", this, 300);
