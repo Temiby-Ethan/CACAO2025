@@ -115,10 +115,10 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
 		this.mesContratEnTantQueVendeur.add(contrat);
-		this.journalCC.ajouter("Nouveau contrat cadre obtenu ");
-		this.journalCC.ajouter("Acheteur : " + contrat.getAcheteur() + " ; Vendeur : " + contrat.getVendeur());
-		this.journalCC.ajouter("Produit :  " + contrat.getProduit());
-		this.journalCC.ajouter("Echeancier : " + contrat.getEcheancier());
+		this.journalCC.ajouter("Nouveau contrat cadre obtenu \n");
+		this.journalCC.ajouter("Acheteur : " + contrat.getAcheteur() + " ; Vendeur : " + contrat.getVendeur() + "\n");
+		this.journalCC.ajouter("Produit :  " + contrat.getProduit() + "\n");
+		this.journalCC.ajouter("Echeancier : " + contrat.getEcheancier() + "\n");
 	}
 	
 
@@ -142,7 +142,7 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 		double livre = Math.min(stockChoco.get((Chocolat) produit), quantite);
 		if (livre>0.0) {
 			totalStocksChoco.retirer(this,  livre);
-			this.journalStock.ajouter("Retrait de " + livre + "T" + contrat.getProduit() + "(CC avec "+ contrat.getAcheteur() + ")");
+			this.journalStock.ajouter("Retrait de " + livre + "T" + contrat.getProduit() + "(CC avec "+ contrat.getAcheteur() + ")\n");
 			double currStockChoco = stockChoco.get(produit);
 			stockChoco.put((Chocolat) produit, currStockChoco-livre);
 		}

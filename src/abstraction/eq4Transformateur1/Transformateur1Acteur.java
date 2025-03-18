@@ -40,9 +40,9 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 	public Transformateur1Acteur() {
 		
 		this.journal = new Journal("Journal " + this.getNom(), this);
-		this.journalStock = new Journal("Journal Stock" + this.getNom(), this);
-		this.journalCC = new Journal("Journal CC" + this.getNom(), this);
-		this.journalTransactions = new Journal("Journal Transactions" + this.getNom(), this);
+		this.journalStock = new Journal("Journal Stock " + this.getNom(), this);
+		this.journalCC = new Journal("Journal CC " + this.getNom(), this);
+		this.journalTransactions = new Journal("Journal Transactions " + this.getNom(), this);
 
 		this.totalStocksFeves = new VariablePrivee("Eq4TStockFeves", "<html>Quantite totale de feves en stock</html>",this, 0.0, 1000000.0, 0.0);
 		this.totalStocksChoco = new VariablePrivee("Eq4TStockChoco", "<html>Quantite totale de chocolat en stock</html>",this, 0.0, 1000000.0, 0.0);
@@ -160,6 +160,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 	// Apres chaque operation sur votre compte bancaire, cette
 	// operation est appelee pour vous en informer
 	public void notificationOperationBancaire(double montant) {
+		journal.ajouter("Opération sur compte bancaire : " +  montant);
 	}
 	
 	// Renvoie le solde actuel de l'acteur

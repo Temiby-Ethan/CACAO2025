@@ -10,7 +10,7 @@ import java.util.Scanner;
  * @author YAOU Reda
  */
 
-public class Transformateur1VendeurAppelDoffre extends Transformateur1AcheteurBourse implements IVendeurAO {
+/*public class Transformateur1VendeurAppelDoffre extends Transformateur1AcheteurBourse implements IVendeurAO {
 
     public Transformateur1VendeurAppelDoffre() {
 		super();
@@ -37,6 +37,7 @@ public class Transformateur1VendeurAppelDoffre extends Transformateur1AcheteurBo
 		this.journalTransactions.ajouter("J'ai vendu " + propositionRetenue.getQuantiteT() + " tonnes de " + propositionRetenue.getProduit() + " au cours de " + propositionRetenue.getPrixT() + " euros par tonne.");
 	
 		/* Mettre à jour les autres variables */
+		/*
 		stockChocoMarque.put((ChocolatDeMarque)(propositionRetenue.getProduit()), stockChocoMarque.get(propositionRetenue.getProduit()) - propositionRetenue.getQuantiteT());
 		this.journalTransactions.ajouter("J'ai maintenant " + this.stockChocoMarque.get(propositionRetenue.getProduit()) + " tonnes de " + propositionRetenue.getProduit() + " en stock.");
 
@@ -53,6 +54,6 @@ public class Transformateur1VendeurAppelDoffre extends Transformateur1AcheteurBo
 		System.out.println("Votre proposition de vente n'a pas été retenue");
 		this.journalTransactions.ajouter("J'ai proposé " + propositionRefusee.getQuantiteT() + " tonnes de " + propositionRefusee.getProduit() + " au cours de " + propositionRefusee.getPrixT() + " euros par tonne mais elle n'a pas été retenue.");
 	}
-}
+}*/
 
 

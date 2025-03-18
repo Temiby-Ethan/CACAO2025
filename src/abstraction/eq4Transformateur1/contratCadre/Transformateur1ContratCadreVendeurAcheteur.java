@@ -20,7 +20,7 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 		super();
 		this.mesContratEnTantQuAcheteur=new LinkedList<ExemplaireContratCadre>();
         this.epsilon  = 0.1;
-        this.qttInitialementVoulue = 0.5*stock.getMax();//On cherche à acheter de quoi remplir notre stock à hauteur de 50%
+        this.qttInitialementVoulue = 0.5*STOCK_MAX_TOTAL_FEVES;//On cherche à acheter de quoi remplir ou vendre notre stock à hauteur de 50%
         this.prixInitialementVoulu = 0.75*9500; //Une valeur arbitraire s'appuyant sur le prix moyen des fèves de cacao en 2024
 	}
 
@@ -148,8 +148,10 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 	}
 
 	public boolean achete(IProduit produit) {
-		return true;
+		//On n'achète que les fèves nous permettant de produire les chocolats que l'on veut produire
+		return pourcentageTransfo.keySet().contains(produit);
 	}
+
 	public String toString() {
 		return this.getNom();
 	}
