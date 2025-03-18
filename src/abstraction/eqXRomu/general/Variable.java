@@ -1,10 +1,9 @@
 package abstraction.eqXRomu.general;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 
 
 /**
@@ -157,7 +156,7 @@ public class Variable implements Comparable<Variable>{
 	 * @return Retourne la valeur de la variable au step
 	 * indique en parametre
 	 */
-	public VariablePrivee getValeur(int step) {
+	public double getValeur(int step) {
 		return this.historique.getValeur(step);
 	}
 	/**
