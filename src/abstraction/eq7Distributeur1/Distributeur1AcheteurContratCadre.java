@@ -187,4 +187,9 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 	public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat){
 
 	}
+<<<<<<< HEAD
 }
+=======
+}
+
+>>>>>>> baa94e0d27306b82ae7842792130ad71e4033f65
