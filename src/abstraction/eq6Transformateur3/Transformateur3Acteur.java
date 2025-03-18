@@ -13,7 +13,7 @@ import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
-import abstraction.eq6Transformateur3.eq6Transformateur3Stock;
+import abstraction.eq6Transformateur3.Transformateur3Stock;
 
 
 public class Transformateur3Acteur implements IActeur {
@@ -30,8 +30,8 @@ public class Transformateur3Acteur implements IActeur {
 	protected List<IProduit> lesFeves;
 	protected List<IProduit> lesChocolats;
 	protected HashMap<IProduit, Variable> dicoIndicateurFeves;
-	protected eq6Transformateur3Stock stockFeves;
-	protected eq6Transformateur3Stock stockChoco;
+	protected Transformateur3Stock stockFeves;
+	protected Transformateur3Stock stockChoco;
 
 	protected Variable eq6_Q_MQ_0;
 	protected Variable eq6_Q_MQ_1;
@@ -97,7 +97,7 @@ public class Transformateur3Acteur implements IActeur {
 		}
 		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*4;
 		
-		stockFeves = new eq6Transformateur3Stock(this, journalStock, "fèves", lesFeves, dicoIndicateurFeves);
+		stockFeves = new Transformateur3Stock(this, journalStock, "fèves", lesFeves, dicoIndicateurFeves);
 		stockFeves.addToStock(abstraction.eqXRomu.produits.Feve.F_BQ, 200.0);
 		stockFeves.display();
 
