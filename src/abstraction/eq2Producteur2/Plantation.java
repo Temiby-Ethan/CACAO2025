@@ -1,6 +1,6 @@
 //Maxime Philippon
 package abstraction.eq2Producteur2;
-
+import java.util.concurrent.ThreadLocalRandom;
 
 import abstraction.eqXRomu.produits.Feve;
 
@@ -113,17 +113,17 @@ public class Plantation extends Producteur2recolte {
     private int getFevesParCabosse() {
         switch (typeFeve) {
             case F_BQ:
-                return 25; // Moyenne entre 23 et 28
+                return ThreadLocalRandom.current().nextInt(23, 29); // Moyenne entre 23 et 28
             case F_BQ_E:
-                return 25; // Moyenne entre 23 et 28
+                return ThreadLocalRandom.current().nextInt(23, 29); // Moyenne entre 23 et 28
             case F_MQ:
-                return 27; // Moyenne entre 25 et 29
+                return ThreadLocalRandom.current().nextInt(25, 30); // Moyenne entre 25 et 29
             case F_MQ_E:
-                return 27; // Moyenne entre 25 et 29
+                return ThreadLocalRandom.current().nextInt(25, 30); // Moyenne entre 25 et 29
             case F_HQ_E:
-                return 30; // Moyenne entre 29 et 31
+                return ThreadLocalRandom.current().nextInt(29, 32); // Moyenne entre 29 et 31
             case F_HQ_BE:
-                return 30; // Moyenne entre 29 et 31
+                return ThreadLocalRandom.current().nextInt(29, 32); // Moyenne entre 29 et 31
             default:
                 return 0;
         }
