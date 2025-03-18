@@ -32,7 +32,6 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 	public void initialiser() {
 		super.initialiser();
 
-		super.initialiser();
 
 		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*4;
 

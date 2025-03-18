@@ -151,7 +151,7 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 	//On ne prend pas en compte le fait que l'on ait possiblement d'autre livraisons à réaliser sur la même période
 	//Il faudra s'assurer que l'on ait du stock pour cette transaction spécifiquement
 	public boolean vend(IProduit produit) {
-		return produit.getType().equals("Chocolat") && stockChoco.get(produit)>0;
+		return produit.getType().equals("Chocolat") && stockChoco.get(produit)>=0;
 	}
 
 	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
