@@ -17,4 +17,3 @@ public interface IFabricantChocolatDeMarque extends IActeur {
 	public List<ChocolatDeMarque> getChocolatsProduits();
 
 }
-
