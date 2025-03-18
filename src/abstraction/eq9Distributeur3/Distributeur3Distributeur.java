@@ -13,7 +13,7 @@ import java.util.List;
 
 public class Distributeur3Distributeur extends Distributeur3Acteur implements IDistributeurChocolatDeMarque {
     // Implémentée par Héloïse
-    //protected HashMap<ChocolatDeMarque, Double> stocks;
+    // protected HashMap<ChocolatDeMarque, Double> stocks;
     protected HashMap<ChocolatDeMarque, Float> prix;
     private VariablePrivee stockTotal;
     private VariablePrivee stockBQ;
