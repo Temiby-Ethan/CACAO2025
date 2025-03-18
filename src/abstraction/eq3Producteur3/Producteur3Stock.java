@@ -52,13 +52,12 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
     
 // Alice
     public void ajouterStock(Feve feve,double delta){
-        stockFeve.get(feve).ajouter(this,delta);
-        journal.ajouter("Ajout de " + delta + " au stock de " + feve + ". Nouveau stock : " + stockFeve.get(feve).getValeur());
-        
+        stockFeve.get(feve).ajouter(this,delta,cryptogramme);
+        journal.ajouter("Ajout de " + delta + " au stock de " + feve + ". Nouveau stock : " + stockFeve.get(feve).getValeur(cryptogramme));
     }
     public void retirerStock(Feve feve,double delta){
-        stockFeve.get(feve).retirer(this,delta);
-        journal.ajouter("Retrait de " + delta + " du stock de " + feve + ". Nouveau stock : " + stockFeve.get(feve).getValeur());
+        stockFeve.get(feve).retirer(this,delta,cryptogramme);
+        journal.ajouter("Retrait de " + delta + " du stock de " + feve + ". Nouveau stock : " + stockFeve.get(feve).getValeur(cryptogramme));
 
     }
 

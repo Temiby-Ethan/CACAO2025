@@ -157,7 +157,7 @@ public class Variable implements Comparable<Variable>{
 	 * @return Retourne la valeur de la variable au step
 	 * indique en parametre
 	 */
-	public double getValeur(int step) {
+	public VariablePrivee getValeur(int step) {
 		return this.historique.getValeur(step);
 	}
 	/**
