@@ -4,6 +4,8 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.general.VariablePrivee;
 import abstraction.eqXRomu.produits.Feve;
+import abstraction.eqXRomu.produits.Gamme;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Random;
@@ -43,9 +45,6 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
     }
   
     //Zoé
-
-
-    
 
     public void calculTotalStock(){
         double total = 0;
@@ -109,6 +108,28 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
         return total;
     }
 
+    double calculTotalStockParticulier(Feve feve){
+        if(feve.getGamme().equals(Gamme.BQ)){
+            if(feve.isEquitable()){
+                return calculTotalStockBQ_E();
+            }else{
+                return calculTotalStockBQ();
+            }
+        }
+        else if(feve.getGamme().equals(Gamme.MQ)){
+            if(feve.isEquitable()){
+                return calculTotalStockMQ_E();
+            }else{
+                return calculTotalStockMQ();
+            }
+        }else{
+            if (feve.isBio()){
+                return calculTotalStockHQ_B();
+            }else{
+                return calculTotalStockHQ();
+            }
+        }
+    }
 
 
     void vieillirStock(){
