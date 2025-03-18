@@ -21,6 +21,10 @@ public class Producteur3GestionTerrains extends Producteur3Acteur{
     protected int [] effectifs = new int [3];
     protected int feveProduites = 0;
 
+    public Producteur3GestionTerrains(){
+        super();
+    }
+
 
     void achatTerrain(Qualite q, boolean bio){
         if(q instanceof QualiteBQ){
