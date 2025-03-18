@@ -6,6 +6,7 @@ public class plantation {
     private String typedeplant;
     private int nombre_arbes;
     private int temps_avant_production;
+    private int age;
     private int duree_de_vie = 960; // en steps
     private int besoin_main_doeuvre;
     private int production_par_arbre;
