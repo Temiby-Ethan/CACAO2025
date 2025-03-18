@@ -10,7 +10,7 @@ import java.util.Scanner;
  * @author YAOU Reda
  */
 
-public class Transformateur1VendeurAppelDoffre extends Transformateur1Stocks implements IVendeurAO {
+public class Transformateur1VendeurAppelDoffre extends Transformateur1AcheteurBourse implements IVendeurAO {
 
     public Transformateur1VendeurAppelDoffre() {
 		super();

@@ -1,5 +1,6 @@
 package abstraction.eq4Transformateur1;
 
+import abstraction.eq4Transformateur1.contratCadre.Transformateur1ContratCadreVendeurAcheteur;
 import abstraction.eqXRomu.bourseCacao.IAcheteurBourse;
 import abstraction.eqXRomu.produits.Feve;
 
@@ -7,7 +8,7 @@ import abstraction.eqXRomu.produits.Feve;
  * @author YAOU Reda
  */
 
-public class Transformateur1AcheteurBourse extends Transformateur1Stocks implements IAcheteurBourse{
+public class Transformateur1AcheteurBourse extends Transformateur1ContratCadreVendeurAcheteur implements IAcheteurBourse{
 	
 	private Feve feve;
 	private double T;
@@ -30,6 +31,7 @@ public class Transformateur1AcheteurBourse extends Transformateur1Stocks impleme
 
 	@Override
 	public void notificationAchat(Feve f, double quantiteEnT, double coursEnEuroParT) {
+		
 		this.totalStocksFeves.setValeur(this, this.totalStocksFeves.getValeur(this.cryptogramme) +quantiteEnT, this.cryptogramme);
 		this.journalTransactions.ajouter("J'ai achete " + quantiteEnT + " tonnes de " + f + " au cours de " + coursEnEuroParT + " euros par tonne.");
 		

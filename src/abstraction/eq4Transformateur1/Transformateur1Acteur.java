@@ -38,6 +38,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 	protected Variable VolumeTotalDeStock; // Le volume total de stock
 
 	public Transformateur1Acteur() {
+		
 		this.journal = new Journal("Journal " + this.getNom(), this);
 		this.journalStock = new Journal("Journal Stock" + this.getNom(), this);
 		this.journalCC = new Journal("Journal CC" + this.getNom(), this);
@@ -73,6 +74,10 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 			this.VolumeTotalDeStock.ajouter(this, 20000.0, this.cryptogramme);
 			this.journalStock.ajouter("ajout de 20000 de "+c+" au stock de chocolat --> total="+this.totalStocksChoco.getValeur(this.cryptogramme));
 		}
+	}
+
+	public void main(){
+		System.out.println(Feve.values());
 	}
 
 	public String getNom() {// NE PAS MODIFIER
