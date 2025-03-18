@@ -14,9 +14,10 @@ public class Plantation extends Producteur2recolte {
     private final int dureeDeVie;   // Durée de vie maximale avant remplacement
     private final int tempsAvantProduction; // Temps nécessaire avant production
     private final int productionParParcelle; // Nombre de cabosses par parcelle a chaque step
-    private int prix_achat; // Prix d'achat de la plantation
-    private int prix_vente; // Prix de vente de la plantation
-    private int prix_replantation; // Prix de replantation de la plantation
+    private double prix_achat; // Prix d'achat de la plantation
+    private double prix_vente; // Prix de vente de la plantation
+    private double prix_replantation; // Prix de replantation de la plantation
+    private double salaire_employe; // Prix que coûtente les employés par step par parcelle
 
     
     public Plantation(Feve typeFeve, int parcelles, int age) {
@@ -34,6 +35,7 @@ public class Plantation extends Producteur2recolte {
                 this.prix_achat = 2250000;
                 this.prix_vente = 1450000;
                 this.prix_replantation = 800000;
+                this.salaire_employe = 6600;
                 break;
             case F_BQ_E:
                 this.dureeDeVie = 960;  // 40 ans
@@ -42,6 +44,7 @@ public class Plantation extends Producteur2recolte {
                 this.prix_achat = 2250000;
                 this.prix_vente = 1450000;
                 this.prix_replantation = 800000;
+                this.salaire_employe = 30000;
                 break;
             case F_MQ:
                 this.dureeDeVie = 960;
@@ -50,6 +53,7 @@ public class Plantation extends Producteur2recolte {
                 this.prix_achat = 4250000;
                 this.prix_vente = 2850000;
                 this.prix_replantation = 1400000;
+                this.salaire_employe = 5400;
                 break;
             case F_MQ_E:
                 this.dureeDeVie = 960;
@@ -58,6 +62,7 @@ public class Plantation extends Producteur2recolte {
                 this.prix_achat = 4250000;
                 this.prix_vente = 2850000;
                 this.prix_replantation = 1400000;
+                this.salaire_employe = 22500;
                 break;
             case F_HQ_E:
                 this.dureeDeVie = 960;
@@ -66,11 +71,16 @@ public class Plantation extends Producteur2recolte {
                 this.prix_achat = 7000000;
                 this.prix_vente = 4650000;
                 this.prix_replantation = 2350000;
+                this.salaire_employe = 15000;
                 break;
             case F_HQ_BE:
                 this.dureeDeVie = 960;
                 this.tempsAvantProduction = 120; // 5 ans
                 this.productionParParcelle = 29166;
+                this.prix_achat = 7000000;
+                this.prix_vente = 4650000;
+                this.prix_replantation = 2350000;
+                this.salaire_employe = 15000;
                 break;
             default:
                 throw new IllegalArgumentException("Type de fève non reconnu !");
