@@ -17,6 +17,7 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 
 	private double coutStockage; 
 	protected double STOCK_MAX_TOTAL_FEVES = 1000000;
+
 	private List<ChocolatDeMarque> chocosProduits; // la liste de toutes les sortes de ChocolatDeMarque que l'acteur produit et peut vendre
 	protected HashMap<Feve, HashMap<Chocolat, Double>> pourcentageTransfo; // pour les differentes feves, le chocolat qu'elles peuvent contribuer a produire avec le ratio
 	protected List<ChocolatDeMarque> chocolatsLimDt; // la liste des chocolats de marque "LimDt" que l'acteur produit
@@ -24,27 +25,37 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 	public Transformateur1Stocks() {
 		super();
 		this.chocosProduits = new LinkedList<ChocolatDeMarque>();
+		this.pourcentageTransfo = new HashMap<Feve, HashMap<Chocolat, Double>>();
+		this.chocolatsLimDt=new LinkedList<ChocolatDeMarque>();
 	}
 	
 	public void initialiser() {
 		super.initialiser();
 
+		super.initialiser();
+
 		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*4;
 
-		this.stockFeves=new HashMap<Feve,Double>();
+		this.lesFeves = new LinkedList<Feve>();
+		for (Feve f : Feve.values()) {
+			this.lesFeves.add(f);
+		}
+		
 		for (Feve f : this.lesFeves) {
 			this.stockFeves.put(f, 20000.0);
 			this.totalStocksFeves.ajouter(this, 20000.0, this.cryptogramme);
 			this.journal.ajouter("ajout de 20000 de "+f+" au stock de feves --> total="+this.totalStocksFeves.getValeur(this.cryptogramme));
 		}
-		this.stockChoco=new HashMap<Chocolat,Double>();
+		
 		for (Chocolat c : Chocolat.values()) {
 			this.stockChoco.put(c, 0.0);
 			this.totalStocksChoco.ajouter(this, 0.0, this.cryptogramme);
 			this.journal.ajouter("Initialisation de 0 de "+c+" au stock de chocolat --> total="+this.totalStocksChoco.getValeur(this.cryptogramme));
 		}
+
 		this.stockChocoMarque=new HashMap<ChocolatDeMarque,Double>();
 		this.pourcentageTransfo = new HashMap<Feve, HashMap<Chocolat, Double>>();
+
 
 		this.pourcentageTransfo.put(Feve.F_HQ_BE, new HashMap<Chocolat, Double>());
 		double conversion = 1.0 + (100.0 - Filiere.LA_FILIERE.getParametre("pourcentage min cacao HQ").getValeur())/100.0;
@@ -66,7 +77,7 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 
 
 		this.journalStock.ajouter(Romu.COLOR_LLGRAY, Color.PINK, "Stock initial chocolat de marque : ");
-		this.chocolatsLimDt=new LinkedList<ChocolatDeMarque>();
+		
 		for (Feve f : Feve.values()) {
 			if (this.pourcentageTransfo.keySet().contains(f)) {
 				for (Chocolat c : this.pourcentageTransfo.get(f).keySet()) {
@@ -86,6 +97,15 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 
 	public void next() {
 		super.next();
+
+
+		this.journal.ajouter("N° Etape " + Filiere.LA_FILIERE.getEtape());
+		this.journal.ajouter("Solde : " + this.getSolde());
+
+		this.journalStock.ajouter("N° Etape " + Filiere.LA_FILIERE.getEtape());
+		this.journalCC.ajouter("N° Etape " + Filiere.LA_FILIERE.getEtape());
+		this.journalTransactions.ajouter("N° Etape " + Filiere.LA_FILIERE.getEtape());
+
 		
 		this.journal.ajouter("Stock de fèves : " + this.totalStocksFeves.getValeur(this.cryptogramme));
 		this.journal.ajouter("Stock de chocolat : " + this.totalStocksChoco.getValeur(this.cryptogramme));
@@ -107,21 +127,31 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 
 		for (Feve f : this.pourcentageTransfo.keySet()) {
 			for (Chocolat c : this.pourcentageTransfo.get(f).keySet()) {
-				int transfo = (int) (Math.min(this.stockFeves.get(f), Filiere.random.nextDouble()*30));
+				int transfo;
+				if (this.stockFeves.get(f) == null){
+					transfo = (int) Filiere.random.nextDouble()*30;
+				}
+				else{
+					transfo = (int) (Math.min(this.stockFeves.get(f), Filiere.random.nextDouble()*30));
+				}
 				if (transfo>0) {
 					this.stockFeves.put(f, this.stockFeves.get(f)-transfo);
 					this.totalStocksFeves.retirer(this, transfo, this.cryptogramme);
+
 					double PourcentageMarque = 0.8;  //Modifiable
 					// La Pourcentage ainsi definie sera stockee sous forme de marquee, la quantité restante sera alors stockee comme non marquee
 
 					this.stockChoco.put(c, this.stockChoco.get(c)+((transfo*PourcentageMarque)*this.pourcentageTransfo.get(f).get(c)));
+
 					int pourcentageCacao =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+c.getGamme()).getValeur());
 					ChocolatDeMarque cm= new ChocolatDeMarque(c, "LimDt", pourcentageCacao);
 					double scm = this.stockChocoMarque.keySet().contains(cm) ?this.stockChocoMarque.get(cm) : 0.0;
+					
 					this.stockChocoMarque.put(cm, scm+((transfo*PourcentageMarque)*this.pourcentageTransfo.get(f).get(c)));
 					this.totalStocksChocoMarque.ajouter(this, ((transfo*PourcentageMarque)*this.pourcentageTransfo.get(f).get(c)), this.cryptogramme);
 					this.totalStocksChoco.ajouter(this, ((transfo)*this.pourcentageTransfo.get(f).get(c)), this.cryptogramme);
 					this.totalStocksChocoNonMarquee.ajouter(this, ((transfo*(1-PourcentageMarque))*this.pourcentageTransfo.get(f).get(c)), this.cryptogramme);
+					
 					this.journal.ajouter(Romu.COLOR_LLGRAY, Color.PINK, "Transfo de "+(transfo<10?" "+transfo:transfo)+" T de "+f+" en "+Journal.doubleSur(transfo*this.pourcentageTransfo.get(f).get(c),3,2)+" T de "+c);
 					this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN," stock("+f+")->"+this.stockFeves.get(f));
 					this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN," stock("+c+")->"+this.stockChoco.get(c));

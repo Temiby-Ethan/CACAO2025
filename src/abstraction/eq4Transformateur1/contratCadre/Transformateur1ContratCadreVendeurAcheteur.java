@@ -4,7 +4,6 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.contratsCadres.*;
 import abstraction.eqXRomu.produits.Feve;
-import abstraction.eq4Transformateur1.Transformateur1Stocks;
 
 import java.util.List;
 import java.util.LinkedList;
@@ -16,22 +15,28 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 	protected double prixInitialementVoulu;
 	protected double epsilon;
 
+
 	public Transformateur1ContratCadreVendeurAcheteur() {
 		super();
 		this.mesContratEnTantQuAcheteur=new LinkedList<ExemplaireContratCadre>();
         this.epsilon  = 0.1;
+
         this.qttInitialementVoulue = 0.5*STOCK_MAX_TOTAL_FEVES;//On cherche à acheter de quoi remplir ou vendre notre stock à hauteur de 50%
+
         this.prixInitialementVoulu = 0.75*9500; //Une valeur arbitraire s'appuyant sur le prix moyen des fèves de cacao en 2024
 	}
 
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {
+
         //Si la qtt proposée est cohérente avec la quantité que nous voulions initialement, on accepte l'echeancier
 		if (contrat.getEcheancier().getQuantiteTotale()>100.0){
 			if (Math.abs((this.qttInitialementVoulue - contrat.getEcheancier().getQuantiteTotale())/this.qttInitialementVoulue) <= epsilon){
+
 				return contrat.getEcheancier();
 			}
 			//Sinon on négocie par dichotomie
 			else{
+
 				double qttContrat = contrat.getEcheancier().getQuantiteTotale();
 				double qttVoulue = 0.25*qttContrat + 0.75 * this.qttInitialementVoulue;
 
@@ -40,14 +45,15 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 				//Mise à jour de l'échéancier pour prendre en compte ces modifications
 				Echeancier e = contrat.getEcheancier();
 
-
 				//Redistribution uniforme de la hausse ou de la baisse des qtt vendues 
 				for(int i = e.getStepDebut() ; i< e.getStepFin() ; i++){
 					double qtti = e.getQuantite(i);
+
 					e.set(i, qtti*(qttContrat/qttVoulue));
 				}
 				if (e.getQuantiteTotale()<100.) return contrat.getEcheancier();
 				else return e;
+
 			}
 		}
 		else {
@@ -86,6 +92,7 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 
 	public void next() {
 		super.next();
+
 		// On enleve les contrats obsolete (nous pourrions vouloir les conserver pour "archive"...)
 		List<ExemplaireContratCadre> contratsObsoletes=new LinkedList<ExemplaireContratCadre>();
 		for (ExemplaireContratCadre contrat : this.mesContratEnTantQuAcheteur) {
@@ -96,10 +103,12 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 		this.mesContratEnTantQuAcheteur.removeAll(contratsObsoletes);
 
 		
+
 		// OU proposition d'un contrat a un des vendeurs choisi aleatoirement
-		for(IProduit produit : stockFeves.keySet()){
+		for(IProduit produit : pourcentageTransfo.keySet()){
 			if(stockFeves.get(produit)< 0.75*STOCK_MAX_TOTAL_FEVES){
 				journalCC.ajouter("Recherche d'un vendeur aupres de qui acheter");
+
 				List<IVendeurContratCadre> vendeurs = supCCadre.getVendeurs(produit);
 				if (vendeurs.contains(this)) {
 					vendeurs.remove(this);
@@ -122,6 +131,7 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 		// Proposition d'un contrat a un des achteur choisi aleatoirement
 		for(IProduit produit : stockChoco.keySet()){
 			journalCC.ajouter("Recherche d'un acheteur aupres de qui vendre");
+
 			List<IAcheteurContratCadre> acheteurs = supCCadre.getAcheteurs(produit);
 			if (acheteurs.contains(this)) {
 				acheteurs.remove(this);
@@ -141,7 +151,7 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 	}
 
 	public void receptionner(IProduit produit, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
-		totalStocksFeves.ajouter(this, quantiteEnTonnes); 
+		totalStocksFeves.ajouter(this, quantiteEnTonnes, cryptogramme); 
         double currStockFeves = stockFeves.get((Feve) produit);
         stockFeves.put((Feve) produit, currStockFeves+quantiteEnTonnes);
         journalStock.ajouter("Reception de " + quantiteEnTonnes +"feves " + ((Feve)produit).getGamme() + "(CC avec" + contrat.getVendeur() + ")");

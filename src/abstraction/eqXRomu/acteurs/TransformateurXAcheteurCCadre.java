@@ -17,7 +17,7 @@ import abstraction.eqXRomu.produits.IProduit;
 
 public class TransformateurXAcheteurCCadre extends TransformateurXAcheteurBourse implements IAcheteurContratCadre {
 	private SuperviseurVentesContratCadre supCC;
-	private List<ExemplaireContratCadre> contratsEnCours;
+	protected List<ExemplaireContratCadre> contratsEnCours;
 	private List<ExemplaireContratCadre> contratsTermines;
 	protected Journal journalCC;
 

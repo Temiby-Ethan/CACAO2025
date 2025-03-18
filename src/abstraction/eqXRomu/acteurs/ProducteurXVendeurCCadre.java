@@ -152,7 +152,8 @@ public class ProducteurXVendeurCCadre extends ProducteurXVendeurBourse implement
 						return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)(ec.getQuantiteTotale()/12));
 					} else {
 						journalCC.ajouter("      je retourne "+new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)(((stock.get((Feve)produit).getValeur()-restantDu((Feve)produit))/12))));
-						return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)(((stock.get((Feve)produit).getValeur()-restantDu((Feve)produit))/12)));
+						res = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12,  (int)(((stock.get((Feve)produit).getValeur()-restantDu((Feve)produit))/12)));
+						return res.getQuantiteTotale()>=1200 ? res : null;
 					}
 				}
 				journalCC.ajouter("      j'accepte l'echeancier");

@@ -38,12 +38,13 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 	protected Variable totalStocksChocoNonMarquee; // La quantie totale de stock de chocolat non marquee
 
 	public Transformateur1Acteur() {
-		
+
 		this.journal = new Journal("Journal " + this.getNom(), this);
 		this.journalStock = new Journal("Journal Stock " + this.getNom(), this);
 		this.journalCC = new Journal("Journal CC " + this.getNom(), this);
 		this.journalTransactions = new Journal("Journal Transactions " + this.getNom(), this);
 
+		//Constructions des variables de stocks (quantités globales)
 		this.totalStocksFeves = new VariablePrivee("Eq4TStockFeves", "<html>Quantite totale de feves en stock</html>",this, 0.0, 1000000.0, 0.0);
 		this.totalStocksChoco = new VariablePrivee("Eq4TStockTotalChoco", "<html>Quantite totale de chocolat en stock</html>",this, 0.0, 1000000.0, 0.0);
 		this.totalStocksChocoMarque = new VariablePrivee("Eq4TStockChocoMarque", "<html>Quantite totale de chocolat de marque en stock</html>",this, 0.0, 1000000.0, 0.0);
@@ -72,6 +73,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 			this.totalStocksChoco.ajouter(this, 0.0, this.cryptogramme);
 			this.journalStock.ajouter("Initialisation de 0 de "+c+" au stock de chocolat --> total="+this.totalStocksChoco.getValeur(this.cryptogramme));
 		}
+
 	}
 
 	public void main(){
@@ -92,16 +94,12 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 
 	public void next() {
 		
-		this.journal.ajouter("N° Etape " + Filiere.LA_FILIERE.getEtape());
-		this.journalStock.ajouter("N° Etape " + Filiere.LA_FILIERE.getEtape());
-		this.journalCC.ajouter("N° Etape " + Filiere.LA_FILIERE.getEtape());
-		this.journalTransactions.ajouter("N° Etape " + Filiere.LA_FILIERE.getEtape());
-
 
 		this.journalStock.ajouter("Stock de fèves : " + this.totalStocksFeves.getValeur(this.cryptogramme));
 		this.journalStock.ajouter("Stock de chocolat : " + this.totalStocksChoco.getValeur(this.cryptogramme));
 		this.journalStock.ajouter("Stock de chocolat de marque : " + this.totalStocksChocoMarque.getValeur(this.cryptogramme));
 		this.journal.ajouter("Solde : " + this.getSolde());
+
 	}
 
 	public Color getColor() {// NE PAS MODIFIER

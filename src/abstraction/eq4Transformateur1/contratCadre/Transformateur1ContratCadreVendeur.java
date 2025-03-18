@@ -8,7 +8,6 @@ import java.util.List;
 import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.contratsCadres.*;
-import abstraction.eqXRomu.general.Journal;
 
 
 /*
@@ -19,54 +18,66 @@ import abstraction.eqXRomu.general.Journal;
 public class Transformateur1ContratCadreVendeur extends TransformateurContratCadre implements IVendeurContratCadre {
 
 	protected List<ExemplaireContratCadre> mesContratEnTantQueVendeur;//Contient tous les contrats de vente
-	protected double qttInitialementVoulue;	
+	protected double partInitialementVoulue;	
 	protected double prixInitialementVoulu;
 	protected double epsilon;
 	
 	public Transformateur1ContratCadreVendeur() {
 		super();
 		this.mesContratEnTantQueVendeur=new LinkedList<ExemplaireContratCadre>();
-		this.epsilon = 0.1;  //Pourcentage d'erreur entre la quantite voulue et celle du contrat actuel
+
+		this.partInitialementVoulue = 0.6; //A MODIFIER On cherche initialement à vendre 60% du stock du produit dont il est question
+		this.epsilon = 0.1;  //A MODIFIER Pourcentage d'erreur entre la quantite voulue et celle du contrat actuel
+
 
 	}
 
-
+	//A MODIFIER
+	//Il faut balayer tous les types de chocolat que l'on a en stock
+	//Le problème est qu'on supprime la notion de produit comme variable de classe pour généraliser
+	//Les stratégies de négociations restent les mêmes
 	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
+		if (contrat.getEcheancier().getQuantiteTotale()> SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER){
+			IProduit produit = contrat.getProduit();
+			if (contrat.getProduit().equals(produit)) {
+				double qtt_totale_voulue = partInitialementVoulue*stockChoco.get(contrat.getProduit());
 
 
-		double qtt_totale_voulue = qttInitialementVoulue;
+				if (contrat.getEcheancier().getQuantiteTotale()< stockChoco.get((Chocolat) produit)) {  //On chercher à honorer le contrat sur les qtts
 
-		if (contrat.getEcheancier().getQuantiteTotale()<100) return null; //On vérifie que la règle des 100T est valide
+					//On vérifie que le contrat propose met en jeu suffisemment de quantite par rapport aux quantite voulues par notre acteur, a plus ou moins epsilon pres
+					double delta = contrat.getEcheancier().getQuantiteTotale() - qtt_totale_voulue;
 
-		if (contrat.getEcheancier().getQuantiteTotale()< stockChoco.get((Chocolat) contrat.getProduit())) {  //On chercher à honorer le contrat sur les qtts
-
-			//On vérifie que le contrat propose met en jeu suffisemment de quantite par rapport aux quantite voulues par notre acteur, a plus ou moins epsilon pres
-			double delta = contrat.getEcheancier().getQuantiteTotale() - qtt_totale_voulue;
-
-			if (Math.abs(delta) <= epsilon*qtt_totale_voulue ) {
-				return contrat.getEcheancier(); // on ne cherche pas a negocier sur le previsionnel de livraison
+					if (Math.abs(delta) <= epsilon*qtt_totale_voulue ) {
+						return contrat.getEcheancier(); // on ne cherche pas a negocier sur le previsionnel de livraison
+					} 
+					else {
+						//Mise à jour de l'échéancier pour prendre en compte ces modifications
+						Echeancier e = contrat.getEcheancier();
+						//On procède par dichotomie en augmentant ou diminuant le volume de vente de nos produits
+						double signe = delta/Math.abs(delta);
+						this.partInitialementVoulue = this.partInitialementVoulue * (1 + signe*0.125);//si detla<0, proposition trop faible donc on diminue notre demande
+																									//si delta>0, proposition trop forte donc on augmante notre demande
+			
+						//Redistribution uniforme de la hausse ou de la baisse des qtt vendues 
+						for(int i = e.getStepDebut() ; i< e.getStepFin() ; i++){
+							double qtti = e.getQuantite(i);
+							e.set(i, qtti*(1+signe*0.125));
+						}
+						if (e.getQuantiteTotale() > SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER) return e;
+						else return null;
+					}
+				} 
+				else {
+					return null; // on est frileux : on ne s'engage dans un contrat cadre que si on a toute la quantite en stock (on pourrait accepter meme si nous n'avons pas tout car nous pouvons produire/acheter pour tenir les engagements) 
+				}
 			} 
 			else {
-				//Mise à jour de l'échéancier pour prendre en compte ces modifications
-				Echeancier e = contrat.getEcheancier();
-				//On procède par dichotomie en augmentant ou diminuant le volume de vente de nos produits
-				double signe = delta/Math.abs(delta);
-				qtt_totale_voulue = e.getQuantiteTotale() * (1 + signe*0.125);//si detla<0, proposition trop faible donc on diminue notre demande
-																								//si delta>0, proposition trop forte donc on augmante notre demande
-				if (qtt_totale_voulue<100.) return contrat.getEcheancier();//si notre qtt est inférieur à 100, accepte le CC
-
-				//Redistribution uniforme de la hausse ou de la baisse des qtt vendues 
-				for(int i = e.getStepDebut() ; i< e.getStepFin() ; i++){
-					double qtti = e.getQuantite(i);
-					e.set(i, qtti*(1+signe*0.125));
-				}
-				return e;
-				}
-			} else {
-				return null; // on est frileux : on ne s'engage dans un contrat cadre que si on a toute la quantite en stock (on pourrait accepter meme si nous n'avons pas tout car nous pouvons produire/acheter pour tenir les engagements) 
+				return null;// on ne vend pas de ce produit
 			}
 		}
-	
+		return null ; //On annule les négociations si le nouveau contrat a une quantité insuffisante
+	}
 
 
 	//A MODIFIER
@@ -125,6 +136,7 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 	public void next() {
 
 		super.next();
+
 		List<ExemplaireContratCadre> contratsObsoletes=new LinkedList<ExemplaireContratCadre>();
 		for (ExemplaireContratCadre contrat : this.mesContratEnTantQueVendeur) {
 			if (contrat.getQuantiteRestantALivrer()==0.0 && contrat.getMontantRestantARegler()==0.0) {
@@ -134,23 +146,35 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 		this.mesContratEnTantQueVendeur.removeAll(contratsObsoletes);
 	}
 
+	//A MODIFIER
+	//Ici le problème est qu'on ne vérifie que s'il est possible de vendre à l'instant T
+	//On ne prend pas en compte le fait que l'on ait possiblement d'autre livraisons à réaliser sur la même période
+	//Il faudra s'assurer que l'on ait du stock pour cette transaction spécifiquement
 	public boolean vend(IProduit produit) {
-		return stockChoco.keySet().contains(produit) || stockChocoMarque.keySet().contains(produit);
+		return produit.getType().equals("Chocolat") && stockChoco.get(produit)>0;
 	}
 
 	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
 		double livre = Math.min(stockChoco.get((Chocolat) produit), quantite);
 		if (livre>0.0) {
-			totalStocksChoco.retirer(this,  livre);
-			this.journalStock.ajouter("Retrait de " + livre + "T" + contrat.getProduit() + "(CC avec "+ contrat.getAcheteur() + ")\n");
+
+			totalStocksChoco.retirer(this,  livre, cryptogramme);
+			this.journalStock.ajouter("Retrait de " + livre + "T" + contrat.getProduit() + "(CC avec "+ contrat.getAcheteur() + ")");
 			double currStockChoco = stockChoco.get(produit);
 			stockChoco.put((Chocolat) produit, currStockChoco-livre);
 		}
 		return livre;
 	}
 
+	
 	public boolean peutVendre(IProduit produit) {
-		return stockChoco.keySet().contains(produit) || stockChocoMarque.keySet().contains(produit);
+		for (IProduit produi : stockChoco.keySet()){
+			if (produi.equals(produit)){
+				return stockChoco.get(produi)>0.;
+			}
+		}
+		return false;
+
 	}
 	public String toString() {
 		return this.getNom();
