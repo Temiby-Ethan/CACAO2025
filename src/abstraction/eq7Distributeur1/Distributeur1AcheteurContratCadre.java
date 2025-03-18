@@ -26,8 +26,19 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 	protected List<Double> predictionsVentesPourcentage;
 	//private HashMap<ChocolatDeMarque,Variable> stock;
 
-	public Distributeur1AcheteurContratCadre(List<Double> predictionsVentesPourcentage, List<Double> priceProduct, List<Double> requiredQuantities, int cryptogramme, int step, int product,String name,Color color) {
+	public Distributeur1AcheteurContratCadre() {
 		super();
+
+		List<Double> predictionsVentesPourcentage = null;
+		List<Double> priceProduct = null;
+		List<Double> requiredQuantities = null;
+		int cryptogramme = -1;
+		int step = -1;
+		int product = -1;
+
+		String name = "EQ7";
+		Color color = new Color(162, 207, 238);
+
 		this.predictionsVentesPourcentage = predictionsVentesPourcentage;
 		this.priceProduct = priceProduct;
 		this.requiredQuantities = requiredQuantities;

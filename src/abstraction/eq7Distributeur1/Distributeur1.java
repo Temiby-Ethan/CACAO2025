@@ -24,8 +24,10 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre  {
 	private List<Double> prix;
 	private List<Double> capaciteDeVente;
 
-    public Distributeur1(IAcheteurAO identity,List<Integer> successedSell,List<Double> predictionsVentesPourcentage, List<Double> priceProduct, List<Double> requiredQuantities, int cryptogramme, int step, int product,String name,Color color) {
-		super(identity, successedSell,predictionsVentesPourcentage, priceProduct, requiredQuantities, cryptogramme, step, product, name, color);
+    public Distributeur1() {
+		
+		
+		super();
         
         this.journal = new Journal("Journal de EQ7", this); // Initialisation du journal
 		/*
@@ -160,3 +162,4 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre  {
 	}
 	
 }
+

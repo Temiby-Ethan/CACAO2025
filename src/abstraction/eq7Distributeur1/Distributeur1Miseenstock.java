@@ -1,18 +1,12 @@
 package abstraction.eq7Distributeur1;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.List;
-
-import abstraction.eqXRomu.acteurs.DistributeurXActeur;
-import abstraction.eqXRomu.appelDOffre.IAcheteurAO;
 import abstraction.eqXRomu.filiere.Filiere;
-import abstraction.eqXRomu.filiere.IDistributeurChocolatDeMarque;
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
-import abstraction.eqXRomu.produits.IProduit;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /* @Ethan */
 public class Distributeur1Miseenstock extends Distributeur1 {
@@ -21,8 +15,8 @@ public class Distributeur1Miseenstock extends Distributeur1 {
     protected Map<ChocolatDeMarque,Variable> stockVenteChocolat;
     protected List<ChocolatDeMarque> chocolats;
 
-    public Distributeur1Miseenstock(IAcheteurAO identity,List<Integer> successedSell,List<Double> predictionsVentesPourcentage, List<Double> priceProduct, List<Double> requiredQuantities, int cryptogramme, int step, int product,String name,Color color){
-        super(identity, successedSell,predictionsVentesPourcentage, priceProduct, requiredQuantities, cryptogramme, step, product, name, color);
+    public Distributeur1Miseenstock(){
+        super();
         this.etape = Filiere.LA_FILIERE.getEtape();
 
         this.chocolats = new ArrayList<ChocolatDeMarque>();

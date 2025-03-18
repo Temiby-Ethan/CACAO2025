@@ -27,8 +27,10 @@ public class Distributeur1AcheteurEncheres extends Distributeur1AcheteurContratC
 	//private Color color;
 	//private HashMap<ChocolatDeMarque,Variable> stock;
 
-	public Distributeur1AcheteurEncheres(List<Integer> successedSell,List<Double> predictionsVentesPourcentage, List<Double> priceProduct, List<Double> requiredQuantities, int cryptogramme, int step, int product,String name,Color color) {
-		super(predictionsVentesPourcentage, priceProduct, requiredQuantities, cryptogramme, step, product, name, color);
+	public Distributeur1AcheteurEncheres() {
+		super();
+
+		List<Integer> successedSell = null;
 		//this.priceProduct = priceProduct;
 		//this.name = name ;
 		//this.color = color;
@@ -147,3 +149,4 @@ public class Distributeur1AcheteurEncheres extends Distributeur1AcheteurContratC
 	}
 	
 }
+

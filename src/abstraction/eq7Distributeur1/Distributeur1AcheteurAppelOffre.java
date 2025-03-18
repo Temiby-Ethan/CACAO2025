@@ -29,15 +29,16 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurEncher
 	//private List<Double> stock;
 	//private List<Double> priceProduct;
 
-	public Distributeur1AcheteurAppelOffre(IAcheteurAO identity,List<Integer> successedSell,List<Double> predictionsVentesPourcentage, List<Double> priceProduct, List<Double> requiredQuantities, int cryptogramme, int step, int product,String name,Color color) {
-		super(successedSell,predictionsVentesPourcentage, priceProduct, requiredQuantities, cryptogramme, step, product, name, color);
+	public Distributeur1AcheteurAppelOffre() {
+		super();
+
 		//this.requiredQuantities = requiredQuantities;
 		//this.identity = identity;
 		//this.color = color;
 		//this.name = name;
 		//this.stock = stock;
 		//this.priceProduct = priceProduct;
-		this.identity = identity;
+		//this.identity = identity;
 
 	}
 
@@ -120,3 +121,4 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurEncher
 
 	
 }
+
