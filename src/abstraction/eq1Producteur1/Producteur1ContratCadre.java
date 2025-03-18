@@ -33,9 +33,9 @@ public class Producteur1ContratCadre extends Producteur1Acteur implements IVende
             for (int step = echeancierPropose.getStepDebut(); step <= echeancierPropose.getStepFin(); step++) { 
                 double quantiteStep = echeancierPropose.getQuantite(step);
                 if (quantiteStep > quantiteMaximale) {
-                    echeancierContrePropose.ajouter(step, quantiteMaximale);
+                    echeancierContrePropose.ajouter(quantiteMaximale);
                 } else {
-                    echeancierContrePropose.ajouter(step, quantiteStep);
+                    echeancierContrePropose.ajouter(quantiteStep);
                 }
             }
             return echeancierContrePropose;
