@@ -24,10 +24,9 @@ public class Producteur3 extends Producteur3GestionDesCoûts  {
 	@Override
 	public void next() {
 		journal.ajouter(Filiere.LA_FILIERE.getEtape()+"\n");
-		calculTotalStock();
-		//defiJournal.ajouter(Double.toString(stockFeve.getValeur()));
+		actualiserTerrain();
+		vieillirStock();
 		recolte();
-		getMasseSalariale();
 		
 
 

@@ -118,10 +118,10 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
 
 
     void vieillirStock(){
-        for(int i = 7; i > 0; i++){
-            stockFeveBQ.get(i).setValeur(this, stockFeveBQ.get(i+1).getValeur(cryptogramme), cryptogramme);
-            stockFeveMQ.get(i).setValeur(this, stockFeveMQ.get(i+1).getValeur(cryptogramme), cryptogramme);
-            stockFeveHQ.get(i).setValeur(this, stockFeveHQ.get(i+1).getValeur(cryptogramme), cryptogramme);
+        for(int i = 7; i > 0; i--){
+            stockFeveBQ.get(i).setValeur(this, stockFeveBQ.get(i-1).getValeur(cryptogramme), cryptogramme);
+            stockFeveMQ.get(i).setValeur(this, stockFeveMQ.get(i-1).getValeur(cryptogramme), cryptogramme);
+            stockFeveHQ.get(i).setValeur(this, stockFeveHQ.get(i-1).getValeur(cryptogramme), cryptogramme);
         }
         stockFeveBQ.get(0).setValeur(this, sechageBQ[0], cryptogramme);
         stockFeveMQ.get(0).setValeur(this, sechageMQ[0], cryptogramme);
