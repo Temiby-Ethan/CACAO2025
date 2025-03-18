@@ -16,7 +16,7 @@ public class eq6Transformateur3Stock {
     private IActeur monActeur;
     private String nomProduit;
 
-    public eq6Transformateur3Stock(Transformateur3Acteur acteur, Journal journal, String nomProduit, double inial_value, List<IProduit> listProduit, HashMap<IProduit, Variable> indicateurs){
+    public eq6Transformateur3Stock(Transformateur3Acteur acteur, Journal journal, String nomProduit, double initial_value, List<IProduit> listProduit, HashMap<IProduit, Variable> indicateurs){
         
         // Récupère les variables associés au stock
         this.journalStock = journal;
@@ -30,8 +30,8 @@ public class eq6Transformateur3Stock {
         // Initialise les quantitée pour chaque produit
         this.stockTotal = 0.0;
         for (IProduit prod : listProduit) {
-			stockProduit.put(prod, inial_value);
-            dicoIndicateur.get(prod).setValeur(monActeur, inial_value);
+			stockProduit.put(prod, initial_value);
+            dicoIndicateur.get(prod).setValeur(monActeur, initial_value);
 		}
 
         journalStock.ajouter("Initialisation du stock de "+this.nomProduit);

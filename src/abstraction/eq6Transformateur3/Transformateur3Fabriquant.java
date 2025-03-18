@@ -12,12 +12,24 @@ import abstraction.eqXRomu.general.Variable;
 
 public class Transformateur3Fabriquant extends Transformateur3Marques implements IFabricantChocolatDeMarque{
     
+    //Gestion des chocolats de marque
     private List<ChocolatDeMarque> chocolatDeMarques;
 	protected HashMap<IProduit, Variable> dicoIndicateurChoco;
     private ChocolatDeMarque fraud;
     private ChocolatDeMarque hypo;
     private ChocolatDeMarque arna;
     private ChocolatDeMarque bollo;
+
+    //Gestion de la production de chocolat
+    double nb_ouvrier = 85400;
+    double nb_machine = 128;
+    
+    double capacite_machine = 10e7; //tablette/step
+    double capacite_ouvrier = 15000; // tab/step
+
+    double cout_ingr = 450.0; // €/tonnes
+    double salaire_ouvrier = 4500.0; // €
+    
 
     public Transformateur3Fabriquant(){
         super();
