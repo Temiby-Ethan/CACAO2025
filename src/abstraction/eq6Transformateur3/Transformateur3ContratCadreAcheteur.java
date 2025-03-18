@@ -11,40 +11,29 @@ import abstraction.eqXRomu.contratsCadres.IVendeurContratCadre;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 import abstraction.eqXRomu.contratsCadres.IAcheteurContratCadre;
 import abstraction.eqXRomu.contratsCadres.SuperviseurVentesContratCadre;
+import abstraction.eqXRomu.produits.Feve;
 
 // @author Eric SCHILTZ & Henri Roth
 
-public class Transformateur3ContratCadreAcheteur extends Transformateur3 implements IAcheteurContratCadre{
+public class Transformateur3ContratCadreAcheteur extends Transformateur3Fabriquant implements IAcheteurContratCadre{
 	protected List<ExemplaireContratCadre> ContratsAcheteur;
-	private IProduit produit;
 	protected List<ExemplaireContratCadre> contratsObsoletes;
-	protected IActeur supCCadre;
 
-	public Transformateur3ContratCadreAcheteur(IProduit produit) {
-		this.produit = produit;
+	public Transformateur3ContratCadreAcheteur() {
 		this.ContratsAcheteur=new LinkedList<ExemplaireContratCadre>();
 		this.contratsObsoletes =new LinkedList<ExemplaireContratCadre>();
-		this.supCCadre = Filiere.LA_FILIERE.getActeur("Sup.CCadre");
 	}
 
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {
-		if (Filiere.random.nextDouble()<0.1) {
-			return contrat.getEcheancier(); // on ne cherche pas a negocier sur le previsionnel de livraison
-		} else {//dans 90% des cas on fait une contreproposition pour l'echeancier
-			Echeancier e = contrat.getEcheancier();
-			e.set(e.getStepDebut(), e.getQuantite(e.getStepDebut())*2.5);// on souhaite livrer 2.5 fois plus lors de la 1ere livraison... un choix arbitraire, juste pour l'exemple...
-			return e;
-		}
+		return contrat.getEcheancier(); // on ne cherche pas a negocier sur le previsionnel de livraison
 	}
 
 	public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat) {
-		if (Filiere.random.nextDouble()<0.1) {
-			return contrat.getPrix(); // on ne cherche pas a negocier dans 10% des cas
-		} else {//dans 90% des cas on fait une contreproposition differente
-			return contrat.getPrix()*0.95;// 5% de moins.
-		}
+		return contrat.getPrix();
 	}
 	public void next() {
+		SuperviseurVentesContratCadre supCCadre = (SuperviseurVentesContratCadre) Filiere.LA_FILIERE.getActeur("Sup.CCadre");
+
 		journalCC.ajouter("======= Contrats cadres finis période"+Filiere.LA_FILIERE.getEtape()+"=======");
 		// On enleve les contrats obsolete (nous pourrions vouloir les conserver pour "archive"...)
 		for (ExemplaireContratCadre contrat : this.ContratsAcheteur) {
@@ -56,13 +45,14 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3 impleme
 		journalCC.ajouter("==============");
 		
 		// Proposition d'un nouveau contrat a tous les vendeurs possibles
-		/*
+		IProduit produit = Feve.F_BQ;
 		for (IActeur acteur : Filiere.LA_FILIERE.getActeurs()) {
 			if (acteur!=this && acteur instanceof IVendeurContratCadre && ((IVendeurContratCadre)acteur).vend(produit)) {
-				Filiere.LA_FILIERE.getSuperviseurContratCadre().demande((IAcheteurContratCadre)this, ((IVendeurContratCadre)acteur), produit, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10, 5.0), cryptogramme);
+				supCCadre.demandeAcheteur((IAcheteurContratCadre)this, ((IVendeurContratCadre)acteur), produit, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10, 5.0), cryptogramme, false);
 			}
-		}*/
+		}
 		// OU proposition d'un contrat a un des vendeurs choisi aleatoirement
+		/*
 		journalCC.ajouter("Recherche d'un vendeur aupres de qui acheter");
 		List<IVendeurContratCadre> vendeurs = supCCadre.getVendeurs(produit);
 		if (vendeurs.contains(this)) {
@@ -75,31 +65,15 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3 impleme
 			vendeur = vendeurs.get((int)( Filiere.random.nextDouble()*vendeurs.size()));
 		}
 		if (vendeur!=null) {
-			journal.ajouter("Demande au superviseur de debuter les negociations pour un contrat cadre de "+produit+" avec le vendeur "+vendeur);
+			journalCC.ajouter("Demande au superviseur de debuter les negociations pour un contrat cadre de "+produit+" avec le vendeur "+vendeur);
 			ExemplaireContratCadre cc = supCCadre.demandeAcheteur((IAcheteurContratCadre)this, vendeur, produit, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10, (SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER+10.0)/10), cryptogramme,false);
-			journal.ajouter("-->aboutit au contrat "+cc);
-		}
-		// Proposition d'un contrat a un des achteur choisi aleatoirement
-		journalCC.ajouter("Recherche d'un acheteur aupres de qui vendre");
-		List<IAcheteurContratCadre> acheteurs = supCCadre.getAcheteurs(produit);
-		if (acheteurs.contains(this)) {
-			acheteurs.remove(this);
-		}
-		IAcheteurContratCadre acheteur = null;
-		if (acheteurs.size()==1) {
-			acheteur=acheteurs.get(0);
-		} else if (acheteurs.size()>1) {
-			acheteur = acheteurs.get((int)( Filiere.random.nextDouble()*acheteurs.size()));
-		}
-		if (acheteur!=null) {
-			journal.ajouter("Demande au superviseur de debuter les negociations pour un contrat cadre de "+produit+" avec l'acheteur "+acheteur);
-			ExemplaireContratCadre cc = supCCadre.demandeVendeur(acheteur, (IVendeurContratCadre)this, produit, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10, (SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER+10.0)/10), cryptogramme,false);
-			journal.ajouter("-->aboutit au contrat "+cc);
-		}
+			journalCC.ajouter("-->aboutit au contrat "+cc);
+		}*/
 	}
 
 	public void receptionner(IProduit produit, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
-		stock.ajouter(this, quantiteEnTonnes); 
+		journalCC.ajouter("Reception de "+quantiteEnTonnes+" de T de chococal en provenance du contrat "+contrat.getNumero());
+		super.stockFeves.addToStock(produit, quantiteEnTonnes);
 	}
 
 	public boolean achete(IProduit produit) {
@@ -116,10 +90,6 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3 impleme
 
 	@Override
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'notificationNouveauContratCadre'");
+		journalCC.ajouter("Nouveau contrat cadre" +contrat);
 	}
-
-
-
 }

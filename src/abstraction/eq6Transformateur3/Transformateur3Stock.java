@@ -8,7 +8,7 @@ import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.filiere.IActeur;
 
-public class eq6Transformateur3Stock {
+public class Transformateur3Stock {
     private double stockTotal;
     private HashMap<IProduit, Double> stockProduit; 
     private HashMap<IProduit, Variable> dicoIndicateur;
@@ -16,7 +16,7 @@ public class eq6Transformateur3Stock {
     private IActeur monActeur;
     private String nomProduit;
 
-    public eq6Transformateur3Stock(Transformateur3Acteur acteur, Journal journal, String nomProduit, double initial_value, List<IProduit> listProduit, HashMap<IProduit, Variable> indicateurs){
+    public Transformateur3Stock(Transformateur3Acteur acteur, Journal journal, String nomProduit, double initial_value, List<IProduit> listProduit, HashMap<IProduit, Variable> indicateurs){
         
         // Récupère les variables associés au stock
         this.journalStock = journal;

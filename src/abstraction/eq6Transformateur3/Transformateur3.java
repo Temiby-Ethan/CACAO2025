@@ -10,11 +10,11 @@ import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.Feve;
+import abstraction.eqXRomu.produits.IProduit;
 
-public class Transformateur3 extends Transformateur3Fabriquant{
+public class Transformateur3 extends Transformateur3ContratCadreAcheteur{
 
 	public Transformateur3() {
-		super();
 	}
 
 	public void initialiser(){
@@ -37,6 +37,7 @@ public class Transformateur3 extends Transformateur3Fabriquant{
 		res.add(super.jdb);
 		res.add(super.journalStock);
 		res.add(super.journalTransac);
+		res.add(super.journalCC);
 		return res;
 	}
 
