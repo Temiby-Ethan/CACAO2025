@@ -29,11 +29,11 @@ public class Producteur3Vente extends Producteur3Stock implements IVendeurBourse
     
     @Override
     public double offre(Feve feve, double cours) {
-       
-        if (this.stockFeve.get(feve).getValeur(cryptogramme)>0){
+       double stock = calculTotalStockParticulier(feve);
+        if (stock > 0){
             BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
             double pourcentage = (bourse.getCours(feve).getValeur()-bourse.getCours(feve).getMin())/(bourse.getCours(feve).getMax()-bourse.getCours(feve).getMin());
-            return this.stockFeve.get(feve).getValeur(cryptogramme)*pourcentage;
+            return stock*pourcentage;
 
         }else{
             return 0.0;
@@ -43,9 +43,26 @@ public class Producteur3Vente extends Producteur3Stock implements IVendeurBourse
 
     @Override
     public double notificationVente(Feve f, double coursEnEuroParT, double quantiteEnT) {
-        double livrable = Math.min(this.stockFeve.get(f).getValeur(cryptogramme), quantiteEnT);
-		this.stockFeve.get(f).setValeur(this, stockFeve.get(f).getValeur(cryptogramme)-livrable,cryptogramme);
-        calculTotalStock();
+        double livrable = Math.min(calculTotalStockParticulier(f), quantiteEnT);
+        if(f.getGamme().equals(Gamme.BQ)){
+            if(f.isEquitable()){
+                retirerStockBQ_E(f,livrable);
+            }else{
+                retirerStockBQ(f, livrable);
+            }
+        }else if (f.getGamme().equals(Gamme.MQ)){
+            if (f.isEquitable()){
+                retirerStockMQ_E(f,livrable);
+            }else{
+                retirerStockMQ(f, livrable);
+            }
+        }else{
+            if (f.isBio()){
+                retirerStockHQ_B(f,livrable);
+            }else{
+                retirerStockHQ(f, livrable);
+            }
+        }
 		return livrable;
     }
 
@@ -62,7 +79,7 @@ public class Producteur3Vente extends Producteur3Stock implements IVendeurBourse
     public boolean vend(IProduit produit) {
         if (produit instanceof Feve) {
             Feve feve = (Feve)produit;
-            return feve.getGamme().equals(Gamme.MQ);
+            return feve.getGamme().equals(Gamme.MQ) && feve.isEquitable();
         }
         return false;
     }
@@ -114,10 +131,29 @@ public class Producteur3Vente extends Producteur3Stock implements IVendeurBourse
 
     @Override
     public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
-        double stockActuel = this.stockFeve.get((Feve)produit).getValeur(cryptogramme);
-        double qteALivrer = Math.min(stockActuel, quantite);
-        this.stockFeve.get((Feve)produit).setValeur(this, stockActuel-qteALivrer, cryptogramme);
-        return qteALivrer;
+        Feve f = (Feve)produit;
+        double stockActuel = calculTotalStockParticulier(f);
+        double livrable = Math.min(stockActuel, quantite);
+        if(f.getGamme().equals(Gamme.BQ)){
+            if(f.isEquitable()){
+                retirerStockBQ_E(f,livrable);
+            }else{
+                retirerStockBQ(f, livrable);
+            }
+        }else if (f.getGamme().equals(Gamme.MQ)){
+            if (f.isEquitable()){
+                retirerStockMQ_E(f,livrable);
+            }else{
+                retirerStockMQ(f, livrable);
+            }
+        }else{
+            if (f.isBio()){
+                retirerStockHQ_B(f,livrable);
+            }else{
+                retirerStockHQ(f, livrable);
+            }
+        }
+        return livrable;
     }
     
 }

@@ -23,10 +23,10 @@ public class Transformateur3 extends Transformateur3ContratCadreAcheteur{
 
 	public void next(){
 		super.next();
-		stockChoco.addToStock(super.lesChocolats.get(0), 500.0);
-		stockChoco.addToStock(lesChocolats.get(1), 800.0);
+		//stockChoco.addToStock(super.lesChocolats.get(0), 500.0);
+		//stockChoco.addToStock(lesChocolats.get(1), 800.0);
 
-		stockFeves.remove(lesFeves.get(0), 100.0);
+		//stockFeves.remove(lesFeves.get(0), 100.0);
 
 		stockFeves.display();
 		stockChoco.display();

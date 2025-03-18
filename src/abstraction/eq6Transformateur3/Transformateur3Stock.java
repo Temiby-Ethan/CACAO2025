@@ -48,11 +48,20 @@ public class Transformateur3Stock {
 
     public void addToStock(IProduit prod, double quantity){
         if(quantity>0.0){
+            //Si le produit n'existe pas on l'ajoute
+            if(!stockProduit.containsKey(prod)){
+                journalStock.ajouter("### Ajout nouveau produit : "+prod.toString());
+                this.stockProduit.put(prod, 0.0);
+            }
+            
+
             stockProduit.put(prod, stockProduit.get(prod)+quantity);
             this.stockTotal += quantity;
             
             //Mise à jour indicateur
-            dicoIndicateur.get(prod).setValeur(monActeur, stockProduit.get(prod));
+            if(dicoIndicateur.containsKey(prod)){
+                dicoIndicateur.get(prod).setValeur(monActeur, stockProduit.get(prod));
+            }
 
         }
         else {
