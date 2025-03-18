@@ -53,30 +53,31 @@ public class Transformateur3Acteur implements IActeur {
 	protected Variable eq6_Q_tablette_CC;
 
 	public Transformateur3Acteur() {
+		// Initialisation des journaux
 		this.jdb = new Journal("Journal de bord", this);
 		this.journalStock = new Journal("Journal des stocks", this);
 		this.journalTransac = new Journal("Journal des transactions", this);
 		this.journalCC = new Journal("Journal des contrats cadre", this);
 
-
-		this.eq6_Q_BQ_0 = new Variable(this.getNom()+": quantité de cacao de BQ non labellisé", this, 300);
-		this.eq6_Q_BQ_1 = new Variable(this.getNom()+": quantité de cacao de BQ équitable", this, 300);
-		this.eq6_Q_MQ_0 = new Variable(this.getNom()+": quantité de cacao de MQ non labellisé", this, 300);
-		this.eq6_Q_MQ_1 = new Variable(this.getNom()+": quantité de cacao de MQ équitable", this, 300);
-		this.eq6_Q_HQ_1 = new Variable(this.getNom()+": quantité de cacao de HQ équitable", this, 300);
-		this.eq6_Q_HQ_2 = new Variable(this.getNom()+": quantité de cacao de HQ bio & équitable", this, 300);
-		this.eq6_Q_Fraudo = new Variable(this.getNom()+": quantité de tablette Fraudolat", this, 300);
-		this.eq6_Q_Bollo = new Variable(this.getNom()+": quantité de tablette Bollorolat", this, 300);
-		this.eq6_Q_Arna = new Variable(this.getNom()+": quantité de tablette Arnaquolat", this, 300);
-		this.eq6_Q_Hypo = new Variable(this.getNom()+": quantité de tablette Hypocritolat", this, 300);
-		this.eq6_Q_ingre = new Variable(this.getNom()+": quantité d'ingédient secondaire", this, 300);
-		this.eq6_Q_machine = new Variable(this.getNom()+": quantité de machine", this, 300);
-		this.eq6_capacite_machine = new Variable(this.getNom()+": capacité de production des machines", this, 300);
-		this.eq6_jours_decouvert = new Variable(this.getNom()+": nombre de jours à découvert", this, 300);
-		this.eq6_nb_employe = new Variable(this.getNom()+": nombre d'employés", this, 300);
-		this.eq6_cout_stockage = new Variable(this.getNom()+": coûts de stockage pour ce step", this, 300);
-		this.eq6_Q_cacao_CC = new Variable(this.getNom()+": quantité de cacaco que l'on reçoit ", this, 300);
-		this.eq6_Q_tablette_CC = new Variable(this.getNom()+": quantité de tablette à produire", this, 300);
+		// Initialisation des indicateurs
+		this.eq6_Q_BQ_0 = new Variable(this.getNom()+": quantité de cacao de BQ non labellisé", this, 0);
+		this.eq6_Q_BQ_1 = new Variable(this.getNom()+": quantité de cacao de BQ équitable", this, 0);
+		this.eq6_Q_MQ_0 = new Variable(this.getNom()+": quantité de cacao de MQ non labellisé", this, 0);
+		this.eq6_Q_MQ_1 = new Variable(this.getNom()+": quantité de cacao de MQ équitable", this, 0);
+		this.eq6_Q_HQ_1 = new Variable(this.getNom()+": quantité de cacao de HQ équitable", this, 0);
+		this.eq6_Q_HQ_2 = new Variable(this.getNom()+": quantité de cacao de HQ bio & équitable", this, 0);
+		this.eq6_Q_Fraudo = new Variable(this.getNom()+": quantité de tablette Fraudolat", this, 0);
+		this.eq6_Q_Bollo = new Variable(this.getNom()+": quantité de tablette Bollorolat", this, 0);
+		this.eq6_Q_Arna = new Variable(this.getNom()+": quantité de tablette Arnaquolat", this, 0);
+		this.eq6_Q_Hypo = new Variable(this.getNom()+": quantité de tablette Hypocritolat", this, 0);
+		this.eq6_Q_ingre = new Variable(this.getNom()+": quantité d'ingédient secondaire", this, 0);
+		this.eq6_Q_machine = new Variable(this.getNom()+": quantité de machine", this, 0);
+		this.eq6_capacite_machine = new Variable(this.getNom()+": capacité de production des machines", this, 0);
+		this.eq6_jours_decouvert = new Variable(this.getNom()+": nombre de jours à découvert", this, 0);
+		this.eq6_nb_employe = new Variable(this.getNom()+": nombre d'employés", this, 0);
+		this.eq6_cout_stockage = new Variable(this.getNom()+": coûts de stockage pour ce step", this, 0);
+		this.eq6_Q_cacao_CC = new Variable(this.getNom()+": quantité de cacaco que l'on reçoit ", this, 0);
+		this.eq6_Q_tablette_CC = new Variable(this.getNom()+": quantité de tablette à produire", this, 0);
 	
 		//Dico d'indicateur fèves
 		this.dicoIndicateurFeves = new HashMap<IProduit, Variable>();
@@ -90,19 +91,17 @@ public class Transformateur3Acteur implements IActeur {
 	}
 	
 	public void initialiser() {
-		// Initialisation stock
+		// Lister les fèves qui existent
 		this.lesFeves = new ArrayList<IProduit>();
 		for (Feve f : Feve.values()) {
 			this.lesFeves.add(f);
 		}
-		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*4;
-		
-		stockFeves = new Transformateur3Stock(this, journalStock, "fèves", lesFeves, dicoIndicateurFeves);
-		stockFeves.addToStock(abstraction.eqXRomu.produits.Feve.F_BQ, 200.0);
-		stockFeves.display();
 
-		//stockFeves.addToStock(lesChocolats.get(0), 500.0);
-		stockChoco.display();
+		//Récupération des paramètres
+		this.coutStockage = 4*Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur();
+		
+		//Création du stock de fèves
+		stockFeves = new Transformateur3Stock(this, journalStock, "fèves", 300.0, lesFeves, dicoIndicateurFeves);
 	}
 
 	public String getNom() {// NE PAS MODIFIER

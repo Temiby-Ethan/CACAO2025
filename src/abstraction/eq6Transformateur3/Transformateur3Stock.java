@@ -1,8 +1,8 @@
+// @author Florian Malveau
 package abstraction.eq6Transformateur3;
 import java.util.HashMap;
 import java.util.List;
 
-import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.general.Journal;
@@ -10,7 +10,7 @@ import abstraction.eqXRomu.filiere.IActeur;
 
 public class Transformateur3Stock {
     private double stockTotal;
-    private HashMap<IProduit, Double> stockProduit;
+    private HashMap<IProduit, Double> stockProduit; 
     private HashMap<IProduit, Variable> dicoIndicateur;
     private Journal journalStock;
     private IActeur monActeur;
@@ -30,8 +30,8 @@ public class Transformateur3Stock {
         // Initialise les quantitée pour chaque produit
         this.stockTotal = 0.0;
         for (IProduit prod : listProduit) {
-            
-			stockProduit.put(prod, 0.0);
+			stockProduit.put(prod, inial_value);
+            dicoIndicateur.get(prod).setValeur(monActeur, inial_value);
 		}
 
         journalStock.ajouter("Initialisation du stock de "+this.nomProduit);
@@ -50,22 +50,44 @@ public class Transformateur3Stock {
         if(quantity>0.0){
             stockProduit.put(prod, stockProduit.get(prod)+quantity);
             this.stockTotal += quantity;
-            //Mise à jour indicateur
             
+            //Mise à jour indicateur
             dicoIndicateur.get(prod).setValeur(monActeur, stockProduit.get(prod));
 
         }
         else {
-            this.journalStock.ajouter("ERROR_stock : ajout avec quantité négative ou nulle");
+            this.journalStock.ajouter("ERROR_stock_add : ajout avec quantité négative ou nulle");
+        }
+    }
+
+    public void remove(IProduit prod, double quantity){
+        if(quantity>0.0){
+            //Si la quantité demandée est supérieur à celle disponible en stock
+            if(stockProduit.get(prod)-quantity < 0.0){
+                this.journalStock.ajouter("ERROR_stock_rmv : stock négatif");
+                //this.stockTotal -= stockProduit.get(prod); //Retire le stock restant
+                //stockProduit.put(prod, stockProduit.get(prod)+quantity);
+            }
+            else{
+                stockProduit.put(prod, stockProduit.get(prod)-quantity);
+                this.stockTotal -= quantity;
+            }
+            
+            //Mise à jour indicateur
+            dicoIndicateur.get(prod).setValeur(monActeur, stockProduit.get(prod));
+
+        }
+        else {
+            this.journalStock.ajouter("ERROR_stock_rmv : ajout avec quantité négative ou nulle");
         }
     }
 
     protected void display() {
         if (nomProduit=="fèves"){
-            journalStock.ajouter("STOCK DE FEVES DE CACAO");
+            journalStock.ajouter("STOCK DE FEVES DE CACAO (en t)");
         }
         else{
-            journalStock.ajouter("STOCK DE CHOCOLAT");
+            journalStock.ajouter("STOCK DE CHOCOLAT (en t)");
         }
 		
 		for (IProduit prod : this.stockProduit.keySet()) {

@@ -18,16 +18,18 @@ public class Transformateur3 extends Transformateur3ContratCadreAcheteur{
 	}
 
 	public void initialiser(){
-		//stockChoco.display();
 		super.initialiser();
-		super.stockChoco.addToStock(super.lesChocolats.get(0), 500.0);
-
 	}
 
 	public void next(){
 		super.next();
-		//super.stockChoco.addToStock(super.lesChocolats.get(0), 500.0);
-		//super.stockChoco.addToStock(super.lesChocolats.get(0), 200.0);
+		stockChoco.addToStock(super.lesChocolats.get(0), 500.0);
+		stockChoco.addToStock(lesChocolats.get(1), 800.0);
+
+		stockFeves.remove(lesFeves.get(0), 100.0);
+
+		stockFeves.display();
+		stockChoco.display();
 	}
 
 	public List<Journal> getJournaux() {
