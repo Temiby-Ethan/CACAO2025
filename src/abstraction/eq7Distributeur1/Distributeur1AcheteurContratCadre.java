@@ -16,7 +16,7 @@ import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class Distributeur1AcheteurContratCadre implements IAcheteurContratCadre  {
+public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implements IAcheteurContratCadre{
 
 	protected Integer cryptogramme;
 	private List<Double> priceProduct;
@@ -24,9 +24,9 @@ public class Distributeur1AcheteurContratCadre implements IAcheteurContratCadre 
 	private String name;
 	private Color color;
 	private List<Double> predictionsVentesPourcentage;
-	private HashMap<ChocolatDeMarque,Variable> stock;
+	//private HashMap<ChocolatDeMarque,Variable> stock;
 
-	public Distributeur1AcheteurContratCadre(HashMap<ChocolatDeMarque,Variable> stock, List<Double> predictionsVentesPourcentage, List<Double> priceProduct, List<Double> requiredQuantities, int cryptogramme, int step, int product,String name,Color color) {
+	public Distributeur1AcheteurContratCadre(List<Double> predictionsVentesPourcentage, List<Double> priceProduct, List<Double> requiredQuantities, int cryptogramme, int step, int product,String name,Color color) {
 		super();
 		this.predictionsVentesPourcentage = predictionsVentesPourcentage;
 		this.priceProduct = priceProduct;
@@ -34,7 +34,7 @@ public class Distributeur1AcheteurContratCadre implements IAcheteurContratCadre 
 		this.cryptogramme = cryptogramme;
 		this.name = name;
 		this.color = color;
-		this.stock = stock;
+		//this.stock = stock;
 	}
 
 	    public int getInt(ChocolatDeMarque product){
@@ -171,8 +171,8 @@ public class Distributeur1AcheteurContratCadre implements IAcheteurContratCadre 
 		if (this.cryptogramme == cryptogramme){
 			if (p instanceof ChocolatDeMarque){
 				ChocolatDeMarque chocolat = (ChocolatDeMarque) p;
-				if (this.stock != null && this.stock.containsKey(chocolat)){
-					return(this.stock.get((chocolat)).getValeur());
+				if (this.stocksChocolats != null && this.stocksChocolats.containsKey(chocolat)){
+					return(this.stocksChocolats.get((chocolat)).getValeur());
 				}
 			}
 			return(0);
