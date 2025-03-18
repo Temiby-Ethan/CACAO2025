@@ -1,6 +1,8 @@
 //Maxime Philippon
 package abstraction.eq2Producteur2;
 
+import abstraction.eqXRomu.produits.Feve;
+
 public class Producteur2couts extends Producteur2stock {
 
     private double cout_tot;
@@ -46,6 +48,13 @@ public class Producteur2couts extends Producteur2stock {
     }
 
     public void calculCout() {
+
+        this.cout_unit_F_BQ = cout_unit_t.get(Feve.F_BQ);
+        this.cout_unit_F_BQ_E = cout_unit_t.get(Feve.F_BQ_E);
+        this.cout_unit_F_MQ = cout_unit_t.get(Feve.F_MQ);
+        this.cout_unit_F_MQ_E = cout_unit_t.get(Feve.F_MQ_E);
+        this.cout_unit_F_HQ_E = cout_unit_t.get(Feve.F_HQ_E);
+        this.cout_unit_F_HQ_BE = cout_unit_t.get(Feve.F_HQ_BE);
         
     }
     

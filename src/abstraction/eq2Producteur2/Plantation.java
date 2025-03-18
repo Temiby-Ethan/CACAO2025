@@ -150,4 +150,16 @@ public class Plantation extends Producteur2recolte {
     public boolean estMorte() {
         return age >= dureeDeVie;
     }
+
+    public double getcout() {
+        if (age == 0){
+            return prix_achat;
+        }
+        else if (age <= dureeDeVie){
+            return salaire_employe;
+        }
+        else {
+            return 0;
+        }
+    }
 }

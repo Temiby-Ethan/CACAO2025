@@ -1,4 +1,4 @@
-package abstraction.eqXRomu.contratsCadres;
+package abstraction.eq2Producteur2;
 
 import java.awt.Color;
 import java.util.ArrayList;
