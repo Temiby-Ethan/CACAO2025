@@ -2,6 +2,7 @@ package abstraction.eq7Distributeur1;
 ///Maxime GUY///
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -24,9 +25,9 @@ public class Distributeur1AcheteurEncheres extends Distributeur1AcheteurContratC
 	private List<Integer> successedSell;
 	private String name;
 	private Color color;
-	//private List<Double> stock;
+	//private HashMap<ChocolatDeMarque,Variable> stock;
 
-	public Distributeur1AcheteurEncheres(List<Double> priceProduct, List<Double> requiredQuantities, String name, Color color, List<Double> stock) {
+	public Distributeur1AcheteurEncheres(List<Double> priceProduct, List<Double> requiredQuantities, String name, Color color) {
 		super();
 		this.priceProduct = priceProduct;
 		this.name = name ;
@@ -135,7 +136,7 @@ public class Distributeur1AcheteurEncheres extends Distributeur1AcheteurContratC
 		if (this.cryptogramme == cryptogramme){
 			if (p instanceof ChocolatDeMarque){
 				ChocolatDeMarque chocolat = (ChocolatDeMarque) p;
-				return(stock.get(getInt(chocolat.getChocolat())));
+				return(stock.get(chocolat));
 			}
 			return(0);
 		}
