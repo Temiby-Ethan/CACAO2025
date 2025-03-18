@@ -16,6 +16,7 @@ public class Producteur2couts extends Producteur2stock {
     private double prix_F_MQ_E;
     private double prix_F_HQ_E;
     private double prix_F_HQ_BE;
+    private double cout_stockage;
     
     public Producteur2couts() {
         super();
@@ -32,6 +33,7 @@ public class Producteur2couts extends Producteur2stock {
         this.prix_F_MQ_E = 0;
         this.prix_F_HQ_E = 0;
         this.prix_F_HQ_BE = 0;
+        this.cout_stockage = 0;
     }
 
     public void initialiser() {
