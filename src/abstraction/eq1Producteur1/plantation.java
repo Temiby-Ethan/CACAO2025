@@ -20,7 +20,6 @@ public class plantation {
         this.typedeplant = "basse_qualite";
         this.nombre_arbes = 950; // par arbre par hecatre
         this.temps_avant_production = 72; // en steps
-        this.duree_de_vie = duree_de_vie;
         this.besoin_main_doeuvre = 8; // employés/hectare : min 2 adultes
         this.production_par_arbre = 32; // cabosses/arbre/an
         this.nb_feves_par_cabosse = getRandomNumberInRange(23, 28); // Générer un nombre aléatoire entre 23 et 28
@@ -35,7 +34,6 @@ public class plantation {
         this.typedeplant = "moyenne_qualite";
         this.nombre_arbes = 750; // par arbre par hecatre
         this.temps_avant_production = 96; // en steps
-        this.duree_de_vie = duree_de_vie;
         this.besoin_main_doeuvre = 6; // employés/hectare : min 2 adultes
         this.production_par_arbre = 30; // cabosses/arbre/an
         this.nb_feves_par_cabosse = getRandomNumberInRange(25, 29);
@@ -50,7 +48,6 @@ public class plantation {
         this.typedeplant = "haute_qualite";
         this.nombre_arbes = 500; // par arbre par hecatre
         this.temps_avant_production = 120; // en steps
-        this.duree_de_vie = duree_de_vie;
         this.besoin_main_doeuvre = 4; // employés/hectare : min 2 adultes
         this.production_par_arbre = 20; // cabosses/arbre/an
         this.nb_feves_par_cabosse = getRandomNumberInRange(29, 31);
