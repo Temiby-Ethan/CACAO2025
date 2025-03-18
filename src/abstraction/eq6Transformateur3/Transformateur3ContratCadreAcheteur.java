@@ -12,15 +12,19 @@ import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 import abstraction.eqXRomu.contratsCadres.IAcheteurContratCadre;
 import abstraction.eqXRomu.contratsCadres.SuperviseurVentesContratCadre;
 
-// @author EricSCHILTZ
+// @author Eric SCHILTZ & Henri Roth
 
-public class Transformateur3ContratCadreAcheteur extends Transformateur3Fabriquant implements IAcheteurContratCadre{
-	protected List<ExemplaireContratCadre> mesContratEnTantQuAcheteur;
+public class Transformateur3ContratCadreAcheteur extends Transformateur3 implements IAcheteurContratCadre{
+	protected List<ExemplaireContratCadre> ContratsAcheteur;
 	private IProduit produit;
+	protected List<ExemplaireContratCadre> contratsObsoletes;
+	protected IActeur supCCadre;
 
 	public Transformateur3ContratCadreAcheteur(IProduit produit) {
 		this.produit = produit;
-		this.mesContratEnTantQuAcheteur=new LinkedList<ExemplaireContratCadre>();
+		this.ContratsAcheteur=new LinkedList<ExemplaireContratCadre>();
+		this.contratsObsoletes =new LinkedList<ExemplaireContratCadre>();
+		this.supCCadre = Filiere.LA_FILIERE.getActeur("Sup.CCadre");
 	}
 
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {
@@ -41,15 +45,15 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3Fabriqua
 		}
 	}
 	public void next() {
-		journal.ajouter("TEST CONTRAT CADRE");
+		journalCC.ajouter("======= Contrats cadres finis période"+Filiere.LA_FILIERE.getEtape()+"=======");
 		// On enleve les contrats obsolete (nous pourrions vouloir les conserver pour "archive"...)
-		List<ExemplaireContratCadre> contratsObsoletes=new LinkedList<ExemplaireContratCadre>();
-		for (ExemplaireContratCadre contrat : this.mesContratEnTantQuAcheteur) {
+		for (ExemplaireContratCadre contrat : this.ContratsAcheteur) {
 			if (contrat.getQuantiteRestantALivrer()==0.0 && contrat.getMontantRestantARegler()==0.0) {
 				contratsObsoletes.add(contrat);
 			}
 		}
-		this.mesContratEnTantQuAcheteur.removeAll(contratsObsoletes);
+		this.ContratsAcheteur.removeAll(contratsObsoletes);
+		journalCC.ajouter("==============");
 		
 		// Proposition d'un nouveau contrat a tous les vendeurs possibles
 		/*
@@ -59,7 +63,7 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3Fabriqua
 			}
 		}*/
 		// OU proposition d'un contrat a un des vendeurs choisi aleatoirement
-		journal.ajouter("Recherche d'un vendeur aupres de qui acheter");
+		journalCC.ajouter("Recherche d'un vendeur aupres de qui acheter");
 		List<IVendeurContratCadre> vendeurs = supCCadre.getVendeurs(produit);
 		if (vendeurs.contains(this)) {
 			vendeurs.remove(this);
@@ -76,7 +80,7 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3Fabriqua
 			journal.ajouter("-->aboutit au contrat "+cc);
 		}
 		// Proposition d'un contrat a un des achteur choisi aleatoirement
-		journal.ajouter("Recherche d'un acheteur aupres de qui vendre");
+		journalCC.ajouter("Recherche d'un acheteur aupres de qui vendre");
 		List<IAcheteurContratCadre> acheteurs = supCCadre.getAcheteurs(produit);
 		if (acheteurs.contains(this)) {
 			acheteurs.remove(this);
