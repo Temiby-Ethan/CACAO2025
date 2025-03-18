@@ -20,6 +20,13 @@ public class Producteur3GestionTerrains extends Producteur3Acteur{
 
     protected int [] effectifs = new int [3];
     protected int feveProduites = 0;
+    protected double [] sechageHQ_B = new double [1];
+    protected double [] sechageHQ = new double [1];
+    protected double [] sechageMQ_E = new double [1];
+    protected double [] sechageMQ = new double [1];
+    protected double [] sechageBQ_E = new double [2];
+    protected double [] sechageBQ = new double [2];
+
 
     public Producteur3GestionTerrains(){
         super();
@@ -128,14 +135,24 @@ public class Producteur3GestionTerrains extends Producteur3Acteur{
         if(prete != null){
             for (Parcelle p : prete) {
                 if(p.qualite instanceof QualiteBQ){
+                    if(p.qualite.equitable){
+                        int nbFeve = Filiere.random.nextInt(5)+23;
+                        sechageBQ_E[0]=sechageBQ_E[1];
+                        sechageBQ_E[1]=((16*nbFeve)*0.753)*p.qualite.densité;
+                    }
                     int nbFeve = Filiere.random.nextInt(5)+23;
-                    feveProduites+=((16*nbFeve)*0.753)*p.qualite.densité;
+                    sechageBQ[0]=sechageBQ[1];
+                    sechageBQ[1]=((16*nbFeve)*0.753)*p.qualite.densité;
                 }else if( p.qualite instanceof QualiteMQ){
+                    if(p.qualite.equitable){
+                        int nbFeve = Filiere.random.nextInt(4)+25;
+                        sechageMQ_E[0]=((15*nbFeve)*0.750)*p.qualite.densité;
+                    }
                     int nbFeve = Filiere.random.nextInt(4)+25;
-                    feveProduites+=((15*nbFeve)*0.750)*p.qualite.densité;
+                    sechageMQ[0]=((15*nbFeve)*0.750)*p.qualite.densité;
                 }else if(p.qualite instanceof QualiteHQ){
                     int nbFeve = Filiere.random.nextInt(3)+29;
-                    feveProduites+=((10*nbFeve)*0.765)*p.qualite.densité;
+                    sechageHQ[0]=((10*nbFeve)*0.765)*p.qualite.densité;
                 }   
             }
             
