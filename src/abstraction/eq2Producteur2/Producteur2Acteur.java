@@ -19,8 +19,6 @@ public class Producteur2Acteur implements IActeur {
 	protected HashMap<Feve,Variable> stock;
 	protected int cryptogramme;
 	protected Variable stockTotal;
-	private static final double PART=0.1;  // La part de marche initiale
-	private double coutStockage;
 	private int numero = 0;
 	protected Journal num = new Journal("Journal Eq2", this);
 
