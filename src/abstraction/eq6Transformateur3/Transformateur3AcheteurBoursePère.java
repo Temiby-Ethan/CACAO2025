@@ -1,4 +1,4 @@
-package abstraction.eq6Transformateur3;
+/**package abstraction.eq6Transformateur3;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -82,6 +82,7 @@ public class Transformateur3AcheteurBoursePère implements IActeur{
 		return "Acheteur de feve a la bourse du cacao "+this.numero;
 	}
 
+    */
     /*à faire */
     //y mettre à jour : notre journal le cours actuel de la bourse si on est au delà de l'étape 1
     //sinon aussi plus généralement l'étape courante de la filière dans ce journal. 
@@ -90,6 +91,7 @@ public class Transformateur3AcheteurBoursePère implements IActeur{
     // permet d'accéder à l'unique instance valable pour tout le jeu responsable de la bourse de cacao
     //Filiere.LA_FILIERE.getEtape()
     //la filière c'est le jeu global.
+    /*
     @Override
     public void next() {
         journal.ajouter("Etape="+Filiere.LA_FILIERE.getEtape());
@@ -156,4 +158,4 @@ public class Transformateur3AcheteurBoursePère implements IActeur{
         throw new UnsupportedOperationException("Unimplemented method 'getQuantiteEnStock'");
     }
     
-}
+}*/
