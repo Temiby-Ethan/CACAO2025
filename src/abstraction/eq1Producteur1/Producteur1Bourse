@@ -27,7 +27,7 @@ public class Producteur1Bourse extends Producteur1Acteur implements IVendeurBour
             super();
             this.journalTransactions = new Journal(this.getNom() + " - Journal des transactions boursières de l'équipe 1", this);
         }
-    
+    //Détermine la quantité de fèves que nous sommes prêt à vendre à un certain prix
         @Override
         public double offre(Feve typeFeve, double prixCourant) {
             if (typeFeve.getGamme() == stockFBQ) { // On vend uniquement des fèves de haute qualité (HQ)
