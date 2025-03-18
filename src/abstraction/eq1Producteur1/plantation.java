@@ -1,8 +1,13 @@
 package abstraction.eq1Producteur1;
 
 import java.util.Random;
+import java.util.HashMap;
 
-public class plantation {
+import abstraction.eqXRomu.general.Journal;
+import abstraction.eqXRomu.produits.Feve;
+
+// Amal Moncer
+public class plantation extends Producteur1Acteur {
     private String typedeplant;
     private int nombre_arbes;
     private int temps_avant_production; // en steps
@@ -15,6 +20,7 @@ public class plantation {
     private int temps_de_sechage;
     private double prix_achat;
     private int prix_replantation;
+    private Journal journal;
 
     public void basse_qualite(){
         this.typedeplant = "basse_qualite";
@@ -58,7 +64,8 @@ public class plantation {
         this.prix_replantation = 2350;  // par hectare
     }
 
-    // Méthode pour générer un nombre aléatoire entre min et max (inclus)
+
+        // Méthode pour générer un nombre aléatoire entre min et max (inclus)
     private int getRandomNumberInRange(int min, int max) {
         if (min >= max) {
             throw new IllegalArgumentException("max doit être supérieur à min");
@@ -66,4 +73,7 @@ public class plantation {
         Random r = new Random();
         return r.nextInt((max - min) + 1) + min;
     }
+
 }
+
+
