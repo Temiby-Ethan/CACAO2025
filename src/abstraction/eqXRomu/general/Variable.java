@@ -1,9 +1,10 @@
 package abstraction.eqXRomu.general;
 
-import abstraction.eqXRomu.filiere.Filiere;
-import abstraction.eqXRomu.filiere.IActeur;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+
+import abstraction.eqXRomu.filiere.Filiere;
+import abstraction.eqXRomu.filiere.IActeur;
 
 
 /**
