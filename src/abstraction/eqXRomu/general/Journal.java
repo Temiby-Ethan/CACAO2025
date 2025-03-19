@@ -85,12 +85,12 @@ public class Journal {
 	/**
 	 * Si i>=0 et i<this.getTaille(), retourne le message d'index i.
 	 * Sinon retourne null.
-	 * @param typedeplant
+	 * @param i
 	 * @return
 	 */
-	public String get(String typedeplant) {
-		if (typedeplant>=0 && typedeplant<this.getTaille()) {
-			return this.liste.get(typedeplant);
+	public String get(int i) {
+		if (i>=0 && i<this.getTaille()) {
+			return this.liste.get(i);
 		} else {
 			return null;
 		}
@@ -259,12 +259,4 @@ public class Journal {
 	public void notifyObservers() {
 		pcs.firePropertyChange("endOfNext",null,null);
 	}
-    public void put(String string, int i) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'put'");
-    }
-    public int get(String typedeplant) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'get'");
-    }
 }
