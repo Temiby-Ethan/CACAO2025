@@ -1,6 +1,8 @@
 package abstraction.eq1Producteur1;
 
 
+import java.util.Random;
+
 import abstraction.eqXRomu.general.Journal;
 
 // Amal Moncer
@@ -19,7 +21,7 @@ public class plantation extends Producteur1Acteur {
     protected int prix_replantation;
     protected Journal journal;
 
-    
+
 }
 
 
