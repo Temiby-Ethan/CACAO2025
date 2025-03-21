@@ -29,29 +29,35 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {
 
         //Si la qtt proposée est cohérente avec la quantité que nous voulions initialement, on accepte l'echeancier
-		if (contrat.getEcheancier().getQuantiteTotale()>100.0){
+		if (contrat.getEcheancier().getQuantiteTotale()>SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER){
 			if (Math.abs((this.qttInitialementVoulue - contrat.getEcheancier().getQuantiteTotale())/this.qttInitialementVoulue) <= epsilon){
 
 				return contrat.getEcheancier();
 			}
-			//Sinon on négocie par dichotomie
+			//Sinon on négocie par dichotomie particulière
 			else{
 
 				double qttContrat = contrat.getEcheancier().getQuantiteTotale();
 				double qttVoulue = 0.25*qttContrat + 0.75 * this.qttInitialementVoulue;
 
-				if (qttVoulue<100.) return contrat.getEcheancier();
+				//Si on calcule une quantité voulue inférieure à celle du contrat, on accepte la dernière offre
+				if (qttVoulue<SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER) return contrat.getEcheancier();
 
 				//Mise à jour de l'échéancier pour prendre en compte ces modifications
 				Echeancier e = contrat.getEcheancier();
 
 				//Redistribution uniforme de la hausse ou de la baisse des qtt vendues 
 				for(int i = e.getStepDebut() ; i< e.getStepFin() ; i++){
-					double qtti = e.getQuantite(i);
+					double qtti = e.getQuantite(i)*(qttVoulue/qttContrat);
 
-					e.set(i, qtti*(qttContrat/qttVoulue));
+					//Si la quantité par step ne respecte pas les exigeances des règles du contrat, on met la part minimale
+					//Mais si cette condition est vérifiée, il risque d'y avoir une augmentation de la qtt totale et donc que le problème se reporte sur d'autres step
+					if (qtti<qttVoulue/(10*e.getNbEcheances())){
+
+						e.set(i, qttVoulue/(10*e.getNbEcheances()));
+					}
 				}
-				if (e.getQuantiteTotale()<100.) return contrat.getEcheancier();
+				if (e.getQuantiteTotale()<SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER) return contrat.getEcheancier();
 				else return e;
 
 			}

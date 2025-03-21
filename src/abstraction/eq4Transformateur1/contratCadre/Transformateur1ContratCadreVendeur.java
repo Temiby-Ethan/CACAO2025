@@ -88,11 +88,10 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 	//adopter une stratégie selon celui-ci
 	public double propositionPrix(ExemplaireContratCadre contrat) {
 		if(contrat.getQuantiteTotale() >= 2000){
-			this.prixInitialementVoulu = 0.75*5226;
-			return 0.75*5226; 
+			this.prixInitialementVoulu = 9000;
+			return 0.75*9000; 
 		}
-		this.prixInitialementVoulu = 5226*(1 - 0.25*contrat.getQuantiteTotale()/2000);
-		return 5226*(1 - 0.25*contrat.getQuantiteTotale()/2000);// plus la quantite est elevee, plus le prix est interessant
+		return 9000*(1 - 0.25*contrat.getQuantiteTotale()/2000);// plus la quantite est elevee, plus le prix est interessant
 	}
 
 
