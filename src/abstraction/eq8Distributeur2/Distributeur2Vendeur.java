@@ -1,6 +1,6 @@
 /**
-	 * @author tidzzz 
-	 */
+ * @author tidzzz 
+ */
 
 package abstraction.eq8Distributeur2;
 
@@ -72,23 +72,15 @@ public void setPrix(ChocolatDeMarque choco) {
 
 
 
-    public double prix(ChocolatDeMarque choco){
-        if (ListPrix.containsKey(choco)) {
-			return ListPrix.get(choco);
+    public double prix(ChocolatDeMarque cm){
+        if (ListPrix.containsKey(cm)) {
+			return ListPrix.get(cm);
 		} 
 		else { 
 			return 0;
 		}
     }
 
-    public double quantiteEnVenteTG(ChocolatDeMarque choco, int crypto){
-        if (crypto!=this.cryptogramme
-			) {
-			
-			return 0.0;
-		} 
-		else {return 0.0;}
-    }
     
     public double quantiteEnVente(ChocolatDeMarque choco, int crypto){
         if (crypto!=this.cryptogramme || !chocolats.contains(choco)) {
@@ -115,8 +107,50 @@ public void setPrix(ChocolatDeMarque choco) {
 		return 0.0;
 	}
 
+	public double quantiteEnVenteTotal(){
+		double qte = 0;
+
+		for (ChocolatDeMarque cm :this.chocolats){
+			qte = qte + this.quantiteEnVente(cm, cryptogramme);
+		}
+		return qte;
+	}
+
+
+	public double quantiteEnVenteTG(ChocolatDeMarque choco, int crypto){
+        if (crypto!=this.cryptogramme) {
+			double capaciteDeVenteTG = this.quantiteEnVenteTotal() * ClientFinal.POURCENTAGE_MAX_EN_TG;
+			
+			if(choco.getChocolat() == Chocolat.C_MQ_E){
+				return (0.3 * capaciteDeVenteTG);
+			}
+
+			if(choco.getChocolat() == Chocolat.C_HQ_E){
+				return (0.3 * capaciteDeVenteTG);
+			}
+
+			if(choco.getChocolat() == Chocolat.C_HQ_BE){
+				return (0.4 * capaciteDeVenteTG);
+			}
+			
+			return 0.0;
+		} 
+		else {return 0.0;}
+    }
+
+	public double quantiteEnVenteTotalTG(){
+		double qte = 0;
+
+		for (ChocolatDeMarque cm :this.chocolats){
+			qte = qte + this.quantiteEnVenteTG(cm, cryptogramme);
+		}
+		return qte;
+	}
+
+
+
     public void vendre(ClientFinal client, ChocolatDeMarque choco, double quantite, double montant, int crypto) {
-		int pos= (chocolats.indexOf(choco));
+		int pos = (chocolats.indexOf(choco));
 		if (pos>=0) {
 			stock_Choco.put(choco, this.getQuantiteEnStock(choco,crypto) - quantite) ;
 			stockTotal.retirer(this, quantite, cryptogramme);
