@@ -81,15 +81,6 @@ public void setPrix(ChocolatDeMarque choco) {
 		}
     }
 
-    public double quantiteEnVente(ChocolatDeMarque choco, int crypto){
-        if (crypto!=this.cryptogramme
-			) {
-			
-			return 0.0;
-		} 
-		else {return 0.0;}
-    }
-    
     public double quantiteEnVenteTG(ChocolatDeMarque choco, int crypto){
         if (crypto!=this.cryptogramme
 			) {
@@ -98,6 +89,31 @@ public void setPrix(ChocolatDeMarque choco) {
 		} 
 		else {return 0.0;}
     }
+    
+    public double quantiteEnVente(ChocolatDeMarque choco, int crypto){
+        if (crypto!=this.cryptogramme || !chocolats.contains(choco)) {
+			journalVente.ajouter("Quelqu'un essaye de me pirater !");
+			return 0.0;
+		} 
+		else {
+			
+			if (choco.toString().contains("C_MQ_E")) {
+				double x = (capaciteDeVente*0.30);
+				return Math.max(Math.min(x , this.getQuantiteEnStock(choco,crypto)),0.0);
+			}
+			
+			if (choco.toString().contains("C_HQ_BE")) {
+				double x = (capaciteDeVente*0.30);
+				return Math.max(Math.min(x , this.getQuantiteEnStock(choco,crypto)),0.0);
+			}
+			if (choco.toString().contains("C_HQ_E")) {
+				double x = (capaciteDeVente*0.40);
+				return Math.max(Math.min(x , this.getQuantiteEnStock(choco,crypto)),0.0);
+			}
+			
+		}
+		return 0.0;
+	}
 
     public void vendre(ClientFinal client, ChocolatDeMarque choco, double quantite, double montant, int crypto) {
 		int pos= (chocolats.indexOf(choco));
