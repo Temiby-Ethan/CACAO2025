@@ -13,7 +13,7 @@ import abstraction.eqXRomu.produits.Feve;
 
 public class Producteur2recolte extends Producteur2Acteur {
 
-    private List<Plantation> plantations;
+    protected List<Plantation> plantations;
     protected HashMap<Feve, Double> feve_recolte;
     protected HashMap<Feve, Double> cout_recolte;
     private Journal Journalterrains;
@@ -56,36 +56,35 @@ public class Producteur2recolte extends Producteur2Acteur {
         double cout_HQ_E = 0;
         double cout_HQ_BE = 0;
         for (Plantation p : plantations) {
-            if (p.prodPlantation() > 0) {
-                switch (p.getTypeFeve()) {
-                    case F_BQ:
-                        Prod_BQ += p.prodPlantation();
-                        cout_BQ += p.getcout();
-                        break;
-                    case F_BQ_E:
-                        Prod_BQ_E += p.prodPlantation();
-                        cout_BQ_E += p.getcout();
-                        break;
-                    case F_MQ:
-                        Prod_MQ += p.prodPlantation();
-                        cout_MQ += p.getcout();
-                        break;
-                    case F_MQ_E:
-                        Prod_MQ_E += p.prodPlantation();
-                        cout_MQ_E += p.getcout();
-                        break;
-                    case F_HQ_E:
-                        Prod_HQ_E += p.prodPlantation();
-                        cout_HQ_E += p.getcout();
-                        break;
-                    case F_HQ_BE:
-                        Prod_HQ_BE += p.prodPlantation();
-                        cout_HQ_BE += p.getcout();
-                        break;
-                    default:
-                        throw new IllegalArgumentException("Type de fève non reconnu !");
-                }
+            switch (p.getTypeFeve()) {
+                case F_BQ:
+                    Prod_BQ += p.prodPlantation();
+                    cout_BQ += p.getcout();
+                    break;
+                case F_BQ_E:
+                    Prod_BQ_E += p.prodPlantation();
+                    cout_BQ_E += p.getcout();
+                    break;
+                case F_MQ:
+                    Prod_MQ += p.prodPlantation();
+                    cout_MQ += p.getcout();
+                    break;
+                case F_MQ_E:
+                    Prod_MQ_E += p.prodPlantation();
+                    cout_MQ_E += p.getcout();
+                    break;
+                case F_HQ_E:
+                    Prod_HQ_E += p.prodPlantation();
+                    cout_HQ_E += p.getcout();
+                    break;
+                case F_HQ_BE:
+                    Prod_HQ_BE += p.prodPlantation();
+                    cout_HQ_BE += p.getcout();
+                    break;
+                default:
+                    throw new IllegalArgumentException("Type de fève non reconnu !");
             }
+        
         }
         this.feve_recolte.put(Feve.F_BQ,Prod_BQ);
         this.feve_recolte.put(Feve.F_BQ_E,Prod_BQ_E);
@@ -102,13 +101,23 @@ public class Producteur2recolte extends Producteur2Acteur {
         JournalRecolte.ajouter(Filiere.LA_FILIERE.getEtape()+" : Recolte de "+Prod_BQ+" feves de BQ, "+Prod_BQ_E+" feves de BQ_E, "+Prod_MQ+" feves de MQ, "+Prod_MQ_E+" feves de HQ_E, "+Prod_HQ_E+" feves de HQ_E et "+Prod_HQ_BE+" feves de HQ_BE");
     }
     
-    public void cout_employe() {
+    public void cout_plantations() {
         double cout = 0;
         for (Feve f : Feve.values()) {
             cout += cout_recolte.get(f);
         }
-        Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Salaire main d'oeuvre", cout);
-        JournalBanque.ajouter(Filiere.LA_FILIERE.getEtape()+" : Cout total des employes : "+cout);
+        Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Cout lié aux plantations (main d'oeuvre, achat, replantation) ", cout);
+        JournalBanque.ajouter(Filiere.LA_FILIERE.getEtape()+" : Cout total lié aux plantations : "+cout);
+    }
+
+    public void action_replante() {
+        for (Plantation p : plantations) {
+            if (p.estMorte()) {
+                p.Replante();
+                Journalterrains.ajouter(Filiere.LA_FILIERE.getEtape()+" : Replantation de "+p.getParcelles()+" parcelles de "+p.getTypeFeve());
+            }
+            else{}
+        }
     }
     /**
      * Retourne le nombre de parcelles par type de feve.
@@ -121,30 +130,32 @@ public class Producteur2recolte extends Producteur2Acteur {
         double nb_HQ_E = 0;
         double nb_HQ_BE = 0;
         for (Plantation p : plantations) {
-            switch (p.getTypeFeve()) {
-                case F_BQ:
-                    nb_BQ+=p.getParcelles();
-                    break;
-                case F_BQ_E:
-                    nb_BQ_E+=p.getParcelles();
-                    break;
-                case F_MQ:
-                    nb_MQ+=p.getParcelles();
-                    break;
-                case F_MQ_E:
-                    nb_MQ_E+=p.getParcelles();
-                    break;
-                case F_HQ_E:
-                    nb_HQ_E+=p.getParcelles();
-                    break;
-                case F_HQ_BE:
-                    nb_HQ_BE+=p.getParcelles();
-                    break;
-                default:
-                    throw new IllegalArgumentException("Type de fève non reconnu !");
+            if (p.estMorte() == false) {
+                switch (p.getTypeFeve()) {
+                    case F_BQ:
+                        nb_BQ+=p.getParcelles();
+                        break;
+                    case F_BQ_E:
+                        nb_BQ_E+=p.getParcelles();
+                        break;
+                    case F_MQ:
+                        nb_MQ+=p.getParcelles();
+                        break;
+                    case F_MQ_E:
+                        nb_MQ_E+=p.getParcelles();
+                        break;
+                    case F_HQ_E:
+                        nb_HQ_E+=p.getParcelles();
+                        break;
+                    case F_HQ_BE:
+                        nb_HQ_BE+=p.getParcelles();
+                        break;
+                    default:
+                        throw new IllegalArgumentException("Type de fève non reconnu !");
+                }
             }
         }
-        Journalterrains.ajouter(Filiere.LA_FILIERE.getEtape()+" Notre producteur possede "+nb_BQ+" parcelles de BQ, "+nb_BQ_E+" parcelles de BQ_E, "+nb_MQ+" parcelles de MQ, "+nb_MQ_E+" parcelles de MQ_E, "+nb_HQ_E+" parcelles de HQ_E et "+nb_HQ_BE+" parcelles de HQ_BE");
+        Journalterrains.ajouter(Filiere.LA_FILIERE.getEtape()+" Nombre de parcelles avec arbres : "+nb_BQ+" BQ, "+nb_BQ_E+" BQ_E, "+nb_MQ+" MQ, "+nb_MQ_E+" MQ_E, "+nb_HQ_E+" HQ_E et "+nb_HQ_BE+" HQ_BE");
     }
 
     public void initialiser() {
@@ -161,12 +172,13 @@ public class Producteur2recolte extends Producteur2Acteur {
     }
 
     public void next() {
+        action_replante();
+        recolteParStep();
+        cout_plantations();
+        get_nb_plantations();
         for (Plantation p : plantations) {
             p.add_age();
         }
-        recolteParStep();
-        cout_employe();
-        get_nb_plantations();
         super.next();
     }
 

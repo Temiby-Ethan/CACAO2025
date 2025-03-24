@@ -17,7 +17,8 @@ public class Plantation extends Producteur2recolte {
     private double prix_achat; // Prix d'achat de la plantation
     private double prix_vente; // Prix de vente de la plantation
     private double prix_replantation; // Prix de replantation de la plantation
-    private double salaire_employe; // Prix que coûtente les employés par step par parcelle
+    private double salaire_employe; // Prix que coûtent les employés par step par parcelle
+    private boolean replante = false;
 
     
     public Plantation(Feve typeFeve, int parcelles, int age) {
@@ -91,7 +92,11 @@ public class Plantation extends Producteur2recolte {
      * Avance l'âge de la plantation d'un step et renvoie la quantité de fèves produites.
      */
     public double prodPlantation() {
-        if (age < tempsAvantProduction) {
+        if (age == 0) {
+            return 0; // Plantation récente, pas encore en production
+        }
+        else if (age < tempsAvantProduction) {
+            replante = false;
             return 0; // La plantation n'est pas encore en production
         }
         if (age >= dureeDeVie) {
@@ -151,15 +156,27 @@ public class Plantation extends Producteur2recolte {
         return age >= dureeDeVie;
     }
 
+    public void Replante() {
+        age = 0;
+        replante = true;
+    }
+
     public double getcout() {
-        if (age == 0){
-            return prix_achat;
+        if ((age == 0) && (replante == false)) {
+            return parcelles*prix_achat;
+        }
+        else if ((age == 0) && (replante == true)) {
+            return parcelles*prix_replantation;
         }
         else if (age <= dureeDeVie){
-            return salaire_employe;
+            return parcelles*salaire_employe;
         }
         else {
             return 0;
         }
+    }
+
+    public double get_prix_vente() {
+        return prix_vente;
     }
 }
