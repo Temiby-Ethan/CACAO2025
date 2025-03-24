@@ -31,8 +31,8 @@ public class Stock extends Transformateur2Acteur{
             this.stockChoco.put(c, new Variable("Stock Chocolat " + c, this, 0.0));
         }
         
-        this.stockFeveTotal = new Variable("EQ5TStockFeve", this, 0.0);
-        this.stockChocoTotal = new Variable("EQ5TStockChoco", this, 0.0);
+        this.stockFeveTotal = new Variable("EQ5TStockFeve", this, 10000.0);
+        this.stockChocoTotal = new Variable("EQ5TStockChoco", this, 10000.0);
         this.stockChocoMarqueTotal = new Variable("EQ5TStockChocoMarque", this, 0.0);
     }
     public Variable getstockFeveTotal() {
