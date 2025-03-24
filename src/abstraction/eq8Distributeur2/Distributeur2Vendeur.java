@@ -14,7 +14,6 @@ import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import java.util.LinkedList;
 import java.util.List;
 
-import abstraction.eqXRomu.acteurs.Romu;
 import abstraction.eqXRomu.clients.ClientFinal;
 
 import abstraction.eqXRomu.general.Journal;
@@ -33,7 +32,7 @@ public class Distributeur2Vendeur extends Distributeur2Acteur implements IDistri
 
 	protected HashMap<String,Double> Coefficient;
 	protected LinkedList<String> equipe;
-	protected HashMap<ChocolatDeMarque,Integer> chocoVendu;
+	
 	protected HashMap<ChocolatDeMarque,Integer> aVendu;
 
 
@@ -46,8 +45,25 @@ public class Distributeur2Vendeur extends Distributeur2Acteur implements IDistri
 		
 		
 		this.equipe = new LinkedList<String>();
-		this.chocoVendu = new HashMap<ChocolatDeMarque,Integer>();
+		
 		this.aVendu = new HashMap<ChocolatDeMarque,Integer>();
+	}
+
+	public void initialiser () {
+		super.initialiser();
+		for (ChocolatDeMarque choco : chocolats) {
+			this.setPrix(choco);
+		}
+		
+		
+		this.equipe.add("EQ4");
+		this.equipe.add("EQ5");
+		this.equipe.add("EQ6");
+		
+		
+		for (ChocolatDeMarque choc : chocolats) {
+			this.aVendu.putIfAbsent(choc, 0);
+		}
 	}
 
 
@@ -121,16 +137,13 @@ public void setPrix(ChocolatDeMarque choco) {
         if (crypto!=this.cryptogramme) {
 			double capaciteDeVenteTG = this.quantiteEnVenteTotal() * ClientFinal.POURCENTAGE_MAX_EN_TG;
 			
-			if(choco.getChocolat() == Chocolat.C_MQ_E){
-				return (0.3 * capaciteDeVenteTG);
-			}
 
 			if(choco.getChocolat() == Chocolat.C_HQ_E){
 				return (0.3 * capaciteDeVenteTG);
 			}
 
 			if(choco.getChocolat() == Chocolat.C_HQ_BE){
-				return (0.4 * capaciteDeVenteTG);
+				return (0.7 * capaciteDeVenteTG);
 			}
 			
 			return 0.0;
@@ -156,7 +169,7 @@ public void setPrix(ChocolatDeMarque choco) {
 			stockTotal.retirer(this, quantite, cryptogramme);
 			this.aVendu.replace(choco, 1);
 		}
-		journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE,client.getNom()+" a acheté "+quantite+"kg de "+choco+" pour "+montant+" d'euros ");
+		journalVente.ajouter(client.getNom()+" a acheté "+quantite+"kg de "+choco+" pour "+montant+" d'euros ");
 
 	}
 
