@@ -19,7 +19,7 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
     protected HashMap<Integer,VariablePrivee> stockFeveMQ_E = new HashMap<Integer,VariablePrivee>();
     protected HashMap<Integer,VariablePrivee> stockFeveHQ = new HashMap<Integer,VariablePrivee>();
     protected HashMap<Integer,VariablePrivee> stockFeveHQ_B = new HashMap<Integer,VariablePrivee>();
-    protected VariablePrivee totalStock;
+    public VariablePrivee totalStock;
     protected VariablePrivee totalStockBQ;
     protected VariablePrivee totalStockBQ_E;
     protected VariablePrivee totalStockMQ;
@@ -64,7 +64,6 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
         getIndicateurs().add(totalStockHQ);
         getIndicateurs().add(totalStockHQ_B);
     }
-
 
 
     
@@ -200,13 +199,15 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
         return total;
     }
     void vieillirStock(){
-        for(int i = 7; i > 0; i--){
-            stockFeveBQ.get(i).setValeur(this, stockFeveBQ.get(i-1).getValeur(cryptogramme), cryptogramme);
-            stockFeveBQ_E.get(i).setValeur(this, stockFeveBQ_E.get(i-1).getValeur(cryptogramme), cryptogramme);
-            stockFeveMQ.get(i).setValeur(this, stockFeveMQ.get(i-1).getValeur(cryptogramme), cryptogramme);
-            stockFeveMQ_E.get(i).setValeur(this, stockFeveMQ_E.get(i-1).getValeur(cryptogramme), cryptogramme);
-            stockFeveHQ.get(i).setValeur(this, stockFeveHQ.get(i-1).getValeur(cryptogramme), cryptogramme);
-            stockFeveHQ_B.get(i).setValeur(this, stockFeveHQ.get(i-1).getValeur(cryptogramme), cryptogramme);
+        System.out.println(stockFeveBQ.get(7).getValeur(cryptogramme));
+        System.out.println(stockFeveBQ.get(6).getValeur(cryptogramme));
+        for (int i = 6; i >= 0; i--) { 
+            stockFeveBQ.get(i+1).setValeur(this, stockFeveBQ.get(i).getValeur(cryptogramme), cryptogramme);
+            stockFeveBQ_E.get(i+1).setValeur(this, stockFeveBQ_E.get(i).getValeur(cryptogramme), cryptogramme);
+            stockFeveMQ.get(i+1).setValeur(this, stockFeveMQ.get(i).getValeur(cryptogramme), cryptogramme);
+            stockFeveMQ_E.get(i+1).setValeur(this, stockFeveMQ_E.get(i).getValeur(cryptogramme), cryptogramme);
+            stockFeveHQ.get(i+1).setValeur(this, stockFeveHQ.get(i).getValeur(cryptogramme), cryptogramme);
+            stockFeveHQ_B.get(i+1).setValeur(this, stockFeveHQ_B.get(i).getValeur(cryptogramme), cryptogramme);
         }
         stockFeveBQ.get(0).setValeur(this, sechageBQ[0], cryptogramme);
         stockFeveBQ_E.get(0).setValeur(this, sechageBQ_E[0], cryptogramme);

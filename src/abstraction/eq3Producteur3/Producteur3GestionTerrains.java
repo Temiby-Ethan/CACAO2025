@@ -158,6 +158,7 @@ public class Producteur3GestionTerrains extends Producteur3Acteur{
 
         }
     }
+
     
     // Paul
     void recolte(){
@@ -166,8 +167,14 @@ public class Producteur3GestionTerrains extends Producteur3Acteur{
 
         // Actualisation des sechages durant 2 nexts
         sechageBQ_E[0] = sechageBQ_E[1];
+        sechageBQ_E[1] = 0;
         sechageBQ[0] = sechageBQ[1];
-
+        sechageBQ[1] = 0;
+        sechageMQ_E[0] = 0;
+        sechageMQ[0] = 0;
+        sechageHQ_B[0] = 0;
+        sechageHQ[0] = 0;
+        
         if(prete != null){
             for (Parcelle p : prete) {
                 if(p.qualite instanceof QualiteBQ){
