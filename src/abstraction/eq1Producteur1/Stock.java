@@ -11,9 +11,9 @@ public class Stock {
 
     // Constructeur qui initialise les stocks à zéro
     public Stock() {
-        this.stockFMQ = basse_qualite.nombre_arbes();
-        this.stockFBQ = moyenne_qualite.nombre_arbes();
-        this.stockFHQ = haute_qualite.nombre_arbes();
+        this.stockFMQ = basse_qualite.nombre_feves_total();
+        this.stockFBQ = moyenne_qualite.nombre_feves_total();
+        this.stockFHQ = haute_qualite.nombre_feves_total();
     }
 
     // Méthode pour ajouter des fèves à chaque type de stock

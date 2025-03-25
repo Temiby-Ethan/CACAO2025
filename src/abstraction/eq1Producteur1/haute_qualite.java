@@ -17,6 +17,9 @@ public class haute_qualite extends plantation {
         this.temps_de_sechage = 1; // en steps
         this.prix_achat = 7000;
         this.prix_replantation = 2350;  // par hectare
+        this.nombre_hectares = 0;
+        this.nombre_feves = this.nombre_arbes * this.production_par_arbre * this.nb_feves_par_cabosse;
+        this.nombre_feves_total = this.nombre_feves * this.nombre_hectares;
     }
 
 
@@ -32,5 +35,9 @@ public class haute_qualite extends plantation {
         return 500;
     }
 
+    public static double nombre_feves_total(){
+        double nb = this.nombre_feves_total;
+        return nb;
+    }
 }
 

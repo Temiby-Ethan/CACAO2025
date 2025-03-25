@@ -17,6 +17,9 @@ public class moyenne_qualite extends plantation {
         this.temps_de_sechage = 1; // en steps
         this.prix_achat = 4250;
         this.prix_replantation = 1400 ; // par hectare
+        this.nombre_feves = this.nombre_arbes * this.production_par_arbre * this.nb_feves_par_cabosse;
+        this.nombre_hectares = 120; // en milliers d'hectares
+        this.nombre_feves_total = this.nombre_feves * this.nombre_hectares;
     }
 
     private int getRandomNumberInRange(int min, int max) {
@@ -29,6 +32,11 @@ public class moyenne_qualite extends plantation {
 
     public static double nombre_arbes(){
         return 750;
+    }
+
+    public static double nombre_feves_total(){
+        double nb = this.nombre_feves_total;
+        return nb;
     }
 
 }

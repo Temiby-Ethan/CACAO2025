@@ -19,6 +19,9 @@ public class plantation extends Producteur1Acteur {
     protected double prix_achat;
     protected int prix_replantation;
     protected Journal journal;
+    protected int nombre_hectares;
+    protected int nombre_feves;
+    protected int nombre_feves_total;
 
 
 }
