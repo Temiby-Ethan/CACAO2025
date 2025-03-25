@@ -14,6 +14,7 @@ import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.appelDOffre.IAcheteurAO;
 import abstraction.eqXRomu.clients.ClientFinal;
+import abstraction.eqXRomu.contratsCadres.IAcheteurContratCadre;
 import abstraction.eqXRomu.general.Variable;
 
 public class Distributeur1 extends Distributeur1AcheteurAppelOffre  {
@@ -31,7 +32,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre  {
 	protected int cryptogramme;
 	protected int step = 0;
 	protected String name = "HexaFridge";
-	protected Color color = new Color(255,0,0);
+	protected Color color = new Color(162, 207, 238);
 	
 
 
@@ -79,8 +80,21 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre  {
 
 	public void next() // par Alexiho
 	{
-		int etape = Filiere.LA_FILIERE.getEtape(); // Récupération du numéro de l'étape
-
+		List<Double> requiredQuantities = new ArrayList<>();
+		Distributeur1Stock acteurStock = new Distributeur1Stock();
+		int step = Filiere.LA_FILIERE.getEtape(); // Récupération du numéro de l'étape
+		for (int i=0; i<5; i++){
+			requiredQuantities.add(acteurStock.VolumetoBuy(chocolats.get(i),cryptogramme)*0.95);
+		}
+		if (step%4==0){
+			IAcheteurContratCadre acheteurContratCadre = new Distributeur1AcheteurContratCadre();
+			acheteurContratCadre.next();
+			for (int i = 0 ; i<6 ; i++){
+				requiredQuantities.set(i, requiredQuantities.get(i)/19);
+			}}
+		
+		IAcheteurAO acheteurAppelOffre = new Distributeur1AcheteurAppelOffre();
+		acheteurAppelOffre.next();
 		//ChocolatDeMarque produit = new ChocolatDeMarque(Chocolat.C_MQ, "Villors", 50); // Produit choisi
         //double quantiteAjoutee = 100.0; // 100 tonnes
 
