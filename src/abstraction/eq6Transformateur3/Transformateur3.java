@@ -38,6 +38,7 @@ public class Transformateur3 extends Transformateur3ContratCadreAcheteur{
 		res.add(super.journalStock);
 		res.add(super.journalTransac);
 		res.add(super.journalCC);
+		res.add(super.journalBourse);
 		return res;
 	}
 
