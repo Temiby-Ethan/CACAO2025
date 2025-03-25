@@ -141,7 +141,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 	}
 
 	public void next(){
-		SuperviseurVentesContratCadre superviseur = new SuperviseurVentesContratCadre();
+		SuperviseurVentesContratCadre superviseur = (SuperviseurVentesContratCadre)(Filiere.LA_FILIERE.getActeur("Sup.CCadre"));
 		for (int i=0; i<chocolats.size(); i++) {
 			List<IVendeurContratCadre> vendeurList = superviseur.getVendeurs(chocolats.get(i));
 			superviseur.demandeAcheteur(this.identityContratCadre, vendeurList.get(0), chocolats.get(i), new Echeancier(Filiere.LA_FILIERE.getEtape(), 8, requiredQuantities.get(i)), this.cryptogramme, false);
