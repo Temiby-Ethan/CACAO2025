@@ -6,10 +6,12 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
+import abstraction.eqXRomu.general.VariablePrivee;
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.IProduit;
@@ -18,9 +20,11 @@ public class Distributeur2Acteur implements IActeur {
 	
 
 	//stockTotal et journal par Tidiane
-	private Journal journal_next = new Journal("journal Eq8", this);
+	private Journal journal_next = new Journal("journal next Eq8", this);
 	
+
 	protected Variable stockTotal;
+	protected Journal journal;
 	protected int cryptogramme;
 	protected double coutStockage;
 	protected IProduit produit;
@@ -31,16 +35,67 @@ public class Distributeur2Acteur implements IActeur {
 	protected List<ChocolatDeMarque> chocoProduits;
 
 	public Distributeur2Acteur() {
-		stockTotal = new Variable("Volume total du stock de l'EQ8", "Volume total du stock", this);
+		
+		this.journal= new Journal(this.getNom()+" journal", this);
 		this.chocolats = new LinkedList<ChocolatDeMarque>();
 		this.chocoProduits = new LinkedList<ChocolatDeMarque>();
+		this.stockTotal = new VariablePrivee("Eq8DStockChocoMarque","Quantite totale de chocolat de marque en stock",this,0);
 		this.variables= new HashMap<Chocolat, Variable>();
 		for (Chocolat c : Chocolat.values()) {
 			this.variables.put(c,new Variable ("EQ8 stock de : "+c,this,0));}
 	}
 	
-	public void initialiser() {
+	
+    
+    public Variable getStockTotal(){
+		return stockTotal;
 	}
+
+    public void initialiser() {
+		
+		this.stock_Choco=new HashMap<ChocolatDeMarque,Double>();
+		this.nombreMarquesParType=new HashMap<Chocolat,Integer>();
+		
+		
+		chocolats= Filiere.LA_FILIERE.getChocolatsProduits();
+		
+		for (ChocolatDeMarque cm : chocolats) {
+		    Chocolat typeChoco = cm.getChocolat();
+		    nombreMarquesParType.put(typeChoco, nombreMarquesParType.getOrDefault(typeChoco, 0) + 1);
+	    }
+		
+		this.journal.ajouter("===== STOCK INITIALE =====");
+		for (ChocolatDeMarque cm : chocolats) {
+			double stock = 0;
+			
+			if (cm.getChocolat() == Chocolat.C_MQ_E) {
+				stock=12000;
+			}
+			
+			if (cm.getChocolat() == Chocolat.C_HQ_E) {
+				stock=12000;
+			}
+			if (cm.getChocolat() == Chocolat.C_HQ_BE)  {
+				stock=12000;
+			}
+			this.stock_Choco.put(cm, stock);
+			this.journal.ajouter(cm+"->"+this.stock_Choco.get(cm));
+			this.stockTotal.ajouter(this, stock, cryptogramme);
+		}
+
+		for (Chocolat choc : Chocolat.values()) {
+			double totalStock = 0;
+			for (ChocolatDeMarque cm : chocolats) {
+				if (cm.getChocolat().equals(choc)) {
+					totalStock += stock_Choco.get(cm);
+				}
+			}
+			this.variables.get(choc).setValeur(this, totalStock);
+		}
+		
+		this.journal.ajouter("");
+	}
+
 
 	public String getNom() {// NE PAS MODIFIER
 		return "EQ8";
@@ -57,15 +112,24 @@ public class Distributeur2Acteur implements IActeur {
 	public void next() {
 		//Journal par Tidiane
 		journal_next.ajouter("" + Filiere.LA_FILIERE.getEtape());
+		
+		
+		for (Chocolat choc : Chocolat.values() ) {
+			double x = 0;
+			for (ChocolatDeMarque c : chocolats) {
+				if (c.getChocolat().equals(choc)) {
+					x = x + this.stock_Choco.get(c);
+				}
+			}
+			this.variables.get(choc).setValeur(this, x);
+		}
 	}
 
 	public Journal getJournal(){
 		return this.journal_next;
 	}
 
-	public Variable getStockTotal(){
-		return stockTotal;
-	}
+	
 	
 	public Color getColor() {// NE PAS MODIFIER
 		return new Color(209, 179, 221); 
@@ -79,6 +143,9 @@ public class Distributeur2Acteur implements IActeur {
 	public List<Variable> getIndicateurs() {
 		List<Variable> res = new ArrayList<Variable>();
 		res.add(getStockTotal());
+		for (Chocolat choc : Chocolat.values()) {
+			res.add(this.variables.get(choc));
+		}
 		return res;
 	}
 
@@ -93,7 +160,8 @@ public class Distributeur2Acteur implements IActeur {
 	// Renvoie les journaux
 	public List<Journal> getJournaux() {
 		List<Journal> res=new ArrayList<Journal>();
-		res.add(getJournal());
+		res.add(journal_next);
+		res.add(journal);
 		return res;
 	}
 
@@ -140,11 +208,14 @@ public class Distributeur2Acteur implements IActeur {
 
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
 		if (this.cryptogramme==cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
-			return 0; // A modifier
-		} else {
-			System.out.println("Cet acteur n'est pas assermenté");
-			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
-		}
+			if (stock_Choco.containsKey(p)) {
+			return stock_Choco.get(p);
+			}
+		} 
+		
+		System.out.println("Cet acteur n'est pas assermenté");
+		return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
+		
 	}
 	
 	
