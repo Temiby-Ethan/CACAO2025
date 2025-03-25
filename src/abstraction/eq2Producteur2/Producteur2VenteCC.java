@@ -122,4 +122,4 @@ public class Producteur2VenteCC extends Producteur2couts implements IVendeurBour
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Unimplemented method 'notificationNouveauContratCadre'");
 	}
-}
+} */

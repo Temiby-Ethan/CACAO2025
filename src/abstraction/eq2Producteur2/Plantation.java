@@ -36,7 +36,7 @@ public class Plantation {
                 this.prix_achat = 225000;
                 this.prix_vente = 145000;
                 this.prix_replantation = 80000;
-                this.salaire_employe = 6600;
+                this.salaire_employe = 10200;
                 break;
             case F_BQ_E:
                 this.dureeDeVie = 960;  // 40 ans
@@ -54,7 +54,7 @@ public class Plantation {
                 this.prix_achat = 425000;
                 this.prix_vente = 285000;
                 this.prix_replantation = 140000;
-                this.salaire_employe = 5400;
+                this.salaire_employe = 7800;
                 break;
             case F_MQ_E:
                 this.dureeDeVie = 960;
@@ -104,7 +104,7 @@ public class Plantation {
         }
 
         // Calcul de la production en fèves sèches
-        double fevesTotales = this.productionParParcelle * getFevesParCabosse();
+        double fevesTotales = parcelles * productionParParcelle * getFevesParCabosse();
 
         return fevesTotales;
     }

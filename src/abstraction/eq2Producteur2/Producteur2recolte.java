@@ -29,6 +29,7 @@ public class Producteur2recolte extends Producteur2Acteur {
 
         for (Feve f : Feve.values()) {
             this.feve_recolte.put(f, 0.0);
+            this.cout_recolte.put(f, 0.0);
         }
     }
 
