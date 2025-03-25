@@ -62,11 +62,12 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurEncher
 	
 	public OffreVente choisirOV(List<OffreVente> propositions){
 		int indice = -1;
+		double volume = propositions.get(0).getQuantiteT();
 		IProduit product = propositions.get(0).getProduit();
 		if (product instanceof ChocolatDeMarque) {
         	ChocolatDeMarque chocolat = (ChocolatDeMarque) product;
 			int idProduct = getInt(chocolat.getChocolat());
-			double price = 1.03*this.priceProduct.get(idProduct) ;
+			double price = 1.03*this.priceProduct.get(idProduct)*volume ;
 			for (int i=0; i<propositions.size(); i++){
 				double priceProposed = propositions.get(i).getPrixT();
 				if (priceProposed<price){
@@ -74,7 +75,7 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurEncher
 					price = priceProposed;
 					}
 				}
-				this.priceProduct.set(idProduct,price);
+				this.priceProduct.set(idProduct,price/volume);
 			}
 		
 		if (indice == -1){

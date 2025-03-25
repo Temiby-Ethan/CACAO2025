@@ -61,7 +61,7 @@ public class Distributeur1AcheteurEncheres extends Distributeur1AcheteurContratC
         	ChocolatDeMarque chocolat = (ChocolatDeMarque) product;
 			double volume = encheres.getQuantiteT();
 			int idProduct = getInt(chocolat.getChocolat());
-			double price = this.priceProduct.get(idProduct);
+			double price = this.priceProduct.get(idProduct)*volume;
 			double wantedquantity = this.requiredQuantities.get(idProduct);
 			int numberSuccessedSell = this.successedSell.get(idProduct);
 			if (wantedquantity<volume){
