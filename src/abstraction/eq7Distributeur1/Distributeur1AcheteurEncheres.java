@@ -30,7 +30,10 @@ public class Distributeur1AcheteurEncheres extends Distributeur1AcheteurContratC
 	public Distributeur1AcheteurEncheres() {
 		super();
 
-		List<Integer> successedSell = null;
+		List<Integer> successedSell = new ArrayList<>();
+		for (int i=0; i<5; i++){
+			successedSell.add(i,0);
+		}
 		//this.priceProduct = priceProduct;
 		//this.name = name ;
 		//this.color = color;
@@ -76,11 +79,19 @@ public class Distributeur1AcheteurEncheres extends Distributeur1AcheteurContratC
 	}
 
 	public void notifierAchatAuxEncheres(Enchere enchereRetenue){
-
+		IProduit product = enchereRetenue.getProduit();
+		if (product instanceof ChocolatDeMarque){
+			ChocolatDeMarque chocolat = (ChocolatDeMarque) product;
+		this.successedSell.set(getInt(chocolat.getChocolat()),this.successedSell.get(getInt(chocolat.getChocolat())+1));
+		}
 	}
 	public void notifierEnchereNonRetenue(Enchere enchereNonRetenue){
-		
-	};
+		IProduit product = enchereNonRetenue.getProduit();
+		if (product instanceof ChocolatDeMarque){
+			ChocolatDeMarque chocolat = (ChocolatDeMarque) product;
+		this.successedSell.set(getInt(chocolat.getChocolat()),this.successedSell.get(getInt(chocolat.getChocolat())-1));
+		}
+	}
 
 	public String getNom(){
 		return(this.name);
