@@ -112,7 +112,7 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 
 		// OU proposition d'un contrat a un des vendeurs choisi aleatoirement
 		for(IProduit produit : pourcentageTransfo.keySet()){
-			if(stockFeves.get(produit)< 0.75*STOCK_MAX_TOTAL_FEVES){
+			if(stockFeves.get(produit)< 0.1*STOCK_MAX_TOTAL_FEVES){
 				journalCC.ajouter("Recherche d'un vendeur aupres de qui acheter");
 
 				List<IVendeurContratCadre> vendeurs = supCCadre.getVendeurs(produit);
