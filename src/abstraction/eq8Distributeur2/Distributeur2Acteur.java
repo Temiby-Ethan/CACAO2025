@@ -68,20 +68,31 @@ public class Distributeur2Acteur implements IActeur {
 		for (ChocolatDeMarque cm : chocolats) {
 			double stock = 0;
 			
-			if (cm.getChocolat()==Chocolat.C_MQ_E) {
+			if (cm.getChocolat() == Chocolat.C_MQ_E) {
 				stock=12000;
 			}
 			
-			if (cm.getChocolat()==Chocolat.C_HQ_E) {
+			if (cm.getChocolat() == Chocolat.C_HQ_E) {
 				stock=12000;
 			}
-			if (cm.getChocolat()==Chocolat.C_HQ_BE)  {
+			if (cm.getChocolat() == Chocolat.C_HQ_BE)  {
 				stock=12000;
 			}
 			this.stock_Choco.put(cm, stock);
 			this.journal.ajouter(cm+"->"+this.stock_Choco.get(cm));
 			this.stockTotal.ajouter(this, stock, cryptogramme);
 		}
+
+		for (Chocolat choc : Chocolat.values()) {
+			double totalStock = 0;
+			for (ChocolatDeMarque cm : chocolats) {
+				if (cm.getChocolat().equals(choc)) {
+					totalStock += stock_Choco.get(cm);
+				}
+			}
+			this.variables.get(choc).setValeur(this, totalStock);
+		}
+		
 		this.journal.ajouter("");
 	}
 
@@ -101,6 +112,17 @@ public class Distributeur2Acteur implements IActeur {
 	public void next() {
 		//Journal par Tidiane
 		journal_next.ajouter("" + Filiere.LA_FILIERE.getEtape());
+		
+		
+		for (Chocolat choc : Chocolat.values() ) {
+			double x = 0;
+			for (ChocolatDeMarque c : chocolats) {
+				if (c.getChocolat().equals(choc)) {
+					x = x + this.stock_Choco.get(c);
+				}
+			}
+			this.variables.get(choc).setValeur(this, x);
+		}
 	}
 
 	public Journal getJournal(){
@@ -121,6 +143,9 @@ public class Distributeur2Acteur implements IActeur {
 	public List<Variable> getIndicateurs() {
 		List<Variable> res = new ArrayList<Variable>();
 		res.add(getStockTotal());
+		for (Chocolat choc : Chocolat.values()) {
+			res.add(this.variables.get(choc));
+		}
 		return res;
 	}
 
@@ -183,11 +208,14 @@ public class Distributeur2Acteur implements IActeur {
 
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
 		if (this.cryptogramme==cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
-			return 0; // A modifier
-		} else {
-			System.out.println("Cet acteur n'est pas assermenté");
-			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
-		}
+			if (stock_Choco.containsKey(p)) {
+			return stock_Choco.get(p);
+			}
+		} 
+		
+		System.out.println("Cet acteur n'est pas assermenté");
+		return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
+		
 	}
 	
 	

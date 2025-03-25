@@ -15,17 +15,38 @@ public class Distributeur3ContratCadre extends Distributeur3Distributeur impleme
 
     @Override
     public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {
+        double FourchetteHauteNego = 2000;
+        double FourchetteHauteAchat = 1700;
+        double FourchetteBasseNego = 1000;
+        double FourchetteBasseAchat = 1500;
+
+        if(contrat.getEcheancier().getNbEcheances()==8 && contrat.getQuantiteTotale()<FourchetteHauteNego && contrat.getQuantiteTotale()>FourchetteBasseNego){
+
+        }else {
+            return null;
+        }
         return null;
     }
 
     @Override
     public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat) {
-        return 0;
+        double fourchetteLimiteNegociation  = 1500;
+        double fourchetteLimiteAchat = 1000;
+        double baisseNego = 0.8; // Correspond a 80% du prix proposé soit une baisse de 20%
+        if(contrat.getPrix()/contrat.getQuantiteTotale()<fourchetteLimiteNegociation){
+            if(contrat.getPrix()/contrat.getQuantiteTotale()<fourchetteLimiteAchat){
+                return contrat.getPrix();
+            }else{
+                return contrat.getPrix()*baisseNego;
+            }
+        }else{
+            return -1;
+        }
     }
 
     @Override
     public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
-
+        this.journalActeur.ajouter("Nouveau contrat signé n°" + contrat.getNumero() + " : " + contrat.getQuantiteTotale() + " tonnes de " + contrat.getProduit() + " pour" + contrat.getPrix() + "€/tonne");
     }
 
     @Override
