@@ -3,7 +3,6 @@ package abstraction.eq6Transformateur3;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 
 import abstraction.eqXRomu.filiere.Banque;
@@ -11,10 +10,8 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
-import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
-import abstraction.eq6Transformateur3.Transformateur3Stock;
 
 
 public class Transformateur3Acteur implements IActeur {

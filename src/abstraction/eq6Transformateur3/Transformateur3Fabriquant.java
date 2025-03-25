@@ -69,7 +69,7 @@ public class Transformateur3Fabriquant extends Transformateur3Marques implements
         this.dicoIndicateurChoco.put(bollo,super.eq6_Q_Bollo);
 
         //Création du stock de chocolat
-		super.stockChoco = new Transformateur3Stock(this, super.journalStock, "chocolat", 200.0, super.lesChocolats, this.dicoIndicateurChoco);
+		super.stockChoco = new Transformateur3Stock(this, super.journalStock, "chocolat", 200000.0, super.lesChocolats, this.dicoIndicateurChoco);
     
         //Initialisation de la demande
         this.DemandeProdChoco = new HashMap<IProduit, Double>();

@@ -4,12 +4,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import abstraction.eqXRomu.bourseCacao.IAcheteurBourse;
-import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 //de quoi hérite notre classe ? aucun héritage mais une interface : IActeur 
 //on importe cette interface : 
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.Feve;
-import abstraction.eqXRomu.bourseCacao.BourseCacao;
 
 
 // @author Eric SCHILTZ
@@ -64,8 +62,7 @@ public class Transformateur3AcheteurBoursef extends Transformateur3ContratCadreA
         //fève MQ
         //fève HQ équitable 
         // tout cela c'est la filière le code mère qui va s'en occuper ce n'est pas notre rôle
-
-        
+        super.next();
     }
 
     //méthodes pour correspondre à l'interface IAcheteur

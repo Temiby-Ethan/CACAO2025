@@ -1,28 +1,38 @@
 package abstraction.eq6Transformateur3;
 
-import java.awt.Color;
-import java.util.List;
+import java.util.LinkedList;
 
 import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
+import abstraction.eqXRomu.contratsCadres.IAcheteurContratCadre;
 import abstraction.eqXRomu.contratsCadres.IVendeurContratCadre;
+import abstraction.eqXRomu.contratsCadres.SuperviseurVentesContratCadre;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
-import abstraction.eqXRomu.general.Journal;
-import abstraction.eqXRomu.general.Variable;
-import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquant implements IVendeurContratCadre {
 
+    protected LinkedList<ExemplaireContratCadre> ContratsVendeur;
+    
+    public Transformateur3ContratCadreVendeur() {
+        this.ContratsVendeur=new LinkedList<ExemplaireContratCadre>();
+	}
+    @Override
     public void next(){
         super.next();
-        for(ChocolatDeMarque choco : chocolatDeMarques){
-            if(stockChoco.getQuantityOf(choco)>10000){
-                
+        SuperviseurVentesContratCadre supCCadre = (SuperviseurVentesContratCadre) Filiere.LA_FILIERE.getActeur("Sup.CCadre");
+        for(IProduit choco : super.lesChocolats){
+            if(stockChoco.getQuantityOf(choco)>1000){
+                for (IActeur acteur : Filiere.LA_FILIERE.getActeurs()) {
+			        if (acteur!=this && acteur instanceof IAcheteurContratCadre && ((IAcheteurContratCadre)acteur).achete(choco)) {
+				        supCCadre.demandeVendeur((IAcheteurContratCadre)acteur, (IVendeurContratCadre)this,(IProduit) choco, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10, 100.0), cryptogramme, false);
+                    }
+                }
             }
         }
     }
+
     @Override
     public boolean vend(IProduit produit) {
         if(produit == super.fraud
@@ -54,6 +64,7 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
     @Override
     public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
         journalCC.ajouter("Nouveau contrat cadre" +contrat);
+        ContratsVendeur.add(contrat);
     }
 
     @Override

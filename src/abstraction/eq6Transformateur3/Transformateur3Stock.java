@@ -9,7 +9,6 @@ import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.filiere.IActeur;
-import abstraction.eqXRomu.produits.Feve;
 
 public class Transformateur3Stock {
     private double stockTotal;

@@ -32,6 +32,7 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratC
 		return contrat.getPrix();
 	}
 	public void next() {
+		super.next();
 		SuperviseurVentesContratCadre supCCadre = (SuperviseurVentesContratCadre) Filiere.LA_FILIERE.getActeur("Sup.CCadre");
 
 		journalCC.ajouter("======= Contrats cadres finis période"+Filiere.LA_FILIERE.getEtape()+"=======");
@@ -42,6 +43,12 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratC
 			}
 		}
 		this.ContratsAcheteur.removeAll(contratsObsoletes);
+		for (ExemplaireContratCadre contrat : this.ContratsVendeur) {
+			if (contrat.getQuantiteRestantALivrer()==0.0 && contrat.getMontantRestantARegler()==0.0) {
+				contratsObsoletes.add(contrat);
+			}
+		}
+		this.ContratsVendeur.removeAll(contratsObsoletes);
 		journalCC.ajouter("==============");
 		
 		// Proposition d'un nouveau contrat a tous les vendeurs possibles
@@ -81,5 +88,6 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratC
 	@Override
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
 		journalCC.ajouter("Nouveau contrat cadre" +contrat);
+		ContratsAcheteur.add(contrat);
 	}
 }
