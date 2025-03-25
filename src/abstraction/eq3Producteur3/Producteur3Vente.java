@@ -79,7 +79,10 @@ public class Producteur3Vente extends Producteur3Stock implements IVendeurBourse
     public boolean vend(IProduit produit) {
         if (produit instanceof Feve) {
             Feve feve = (Feve)produit;
-            return feve.getGamme().equals(Gamme.MQ) && feve.isEquitable();
+            boolean A = feve.getGamme().equals(Gamme.MQ) && feve.isEquitable();
+            boolean B = feve.getGamme().equals(Gamme.BQ) && !feve.isEquitable();
+            boolean C = feve.getGamme().equals(Gamme.HQ) && feve.isBio();
+            return A || B || C;
         }
         return false;
     }
@@ -88,14 +91,15 @@ public class Producteur3Vente extends Producteur3Stock implements IVendeurBourse
     public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
         Echeancier echeancier = contrat.getEcheancier();
         double qteTotale = contrat.getQuantiteTotale();
-        double qteInit = contrat.getEcheanciers().get(0).getQuantiteTotale();
-        if (qteTotale >= qteInit*1.1) {
+        double stockActuel = calculTotalStockParticulier((Feve)contrat.getProduit());
+        if (qteTotale <= stockActuel*0.7 && qteTotale >= stockActuel*0.2)  {
             return echeancier;
         }
         int stepDebut = contrat.getEcheancier().getStepDebut();
         int stepFin = contrat.getEcheancier().getStepFin();
         int nbStep = stepFin - stepDebut;
-        return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, nbStep,(int)(qteInit*1.2/nbStep));
+        double contreQuantite = (qteTotale + stockActuel*0.5)/2;
+        return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, nbStep,(int)(contreQuantite/nbStep));
     }
 
 
