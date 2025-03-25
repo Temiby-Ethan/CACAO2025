@@ -50,9 +50,10 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*4;
 
 		this.lesFeves = new LinkedList<Feve>();
-		for (Feve f : Feve.values()) {
-			this.lesFeves.add(f);
-		}
+		this.lesFeves.add(Feve.F_HQ_BE);
+		this.lesFeves.add(Feve.F_MQ_E);
+		this.lesFeves.add(Feve.F_BQ_E);
+		this.lesFeves.add(Feve.F_BQ);
 		
 		for (Feve f : this.lesFeves) {
 			this.stockFeves.put(f, 20000.0);
@@ -79,7 +80,6 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 		conversion = 1.0 + (100.0 - Filiere.LA_FILIERE.getParametre("pourcentage min cacao MQ").getValeur())/100.0;
 		this.pourcentageTransfo.get(Feve.F_MQ_E).put(Chocolat.C_MQ_E, conversion);
 
-
 		this.pourcentageTransfo.put(Feve.F_BQ, new HashMap<Chocolat, Double>());
 		conversion = 1.0 + (100.0 - Filiere.LA_FILIERE.getParametre("pourcentage min cacao BQ").getValeur())/100.0;
 		this.pourcentageTransfo.get(Feve.F_BQ).put(Chocolat.C_BQ, conversion);
@@ -94,7 +94,9 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 			if (this.pourcentageTransfo.keySet().contains(f)) {
 				for (Chocolat c : this.pourcentageTransfo.get(f).keySet()) {
 					int pourcentageCacao =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+c.getGamme()).getValeur());
+
 					ChocolatDeMarque cm= new ChocolatDeMarque(c, "LimDt", pourcentageCacao);
+
 					this.chocolatsLimDt.add(cm);
 					this.stockChocoMarque.put(cm, 40000.0);
 					this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN," stock("+cm+")->"+this.stockChocoMarque.get(cm));
@@ -273,7 +275,6 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", (this.totalStocksFeves.getValeur(cryptogramme)+this.totalStocksChoco.getValeur(cryptogramme)+this.totalStocksChocoMarque.getValeur(cryptogramme))*this.coutStockage);
 
-		
 	}
 
 
