@@ -74,7 +74,9 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre  {
 		if (pos<0) {
 			return 0.0;
 		} else {
-			return prix.get(pos);
+			//return prix.get(pos);
+			double price = 1.08*this.priceProduct.get(pos) ;
+			return price;
 		}
 	}
 
@@ -86,7 +88,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre  {
 		for (int i=0; i<5; i++){
 			requiredQuantities.add(acteurStock.VolumetoBuy(chocolats.get(i),cryptogramme)*0.95);
 		}
-		if (step%4==0){
+		if (step%8==0){
 			IAcheteurContratCadre acheteurContratCadre = new Distributeur1AcheteurContratCadre();
 			acheteurContratCadre.next();
 			for (int i = 0 ; i<6 ; i++){
