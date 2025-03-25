@@ -1,0 +1,49 @@
+package abstraction.eq8Distributeur2;
+
+import abstraction.eqXRomu.contratsCadres.Echeancier;
+import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
+import abstraction.eqXRomu.contratsCadres.IAcheteurContratCadre;
+import abstraction.eqXRomu.produits.ChocolatDeMarque;
+import abstraction.eqXRomu.produits.IProduit;
+
+public class Distributeur2AcheteurContratCadre extends Distributeur2Distributeur implements IAcheteurContratCadre{
+
+	protected List<ExemplaireContratCadre> contrat_en_cours;
+	protected List<ExemplaireContratCadre> contrat_term;
+	protected Journal journalCC;
+
+	public Distributeur1AcheteurContratCadre() {
+		super();
+		this.contrat_en_cours = new LinkedList<ExemplaireContratCadre>();
+		this.contrat_term= new LinkedList<ExemplaireContratCadre>();
+		this.journalCC= new Journal (this.getNom() + "journal CC", this);
+		this.choix=new LinkedList<ExemplaireContratCadre>();
+		this.test=1;
+	}
+    
+    public boolean achete(IProduit produit) {
+        return produit instanceof ChocolatDeMarque && stockChocoMarque.containsKey(produit) && stockChocoMarque.get(produit) <= 100000;
+    }
+
+    
+    public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {
+        return null;
+    }
+
+    
+    public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat) {
+        return 0;
+    }
+
+    
+    public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
+
+    }
+
+    
+    public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
+        stockChocoMarque.put((ChocolatDeMarque) p,this.stockChocoMarque.get(p)+quantiteEnTonnes);
+        journalActeur.ajouter("reception de "+quantiteEnTonnes+" tonnes de "+p.toString()+" du contrat "+ contrat.toString());
+        this.MAJStocks();
+    }
+}
