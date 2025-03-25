@@ -22,12 +22,12 @@ public class Distributeur1Stock extends Distributeur1Acteur{
         this.stocksChocolats = new HashMap<>();
 
         this.chocolats = new ArrayList<ChocolatDeMarque>();
-		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_HQ_BE, "Hexafridge", 50));
-		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_HQ_E, "Hexafridge", 50));
-		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_MQ_E, "Hexafridge", 50));
-		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_MQ, "Hexafridge", 50));
-		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_BQ_E, "Hexafridge", 50));
-		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_BQ, "Hexafridge", 50));
+		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_HQ_BE, "Villors", 50));
+		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_HQ_E, "Villors", 50));
+		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_MQ_E, "Villors", 50));
+		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_MQ, "Villors", 50));
+		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_BQ_E, "Villors", 50));
+		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_BQ, "Villors", 50));
 
         for (int i=0; i<this.chocolats.size(); i++) {
 			this.stocksChocolats.put(chocolats.get(i), new Variable("Stock"+chocolats.get(i).getNom(), this, 1000.0));
