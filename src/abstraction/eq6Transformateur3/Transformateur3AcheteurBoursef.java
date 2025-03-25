@@ -26,20 +26,27 @@ public class Transformateur3AcheteurBoursef extends Transformateur3ContratCadreA
     //des attributs
     //il faut que les attributs de notre instance que l'on rajoute soit donc la liste des achats en 
     //bourses faits :soit une liste avec les achats en bourse fait : liste de fèves et liste de stocks
+    //et liste de prix faits
+    //et une liste avec les achats en bourse courants :liste de fèves et liste de stocks et liste de prix
     //voulus
-    //et une liste avec les achats en bourse courants :liste de fèves et liste de stocks
-    //voulus
-	protected List<Variable> StockFevevouluencours;
+    //Foncièrement elles ne servent à rien   
+    //mais on les gardes pour la V2 en vue de l'élaboration de stratégies longs termes
+	protected List<Double> StockFevevouluencours;
 	protected List<Feve> Fevevoulueencours;
-    protected List<Variable> Stockvoulufaits;
+    protected List<Double> Prixvoulusencours;
+    protected List<Double> Stockvoulufaits;
     protected List<Feve> Fevevouluefaites;
+    protected List<Double> Prixvoulusfaits;
     //des constructeurs
     //notre contrainte et que l'on veut rien en variable 
     public Transformateur3AcheteurBoursef(){
-        this.StockFevevouluencours = new LinkedList<Variable>();
+        //on construit les arguments précédents
+        this.StockFevevouluencours = new LinkedList<Double>();
         this.Fevevoulueencours = new LinkedList<Feve>();
-        this.Stockvoulufaits = new LinkedList<Variable>();
+        this.Prixvoulusencours = new LinkedList<Double>();
+        this.Stockvoulufaits = new LinkedList<Double>();
         this.Fevevouluefaites = new LinkedList<Feve>();
+        this.Prixvoulusfaits = new LinkedList<Double>();
     }
 
     //des méthodes
@@ -76,10 +83,69 @@ public class Transformateur3AcheteurBoursef extends Transformateur3ContratCadreA
 	 */
     @Override
     public double demande(Feve f, double cours) {
-        //pour l'instant simple qu'importe le type de fève ou le cours en cours
-        //on commande une quantité de 1000
-        //le but est juste que le code fonctionne pour l'instant
-        return 1000;
+        //fève BQ de nom java : Feve.F_BQ
+        if (f==Feve.F_BQ){
+            double a = super.stockFeves.getQuantityOf(Feve.F_BQ);
+            if (a<100000){
+                double b = 100000 - a;
+                //rajouter à la liste de feves, stock et prix voulu 
+                StockFevevouluencours.add(b);
+                Fevevoulueencours.add(f);
+                Prixvoulusencours.add(a*cours);
+                return b;
+            }
+            else{
+                return 0;
+            }
+        }
+        //fève BQ équitable  
+        if (f==Feve.F_BQ_E){
+            double a = super.stockFeves.getQuantityOf(Feve.F_BQ_E);
+            if (a<100000){
+                double b = 100000 - a;
+                //rajouter à la liste de feves, stock et prix voulu 
+                StockFevevouluencours.add(b);
+                Fevevoulueencours.add(f);
+                Prixvoulusencours.add(a*cours);
+                return b;
+            }
+            else{
+                return 0;
+            }
+        }   
+        //fève MQ
+        if (f==Feve.F_MQ){
+            double a = super.stockFeves.getQuantityOf(Feve.F_MQ);
+            if (a<100000){
+                double b = 100000 - a;
+                //rajouter à la liste de feves, stock et prix voulu 
+                StockFevevouluencours.add(b);
+                Fevevoulueencours.add(f);
+                Prixvoulusencours.add(a*cours);
+                return b;
+            }
+            else{
+                return 0;
+            }
+        }
+        //fève HQ équitable 
+        if (f==Feve.F_HQ_E){
+            double a = super.stockFeves.getQuantityOf(Feve.F_HQ_E);
+            if (a<100000){
+                double b = 100000 - a;
+                //rajouter à la liste de feves, stock et prix voulu 
+                StockFevevouluencours.add(b);
+                Fevevoulueencours.add(f);
+                Prixvoulusencours.add(a*cours);
+                return b;
+            }
+            else{
+                return 0;
+            }
+        }
+        else{
+            return 0;
+        }
 
     }
 
@@ -98,6 +164,11 @@ public class Transformateur3AcheteurBoursef extends Transformateur3ContratCadreA
         journalBourse.ajouter("vous venez d'acheter de la fève"+f+"au prix de"+coursEnEuroParT+"par tonne");
         //L'acteur this doit augmenter son stock de feves de type f de la quantite quantiteEnT.
         super.stockFeves.addToStock(f,quantiteEnT);
+        //rajouter à liste de stocks et de fèves et de prix faits
+        Stockvoulufaits.add(quantiteEnT);
+        Fevevouluefaites.add(f);
+        Prixvoulusfaits.add(quantiteEnT*coursEnEuroParT);
+
     }
 
     /**
