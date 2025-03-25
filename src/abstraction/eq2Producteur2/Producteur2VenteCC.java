@@ -1,4 +1,4 @@
-package abstraction.eq2Producteur2;
+/*package abstraction.eq2Producteur2;
 
 import abstraction.eqXRomu.bourseCacao.IVendeurBourse;
 import abstraction.eqXRomu.contratsCadres.Echeancier;

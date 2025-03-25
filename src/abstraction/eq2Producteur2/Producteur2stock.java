@@ -78,7 +78,9 @@ public class Producteur2stock extends Producteur2sechage {
     public void next(){
         
         super.next();
+        
         UpdateProd();
+        SetStockMin(0.1);
         ProdParStep();
         Check();
         TaxeStockage();
@@ -137,6 +139,7 @@ public class Producteur2stock extends Producteur2sechage {
     public void SetProdParStep(Feve f, double prod){  //Permet de modifier la production par next d'une fève en particulier
 
         this.prodParStep.put(f, prod);
+       
 
     }
 
@@ -147,6 +150,7 @@ public class Producteur2stock extends Producteur2sechage {
 
             double feve_seche = fevesSeches.get(f);
             this.prodParStep.put(f,feve_seche);
+            
 
         }
     }
@@ -225,12 +229,12 @@ public class Producteur2stock extends Producteur2sechage {
 
     }
 
-    public void SetStockMin(){
+    public void SetStockMin(double pourcentage){
 
         for(Feve f : Feve.values()){
-            
-            double prod = this.prodParStep.get(f);
-            this.seuil_stock.replace(f, 0.10*prod);
+
+            double prod = this.stockvar.get(f).getValeur();
+            this.seuil_stock.put(f, pourcentage*prod);
 
 
         }

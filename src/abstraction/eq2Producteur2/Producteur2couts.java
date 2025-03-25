@@ -77,7 +77,7 @@ public class Producteur2couts extends Producteur2stock {
      */
     public void calcul_prix() {
         for (Feve f : Feve.values()) {
-            prix.put(f, cout_unit_t.get(f) * 1.2); //Fixe le prix telle que la marge soit de 20%
+            prix.put(f, cout_unit_t.get(f) * 100); //Fixe le prix telle que la marge soit de 20%
         }
     }
 }
