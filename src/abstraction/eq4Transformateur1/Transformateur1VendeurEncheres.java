@@ -19,21 +19,18 @@ public class Transformateur1VendeurEncheres extends Transformateur1VendeurAppelD
     protected SuperviseurVentesAuxEncheres superviseur;
 	private static int NB_INSTANCES = 0; // Afin d'attribuer un nom different a toutes les instances
 	protected int numero;
-	protected Variable stock; // Ce sera stock_ChocoMarqueBQ, BQ_E ....
+	protected Variable stock; // Ce sera stockChocoMarqueBQ, BQ_E ....
 	protected Chocolat choco;
 	protected String marque;
 	protected double prixMin;
 
-    public Transformateur1VendeurEncheres(Chocolat choco, String marque, double stock, double prixMin) {
-		if (choco==null || marque==null || stock<=0) {
-			throw new IllegalArgumentException("creation d'une instance de ExempleAbsVendeurAuxEncheres avec des arguments non valides");
-		}		
+    public Transformateur1VendeurEncheres() {	
 		NB_INSTANCES++;
 		this.numero=NB_INSTANCES;
-		this.stock=new Variable(this.getNom()+"Stock"+choco, this, 0.0, 1000000000.0,stock);
-		this.choco = choco;
-		this.marque = marque;
-		this.prixMin = prixMin;
+		this.choco = Chocolat.C_BQ;
+		this.marque = "LimDt";
+		this.prixMin = 2400.0;
+		this.stock=new Variable(this.getNom()+"Stock"+choco, this, 0.0, 1000000000.0, 500);
 	}
 
 	public void initialiser() {
@@ -76,8 +73,6 @@ public class Transformateur1VendeurEncheres extends Transformateur1VendeurAppelD
 			}
 		}		
 	}
-
-	
 }
 
 
