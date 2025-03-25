@@ -1,7 +1,6 @@
 package abstraction.eq1Producteur1;
 
 
-import java.util.Random;
 
 import abstraction.eqXRomu.general.Journal;
 
