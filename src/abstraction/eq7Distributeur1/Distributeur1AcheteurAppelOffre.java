@@ -19,6 +19,8 @@ import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.IProduit;
 
+
+
 public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurEncheres implements IAcheteurAO  {
 
 	//protected Integer cryptogramme;
@@ -72,6 +74,7 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurEncher
 					price = priceProposed;
 					}
 				}
+				this.priceProduct.set(idProduct,price);
 			}
 		
 		if (indice == -1){

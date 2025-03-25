@@ -9,6 +9,8 @@ import java.util.List;
 import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 import abstraction.eqXRomu.contratsCadres.IAcheteurContratCadre;
+import abstraction.eqXRomu.contratsCadres.IVendeurContratCadre;
+import abstraction.eqXRomu.contratsCadres.SuperviseurVentesContratCadre;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
@@ -24,6 +26,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 	protected String name;
 	protected Color color;
 	protected List<Double> predictionsVentesPourcentage;
+	protected IAcheteurContratCadre identityContratCadre;
 	//private HashMap<ChocolatDeMarque,Variable> stock;
 
 	public Distributeur1AcheteurContratCadre() {
@@ -138,7 +141,12 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 	}
 
 	public void next(){
-
+		SuperviseurVentesContratCadre superviseur = new SuperviseurVentesContratCadre();
+		for (int i=0; i<chocolats.size(); i++) {
+			List<IVendeurContratCadre> vendeurList = superviseur.getVendeurs(chocolats.get(i));
+			superviseur.demandeAcheteur(this.identityContratCadre, vendeurList.get(0), chocolats.get(i), new Echeancier(this.step, 8, requiredQuantities.get(i)), this.cryptogramme, false);
+		}
+		
 	}
 
 	public List<Variable> getIndicateurs(){
