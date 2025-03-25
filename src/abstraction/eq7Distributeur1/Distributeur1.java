@@ -27,9 +27,9 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 	protected List<Double> prix;
 	protected List<Double> capaciteDeVente;
 	protected IAcheteurAO identity;
-	protected List<Integer> successedSell = new ArrayList<>();
-	protected List<Double> priceProduct = new ArrayList<>();
-	protected List<Double> requiredQuantities  = new ArrayList<>();
+	protected List<Integer> successedSell = new ArrayList<Integer>();
+	protected List<Double> priceProduct = new ArrayList<Double>();
+	protected List<Double> requiredQuantities  = new ArrayList<Double>();
 	protected int cryptogramme;
 	protected int step = 0;
 	protected String name = "HexaFridge";
