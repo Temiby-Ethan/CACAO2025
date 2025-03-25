@@ -6,7 +6,7 @@ import abstraction.eqXRomu.produits.Feve;
 
 
 
-public class Plantation extends Producteur2recolte {
+public class Plantation {
     
     private Feve typeFeve;          // Type de fèves cultivées
     private int parcelles;          // Nombre de parcelles de 100 ha
