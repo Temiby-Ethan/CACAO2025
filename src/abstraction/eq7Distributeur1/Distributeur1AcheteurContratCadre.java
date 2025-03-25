@@ -31,20 +31,11 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 
 	public Distributeur1AcheteurContratCadre() {
 		super();
-
-		List<Double> predictionsVentesPourcentage = new ArrayList<Double>();
-		List<Double> priceProduct = new ArrayList<Double>();
-		List<Double> requiredQuantities = new ArrayList<Double>();
 		int cryptogramme = -1;
-		int step = -1;
-		int product = -1;
 
 		String name = "EQ7";
 		Color color = new Color(162, 207, 238);
 
-		this.predictionsVentesPourcentage = predictionsVentesPourcentage;
-		this.priceProduct = priceProduct;
-		this.requiredQuantities = requiredQuantities;
 		this.cryptogramme = cryptogramme;
 		this.name = name;
 		this.color = color;
