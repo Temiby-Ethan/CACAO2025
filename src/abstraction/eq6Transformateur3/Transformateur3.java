@@ -12,7 +12,7 @@ import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class Transformateur3 extends Transformateur3ContratCadreAcheteur{
+public class Transformateur3 extends Transformateur3AcheteurBoursef{
 
 	public Transformateur3() {
 	}
@@ -23,13 +23,14 @@ public class Transformateur3 extends Transformateur3ContratCadreAcheteur{
 
 	public void next(){
 		super.next();
+		super.jdb.ajouter("NEXT - TRANSFORMATEUR3");
 		//stockChoco.addToStock(super.lesChocolats.get(0), 500.0);
 		//stockChoco.addToStock(lesChocolats.get(1), 800.0);
 
-		//stockFeves.remove(lesFeves.get(0), 100.0);
+		//stockFeves.remove(abstraction.eqXRomu.produits.Feve.F_BQ, 100.0);
 
-		stockFeves.display();
-		stockChoco.display();
+		super.stockFeves.display();
+		super.stockChoco.display();
 	}
 
 	public List<Journal> getJournaux() {
@@ -38,6 +39,7 @@ public class Transformateur3 extends Transformateur3ContratCadreAcheteur{
 		res.add(super.journalStock);
 		res.add(super.journalTransac);
 		res.add(super.journalCC);
+		res.add(super.journalBourse);
 		return res;
 	}
 
