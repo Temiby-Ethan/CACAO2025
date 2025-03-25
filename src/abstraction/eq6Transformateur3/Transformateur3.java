@@ -12,7 +12,7 @@ import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class Transformateur3 extends Transformateur3ContratCadreAcheteur{
+public class Transformateur3 extends Transformateur3Fabriquant{//Transformateur3ContratCadreAcheteur{
 
 	public Transformateur3() {
 	}
@@ -31,6 +31,7 @@ public class Transformateur3 extends Transformateur3ContratCadreAcheteur{
 
 		super.stockFeves.display();
 		super.stockChoco.display();
+		super.jdb.ajouter("");//Saut de ligne de fin de next
 	}
 
 	public List<Journal> getJournaux() {
