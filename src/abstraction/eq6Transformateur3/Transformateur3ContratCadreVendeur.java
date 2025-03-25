@@ -10,13 +10,30 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
+import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquant implements IVendeurContratCadre {
 
+    public void next(){
+        super.next();
+        for(ChocolatDeMarque choco : chocolatDeMarques){
+            if(stockChoco.getQuantityOf(choco)>10000){
+                
+            }
+        }
+    }
     @Override
     public boolean vend(IProduit produit) {
-        return true;
+        if(produit == super.fraud
+            || produit == super.arna
+            || produit == super.hypo
+            || produit == super.bollo){
+            if(stockChoco.getQuantityOf(produit)>100){
+                return true;
+            }
+            }
+        return false;
     }
 
     @Override
@@ -41,8 +58,11 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
 
     @Override
     public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'livrer'");
-    }
+        double stockActuel = stockChoco.getQuantityOf(produit);
+		double aLivre = Math.min(quantite, stockActuel);
+		journalCC.ajouter("   Livraison de "+aLivre+" T de "+produit+" sur "+quantite+" exigees pour contrat "+contrat.getNumero());
+		stockChoco.remove(produit, aLivre);
+		return aLivre;
+	}
     
 }
