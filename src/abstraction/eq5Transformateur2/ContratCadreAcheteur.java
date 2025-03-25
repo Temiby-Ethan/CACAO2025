@@ -6,7 +6,6 @@ import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 import abstraction.eqXRomu.contratsCadres.IAcheteurContratCadre;
 import abstraction.eqXRomu.filiere.Filiere;
-import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
@@ -36,9 +35,6 @@ class ContratCadreAcheteur extends ContratCadreVendeur implements IAcheteurContr
 		if (produit == Feve.F_HQ_BE){
 			return true;
 		}
-		if (produit == Chocolat.C_HQ_E){
-			return true;
-		}
 
         return false;
 
@@ -64,7 +60,7 @@ class ContratCadreAcheteur extends ContratCadreVendeur implements IAcheteurContr
 		int stepDebut = e.getStepDebut();
 		double quantite = e.getQuantite(stepDebut);
 		Feve f = (Feve) contrat.getProduit();
-		double quantiteVoulue = this.getProductionTotale()*getProportion(f);
+		double quantiteVoulue = this.getProductionTotale()*this.getProportion(f);
 
 		if (quantite > (quantiteVoulue)*1.1){
 			e.ajouter(quantiteVoulue*1.1 -quantite);

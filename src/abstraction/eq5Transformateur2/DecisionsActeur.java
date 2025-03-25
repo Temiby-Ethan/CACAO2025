@@ -53,7 +53,23 @@ public class DecisionsActeur extends ProcessChoco{
         if(c==Chocolat.C_HQ_BE){
             return Feve.F_HQ_BE;
         }
-        return Feve.F_MQ; // default return value or throw an exception if appropriate
+        return null;
+    }
+
+    public Chocolat correspondChocolat(Feve f){
+        if(f==Feve.F_MQ){
+            return Chocolat.C_MQ;
+        }
+        if(f==Feve.F_MQ_E){
+            return Chocolat.C_MQ_E;
+        }
+        if(f==Feve.F_HQ_E){
+            return Chocolat.C_HQ_E;
+        }
+        if(f==Feve.F_HQ_BE){
+            return Chocolat.C_HQ_BE;
+        }
+        return null;
     }
 
 
@@ -97,11 +113,12 @@ public class DecisionsActeur extends ProcessChoco{
 
     public void next(){
         super.next();
+        for (Feve f : Feve.values()){
+            Chocolat c =correspondChocolat(f);
+            double production = Math.min(this.getProductionTotale()*this.getProportion(f), super.getQuantiteStock(f));
+            super.fabriquerChocolat(c , f, production);
+            }
 
-        
-        
-        
-        
         if(objecifChangementProportion()){
             ChangementProportion();
         }

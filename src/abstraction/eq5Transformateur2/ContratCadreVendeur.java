@@ -82,7 +82,13 @@ return null;
 	 * Sinon, retourne une contreproposition de prix.
 	 */
 	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat){
-        return contrat.getPrix();
+        Chocolat c = (Chocolat) contrat.getProduit();
+		double prixSouhaite = prixVente(c);
+		double prix = contrat.getPrix();
+		if (prix >= 0.99*prixSouhaite){
+			return prix;
+		}
+		return 0.99*prixSouhaite;
     }
 	
 	/**
@@ -95,6 +101,7 @@ return null;
 	 * @param contrat
 	 */
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat){
+		this.journal.ajouter("Nouveau contrat cadre : "+contrat.toString());
     }
 
 	/**
