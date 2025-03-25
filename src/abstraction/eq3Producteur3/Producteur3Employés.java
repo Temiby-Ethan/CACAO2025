@@ -27,7 +27,7 @@ public class Producteur3Employés extends Producteur3Vente {
                 double masseSalariale = 100*nbParcellesBQ_E*8*37.5;
                 return masseSalariale;
             }else{
-                double masseSalariale = 100*nbParcellesBQ_E*(2*15+12*6);
+                double masseSalariale = 100*nbParcellesBQ*(2*15+12*6);
                 return masseSalariale;
             }
         }
