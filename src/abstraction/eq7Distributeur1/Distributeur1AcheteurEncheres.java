@@ -31,7 +31,7 @@ public class Distributeur1AcheteurEncheres extends Distributeur1AcheteurContratC
 		super();
 
 		List<Integer> successedSell = new ArrayList<>();
-		for (int i=0; i<5; i++){
+		for (int i=0; i<6; i++){
 			successedSell.add(i,0);
 		}
 		//this.priceProduct = priceProduct;
