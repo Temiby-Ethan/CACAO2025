@@ -69,22 +69,20 @@ public class Distributeur2Vendeur extends Distributeur2Acteur implements IDistri
 
 
 public void setPrix(ChocolatDeMarque choco) {
-	if (Filiere.LA_FILIERE.getEtape()<1) {
-			
-			
-		if (choco.getChocolat() == Chocolat.C_MQ_E) {
-			ListPrix.put(choco, (double) 10000);
-		}
-		
-	
-		if (choco.getChocolat() == Chocolat.C_HQ_E) {
-			ListPrix.put(choco, (double) 22000);
-		}
-		if (choco.getChocolat() == Chocolat.C_HQ_BE) {
-			ListPrix.put(choco, (double) 30000);
-		}
-	} 
+
+	if (choco.getChocolat() == Chocolat.C_MQ_E) {
+		ListPrix.put(choco, (double) 10000);
 	}
+	
+
+	if (choco.getChocolat() == Chocolat.C_HQ_E) {
+		ListPrix.put(choco, (double) 22000);
+	}
+	if (choco.getChocolat() == Chocolat.C_HQ_BE) {
+		ListPrix.put(choco, (double) 30000);
+	}
+
+}
 
 
 
