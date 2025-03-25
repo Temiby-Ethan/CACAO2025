@@ -25,7 +25,7 @@ public class Distributeur3ContratCadre extends Distributeur3Distributeur impleme
 
     @Override
     public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
-
+        this.journalActeur.ajouter("Nouveau contrat signé n°" + contrat.getNumero() + " : " + contrat.getQuantiteTotale() + " tonnes de " + contrat.getProduit() + " pour" + contrat.getPrix() + "€/tonne");
     }
 
     @Override
