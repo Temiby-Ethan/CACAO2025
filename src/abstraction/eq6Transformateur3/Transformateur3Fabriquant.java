@@ -27,7 +27,7 @@ public class Transformateur3Fabriquant extends Transformateur3Marques implements
     private double nbOuvrier = 85400;
     private double nbMachine = 128;
     
-    private double capacite_machine = 10e7; //tablette/step
+    private double capacite_machine = 1e7; //tablette/step
     private double capacite_ouvrier = 15000; // tab/step
 
     private double coutIngredient = 450.0; // €/tonnes
@@ -124,11 +124,11 @@ public class Transformateur3Fabriquant extends Transformateur3Marques implements
         //Afficher les comptes
         double div = 1000.0;
         String suff = " k€";
-        super.jdb.ajouter("====> Coût total de production : "+this.coutTotalProd/div+suff);
-        super.jdb.ajouter("-------------------- + Coût Ingredient : "+prixIngredient/div+suff);
-        super.jdb.ajouter("-------------------- + Coût Ouvrier... : "+prixOuvrier/div+suff);
-        super.jdb.ajouter("-------------------- + Coût fixe...... : "+coutFixe/div+suff);
-        super.jdb.ajouter("-------------------- + Coût variable.. : "+coutVariable/div+suff);
+        super.jdb.ajouter("====> Coût total de production : "+Math.round(this.coutTotalProd/div)+suff);
+        super.jdb.ajouter("-------------------- + Coût Ingredient : "+Math.round(prixIngredient/div)+suff);
+        super.jdb.ajouter("-------------------- + Coût Ouvrier... : "+Math.round(prixOuvrier/div)+suff);
+        super.jdb.ajouter("-------------------- + Coût fixe...... : "+Math.round(coutFixe/div)+suff);
+        super.jdb.ajouter("-------------------- + Coût variable.. : "+Math.round(coutVariable/div)+suff);
     }
 
     public void payerIngredient(double quantity){
@@ -211,7 +211,7 @@ public class Transformateur3Fabriquant extends Transformateur3Marques implements
                     super.stockChoco.addToStock(choco, quantityToProduce);
                     this.quantiteTotaleProduite += quantityToProduce;
 
-                    super.jdb.ajouter("Production de "+choco.getNom()+" ("+feveUtilisee.toString()+")");
+                    super.jdb.ajouter("Production de "+choco.getNom()+" : "+(int)quantityToProduce+" ("+feveUtilisee.toString()+")");
                 }
                 else{
 
@@ -227,7 +227,7 @@ public class Transformateur3Fabriquant extends Transformateur3Marques implements
                     //Calcul la quantité qui reste à produire
                     quantityToProduce -= newQuantityToProduce;
 
-                    super.jdb.ajouter("Production de "+choco.getNom()+" ("+feveUtilisee.toString()+") "+"[Demande disproportionnée]");
+                    super.jdb.ajouter("Production de "+choco.getNom()+" : "+(int)newQuantityToProduce+" t ("+feveUtilisee.toString()+") "+"[Demande disproportionnée]");
                     //+"=> ERROR : demande de fève > stock fève");
                 }
 

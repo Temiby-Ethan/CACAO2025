@@ -117,7 +117,7 @@ public class Transformateur3Stock {
 			for(int i=0;i<nbspace;i++){
 				space=space+".";
 			}
-			this.journalStock.ajouter(prod+space+" : "+this.stockProduit.get(prod));
+			this.journalStock.ajouter(prod+space+" : "+Math.round(this.stockProduit.get(prod)));
 		}
 		journalStock.ajouter("");
 	}
