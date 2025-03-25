@@ -15,6 +15,7 @@ public class Producteur2recolte extends Producteur2Acteur {
 
     private List<Plantation> plantations;
     protected HashMap<Feve, Double> feve_recolte;
+    protected HashMap<Feve, Double> cout_recolte;
     private Journal Journalterrains;
     private Journal JournalRecolte;
 
@@ -22,6 +23,7 @@ public class Producteur2recolte extends Producteur2Acteur {
         super();
         this.plantations = new ArrayList<>();
         this.feve_recolte = new HashMap<Feve, Double>();
+        this.cout_recolte = new HashMap<Feve, Double>();
         this.JournalRecolte = new Journal("Journal Recolte Eq2",this);
         this.Journalterrains = new Journal("Journal Terrains Eq2",this);
 
@@ -47,26 +49,38 @@ public class Producteur2recolte extends Producteur2Acteur {
         double Prod_MQ_E = 0;
         double Prod_HQ_E = 0;
         double Prod_HQ_BE = 0;
+        double cout_BQ = 0;
+        double cout_BQ_E = 0;
+        double cout_MQ = 0;
+        double cout_MQ_E = 0;
+        double cout_HQ_E = 0;
+        double cout_HQ_BE = 0;
         for (Plantation p : plantations) {
             if (p.prodPlantation() > 0) {
                 switch (p.getTypeFeve()) {
                     case F_BQ:
                         Prod_BQ += p.prodPlantation();
+                        cout_BQ += p.getcout();
                         break;
                     case F_BQ_E:
                         Prod_BQ_E += p.prodPlantation();
+                        cout_BQ_E += p.getcout();
                         break;
                     case F_MQ:
                         Prod_MQ += p.prodPlantation();
+                        cout_MQ += p.getcout();
                         break;
                     case F_MQ_E:
                         Prod_MQ_E += p.prodPlantation();
+                        cout_MQ_E += p.getcout();
                         break;
                     case F_HQ_E:
                         Prod_HQ_E += p.prodPlantation();
+                        cout_HQ_E += p.getcout();
                         break;
                     case F_HQ_BE:
                         Prod_HQ_BE += p.prodPlantation();
+                        cout_HQ_BE += p.getcout();
                         break;
                     default:
                         throw new IllegalArgumentException("Type de fève non reconnu !");
@@ -79,6 +93,12 @@ public class Producteur2recolte extends Producteur2Acteur {
         this.feve_recolte.put(Feve.F_MQ_E,Prod_MQ_E);
         this.feve_recolte.put(Feve.F_HQ_E,Prod_HQ_E);
         this.feve_recolte.put(Feve.F_HQ_BE,Prod_HQ_BE);
+        this.cout_recolte.put(Feve.F_BQ,cout_BQ);
+        this.cout_recolte.put(Feve.F_BQ_E,cout_BQ_E);
+        this.cout_recolte.put(Feve.F_MQ,cout_MQ);
+        this.cout_recolte.put(Feve.F_MQ_E,cout_MQ_E);
+        this.cout_recolte.put(Feve.F_HQ_E,cout_HQ_E);
+        this.cout_recolte.put(Feve.F_HQ_BE,cout_HQ_BE);
         JournalRecolte.ajouter(Filiere.LA_FILIERE.getEtape()+" : Recolte de "+Prod_BQ+" feves de BQ, "+Prod_BQ_E+" feves de BQ_E, "+Prod_MQ+" feves de MQ, "+Prod_MQ_E+" feves de HQ_E, "+Prod_HQ_E+" feves de HQ_E et "+Prod_HQ_BE+" feves de HQ_BE");
     }
  
@@ -122,8 +142,14 @@ public class Producteur2recolte extends Producteur2Acteur {
     public void initialiser() {
         super.initialiser();
         //Ajoute les parcelles de depart
-        ajouterPlantation(new Plantation(Feve.F_BQ,10,100));
-        ajouterPlantation(new Plantation(Feve.F_BQ_E,10,100));
+        for (int i = 1; i < 40; i++) {
+            int age_init = 1 + (i * 24);
+            ajouterPlantation(new Plantation(Feve.F_BQ,257,age_init));
+            ajouterPlantation(new Plantation(Feve.F_BQ_E,24,age_init));
+            ajouterPlantation(new Plantation(Feve.F_MQ,94,age_init));
+            ajouterPlantation(new Plantation(Feve.F_MQ_E,24,age_init));
+            ajouterPlantation(new Plantation(Feve.F_HQ_BE,24,age_init));
+        }
     }
 
     public void next() {
