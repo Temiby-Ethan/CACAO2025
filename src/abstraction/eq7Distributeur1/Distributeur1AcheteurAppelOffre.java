@@ -8,6 +8,7 @@ import java.util.List;
 
 
 import abstraction.eqXRomu.appelDOffre.SuperviseurVentesAO;
+import abstraction.eqXRomu.contratsCadres.SuperviseurVentesContratCadre;
 import abstraction.eqXRomu.appelDOffre.IAcheteurAO;
 import abstraction.eqXRomu.appelDOffre.OffreVente;
 import abstraction.eqXRomu.encheres.Enchere;
@@ -95,7 +96,7 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurEncher
 	}
 
 	public void next(){
-		SuperviseurVentesAO superviseur = new SuperviseurVentesAO();
+		SuperviseurVentesAO superviseur = (SuperviseurVentesAO)(Filiere.LA_FILIERE.getActeur("Sup.AO"));
 		superviseur.acheterParAO(this.identity,this.cryptogramme, Chocolat.C_BQ , this.requiredQuantities.get(0));
 		superviseur.acheterParAO(this.identity,this.cryptogramme, Chocolat.C_BQ_E , this.requiredQuantities.get(1));
 		superviseur.acheterParAO(this.identity,this.cryptogramme, Chocolat.C_MQ , this.requiredQuantities.get(2));
