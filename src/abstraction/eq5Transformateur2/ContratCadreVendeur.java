@@ -1,3 +1,5 @@
+//Simon
+
 package abstraction.eq5Transformateur2;
 
 import abstraction.eqXRomu.contratsCadres.Echeancier;
@@ -7,7 +9,7 @@ import abstraction.eqXRomu.produits.IProduit;
 
 
 
-public class ContratCadreVendeur extends Stock implements IVendeurContratCadre{
+public class ContratCadreVendeur extends DecisionsActeur implements IVendeurContratCadre{
     public ContratCadreVendeur() {
     	super();
     }
@@ -37,7 +39,12 @@ public class ContratCadreVendeur extends Stock implements IVendeurContratCadre{
 	 * d'accord avec cet echeancier. Sinon, retourne un autre echeancier qui est une contreproposition.
 	 */
 	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat){
-        return contrat.getEcheancier();
+        Echeancier e=contrat.getEcheancier();
+		int nbrStep = e.getNbEcheances();
+		int stepDebut = e.getStepDebut();
+		double quantite = e.getQuantite(stepDebut); 
+
+return null;
     }
 	
 	/**
@@ -86,7 +93,7 @@ public class ContratCadreVendeur extends Stock implements IVendeurContratCadre{
 	 *  est inferieure a celle precisee en parametre
 	 */
 	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat){
-		super.stock.retirerStock(this, produit, quantite, super.cryptogramme);
+		this.retirerStock(this, produit, quantite, super.cryptogramme);
 		return quantite;
 	}
 

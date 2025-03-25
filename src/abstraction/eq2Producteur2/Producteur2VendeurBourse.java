@@ -41,7 +41,7 @@ public class Producteur2VendeurBourse extends Producteur2stock implements IVende
 	}
 
 	public double notificationVente(Feve f, double quantiteEnT, double coursEnEuroParT) {
-		double retire = Math.min(this.stock.get(f).getValeur(), quantiteEnT);
+		double retire = Math.min(this.stockvar.get(f).getValeur(), quantiteEnT);
 		journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : j'ai vendu "+quantiteEnT+" T de "+f);
 		DeleteStock(f,retire);
 
