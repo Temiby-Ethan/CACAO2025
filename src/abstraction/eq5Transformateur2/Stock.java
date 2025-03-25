@@ -1,5 +1,6 @@
 package abstraction.eq5Transformateur2;
 
+import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.Chocolat;
@@ -17,11 +18,16 @@ public class Stock extends Transformateur2Acteur{
     private Variable stockFeveTotal;
     private Variable stockChocoTotal;
     private Variable stockChocoMarqueTotal;
+    private double coutStockageFeve;
+    private double coutStockageChoco;
 
 
     public Stock() {
-        this.stockFeve = new HashMap<Feve,Variable>();
-        this.stockChoco = new HashMap<Chocolat, Variable>();
+        this.coutStockageFeve=30; //par Step et par tonne
+        this.coutStockageChoco= coutStockageFeve*2; //par Step et par tonne
+
+        this.stockFeve = new HashMap<Feve,Variable>();          // en tonne
+        this.stockChoco = new HashMap<Chocolat, Variable>();    // en unité de tablette
         super.journal.ajouter("stock initialisé");
         
         for (Feve f : Feve.values()) {
@@ -112,7 +118,13 @@ public class Stock extends Transformateur2Acteur{
         return res;
     }
 
+    public void depenseStockage(){
+         Filiere.LA_FILIERE.getBanque().payerCout(this ,super.cryptogramme,  "Coût de stockage",
+         this.stockFeveTotal.getValeur()*this.coutStockageFeve+this.stockChocoTotal.getValeur()*this.coutStockageChoco);
+
+    }
     public void next(){
+        depenseStockage();
         super.next();
     }
 

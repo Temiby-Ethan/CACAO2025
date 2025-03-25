@@ -7,6 +7,7 @@ public class Employes extends Stock {
     private int nbrEmployesTotal;
     private double salaireEmployes;
     private double prixLicenciment;
+    private double capaciteProduction;
 
 
     public Employes(){
@@ -14,6 +15,7 @@ public class Employes extends Stock {
         this.nbrEmployesTotal = 85400;
         this.salaireEmployes = 10000;
         this.prixLicenciment=10000;
+        this.capaciteProduction= 15000; // par step et en tablette
     }
 
     public void embaucher(int nbrEmployes){
@@ -31,13 +33,14 @@ public class Employes extends Stock {
 
     }
     
-    public void desicionEmployes(){
-
+    public double capaciteProductionEmployes(){
+        return this.nbrEmployesTotal*this.capaciteProduction;
     }
 
     public void next(){
         super.next();
         Filiere.LA_FILIERE.getBanque().payerCout(this, super.cryptogramme, "stockage", 100.0);
-        desicionEmployes();
     }
+
 }
+

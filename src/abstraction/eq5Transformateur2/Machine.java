@@ -14,7 +14,7 @@ public class Machine extends Employes{
     public Machine(){
         super();
         this.nbrMachineTotal=128;
-        this.capaciteProduction= 10000000;
+        this.capaciteProduction= 10000000; // par step et en tablette
         this.prixMachine =500000;
         this.pourcentageRevente= 0.6;
     }
@@ -24,4 +24,9 @@ public class Machine extends Employes{
         Filiere.LA_FILIERE.getBanque().payerCout(this ,super.cryptogramme,  "Machine",nbrMachineTotal*prixMachine);
 
     }
+    public double getCapaciteProductionMachines(){
+        return this.capaciteProduction*this.nbrMachineTotal;
+    }
+    
+    
 }
