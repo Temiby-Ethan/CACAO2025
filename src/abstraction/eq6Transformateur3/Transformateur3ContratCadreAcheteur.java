@@ -15,7 +15,7 @@ import abstraction.eqXRomu.produits.Feve;
 
 // @author Eric SCHILTZ & Henri Roth
 
-public class Transformateur3ContratCadreAcheteur extends Transformateur3Fabriquant implements IAcheteurContratCadre{
+public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratCadreVendeur implements IAcheteurContratCadre{
 	protected List<ExemplaireContratCadre> ContratsAcheteur;
 	protected List<ExemplaireContratCadre> contratsObsoletes;
 

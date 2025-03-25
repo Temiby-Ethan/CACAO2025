@@ -14,7 +14,7 @@ import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
 
 
-public class TransformateurXVendeurAuxEncheres extends TransformateurXAcheteurCCadre implements IVendeurAuxEncheres {
+public class TransformateurXVendeurAuxEncheres extends TransformateurXVendeurCCadre implements IVendeurAuxEncheres {
 
 	private HashMap<ChocolatDeMarque, List<Double>> prixRetenus;
 	private SuperviseurVentesAuxEncheres supEncheres;
