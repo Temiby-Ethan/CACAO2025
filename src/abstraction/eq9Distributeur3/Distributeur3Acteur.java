@@ -88,7 +88,7 @@ public class Distributeur3Acteur implements IActeur {
 	public void setCryptogramme(Integer crypto) {
 
 		this.cryptogramme = crypto;
-		System.out.println("set crypto : "+this.cryptogramme);
+		//System.out.println("set crypto : "+this.cryptogramme);
 
 	}
 
