@@ -1,6 +1,7 @@
 package abstraction.eq7Distributeur1;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
@@ -18,18 +19,32 @@ import abstraction.eqXRomu.general.Variable;
 public class Distributeur1 extends Distributeur1AcheteurAppelOffre  {
 	
 	// défi 1 et 2 par Alexiho
-	private Journal journal;  // Déclaration du journal
+	protected Journal journal;  // Déclaration du journal
 	// protected Map<ChocolatDeMarque, Variable> stocksChocolats; // Table de hachage pour stocker les quantités de chocolat
 	//protected List<ChocolatDeMarque> chocolats;
-	private List<Double> prix;
-	private List<Double> capaciteDeVente;
+	protected List<Double> prix;
+	protected List<Double> capaciteDeVente;
+	protected IAcheteurAO identity;
+	protected List<Integer> successedSell = new ArrayList<>();
+	protected List<Double> priceProduct = new ArrayList<>();
+	protected List<Double> requiredQuantities  = new ArrayList<>();
+	protected int cryptogramme;
+	protected int step = 0;
+	protected String name = "HexaFridge";
+	protected Color color = new Color(255,0,0);
+	
+
 
     public Distributeur1() {
-		
-		
 		super();
         
         this.journal = new Journal("Journal de EQ7", this); // Initialisation du journal
+		for (int i=0; i<6; i++){
+			successedSell.add(0);
+			priceProduct.add(1000.0);
+			requiredQuantities.add(0.0);
+		}
+		predictionsVentesPourcentage = Arrays.asList(3.6 , 3.6 , 5.0 , 3.6 , 3.6 , 3.6 , 3.6 , 7.0 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 13.0);
 		/*
         this.stocksChocolats = new HashMap<>();
         
@@ -65,25 +80,14 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre  {
 	public void next() // par Alexiho
 	{
 		int etape = Filiere.LA_FILIERE.getEtape(); // Récupération du numéro de l'étape
-        //journal.ajouter("Étape " + etape + " : Avancement de la simulation."); // Ajout d'une entrée dans le journal
 
-		//List<String> marques = getMarquesChocolat() ;
+		//ChocolatDeMarque produit = new ChocolatDeMarque(Chocolat.C_MQ, "Villors", 50); // Produit choisi
+        //double quantiteAjoutee = 100.0; // 100 tonnes
 
-		ChocolatDeMarque produit = new ChocolatDeMarque(Chocolat.C_MQ, "Villors", 50); // Produit choisi
-        double quantiteAjoutee = 100.0; // 100 tonnes
+		//capaciteDeVente.set(3, 100.0);
 
-        // Mettre en rayon (ajouter au stock)
-        //this.stockC_MQ += quantiteAjoutee;
+        //journal.ajouter("Étape " + etape + " : Ajout de " + quantiteAjoutee + " t de " + produit + " en rayon.");
 
-		//stockChocolat.put(Chocolat.C_MQ, stockChocolat.get(Chocolat.C_MQ) + quantiteAjoutee);
-
-		capaciteDeVente.set(3, 100.0);
-
-        // Enregistrement dans le journal
-        journal.ajouter("Étape " + etape + " : Ajout de " + quantiteAjoutee + " t de " + produit + " en rayon.");
-
-		//System.out.println(journal);
-		//System.out.println(stockChocolat.get(Chocolat.C_MQ));
 	}
 
 	public List<String> getMarquesChocolat() { // par Alexiho
@@ -162,4 +166,3 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre  {
 	}
 	
 }
-
