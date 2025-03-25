@@ -106,9 +106,8 @@ public class Producteur3Vente extends Producteur3GestionDesCoûts implements IVe
     @Override
     public double propositionPrix(ExemplaireContratCadre contrat) {
         Feve feve = (Feve)contrat.getProduit();
-        Gamme gamme = feve.getGamme();
         BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
-        double cours = bourse.getCours(Feve.get(gamme, false, false)).getValeur();
+        double cours = bourse.getCours(feve).getValeur();
         double Cump = getCump(feve);
         if (Cump*1.2 >= cours*1.5) {
             return Cump*1.2;

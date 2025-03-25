@@ -63,6 +63,9 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
         getIndicateurs().add(totalStockMQ_E);
         getIndicateurs().add(totalStockHQ);
         getIndicateurs().add(totalStockHQ_B);
+        System.out.println(stockFeveBQ.get(0).getValeur(cryptogramme));
+        stockFeveBQ.get(0).setValeur(this, 15000, cryptogramme);
+        System.out.println(stockFeveBQ.get(0).getValeur(cryptogramme));
     }
 
 
@@ -199,8 +202,6 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
         return total;
     }
     void vieillirStock(){
-        System.out.println(stockFeveBQ.get(7).getValeur(cryptogramme));
-        System.out.println(stockFeveBQ.get(6).getValeur(cryptogramme));
         for (int i = 6; i >= 0; i--) { 
             stockFeveBQ.get(i+1).setValeur(this, stockFeveBQ.get(i).getValeur(cryptogramme), cryptogramme);
             stockFeveBQ_E.get(i+1).setValeur(this, stockFeveBQ_E.get(i).getValeur(cryptogramme), cryptogramme);
