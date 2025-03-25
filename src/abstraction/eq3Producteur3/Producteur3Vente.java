@@ -110,21 +110,27 @@ public class Producteur3Vente extends Producteur3GestionDesCoûts implements IVe
         BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
         double cours = bourse.getCours(Feve.get(gamme, false, false)).getValeur();
         double Cump = getCump(feve);
-        return cours*1.5;
+        if (Cump*1.2 >= cours*1.5) {
+            return Cump*1.2;
+        }
+        else{
+            return cours*1.5;
+        }
     }
 
 
     @Override
     public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
-        Feve feve = (Feve)contrat.getProduit();
-        Gamme gamme = feve.getGamme();
         Double prixProp = contrat.getPrix();
-        BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
-        double cours = bourse.getCours(Feve.get(gamme, false, false)).getValeur();
-        if (prixProp >= cours*1.1) {
-            return prixProp;
+        Feve feve = (Feve)contrat.getProduit();
+        double Cump = getCump(feve);
+        double ancienneOffre = contrat.getListePrix().get(contrat.getListePrix().size()-2);
+        double nouvelleOffre = (ancienneOffre + prixProp)/2;
+        if (Cump*1.1 >= nouvelleOffre) {
+            return Cump*1.1;
         }
-        return cours*1.1;
+        else{
+            return nouvelleOffre;}
     }
 
 
