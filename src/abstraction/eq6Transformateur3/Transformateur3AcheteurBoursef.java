@@ -6,7 +6,6 @@ import java.util.List;
 import abstraction.eqXRomu.bourseCacao.IAcheteurBourse;
 //de quoi hérite notre classe ? aucun héritage mais une interface : IActeur 
 //on importe cette interface : 
-import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.Feve;
 
 

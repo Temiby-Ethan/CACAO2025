@@ -50,14 +50,6 @@ public class Transformateur3 extends Transformateur3AcheteurBoursef{
 		res.add(super.eq6_Q_Bollo);
 		res.add(super.eq6_Q_Hypo);
 		res.add(super.eq6_Q_Arna);
-		res.add(super.eq6_Q_ingre);
-		res.add(super.eq6_Q_machine);
-		res.add(super.eq6_capacite_machine);
-		res.add(super.eq6_jours_decouvert);
-		res.add(super.eq6_nb_employe);
-		res.add(super.eq6_cout_stockage);
-		res.add(super.eq6_Q_cacao_CC);
-		res.add(super.eq6_Q_tablette_CC);
 		return res;
 	}
 }
