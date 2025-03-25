@@ -74,7 +74,9 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre  {
 		if (pos<0) {
 			return 0.0;
 		} else {
-			return prix.get(pos);
+			//return prix.get(pos);
+			double price = 1.08*this.priceProduct.get(pos) ;
+			return price;
 		}
 	}
 
