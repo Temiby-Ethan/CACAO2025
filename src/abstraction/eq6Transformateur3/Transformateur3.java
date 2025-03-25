@@ -1,18 +1,12 @@
 // Henri ROTH, Florian MALVEAU
 package abstraction.eq6Transformateur3;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 
-import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
-import abstraction.eqXRomu.produits.Chocolat;
-import abstraction.eqXRomu.produits.Feve;
-import abstraction.eqXRomu.produits.IProduit;
 
-public class Transformateur3 extends Transformateur3Fabriquant{//Transformateur3ContratCadreAcheteur{
+public class Transformateur3 extends Transformateur3AcheteurBoursef{
 
 	public Transformateur3() {
 	}
@@ -40,6 +34,7 @@ public class Transformateur3 extends Transformateur3Fabriquant{//Transformateur3
 		res.add(super.journalStock);
 		res.add(super.journalTransac);
 		res.add(super.journalCC);
+		res.add(super.journalBourse);
 		return res;
 	}
 

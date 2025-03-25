@@ -16,12 +16,12 @@ import abstraction.eqXRomu.general.Variable;
 public class Transformateur3Fabriquant extends Transformateur3Marques implements IFabricantChocolatDeMarque{
     
     //Gestion des chocolats de marque
-    private List<ChocolatDeMarque> chocolatDeMarques;
+    protected List<ChocolatDeMarque> chocolatDeMarques;
 	protected HashMap<IProduit, Variable> dicoIndicateurChoco;
-    private ChocolatDeMarque fraud;
-    private ChocolatDeMarque hypo;
-    private ChocolatDeMarque arna;
-    private ChocolatDeMarque bollo; 
+    protected ChocolatDeMarque fraud;
+    protected ChocolatDeMarque hypo;
+    protected ChocolatDeMarque arna;
+    protected ChocolatDeMarque bollo;
 
     //Gestion de la production de chocolat
     private double nbOuvrier = 85400;
@@ -72,7 +72,7 @@ public class Transformateur3Fabriquant extends Transformateur3Marques implements
         this.dicoIndicateurChoco.put(bollo,super.eq6_Q_Bollo);
 
         //Création du stock de chocolat
-		super.stockChoco = new Transformateur3Stock(this, super.journalStock, "chocolat", 0.0, super.lesChocolats, this.dicoIndicateurChoco);
+		super.stockChoco = new Transformateur3Stock(this, super.journalStock, "chocolat", 200000.0, super.lesChocolats, this.dicoIndicateurChoco);
     
         //Initialisation de la demande
         this.DemandeProdChoco = new HashMap<IProduit, Double>();
