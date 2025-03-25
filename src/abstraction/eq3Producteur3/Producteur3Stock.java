@@ -359,7 +359,8 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
     }
 
     public double calculCoutStock() {
-        return  7.5 * calculTotalStock(); 
+        coutStock.setValeur(this, 7.5 * calculTotalStock(), cryptogramme);
+        return  coutStock.getValeur(cryptogramme); 
         
     }
 
