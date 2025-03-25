@@ -128,7 +128,8 @@ public class Producteur3GestionTerrains extends Producteur3Acteur{
 
         }
     }
-
+    
+    // Paul
     void recolte(){
         LinkedList<Parcelle> prete = new LinkedList<>();
         prete = recolte.get(Filiere.LA_FILIERE.getNumeroMois());
@@ -181,7 +182,7 @@ public class Producteur3GestionTerrains extends Producteur3Acteur{
         } 
     }
 
-    // Paul
+    
     void actualiserTerrain(){
         if (Filiere.LA_FILIERE.getNumeroMois() == 1 /*&& Filiere.LA_FILIERE.getJour() == 1*/){
             LinkedList<Parcelle> aReplanter = vie.get(39);

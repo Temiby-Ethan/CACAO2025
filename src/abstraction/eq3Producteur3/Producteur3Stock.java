@@ -166,7 +166,39 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
         }
     }
 
+    double getNouveauStockParticulier(Feve feve){
+        if(feve.getGamme().equals(Gamme.BQ)){
+            if(feve.isEquitable()){
+                return stockFeveBQ_E.get(0).getValeur(cryptogramme);
+            }else{
+                return stockFeveBQ.get(0).getValeur(cryptogramme);
+            }
+        }
+        else if(feve.getGamme().equals(Gamme.MQ)){
+            if(feve.isEquitable()){
+                return stockFeveMQ_E.get(0).getValeur(cryptogramme);
+            }else{
+                return stockFeveMQ.get(0).getValeur(cryptogramme);
+            }
+        }else{
+            if (feve.isBio()){
+                return stockFeveHQ_B.get(0).getValeur(cryptogramme);
+            }else{
+                return stockFeveHQ.get(0).getValeur(cryptogramme);
+            }
+        }
 
+    }
+    
+    double getNouveauStockTotal(){
+        double total = stockFeveBQ.get(0).getValeur(cryptogramme);
+        total += stockFeveBQ_E.get(0).getValeur(cryptogramme);
+        total += stockFeveMQ.get(0).getValeur(cryptogramme);
+        total += stockFeveMQ_E.get(0).getValeur(cryptogramme);
+        total += stockFeveHQ.get(0).getValeur(cryptogramme);
+        total += stockFeveHQ_B.get(0).getValeur(cryptogramme);
+        return total;
+    }
     void vieillirStock(){
         for(int i = 7; i > 0; i--){
             stockFeveBQ.get(i).setValeur(this, stockFeveBQ.get(i-1).getValeur(cryptogramme), cryptogramme);
