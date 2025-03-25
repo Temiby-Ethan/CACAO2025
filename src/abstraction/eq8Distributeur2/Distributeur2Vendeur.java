@@ -14,6 +14,7 @@ import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import java.util.LinkedList;
 import java.util.List;
 
+import abstraction.eqXRomu.acteurs.Romu;
 import abstraction.eqXRomu.clients.ClientFinal;
 
 import abstraction.eqXRomu.general.Journal;
@@ -151,7 +152,7 @@ public void setPrix(ChocolatDeMarque choco) {
 		else {return 0.0;}
     }
 
-	public double quantiteEnVenteTotalTG(){
+	public double quantiteEnVenteTGTotal(){
 		double qte = 0;
 
 		for (ChocolatDeMarque cm :this.chocolats){
@@ -184,6 +185,27 @@ public void setPrix(ChocolatDeMarque choco) {
 		List<Journal> jour = super.getJournaux();
 		jour.add(this.journalVente);
 		return jour;
+	}
+
+
+
+	public void next() {
+		super.next();
+		journalVente.ajouter("");
+		journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE,"==================== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
+		journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE,"QuantitéEnVenteTotal à l'Etape "+Filiere.LA_FILIERE.getEtape()+" : " +this.quantiteEnVenteTotal());
+		journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE,"QuantitéEnVenteTGTotal à l'Etape "+Filiere.LA_FILIERE.getEtape()+" : "+this.quantiteEnVenteTGTotal());
+		journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE,"=================================");
+		journalVente.ajouter("");
+		for (ChocolatDeMarque choco : chocolats) {
+			journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE,"prix de vente pour le chocolats "+choco+" est de : "+this.prix(choco));
+		}
+		
+		for (int i=0;i<this.ListPrix.size(); i++) {
+			this.setPrix(chocolats.get(i));
+		}
+		
+		
 	}
 
 }
