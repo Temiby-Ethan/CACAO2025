@@ -9,6 +9,7 @@ import java.awt.Color;
 
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.filiere.Filiere;
+import abstraction.eqXRomu.filiere.IDistributeurChocolatDeMarque;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.IProduit;
@@ -17,7 +18,7 @@ import abstraction.eqXRomu.clients.ClientFinal;
 import abstraction.eqXRomu.contratsCadres.IAcheteurContratCadre;
 import abstraction.eqXRomu.general.Variable;
 
-public class Distributeur1 extends Distributeur1AcheteurAppelOffre  {
+public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements IDistributeurChocolatDeMarque {
 	
 	// défi 1 et 2 par Alexiho
 	protected Journal journal;  // Déclaration du journal
@@ -176,6 +177,11 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre  {
 	}
 
 	public void notificationRayonVide(ChocolatDeMarque choco) {
+		journal.ajouter(" Aie... j'aurais du mettre davantage de "+choco.getNom()+" en vente");
+	}
+
+	public void notificationRayonVide(ChocolatDeMarque choco, int crypto)
+	{
 		journal.ajouter(" Aie... j'aurais du mettre davantage de "+choco.getNom()+" en vente");
 	}
 
