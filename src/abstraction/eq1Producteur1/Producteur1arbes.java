@@ -12,10 +12,7 @@ public class Producteur1arbes extends plantation {
     
     public Producteur1arbes(plantation basse_qualite, plantation moyenne_qualite, plantation haute_qualite){
         super();
-        HashMap<plantation, Double> map = new HashMap<>();
-        map.put(this.basse_qualite, (double) 25);
-        map.put(this.moyenne_qualite, (double) 30);
-        map.put(this.haute_qualite, (double) 20);
+
     }
 
 

@@ -22,7 +22,7 @@ public class plantation extends Producteur1Acteur {
     protected int nombre_hectares;
     protected int nombre_feves;
     protected int nombre_feves_total;
-
+    protected Producteur1 producteur1;
 
 }
 

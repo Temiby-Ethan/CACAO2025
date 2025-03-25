@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class haute_qualite extends plantation {
 
-    public haute_qualite(){
+    public haute_qualite(Producteur1 producteur1){
         super();
         this.typedeplant = "haute_qualite";
         this.nombre_arbes = 500; // par arbre par hecatre
@@ -20,6 +20,7 @@ public class haute_qualite extends plantation {
         this.nombre_hectares = 0;
         this.nombre_feves = this.nombre_arbes * this.production_par_arbre * this.nb_feves_par_cabosse;
         this.nombre_feves_total = this.nombre_feves * this.nombre_hectares;
+        this.producteur1=producteur1;
     }
 
 
@@ -36,8 +37,8 @@ public class haute_qualite extends plantation {
     }
 
     public static double nombre_feves_total(){
-        double nb = this.nombre_feves_total;
-        return nb;
-    }
+        Object nb = this.nombre_feves_total;
+        return (double) nb;
+}
 }
 

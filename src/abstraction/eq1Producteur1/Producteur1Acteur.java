@@ -11,6 +11,7 @@ import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.IProduit;
 
 
+
 public class Producteur1Acteur implements IActeur {
     
     protected int cryptogramme;
@@ -26,11 +27,12 @@ public class Producteur1Acteur implements IActeur {
     public Producteur1Acteur() {
 		// Adrien BUECHER --> Stocks ; Adam SEBIANE --> journal
 		this.journal = new Journal(this.getNom() + " Journal", this);
-        this.stockTotal = new Variable("Stock Total", this, 0.0); // Initialisation du stock total à 0
-		this.stockFBQ = new Variable("Stock FBQ", this, 0.0); // Initialisation du stock de fève basse qualité à 0
-        this.stockFMQ = new Variable("Stock FMQ", this, 0.0); // Initialisation du stock de fève moyenne qualité à 0
-        this.stockFHQ = new Variable("Stock FHQ", this, 0.0); // Initialisation du stock de fève haute qualité à 0
-        this.stock =new Stock();  }
+        this.stockTotal = new Variable("Stock Total", this, this.stock.getStockTotal()); // Initialisation du stock total à 0
+		this.stockFBQ = new Variable("Stock FBQ", this, this.stock.getStockFBQ()); // Initialisation du stock de fève basse qualité à 0
+        this.stockFMQ = new Variable("Stock FMQ", this, this.stock.getStockFMQ()); // Initialisation du stock de fève moyenne qualité à 0
+        this.stockFHQ = new Variable("Stock FHQ", this, this.stock.getStockFHQ()); // Initialisation du stock de fève haute qualité à 0
+        this.stock =new Stock((Producteur1)this);  
+    }
     
     public void initialiser() {
         journal.ajouter("Initialisation du producteur");
