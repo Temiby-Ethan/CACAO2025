@@ -1,8 +1,13 @@
+//Simon
 package abstraction.eq5Transformateur2;
 
+import abstraction.eqXRomu.bourseCacao.BourseCacao;
 import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 import abstraction.eqXRomu.contratsCadres.IAcheteurContratCadre;
+import abstraction.eqXRomu.filiere.Filiere;
+import abstraction.eqXRomu.produits.Chocolat;
+import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
 class ContratCadreAcheteur extends ContratCadreVendeur implements IAcheteurContratCadre{
@@ -19,8 +24,25 @@ class ContratCadreAcheteur extends ContratCadreVendeur implements IAcheteurContr
 	 *         negocier un contrat cadre pour ce type de produit).
 	 */
 	public boolean achete(IProduit produit){
-            return false;
+		if (produit == Feve.F_MQ){
+			return true;
 		}
+		if (produit == Feve.F_MQ_E){
+			return true;
+		}
+		if (produit == Feve.F_HQ_E){
+			return true;
+		}
+		if (produit == Feve.F_HQ_BE){
+			return true;
+		}
+		if (produit == Chocolat.C_HQ_E){
+			return true;
+		}
+
+        return false;
+
+	}
 
 	/**
 	 * Methode appelee par le SuperviseurVentesContratCadre lors des negociations
@@ -37,7 +59,22 @@ class ContratCadreAcheteur extends ContratCadreVendeur implements IAcheteurContr
 	 *         superviseur soumettra au vendeur.
 	 */
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat){
-        return contrat.getEcheancier();
+		Echeancier e=contrat.getEcheancier();
+		int nbrStep = e.getNbEcheances();
+		int stepDebut = e.getStepDebut();
+		double quantite = e.getQuantite(stepDebut);
+		Feve f = (Feve) contrat.getProduit();
+		double quantiteVoulue = this.getProductionTotale();
+
+		if (quantite > (quantiteVoulue)*1.1){
+			e.ajouter(quantiteVoulue*1.1 -quantite);
+		}
+		if (quantite < (quantiteVoulue)*0.1){
+			e.ajouter(quantiteVoulue*0.1 -quantite);
+		}
+		return e;
+		
+		
     }
 	
 	/**
@@ -54,7 +91,16 @@ class ContratCadreAcheteur extends ContratCadreVendeur implements IAcheteurContr
 	 *         un autre prix correspondant a sa contreproposition.
 	 */
 	public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat){
-        return contrat.getPrix();
+        Double prixVendeur= contrat.getPrix();
+		Feve f = (Feve) contrat.getProduit();
+		BourseCacao bc =  ((BourseCacao) (Filiere.LA_FILIERE.getActeur("BourseCacao")));
+		Double prixBourse= bc.getCours(f).getValeur();
+		if (prixVendeur <= prixBourse){  
+			return prixVendeur;
+		}
+		else{
+			return prixBourse;
+		}
     }
 
 	/**
@@ -81,7 +127,7 @@ class ContratCadreAcheteur extends ContratCadreVendeur implements IAcheteurContr
 	 * mettre ce produit dans son stock.
 	 */
 	public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat){
-        super.stock.ajouterStock(this, p, quantiteEnTonnes, super.cryptogramme);
+        this.ajouterStock(this, p, quantiteEnTonnes, super.cryptogramme);
     }
 
 }
