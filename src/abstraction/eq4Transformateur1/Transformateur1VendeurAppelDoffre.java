@@ -25,8 +25,8 @@ public class Transformateur1VendeurAppelDoffre extends Transformateur1AcheteurBo
 
 	@Override
 	public OffreVente proposerVente(AppelDOffre offre) {
-		System.err.println(offre.toString());
-		double prix = 9000;
+		/*System.err.println(offre.toString());*/
+		double prix = 0;
 		if (stockChocoMarque.keySet().contains(offre.getProduit()) && offre.getQuantiteT() <= stockChocoMarque.get(offre.getProduit())) {
 			
             if (((ChocolatDeMarque) offre.getProduit()).getChocolat() == Chocolat.C_BQ) {
@@ -38,6 +38,11 @@ public class Transformateur1VendeurAppelDoffre extends Transformateur1AcheteurBo
 			} else if (((ChocolatDeMarque) offre.getProduit()).getChocolat() == Chocolat.C_HQ_BE) {
 				prix = prix_HQ_BE * pourcentageTransfo.get(Feve.F_HQ_BE).get(Chocolat.C_HQ_BE);
 			}
+            
+			if (prix == 0) {
+				return null;
+			} 
+
 			this.journalTransactions.ajouter("Je propose " + offre.getQuantiteT() + " tonnes de " + offre.getProduit() + " au cours de " + prix + " euros par tonne.");
 			return new OffreVente(offre, this, offre.getProduit(), prix);
 		} else {
