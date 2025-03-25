@@ -133,16 +133,17 @@ public void setPrix(ChocolatDeMarque choco) {
 
 
 	public double quantiteEnVenteTG(ChocolatDeMarque choco, int crypto){
-        if (crypto!=this.cryptogramme) {
+        if (crypto == this.cryptogramme) {
 			double capaciteDeVenteTG = this.quantiteEnVenteTotal() * ClientFinal.POURCENTAGE_MAX_EN_TG;
-			
+			System.out.println("capaciteDeVenteTG"+ capaciteDeVenteTG);
 
 			if(choco.getChocolat() == Chocolat.C_HQ_E){
-				return (0.3 * capaciteDeVenteTG);
+				
+				return ((0.3 * capaciteDeVenteTG)/nombreMarquesParType.get(Chocolat.C_HQ_E));
 			}
 
 			if(choco.getChocolat() == Chocolat.C_HQ_BE){
-				return (0.7 * capaciteDeVenteTG);
+				return ((0.7 * capaciteDeVenteTG)/nombreMarquesParType.get(Chocolat.C_HQ_BE));
 			}
 			
 			return 0.0;
