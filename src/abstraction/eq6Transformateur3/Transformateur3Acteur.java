@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import abstraction.eqXRomu.filiere.Banque;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
@@ -21,6 +22,9 @@ public class Transformateur3Acteur implements IActeur {
 	protected int cryptogramme;
 	protected int etape;
 	protected double coutStockage;
+
+	//Récupération des entitées utiles
+	protected Banque LaBanque;
 
 	protected Journal jdb;
 	protected Journal journalStock;
@@ -91,15 +95,13 @@ public class Transformateur3Acteur implements IActeur {
 	}
 	
 	public void initialiser() {
+		// Récupération des instances utiles
+		this.LaBanque = Filiere.LA_FILIERE.getBanque();
 		// Lister les fèves qui existent
 		this.lesFeves = new ArrayList<IProduit>();
 		for (Feve f : Feve.values()) {
 			this.lesFeves.add(f);
 		}
-
-		//Récupération des paramètres
-		this.coutStockage = 4*Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur();
-		
 		//Création du stock de fèves
 		stockFeves = new Transformateur3Stock(this, journalStock, "fèves", 300.0, lesFeves, dicoIndicateurFeves);
 	}
@@ -117,6 +119,7 @@ public class Transformateur3Acteur implements IActeur {
 	////////////////////////////////////////////////////////
 
 	public void next() {
+		this.jdb.ajouter("NEXT - TRANSFORMATEUR3ACTEUR");
 		etape = Filiere.LA_FILIERE.getEtape();
 		jdb.ajouter("Accteur Etape " + etape);
 	}

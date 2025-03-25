@@ -23,13 +23,14 @@ public class Transformateur3 extends Transformateur3ContratCadreAcheteur{
 
 	public void next(){
 		super.next();
+		super.jdb.ajouter("NEXT - TRANSFORMATEUR3");
 		//stockChoco.addToStock(super.lesChocolats.get(0), 500.0);
 		//stockChoco.addToStock(lesChocolats.get(1), 800.0);
 
-		//stockFeves.remove(lesFeves.get(0), 100.0);
+		//stockFeves.remove(abstraction.eqXRomu.produits.Feve.F_BQ, 100.0);
 
-		stockFeves.display();
-		stockChoco.display();
+		super.stockFeves.display();
+		super.stockChoco.display();
 	}
 
 	public List<Journal> getJournaux() {
