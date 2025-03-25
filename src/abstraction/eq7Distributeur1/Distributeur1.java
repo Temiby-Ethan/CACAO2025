@@ -103,7 +103,12 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre  {
 		//capaciteDeVente.set(3, 100.0);
 
         //journal.ajouter("Étape " + etape + " : Ajout de " + quantiteAjoutee + " t de " + produit + " en rayon.");
+		
+		// définition des capacités de ventes
 
+		for (int i=0; i<this.chocolats.size(); i++) {
+			this.capaciteDeVente.set(i, stocksChocolats.get(chocolats.get(i)).getValeur()/2);
+		}
 	}
 
 	public List<String> getMarquesChocolat() { // par Alexiho
