@@ -9,9 +9,12 @@ public class Stock {
     private double stockFBQ; // Stock de fève de bonne qualité
     private double stockFHQ; // Stock de fève de haute qualité
     Producteur1 producteur1;
+    basse_qualite basse_qualite;
+    moyenne_qualite moyenne_qualite;
+    haute_qualite haute_qualite;
 
     // Constructeur qui initialise les stocks à zéro
-    public Stock(Producteur1 producteur1) {
+    public Stock(Producteur1 producteur1, basse_qualite basse_qualite, moyenne_qualite moyenne_qualite, haute_qualite haute_qualite) {
         this.stockFMQ = basse_qualite.nombre_feves_total();
         this.stockFBQ = moyenne_qualite.nombre_feves_total();
         this.stockFHQ = haute_qualite.nombre_feves_total();
@@ -47,7 +50,7 @@ public class Stock {
     }
 
     public double getStockFBQ() {
-        return basse_qualite.nombre_feves_total();
+        return this.basse_qualite.nombre_feves_total();
     }
 
     public double getStockFHQ() {

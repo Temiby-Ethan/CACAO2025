@@ -35,7 +35,7 @@ public class moyenne_qualite extends plantation {
         return 750;
     }
 
-    public static double nombre_feves_total(){
+    public  double nombre_feves_total(){
         double nb = this.nombre_feves_total;
         return nb;
     }

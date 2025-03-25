@@ -31,7 +31,7 @@ public class basse_qualite extends plantation {
         return r.nextInt((max - min) + 1) + min;
     }
 
-    public static double nombre_feves_total(){
+    public double nombre_feves_total(){
         double nb = this.nombre_feves_total;
         return nb;
     }

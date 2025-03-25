@@ -36,7 +36,7 @@ public class haute_qualite extends plantation {
         return 500;
     }
 
-    public static double nombre_feves_total(){
+    public double nombre_feves_total(){
         Object nb = this.nombre_feves_total;
         return (double) nb;
 }
