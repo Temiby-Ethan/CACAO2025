@@ -32,9 +32,9 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 	public Distributeur1AcheteurContratCadre() {
 		super();
 
-		List<Double> predictionsVentesPourcentage = null;
-		List<Double> priceProduct = null;
-		List<Double> requiredQuantities = null;
+		List<Double> predictionsVentesPourcentage = new ArrayList<Double>();
+		List<Double> priceProduct = new ArrayList<Double>();
+		List<Double> requiredQuantities = new ArrayList<Double>();
 		int cryptogramme = -1;
 		int step = -1;
 		int product = -1;
@@ -207,4 +207,3 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 
 	}
 }
-

@@ -47,7 +47,7 @@ public class Distributeur1Stock extends Distributeur1Acteur{
 		if (etape > 3){
 			val1 = Filiere.LA_FILIERE.getVentes(choco, etape-27)+ Filiere.LA_FILIERE.getVentes(choco, etape-26) + Filiere.LA_FILIERE.getVentes(choco, etape-25) ;
 			val2 = Filiere.LA_FILIERE.getVentes(choco, etape-3)+ Filiere.LA_FILIERE.getVentes(choco, etape-2) + Filiere.LA_FILIERE.getVentes(choco, etape-1) ;
-			ancient_value_mid = (val1/val2)*Filiere.LA_FILIERE.getVentes(choco, etape-1);
+			ancient_value_mid = (val2/val1)*Filiere.LA_FILIERE.getVentes(choco, etape-1);
 		}
 		else{
 		ancient_value_mid = Filiere.LA_FILIERE.getVentes(choco, etape-24) ;

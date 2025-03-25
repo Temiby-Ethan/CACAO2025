@@ -20,6 +20,13 @@ public class Producteur3GestionTerrains extends Producteur3Acteur{
 
     protected int [] effectifs = new int [3];
     protected int feveProduites = 0;
+    protected double [] sechageHQ_B = new double [1];
+    protected double [] sechageHQ = new double [1];
+    protected double [] sechageMQ_E = new double [1];
+    protected double [] sechageMQ = new double [1];
+    protected double [] sechageBQ_E = new double [2];
+    protected double [] sechageBQ = new double [2];
+
 
     public Producteur3GestionTerrains(){
         super();
@@ -94,7 +101,7 @@ public class Producteur3GestionTerrains extends Producteur3Acteur{
 
             effectifs[2]+=400;
 
-            Parcelle p = new Parcelle(new QualiteHQ(true), annee);
+            Parcelle p = new Parcelle(new QualiteHQ(true,true), annee);
             vie.get(annee).add(p);
             recolte.get(mois).add(p);
         }
@@ -125,20 +132,43 @@ public class Producteur3GestionTerrains extends Producteur3Acteur{
     void recolte(){
         LinkedList<Parcelle> prete = new LinkedList<>();
         prete = recolte.get(Filiere.LA_FILIERE.getNumeroMois());
+
+        // Actualisation des sechages durant 2 nexts
+        sechageBQ_E[0] = sechageBQ_E[1];
+        sechageBQ[0] = sechageBQ[1];
+
         if(prete != null){
             for (Parcelle p : prete) {
                 if(p.qualite instanceof QualiteBQ){
                     int nbFeve = Filiere.random.nextInt(5)+23;
-                    feveProduites+=((16*nbFeve)*0.753)*p.qualite.densité;
+                    if(p.qualite.equitable){
+                        sechageBQ_E[1] += ((16*nbFeve)*0.753)*p.qualite.densité/1000000;
+                    }
+                    else{
+                        sechageBQ[1] += ((16*nbFeve)*0.753)*p.qualite.densité/1000000;
+                    }
                 }else if( p.qualite instanceof QualiteMQ){
                     int nbFeve = Filiere.random.nextInt(4)+25;
-                    feveProduites+=((15*nbFeve)*0.750)*p.qualite.densité;
+                    if(p.qualite.equitable){
+                        sechageMQ_E[0] += ((15*nbFeve)*0.750)*p.qualite.densité/1000000;
+                    }
+                    else {
+                        sechageMQ[0] += ((15*nbFeve)*0.750)*p.qualite.densité/1000000;
+                    }
+                    
                 }else if(p.qualite instanceof QualiteHQ){
                     int nbFeve = Filiere.random.nextInt(3)+29;
-                    feveProduites+=((10*nbFeve)*0.765)*p.qualite.densité;
-                }   
+                    QualiteHQ qualite = (QualiteHQ) p.qualite;
+                    if (qualite.bio){
+                        sechageHQ_B[0] += ((10*nbFeve)*0.765)*p.qualite.densité/1000000;
+                    }
+                    else{
+                        sechageHQ[0] += ((10*nbFeve)*0.765)*p.qualite.densité/1000000;
+                    }   
             }
-        }
+            
+            }
+        } 
     }
 
 
@@ -151,6 +181,21 @@ public class Producteur3GestionTerrains extends Producteur3Acteur{
         } 
     }
 
+    // Paul
+    void actualiserTerrain(){
+        if (Filiere.LA_FILIERE.getNumeroMois() == 1 /*&& Filiere.LA_FILIERE.getJour() == 1*/){
+            LinkedList<Parcelle> aReplanter = vie.get(39);
+            // On fait vieillir toutes les parcelles d'un an
+            for (int i = 38; i >= 0; i--){
+                vie.put(i+1,vie.get(i));
+            }
+            // On replante toutes les parcelles de 40 ans
+            for(Parcelle t : aReplanter){
+                deficteTerrain.add(t.qualite.replanter);
+                vie.get(0).add(t);
+            }
+        }
+    }
 
 
     void cleanDeficite(){
@@ -164,13 +209,5 @@ public class Producteur3GestionTerrains extends Producteur3Acteur{
         cleanDeficite();
     }
 
-    
-
-
-
-
-
-
-
-    
+     
 }
