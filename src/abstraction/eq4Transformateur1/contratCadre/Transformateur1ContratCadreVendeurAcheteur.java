@@ -10,7 +10,7 @@ import java.util.LinkedList;
 
 public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1ContratCadreVendeur implements IAcheteurContratCadre {
     
-    protected List<ExemplaireContratCadre> mesContratEnTantQuAcheteur;
+    
     protected double qttInitialementVoulue;	
 	protected double prixInitialementVoulu;
 	protected double epsilon;

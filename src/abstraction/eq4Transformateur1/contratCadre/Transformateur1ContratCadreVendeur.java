@@ -17,7 +17,7 @@ import abstraction.eqXRomu.contratsCadres.*;
 
 public class Transformateur1ContratCadreVendeur extends TransformateurContratCadre implements IVendeurContratCadre {
 
-	protected List<ExemplaireContratCadre> mesContratEnTantQueVendeur;//Contient tous les contrats de vente
+	
 	protected double partInitialementVoulue;	
 	protected double prixInitialementVoulu;
 	protected double epsilon;
