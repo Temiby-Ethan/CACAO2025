@@ -19,6 +19,7 @@ import abstraction.eqXRomu.general.*;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
+import java.util.concurrent.RejectedExecutionException;
 
 public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
 	public static final int MAX_PRIX_NEGO = 14 ; // Les negociations sur le prix s'arretent apres au plus MAX_PRIX_NEGO propositions de prix
@@ -125,6 +126,9 @@ public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
 		if (echeancier==null) {
 			throw new IllegalArgumentException(" appel de demandeAcheteur(...) de SuperViseurVentesContratCadre avec null pour echeancier");
 		}
+		if (!echeancier.echeancierAcceptable()) {
+			throw new  IllegalArgumentException(" appel de demandeAcheteur(...) par "+acheteur.getNom()+" en fournissant un echeancier ne respectant pas les conditions du document des distributeurs : "+echeancier);
+		}
 		if (acheteur==vendeur) {
 			throw new IllegalArgumentException(" appel de demandeAcheteur(...) de SuperViseurVentesContratCadre avec vendeur==acheteur. On ne peut pas faire un contrat cadre avec soi meme");
 		}
@@ -185,6 +189,9 @@ public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
 		if (echeancier==null) {
 			throw new IllegalArgumentException(" appel de demandeVendeur(...) de SuperViseurVentesContratCadre avec null pour echeancier");
 		}
+		if (!echeancier.echeancierAcceptable()) {
+			throw new  IllegalArgumentException(" appel de demandeVendeur(...) par "+vendeur.getNom()+" en fournissant un echeancier ne respectant pas les conditions du document des distributeurs : "+echeancier);
+		}
 		if (echeancier.getQuantiteTotale()<QUANTITE_MIN_ECHEANCIER) {
 			throw new IllegalArgumentException(" appel de demandeVendeur(...) de SuperViseurVentesContratCadre avec un echeancier d'un volume total de moins de "+QUANTITE_MIN_ECHEANCIER+" T");
 		}
@@ -223,10 +230,14 @@ public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
 		Echeancier contrePropositionA;
 		journal.ajouter(Journal.texteColore(vendeur, "==>"+vendeur.getNom())+" lance le contrat #"+contrat.getNumero()+" de "+contrat.getQuantiteTotale()+" T de "+contrat.getProduit()+" a "+Journal.texteColore(acheteur, acheteur.getNom()));
 		contrePropositionA=acheteur.contrePropositionDeLAcheteur(new ExemplaireContratCadre(contrat));
+
 		if (contrePropositionA==null) {
 			journal.ajouter("   "+Journal.texteColore(acheteur, acheteur.getNom()+" retourne null pour echeancier : arret des negociations"));
 			journal.ajouter("contrat #"+contrat.getNumero()+Journal.texteColore(Color.RED,  Color.white, " ANNULE "));
 			return null;// arret des negociations
+		}
+		if (!contrePropositionA.echeancierAcceptable()) {
+			throw new SecurityException(" appel de contrePropositionDeLAcheteur(...) sur "+acheteur.getNom()+" retourne un echeancier qui ne respecte pas les conditions du document des distributeurs : "+contrePropositionA);
 		}
 		if (contrePropositionA.getQuantiteTotale()<SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER) {
 			journal.ajouter("   "+Journal.texteColore(acheteur, acheteur.getNom()+" retourne un echeancier dont la quantite totale est inferieure a "+SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER)+" Arret des negos");
@@ -254,7 +265,10 @@ public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
 				journal.ajouter("   "+Journal.texteColore(vendeur, vendeur.getNom()+" retourne null pour echeancier : arret des negociations"));
 				journal.ajouter("contrat #"+contrat.getNumero()+Journal.texteColore(Color.RED,  Color.white, " ANNULE "));
 				return null;// arret des negociations
-			} 
+			}
+			if (!contrePropositionV.echeancierAcceptable()) {
+				throw new SecurityException(" appel de contrePropositionDuVendeur(...) sur "+vendeur.getNom()+" retourne un echeancier qui ne respecte pas les conditions du document des distributeurs : "+contrePropositionV);
+			}
 			contrat.ajouterEcheancier(contrePropositionV);
 			if (!contrat.accordSurEcheancier()) {
 				journal.ajouter("   "+Journal.texteColore(vendeur, vendeur.getNom())+" propose un echeancier different de "+Journal.doubleSur(contrat.getQuantiteTotale(),4)+" T "+contrat.getEcheancier());
@@ -264,6 +278,9 @@ public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
 					journal.ajouter("contrat #"+contrat.getNumero()+Journal.texteColore(Color.RED,  Color.white, " ANNULE "));
 					return null;// arret des negociations
 				}
+				if (!contrePropositionA.echeancierAcceptable()) {
+					throw new SecurityException(" appel de contrePropositionDeLAcheteur(...) sur "+acheteur.getNom()+" retourne un echeancier qui ne respecte pas les conditions du document des distributeurs : "+contrePropositionA);
+				}				
 				contrat.ajouterEcheancier(contrePropositionA);
 				if (!contrat.accordSurEcheancier()) {
 					journal.ajouter("   "+Journal.texteColore(acheteur, acheteur.getNom())+" propose un echeancier different de "+Journal.doubleSur(contrat.getQuantiteTotale(),4)+" T "+contrat.getEcheancier());
