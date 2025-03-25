@@ -2,6 +2,8 @@
 package abstraction.eq6Transformateur3;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Comparator;
+import java.util.Collections;
 
 import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.general.Variable;
@@ -10,6 +12,7 @@ import abstraction.eqXRomu.filiere.IActeur;
 
 public class Transformateur3Stock {
     private double stockTotal;
+    private List<IProduit> listProduitSorted;
     private HashMap<IProduit, Double> stockProduit; 
     private HashMap<IProduit, Variable> dicoIndicateur;
     private Journal journalStock;
@@ -29,7 +32,13 @@ public class Transformateur3Stock {
         
         // Initialise les quantitée pour chaque produit
         this.stockTotal = 0.0;
+
+        //Trie des fèves par ordre décroissant de qualité
+        Collections.sort(listProduit, new SortbyQuality());
+        this.listProduitSorted = listProduit;
+        
         for (IProduit prod : listProduit) {
+            journalStock.ajouter(prod.toString());
 			stockProduit.put(prod, initial_value);
             dicoIndicateur.get(prod).setValeur(monActeur, initial_value);
 		}
@@ -44,6 +53,10 @@ public class Transformateur3Stock {
         else{
             return 0.0;
         }
+    }
+
+    public boolean contains(IProduit prod){
+        return stockProduit.containsKey(prod);
     }
 
     public void addToStock(IProduit prod, double quantity){
@@ -99,14 +112,32 @@ public class Transformateur3Stock {
             journalStock.ajouter("STOCK DE CHOCOLAT (en t)");
         }
 		
-		for (IProduit prod : this.stockProduit.keySet()) {
+		for (IProduit prod : this.listProduitSorted) {
 			int nbspace = 20-prod.toString().length();
 			String space = "";
 			for(int i=0;i<nbspace;i++){
 				space=space+".";
 			}
-			this.journalStock.ajouter(prod+space+" : "+this.stockProduit.get(prod));
+			this.journalStock.ajouter(prod+space+" : "+Math.round(this.stockProduit.get(prod)));
 		}
 		journalStock.ajouter("");
 	}
+
+    protected List<IProduit> getListProduitSorted(){
+        return this.listProduitSorted;
+    }
 }
+
+class SortbyQuality implements Comparator<IProduit> 
+{ 
+    // Used for sorting in ascending order of 
+    // roll number 
+    public int compare(IProduit a, IProduit b) 
+    { 
+        if(a.greaterThan(b)){
+            return -1;
+        }else{
+            return 1;
+        }
+    } 
+} 
