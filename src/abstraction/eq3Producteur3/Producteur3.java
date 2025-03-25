@@ -28,6 +28,7 @@ public class Producteur3 extends Producteur3Vente  {
 		vieillirStock();
 		recolte();
 		calculTotalStock();
+		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Coûts Totaux sur 1 Step", coutsTotaux());
 		getCump(Feve.F_HQ_BE);
 		getCump(Feve.F_HQ_E);
 		getCump(Feve.F_MQ_E);
