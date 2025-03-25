@@ -66,7 +66,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 		for (int i=0; i<this.chocolats.size(); i++) {
 			this.prix.add(10.0);
 			this.capaciteDeVente.add(0.0);
-			//this.stocksChocolats.put(chocolats.get(i), new Variable(this.getNom()+"Stock"+chocolats.get(i).getNom(), this, 1000.0));
+			this.stocksChocolats.put(chocolats.get(i), new Variable(this.getNom()+"Stock"+chocolats.get(i).getNom(), this, 1000.0));
 		}
     }
 
