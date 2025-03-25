@@ -45,6 +45,10 @@ public class Echeancier {
 		if (quantiteParStep<0.0) {
 			throw new IllegalArgumentException("Le constructeur d'Echeancier est appele avec quantiteParStep<0.0");
 		}
+		double total = nbStep*quantiteParStep;
+		if (total<100.0 || quantiteParStep< (total/(10*nbStep))) {
+			throw new IllegalArgumentException("Un Echeancier doit avoir un total d'au moins 100T et chaque quantite doit etre >= total/(10*duree) \n(cf. document transformateur)");
+		}
 		for (int i=0; i<nbStep; i++) {
 			this.ajouter(quantiteParStep);
 		}
@@ -64,6 +68,9 @@ public class Echeancier {
 				throw new IllegalArgumentException("Le constructeur(Echeancier((stepDebut, quantites) est appele avec une liste comportant une/des valeurs negatives : "+quantites);
 			}
 			total+=d;
+		}
+		if (total<100.0) {
+			throw new IllegalArgumentException("Un Echeancier doit avoir un total d'au moins 100T  \n(cf. document transformateur)");
 		}
 		for (Double d : quantites) {
 			if (d<total/(10*quantites.size())) {
@@ -119,6 +126,22 @@ public class Echeancier {
 		} else {
 			return this.quantites.get(step-this.getStepDebut());
 		}
+	}
+	/**
+ 	* @return Retourne true si l'echeancier respecte les conditions du document des distributeurs
+ 	*/
+	public boolean echeancierAcceptable() {
+		double total = this.getQuantiteTotale();
+		if (total<100.0) {
+			return false;
+		}
+
+		for (Double d : quantites) {
+			if (d<total/(10*quantites.size())) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**
@@ -180,6 +203,9 @@ public class Echeancier {
 	 * Si step<stepDebut ou quantite<0.0, leve une IllegalArgumentException.
 	 * Sinon, fixe la quantite a quantite pour l'etape step (la methode peut etre amenee
 	 * a ajouter des echeances de quantite 0.0 si l'echeancier s'achevait avant step).
+	 * ATTENTION : l'usage de cette methode peut aboutir a un echeancier ne respectant pas
+	 * les conditions du document des distributeur : il est de votre responsabilite de veiller
+	 * au respect de ces conditions.
 	 * @param step, step>=stepDebut
 	 * @param quantite, quantite>=0.0
 	 */
