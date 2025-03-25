@@ -21,11 +21,17 @@ public class Producteur1Acteur implements IActeur {
     private Variable stockFBQ; // Indicateur du stock de fève basse qualité
     private Variable stockFHQ; // Indicateur du stock de fève haute qualité
     protected Stock stock;
+    protected basse_qualite basse_qualite;
+    protected moyenne_qualite moyenne_qualite;  
+    protected haute_qualite haute_qualite;
 
     public Producteur1Acteur() {
         // Initialisation du journal et des stocks
         this.journal = new Journal(this.getNom() + " Journal", this);
-        this.stock = new Stock((Producteur1) this, null, null, null); // Initialisation du stock
+        this.basse_qualite = new basse_qualite((Producteur1)this);
+        this.moyenne_qualite = new moyenne_qualite((Producteur1)this);
+        this.haute_qualite = new haute_qualite((Producteur1) this); // Initialisation de haute_qualite
+        this.stock = new Stock((Producteur1) this, basse_qualite, moyenne_qualite, haute_qualite); // Initialisation du stock
 
         // Initialisation des indicateurs avec les valeurs des stocks
         this.stockTotal = new Variable("Stock Total", this, stock.getStockTotal());
