@@ -4,7 +4,7 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.produits.Feve;
 
 //Zoé
-public class Producteur3 extends Producteur3GestionDesCoûts  {
+public class Producteur3 extends Producteur3Vente  {
 
 	
 	

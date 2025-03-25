@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 // Paul
-public class Producteur3Vente extends Producteur3Stock implements IVendeurBourse, IVendeurContratCadre{
+public class Producteur3Vente extends Producteur3GestionDesCoûts implements IVendeurBourse, IVendeurContratCadre{
     protected List<ExemplaireContratCadre> mesContratCadres = new ArrayList<ExemplaireContratCadre>();
 
    
@@ -109,6 +109,7 @@ public class Producteur3Vente extends Producteur3Stock implements IVendeurBourse
         Gamme gamme = feve.getGamme();
         BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
         double cours = bourse.getCours(Feve.get(gamme, false, false)).getValeur();
+        double Cump = getCump(feve);
         return cours*1.5;
     }
 

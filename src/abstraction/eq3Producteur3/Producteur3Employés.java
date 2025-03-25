@@ -5,7 +5,7 @@ import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.filiere.Filiere;
 
-public class Producteur3Employés extends Producteur3Vente {
+public class Producteur3Employés extends Producteur3Stock {
     
     public Producteur3Employés() {
         super();
