@@ -38,6 +38,7 @@ public class Transformateur3Stock {
         this.listProduitSorted = listProduit;
         
         for (IProduit prod : listProduit) {
+            journalStock.ajouter(prod.toString());
 			stockProduit.put(prod, initial_value);
             dicoIndicateur.get(prod).setValeur(monActeur, initial_value);
 		}
