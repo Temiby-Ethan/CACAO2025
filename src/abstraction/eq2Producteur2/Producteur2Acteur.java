@@ -90,7 +90,7 @@ public class Producteur2Acteur implements IActeur {
 	// votre cryptogramme personnel, indispensable pour les
 	// transactions.
 	public void setCryptogramme(Integer crypto) {
-		this.cryptogramme = crypto;System.out.println(cryptogramme);
+		this.cryptogramme = crypto; //System.out.println(cryptogramme);
 	}
 
 	// Appelee lorsqu'un acteur fait faillite (potentiellement vous)
