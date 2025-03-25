@@ -27,7 +27,7 @@ public class Distributeur3Distributeur extends Distributeur3Acteur implements ID
         this.stockTotal = new VariablePrivee("équipe 9 stock total",this);
         this.stockBQ = new VariablePrivee("équipe 9 stock BQ",this);
         this.stockBQ_E = new VariablePrivee("équipe 9 stock BQ_E",this);
-        System.out.println("crypto constructeur : "+this.cryptogramme);
+        //System.out.println("crypto constructeur : "+this.cryptogramme);
     }
 
     @Override
