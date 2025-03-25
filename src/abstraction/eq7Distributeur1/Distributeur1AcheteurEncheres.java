@@ -42,7 +42,7 @@ public class Distributeur1AcheteurEncheres extends Distributeur1AcheteurContratC
 		this.successedSell = successedSell;
 	}
 
-	    public int getInt(Chocolat product){
+	public int getInt(Chocolat product){
         int idProduct = 0;
         switch(product.getGamme()){
             case BQ : idProduct=0;
@@ -55,6 +55,10 @@ public class Distributeur1AcheteurEncheres extends Distributeur1AcheteurContratC
         if (product.isEquitable()){
             idProduct++;
         }
+		if(idProduct == 6)
+		{
+			return 5;
+		}
         return(idProduct);
     }
 
