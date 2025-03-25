@@ -56,7 +56,7 @@ public class Distributeur3Distributeur extends Distributeur3Acteur implements ID
 
     @Override
     public double prix(ChocolatDeMarque choco) {
-        System.out.println("demande de prix de "+choco.getNom());
+        // System.out.println("demande de prix de "+choco.getNom());
         if(this.stockChocoMarque.containsKey(choco)) {
             return prix.get(choco);
         }else{
