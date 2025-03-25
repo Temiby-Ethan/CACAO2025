@@ -1,6 +1,6 @@
 /**
-	 * @author tidzzz 
-	 */
+ * @author tidzzz 
+ */
 
 package abstraction.eq8Distributeur2;
 
@@ -14,7 +14,6 @@ import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import java.util.LinkedList;
 import java.util.List;
 
-import abstraction.eqXRomu.acteurs.Romu;
 import abstraction.eqXRomu.clients.ClientFinal;
 
 import abstraction.eqXRomu.general.Journal;
@@ -33,7 +32,7 @@ public class Distributeur2Vendeur extends Distributeur2Acteur implements IDistri
 
 	protected HashMap<String,Double> Coefficient;
 	protected LinkedList<String> equipe;
-	protected HashMap<ChocolatDeMarque,Integer> chocoVendu;
+	
 	protected HashMap<ChocolatDeMarque,Integer> aVendu;
 
 
@@ -42,12 +41,29 @@ public class Distributeur2Vendeur extends Distributeur2Acteur implements IDistri
 		this.capaciteDeVente=120000.0;  //capacite de vente par step
 		this.ListPrix = new HashMap<ChocolatDeMarque, Double>();
 		this.marques = new String[chocolats.size()];
-		this.journalVente= new Journal (this.getNom() + " journal des ventes", this);
+		this.journalVente= new Journal ("journal des ventes", this);
 		
 		
 		this.equipe = new LinkedList<String>();
-		this.chocoVendu = new HashMap<ChocolatDeMarque,Integer>();
+		
 		this.aVendu = new HashMap<ChocolatDeMarque,Integer>();
+	}
+
+	public void initialiser () {
+		super.initialiser();
+		for (ChocolatDeMarque choco : chocolats) {
+			this.setPrix(choco);
+		}
+		
+		
+		this.equipe.add("EQ4");
+		this.equipe.add("EQ5");
+		this.equipe.add("EQ6");
+		
+		
+		for (ChocolatDeMarque choc : chocolats) {
+			this.aVendu.putIfAbsent(choc, 0);
+		}
 	}
 
 
@@ -72,23 +88,15 @@ public void setPrix(ChocolatDeMarque choco) {
 
 
 
-    public double prix(ChocolatDeMarque choco){
-        if (ListPrix.containsKey(choco)) {
-			return ListPrix.get(choco);
+    public double prix(ChocolatDeMarque cm){
+        if (ListPrix.containsKey(cm)) {
+			return ListPrix.get(cm);
 		} 
 		else { 
 			return 0;
 		}
     }
 
-    public double quantiteEnVenteTG(ChocolatDeMarque choco, int crypto){
-        if (crypto!=this.cryptogramme
-			) {
-			
-			return 0.0;
-		} 
-		else {return 0.0;}
-    }
     
     public double quantiteEnVente(ChocolatDeMarque choco, int crypto){
         if (crypto!=this.cryptogramme || !chocolats.contains(choco)) {
@@ -115,26 +123,66 @@ public void setPrix(ChocolatDeMarque choco) {
 		return 0.0;
 	}
 
+	public double quantiteEnVenteTotal(){
+		double qte = 0;
+
+		for (ChocolatDeMarque cm :this.chocolats){
+			qte = qte + this.quantiteEnVente(cm, cryptogramme);
+		}
+		return qte;
+	}
+
+
+	public double quantiteEnVenteTG(ChocolatDeMarque choco, int crypto){
+        if (crypto!=this.cryptogramme) {
+			double capaciteDeVenteTG = this.quantiteEnVenteTotal() * ClientFinal.POURCENTAGE_MAX_EN_TG;
+			
+
+			if(choco.getChocolat() == Chocolat.C_HQ_E){
+				return (0.3 * capaciteDeVenteTG);
+			}
+
+			if(choco.getChocolat() == Chocolat.C_HQ_BE){
+				return (0.7 * capaciteDeVenteTG);
+			}
+			
+			return 0.0;
+		} 
+		else {return 0.0;}
+    }
+
+	public double quantiteEnVenteTotalTG(){
+		double qte = 0;
+
+		for (ChocolatDeMarque cm :this.chocolats){
+			qte = qte + this.quantiteEnVenteTG(cm, cryptogramme);
+		}
+		return qte;
+	}
+
+
+
     public void vendre(ClientFinal client, ChocolatDeMarque choco, double quantite, double montant, int crypto) {
-		int pos= (chocolats.indexOf(choco));
+		int pos = (chocolats.indexOf(choco));
 		if (pos>=0) {
 			stock_Choco.put(choco, this.getQuantiteEnStock(choco,crypto) - quantite) ;
 			stockTotal.retirer(this, quantite, cryptogramme);
 			this.aVendu.replace(choco, 1);
 		}
-		journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE,client.getNom()+" a acheté "+quantite+"kg de "+choco+" pour "+montant+" d'euros ");
+		journalVente.ajouter(client.getNom()+" a acheté "+quantite+"kg de "+choco+" pour "+montant+" d'euros ");
 
 	}
 
 
     public void notificationRayonVide(ChocolatDeMarque choco, int crypto){
-        journalVente.ajouter(" Aie... j'aurais du mettre davantage de " + choco.getNom() + " en vente");
+        journalVente.ajouter("J'aurais du mettre davantage de " + choco.getNom() + " en vente");
     }
 
 
 	public List<Journal> getJournaux() {
+		
 		List<Journal> jour = super.getJournaux();
-		jour.add(journalVente);
+		jour.add(this.journalVente);
 		return jour;
 	}
 
