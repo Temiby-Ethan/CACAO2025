@@ -28,15 +28,15 @@ public class Transformateur1VendeurAppelDoffre extends Transformateur1AcheteurBo
 		System.err.println(offre.toString());
 		double prix = 9000;
 		if (stockChocoMarque.keySet().contains(offre.getProduit()) && offre.getQuantiteT() <= stockChocoMarque.get(offre.getProduit())) {
-			double T = offre.getQuantiteT();
+			
             if (((ChocolatDeMarque) offre.getProduit()).getChocolat() == Chocolat.C_BQ) {
-				prix = prix_BQ * T * pourcentageTransfo.get(Feve.F_BQ).get(Chocolat.C_BQ);
+				prix = prix_BQ * pourcentageTransfo.get(Feve.F_BQ).get(Chocolat.C_BQ);
 			} else if (((ChocolatDeMarque) offre.getProduit()).getChocolat() == Chocolat.C_BQ_E) {
-				prix = prix_BQ_E * T * pourcentageTransfo.get(Feve.F_BQ_E).get(Chocolat.C_BQ_E);
+				prix = prix_BQ_E * pourcentageTransfo.get(Feve.F_BQ_E).get(Chocolat.C_BQ_E);
 			} else if (((ChocolatDeMarque) offre.getProduit()).getChocolat() == Chocolat.C_MQ_E) {
-				prix = prix_MQ_E * T * pourcentageTransfo.get(Feve.F_MQ_E).get(Chocolat.C_MQ_E);
+				prix = prix_MQ_E * pourcentageTransfo.get(Feve.F_MQ_E).get(Chocolat.C_MQ_E);
 			} else if (((ChocolatDeMarque) offre.getProduit()).getChocolat() == Chocolat.C_HQ_BE) {
-				prix = prix_HQ_BE * T * pourcentageTransfo.get(Feve.F_HQ_BE).get(Chocolat.C_HQ_BE);
+				prix = prix_HQ_BE * pourcentageTransfo.get(Feve.F_HQ_BE).get(Chocolat.C_HQ_BE);
 			}
 			this.journalTransactions.ajouter("Je propose " + offre.getQuantiteT() + " tonnes de " + offre.getProduit() + " au cours de " + prix + " euros par tonne.");
 			return new OffreVente(offre, this, offre.getProduit(), prix);
@@ -47,7 +47,7 @@ public class Transformateur1VendeurAppelDoffre extends Transformateur1AcheteurBo
 
 	@Override
 	public void notifierVenteAO(OffreVente propositionRetenue) {
-		System.out.println("Votre proposition de vente a été retenue");
+		/*System.out.println("Votre proposition de vente a été retenue");*/
 		this.journalTransactions.ajouter("J'ai vendu " + propositionRetenue.getQuantiteT() + " tonnes de " + propositionRetenue.getProduit() + " au cours de " + propositionRetenue.getPrixT() + " euros par tonne.");
 	
 		/* Mettre à jour les autres variables */
@@ -61,7 +61,7 @@ public class Transformateur1VendeurAppelDoffre extends Transformateur1AcheteurBo
 
 	@Override
 	public void notifierPropositionNonRetenueAO(OffreVente propositionRefusee) {
-		System.out.println("Votre proposition de vente n'a pas été retenue");
+		/*System.out.println("Votre proposition de vente n'a pas été retenue");*/
 		this.journalTransactions.ajouter("J'ai proposé " + propositionRefusee.getQuantiteT() + " tonnes de " + propositionRefusee.getProduit() + " au cours de " + propositionRefusee.getPrixT() + " euros par tonne mais elle n'a pas été retenue.");
 		if (((ChocolatDeMarque) propositionRefusee.getProduit()).getChocolat() == Chocolat.C_BQ) {
 			prix_BQ -= 50;
