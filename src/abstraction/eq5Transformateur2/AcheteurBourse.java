@@ -19,7 +19,7 @@ public class AcheteurBourse extends ContratCadreAcheteur implements IAcheteurBou
     }
 
     
-    private int cryptogramme;
+    protected int cryptogramme;
 
     public void notificationAchat(Feve f, double quantiteEnT, double coursEnEuroParT) {
         super.journal.ajouter("achat effectues");
@@ -34,6 +34,11 @@ public class AcheteurBourse extends ContratCadreAcheteur implements IAcheteurBou
     public void notificationBlackList(int dureeEnStep) {
         super.journal.ajouter("Blacklist de la bourse pour " + dureeEnStep + " steps");
     }
+
+
+public int getCryptogramme() {
+    return this.cryptogramme;
+}
 }
     
 
