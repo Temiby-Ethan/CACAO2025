@@ -7,9 +7,9 @@ import abstraction.eqXRomu.produits.Feve;
 
 public class ProcessChoco extends FraisAditionnel {
 
-    private double proportionFeve;
-    private double coutIngredientSecondaire;
-    private double coutAditionnelParTablette;
+    protected double proportionFeve;
+    protected double coutIngredientSecondaire;
+    protected double coutAditionnelParTablette;
 
 
     public ProcessChoco(){
@@ -18,6 +18,10 @@ public class ProcessChoco extends FraisAditionnel {
         this.coutIngredientSecondaire=450; // euro par tonne de chocolat produite
         this.coutAditionnelParTablette=0.30; // euro par tablette produite
 
+    }
+
+    protected double getcoutAditionnelParTablette(){
+        return this.coutAditionnelParTablette;
     }
     
     public void fabriquerChocolat(Chocolat chocolat,Feve feve, double quantite) { //quantite de chocolat en tonne voulu

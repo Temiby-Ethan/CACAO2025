@@ -64,7 +64,7 @@ class ContratCadreAcheteur extends ContratCadreVendeur implements IAcheteurContr
 		int stepDebut = e.getStepDebut();
 		double quantite = e.getQuantite(stepDebut);
 		Feve f = (Feve) contrat.getProduit();
-		double quantiteVoulue = this.getProductionTotale();
+		double quantiteVoulue = this.getProductionTotale()*getProportion(f);
 
 		if (quantite > (quantiteVoulue)*1.1){
 			e.ajouter(quantiteVoulue*1.1 -quantite);
@@ -128,6 +128,7 @@ class ContratCadreAcheteur extends ContratCadreVendeur implements IAcheteurContr
 	 */
 	public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat){
         this.ajouterStock(this, p, quantiteEnTonnes, super.cryptogramme);
+		this.journal.ajouter("ajout de " + quantiteEnTonnes + " tonnes de " + p + " à notre stock grâce à un contrat cadre");	
     }
 
 }
