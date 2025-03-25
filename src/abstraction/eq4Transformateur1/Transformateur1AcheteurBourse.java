@@ -35,7 +35,7 @@ public class Transformateur1AcheteurBourse extends Transformateur1ContratCadreVe
 
 		this.journalTransactions.ajouter("J'ai achete " + quantiteEnT + " tonnes de " + f + " au cours de " + coursEnEuroParT + " euros par tonne.");
 		
-		if (this.stockFeves.get(f) == null){
+		if (this.stockFeves == null || this.stockFeves.get(f) == null){
 			this.stockFeves.put(f, quantiteEnT);
 		}
 		else{

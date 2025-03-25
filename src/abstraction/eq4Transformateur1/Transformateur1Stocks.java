@@ -42,6 +42,8 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 		this.qttEntrantesFeve = new HashMap<Feve, Double>();
 		this.prixTFeveStockee = new HashMap<Feve, Double>();
 		this.prixTChocoBase = new HashMap<Chocolat, Double>();
+
+		this.stockChocoMarque=new HashMap<ChocolatDeMarque,Double>();
 	}
 	
 	public void initialiser() {
@@ -64,21 +66,22 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 		this.prixTChocoBase.put(Chocolat.C_HQ_BE, 0.);
 		this.prixTChocoBase.put(Chocolat.C_MQ_E, 0.);
 		
+		//initialisation des stocks de fèves à 2000T
 		for (Feve f : this.lesFeves) {
 			this.stockFeves.put(f, 20000.0);
 			this.totalStocksFeves.ajouter(this, 20000.0, this.cryptogramme);
 			this.journal.ajouter("ajout de 20000 de "+f+" au stock de feves --> total="+this.totalStocksFeves.getValeur(this.cryptogramme));
 		}
 		
+		//Initialisation des stocks de chocolat à 0
 		for (Chocolat c : Chocolat.values()) {
 			this.stockChoco.put(c, 0.0);
 			this.totalStocksChoco.ajouter(this, 0.0, this.cryptogramme);
 			this.journal.ajouter("Initialisation de 0 de "+c+" au stock de chocolat --> total="+this.totalStocksChoco.getValeur(this.cryptogramme));
 		}
 
-		this.stockChocoMarque=new HashMap<ChocolatDeMarque,Double>();
-		this.pourcentageTransfo = new HashMap<Feve, HashMap<Chocolat, Double>>();
 
+		//Initialisation du stock de chocolat de marque
 
 		//Initialisation des pourcentage de conversion fèves vers chocolat
 		this.pourcentageTransfo.put(Feve.F_HQ_BE, new HashMap<Chocolat, Double>());
@@ -99,6 +102,8 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 
 		this.journalStock.ajouter(Romu.COLOR_LLGRAY, Color.PINK, "Stock initial chocolat de marque : ");
 		
+
+		//Initialisation du stock des chocolats de marque à 40000T 
 		for (Feve f : Feve.values()) {
 			if (this.pourcentageTransfo.keySet().contains(f)) {
 				for (Chocolat c : this.pourcentageTransfo.get(f).keySet()) {
@@ -108,6 +113,9 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 
 					this.chocolatsLimDt.add(cm);
 					this.stockChocoMarque.put(cm, 40000.0);
+					this.totalStocksChocoMarque.ajouter(this,40000, this.cryptogramme);
+					this.totalStocksChoco.ajouter(this, 40000, this.cryptogramme);
+
 					this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN," stock("+cm+")->"+this.stockChocoMarque.get(cm));
 				}
 			}
@@ -161,14 +169,14 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 							prixTChocoBase.put(c, nouveauPrix);
 						}
 
-						//Conversion des chocolat
+						//Ajout des chocolats produits au stock
 						this.stockChocoMarque.put(cm, scm+PourcentageMarque*nouveauStock);
 
 						this.totalStocksChoco.ajouter(this, nouveauStock, this.cryptogramme);
 						this.totalStocksChocoMarque.ajouter(this, PourcentageMarque*nouveauStock, this.cryptogramme);
 						this.totalStocksChocoNonMarquee.ajouter(this, (1-PourcentageMarque)*nouveauStock, this.cryptogramme);
 
-
+						this.stockChoco.put(c, stockChoco.get(c) + nouveauStock);
 						
 						//Notification dans le journal
 						this.journal.ajouter(Romu.COLOR_LLGRAY, Color.PINK, "Transfo de "+(transfo<10?" "+transfo:transfo)+" T de "+f+" en "+Journal.doubleSur(transfo*this.pourcentageTransfo.get(f).get(c),3,2)+" T de "+c);
