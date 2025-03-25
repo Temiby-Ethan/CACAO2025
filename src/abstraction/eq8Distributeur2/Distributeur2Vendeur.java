@@ -41,7 +41,7 @@ public class Distributeur2Vendeur extends Distributeur2Acteur implements IDistri
 		this.capaciteDeVente=120000.0;  //capacite de vente par step
 		this.ListPrix = new HashMap<ChocolatDeMarque, Double>();
 		this.marques = new String[chocolats.size()];
-		this.journalVente= new Journal (this.getNom() + " journal des ventes", this);
+		this.journalVente= new Journal ("journal des ventes", this);
 		
 		
 		this.equipe = new LinkedList<String>();
@@ -175,13 +175,14 @@ public void setPrix(ChocolatDeMarque choco) {
 
 
     public void notificationRayonVide(ChocolatDeMarque choco, int crypto){
-        journalVente.ajouter(" Aie... j'aurais du mettre davantage de " + choco.getNom() + " en vente");
+        journalVente.ajouter("J'aurais du mettre davantage de " + choco.getNom() + " en vente");
     }
 
 
 	public List<Journal> getJournaux() {
+		
 		List<Journal> jour = super.getJournaux();
-		jour.add(journalVente);
+		jour.add(this.journalVente);
 		return jour;
 	}
 

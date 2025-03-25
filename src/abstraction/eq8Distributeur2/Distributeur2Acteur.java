@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import abstraction.eqXRomu.acteurs.Romu;
+
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
@@ -20,7 +20,7 @@ public class Distributeur2Acteur implements IActeur {
 	
 
 	//stockTotal et journal par Tidiane
-	private Journal journal_next = new Journal("journal Eq8", this);
+	private Journal journal_next = new Journal("journal next Eq8", this);
 	
 
 	protected Variable stockTotal;
@@ -135,7 +135,8 @@ public class Distributeur2Acteur implements IActeur {
 	// Renvoie les journaux
 	public List<Journal> getJournaux() {
 		List<Journal> res=new ArrayList<Journal>();
-		res.add(getJournal());
+		res.add(journal_next);
+		res.add(journal);
 		return res;
 	}
 
