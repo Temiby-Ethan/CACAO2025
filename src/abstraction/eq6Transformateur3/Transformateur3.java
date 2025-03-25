@@ -12,7 +12,7 @@ import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class Transformateur3 extends Transformateur3ContratCadreAcheteur{
+public class Transformateur3 extends Transformateur3AcheteurBoursef{
 
 	public Transformateur3() {
 	}
