@@ -1,5 +1,9 @@
 package abstraction.eq1Producteur1;
 
+import abstraction.eq1Producteur1.moyenne_qualite;
+import abstraction.eq1Producteur1.basse_qualite;
+import abstraction.eq1Producteur1.haute_qualite;
+
 public class Stock {
     private double stockFMQ; // Stock de fève de moyenne qualité
     private double stockFBQ; // Stock de fève de bonne qualité
@@ -7,9 +11,9 @@ public class Stock {
 
     // Constructeur qui initialise les stocks à zéro
     public Stock() {
-        this.stockFMQ = 0.0;
-        this.stockFBQ = 0.0;
-        this.stockFHQ = 0.0;
+        this.stockFMQ = basse_qualite.nombre_arbes();
+        this.stockFBQ = moyenne_qualite.nombre_arbes();
+        this.stockFHQ = haute_qualite.nombre_arbes();
     }
 
     // Méthode pour ajouter des fèves à chaque type de stock

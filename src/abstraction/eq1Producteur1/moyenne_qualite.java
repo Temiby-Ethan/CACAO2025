@@ -27,4 +27,8 @@ public class moyenne_qualite extends plantation {
         return r.nextInt((max - min) + 1) + min;
     }
 
+    public static double nombre_arbes(){
+        return 750;
+    }
+
 }
