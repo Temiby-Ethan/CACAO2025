@@ -32,9 +32,9 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 	public Distributeur1AcheteurContratCadre() {
 		super();
 
-		List<Double> predictionsVentesPourcentage = null;
-		List<Double> priceProduct = null;
-		List<Double> requiredQuantities = null;
+		List<Double> predictionsVentesPourcentage = new ArrayList<Double>();
+		List<Double> priceProduct = new ArrayList<Double>();
+		List<Double> requiredQuantities = new ArrayList<Double>();
 		int cryptogramme = -1;
 		int step = -1;
 		int product = -1;
@@ -90,7 +90,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 		}
 		for (int step = echeancierActuel.getStepDebut(); step<=echeancierActuel.getStepFin() ; step++){
 			double quantiteDemandee = echeancierActuel.getQuantite(step);
-			double quantiteVoulue = requiredQuantities.get(getInt(chocolat))/predictionsVentesPourcentage.get(0)*predictionsVentesPourcentage.get(step);
+			double quantiteVoulue = requiredQuantities.get(getInt(chocolat))/predictionsVentesPourcentage.get(echeancierActuel.getStepDebut()%24)*predictionsVentesPourcentage.get(step%24);
 			if (quantiteDemandee > quantiteVoulue*(1+0.01*tour)){
 				echeancierActuel.set(step, quantiteVoulue*(1+0.01*tour));
 			}
@@ -207,4 +207,3 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 
 	}
 }
-
