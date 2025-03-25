@@ -28,6 +28,7 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
     protected VariablePrivee totalStockHQ_B;
     protected VariablePrivee coutStock;
 
+    
 
 
     public Producteur3Stock(){
@@ -63,8 +64,7 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
         getIndicateurs().add(totalStockHQ);
         getIndicateurs().add(totalStockHQ_B);
     }
-  
-    
+
 
 
     

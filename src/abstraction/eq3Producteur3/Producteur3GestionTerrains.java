@@ -12,6 +12,13 @@ public class Producteur3GestionTerrains extends Producteur3Acteur{
     protected LinkedList<Parcelle> terrainMQ = new LinkedList();
     protected LinkedList<Parcelle> terrainHQ = new LinkedList();
 
+    protected double nbParcellesBQ = 0;
+    protected double nbParcellesBQ_E = 0;
+    protected double nbParcellesMQ = 0;
+    protected double nbParcellesMQ_E = 0;
+    protected double nbParcellesHQ = 0;
+    protected double nbParcellesHQ_B = 0;
+
     protected HashMap<Integer,LinkedList<Parcelle>> vie = new HashMap<Integer,LinkedList<Parcelle>>();
     protected  HashMap<Integer,LinkedList<Parcelle>> recolte = new HashMap<Integer,LinkedList<Parcelle>>();   
 
@@ -39,22 +46,32 @@ public class Producteur3GestionTerrains extends Producteur3Acteur{
             deficteTerrain.add(q.achat);
             if(((QualiteBQ) q).equitable){
                 effectifs[2]+=800;
+                nbParcellesBQ_E += 1;
             }else{
                 effectifs[0]+=1200;
                 effectifs[1]+=200;
+                nbParcellesBQ += 1;
             }
         }else if( q instanceof QualiteMQ){
             terrainMQ.add(new Parcelle(q,0));//modifier date de début
             deficteTerrain.add(q.achat);
             if(((QualiteMQ) q).equitable){
                 effectifs[2]+=600;
+                nbParcellesMQ_E += 1;
             }else{
                 effectifs[1]+=600;
+                nbParcellesMQ += 1;
             }
         }else if( q instanceof QualiteHQ){
             terrainHQ.add(new Parcelle(q,0));//modifier date de début
             deficteTerrain.add(q.achat);
             effectifs[2]+=400;
+            if (bio){
+                nbParcellesHQ_B += 1;
+            }
+            else{
+                nbParcellesHQ += 1;
+            }
         }else{
             journal.ajouter("Erreur qualité achat terrain.");
         }
@@ -66,22 +83,32 @@ public class Producteur3GestionTerrains extends Producteur3Acteur{
             beneficeTerrain.add(q.vente);
             if(((QualiteBQ) q).equitable){
                 effectifs[2]-=800;
+                nbParcellesBQ_E -= 1;
             }else{
                 effectifs[0]-=1200;
                 effectifs[1]-=200;
+                nbParcellesBQ -= 1;
             }
         }else if( q instanceof QualiteMQ){
             terrainMQ.removeFirst();
             beneficeTerrain.add(q.vente);
             if(((QualiteMQ) q).equitable){
                 effectifs[2]-=600;
+                nbParcellesMQ_E -= 1;
             }else{
                 effectifs[1]-=600;
+                nbParcellesMQ -= 1;
             }
         }else if( q instanceof QualiteHQ){
             terrainMQ.removeFirst();
             beneficeTerrain.add(q.vente);
             effectifs[2]-=400;
+            if (((QualiteHQ) q).bio){
+                nbParcellesHQ_B -= 1;
+            }
+            else{
+                nbParcellesHQ -= 1;
+            }
         }else{
             journal.ajouter("Erreur qualité vente terrain.");
         }
@@ -102,6 +129,7 @@ public class Producteur3GestionTerrains extends Producteur3Acteur{
             effectifs[2]+=400;
 
             Parcelle p = new Parcelle(new QualiteHQ(true,true), annee);
+            nbParcellesHQ_B += 1;
             vie.get(annee).add(p);
             recolte.get(mois).add(p);
         }
@@ -112,6 +140,7 @@ public class Producteur3GestionTerrains extends Producteur3Acteur{
             effectifs[2]+=600;
 
             Parcelle p = new Parcelle(new QualiteMQ(true), annee);
+            nbParcellesMQ_E += 1;
             vie.get(annee).add(p);
             recolte.get(mois).add(p);
         }
@@ -123,6 +152,7 @@ public class Producteur3GestionTerrains extends Producteur3Acteur{
             effectifs[1]+=200;
 
             Parcelle p = new Parcelle(new QualiteBQ(false), annee);
+            nbParcellesBQ += 1;
             vie.get(annee).add(p);
             recolte.get(mois).add(p);
 
