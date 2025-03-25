@@ -40,21 +40,31 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
     //Zoé
     public void initStock(){
         for(int i = 0; i < 8; i++){
-            stockFeveBQ.put(i, new VariablePrivee(getNom()+"Stock BQ de "+i,this));
-            stockFeveBQ_E.put(i, new VariablePrivee(getNom()+"Stock BQ Eq de "+i,this));
-            stockFeveMQ.put(i, new VariablePrivee(getNom()+"Stock MQ de "+i,this));
-            stockFeveMQ_E.put(i, new VariablePrivee(getNom()+"Stock MQ_E de "+i,this));
-            stockFeveHQ.put(i, new VariablePrivee(getNom()+"Stock HQ de "+i,this));
-            stockFeveHQ_B.put(i, new VariablePrivee(getNom()+"Stock HQ_B de "+i,this));
+            if (i==0){
+                stockFeveBQ.put(i, new VariablePrivee(getNom()+"Stock BQ de "+i,this,15000));
+                stockFeveBQ_E.put(i, new VariablePrivee(getNom()+"Stock BQ Eq de "+i,this,0));
+                stockFeveMQ.put(i, new VariablePrivee(getNom()+"Stock MQ de "+i,this,0));
+                stockFeveMQ_E.put(i, new VariablePrivee(getNom()+"Stock MQ_E de "+i,this,41000));
+                stockFeveHQ.put(i, new VariablePrivee(getNom()+"Stock HQ de "+i,this,0));
+                stockFeveHQ_B.put(i, new VariablePrivee(getNom()+"Stock HQ_B de "+i,this,5200));
+            }
+            else{
+                stockFeveBQ.put(i, new VariablePrivee(getNom()+"Stock BQ de "+i,this,0));
+                stockFeveBQ_E.put(i, new VariablePrivee(getNom()+"Stock BQ Eq de "+i,this,0));
+                stockFeveMQ.put(i, new VariablePrivee(getNom()+"Stock MQ de "+i,this,0));
+                stockFeveMQ_E.put(i, new VariablePrivee(getNom()+"Stock MQ_E de "+i,this,0));
+                stockFeveHQ.put(i, new VariablePrivee(getNom()+"Stock HQ de "+i,this,0));
+                stockFeveHQ_B.put(i, new VariablePrivee(getNom()+"Stock HQ_B de "+i,this,0));
+            }
         }
-        totalStock = new VariablePrivee(this.getNom()+"Stock Total", this, 0.0, 100000000000000.0, 0);
-        totalStockBQ = new VariablePrivee(this.getNom()+"Stock Total BQ", this);
-        totalStockBQ_E = new VariablePrivee(this.getNom()+"Stock Total BQ_E", this);
-        totalStockMQ = new VariablePrivee(this.getNom()+"Stock Total MQ", this);
-        totalStockMQ_E = new VariablePrivee(this.getNom()+"Stock Total MQ_E", this);
-        totalStockHQ = new VariablePrivee(this.getNom()+"Stock Total HQ", this);
-        totalStockHQ_B = new VariablePrivee(this.getNom()+"Stock Total HQ_B", this);
-        coutStock = new VariablePrivee(this.getNom() + "Cout Stockage", this, 0.0, 1000000000.0, 0);
+        totalStock = new VariablePrivee(this.getNom()+"Stock Total", this, 61200);
+        totalStockBQ = new VariablePrivee(this.getNom()+"Stock Total BQ", this,15000);
+        totalStockBQ_E = new VariablePrivee(this.getNom()+"Stock Total BQ_E", this,0);
+        totalStockMQ = new VariablePrivee(this.getNom()+"Stock Total MQ", this,0);
+        totalStockMQ_E = new VariablePrivee(this.getNom()+"Stock Total MQ_E", this,41000);
+        totalStockHQ = new VariablePrivee(this.getNom()+"Stock Total HQ", this,0);
+        totalStockHQ_B = new VariablePrivee(this.getNom()+"Stock Total HQ_B", this,5200);
+        coutStock = new VariablePrivee(this.getNom() + "Cout Stockage", this,0);
         getIndicateurs().add(totalStock);
         getIndicateurs().add(coutStock);
         getIndicateurs().add(totalStockBQ);
@@ -63,9 +73,6 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
         getIndicateurs().add(totalStockMQ_E);
         getIndicateurs().add(totalStockHQ);
         getIndicateurs().add(totalStockHQ_B);
-        System.out.println(stockFeveBQ.get(0).getValeur(cryptogramme));
-        stockFeveBQ.get(0).setValeur(this, 15000, cryptogramme);
-        System.out.println(stockFeveBQ.get(0).getValeur(cryptogramme));
     }
 
 
