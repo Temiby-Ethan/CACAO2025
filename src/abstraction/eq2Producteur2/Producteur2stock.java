@@ -21,6 +21,7 @@ public class Producteur2stock extends Producteur2sechage {
     protected HashMap<Feve,Double> prodParStep;
 	protected HashMap<Feve,Queue<Stock>> stock;
     protected HashMap<Feve,Variable> stockvar;
+    protected HashMap<Feve,Double> seuil_stock;
 	protected Variable stockTotal;
     private Journal JournalStock;
     double cout_stockage = 7.5;
@@ -29,6 +30,7 @@ public class Producteur2stock extends Producteur2sechage {
 	public Producteur2stock() {
 
         super();
+        this.seuil_stock = new HashMap<Feve,Double>();
         this.stock = new HashMap<Feve, Queue<Stock>>();
         this.stockvar = new HashMap<Feve,Variable>();
 		this.prodParStep = new HashMap<Feve, Double>();
@@ -220,6 +222,19 @@ public class Producteur2stock extends Producteur2sechage {
         for(Feve f : Feve.values()){ 
             AddStock(f,this.prodParStep.get(f));
         }
+
+    }
+
+    public void SetStockMin(){
+
+        for(Feve f : Feve.values()){
+            
+            double prod = this.prodParStep.get(f);
+            this.seuil_stock.replace(f, 0.10*prod);
+
+
+        }
+
 
     }
 
