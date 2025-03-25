@@ -7,7 +7,6 @@ import java.util.List;
 
 import abstraction.eqXRomu.acteurs.Romu;
 import abstraction.eqXRomu.bourseCacao.BourseCacao;
-import abstraction.eqXRomu.contratsCadres.ContratCadre;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IFabricantChocolatDeMarque;
@@ -19,6 +18,7 @@ import abstraction.eqXRomu.produits.Feve;
 public class Transformateur1Stocks extends Transformateur1Acteur implements IFabricantChocolatDeMarque {
 
 	private double coutStockage; 
+	private double coutProd;
 	protected double STOCK_MAX_TOTAL_FEVES = 1000000;
 
 	protected List<ExemplaireContratCadre> mesContratEnTantQuAcheteur;
@@ -31,6 +31,7 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 	protected HashMap<Feve, Double> qttEntrantesFeve;//Contient les quantités entrant dans le stock à la période actuelle
 	protected HashMap<Feve, Double> prixTFeveStockee;//Contient les prix moyens des fèves en stock
 	protected HashMap<Chocolat, Double> prixTChocoBase;//Contient les prix des chocolats produits en s'appuyant sur le prix du stock de fèves
+
 
 	public Transformateur1Stocks() {
 		super();
@@ -48,12 +49,20 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 
 
 		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*4;
+		this.coutProd = 2400; //A MODIFIER il s'agit du cout de la production d'une tonne de chocolat, valeur arbitraire censée contenir salaires, ingrédients secondaires, et autres couts fixes
 
+		//Initialisation des fèves dont on a besoin 
 		this.lesFeves = new LinkedList<Feve>();
 		this.lesFeves.add(Feve.F_HQ_BE);
 		this.lesFeves.add(Feve.F_MQ_E);
 		this.lesFeves.add(Feve.F_BQ_E);
 		this.lesFeves.add(Feve.F_BQ);
+
+		//Initialisation des prix de base des chocolats que l'on veut produire
+		this.prixTChocoBase.put(Chocolat.C_BQ, 0.);
+		this.prixTChocoBase.put(Chocolat.C_BQ_E, 0.);
+		this.prixTChocoBase.put(Chocolat.C_HQ_BE, 0.);
+		this.prixTChocoBase.put(Chocolat.C_MQ_E, 0.);
 		
 		for (Feve f : this.lesFeves) {
 			this.stockFeves.put(f, 20000.0);
@@ -126,6 +135,7 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 					//On transforme toutes nos fèves
 					transfo = this.stockFeves.get(f);
 
+					//On s'assure que l'on produit quelque chose pour faire nos opérations
 					if (transfo<=this.stockFeves.get(f) && transfo >0) {
 
 						this.stockFeves.put(f, this.stockFeves.get(f)-transfo);
@@ -143,10 +153,10 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 						//calcul du stock de chocolat après les transformations
 						double nouveauStock = (transfo)*this.pourcentageTransfo.get(f).get(c);
 
-						//Détermination du prix de base des chocolats en pondérant avec les coûts de la période précédente
+						//Détermination du prix de base des chocolats à la tonne en pondérant avec les coûts de la période précédente
 						if(prixTChocoBase.containsKey(c) && nouveauStock > 0){
 							double ancienPrix = prixTChocoBase.get(c);
-							double nouveauPrix = ancienPrix * (stockChoco.get(c)/ nouveauStock) +  pourcentageTransfo.get(f).get(c) * transfo * prixTFeveStockee.get(f) / nouveauStock;
+							double nouveauPrix = ancienPrix * (stockChoco.get(c)/ (nouveauStock+stockChoco.get(c))) + (prixTFeveStockee.get(f) + coutProd + coutStockage) * (pourcentageTransfo.get(f).get(c) * transfo / (nouveauStock+ stockChoco.get(c)));
 
 							prixTChocoBase.put(c, nouveauPrix);
 						}
@@ -160,7 +170,7 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 
 
 						
-						
+						//Notification dans le journal
 						this.journal.ajouter(Romu.COLOR_LLGRAY, Color.PINK, "Transfo de "+(transfo<10?" "+transfo:transfo)+" T de "+f+" en "+Journal.doubleSur(transfo*this.pourcentageTransfo.get(f).get(c),3,2)+" T de "+c);
 						this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN," stock("+f+")->"+this.stockFeves.get(f));
 						this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN," stock("+c+")->"+this.stockChoco.get(c));

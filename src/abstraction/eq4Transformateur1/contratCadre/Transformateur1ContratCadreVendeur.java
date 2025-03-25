@@ -1,6 +1,6 @@
 package abstraction.eq4Transformateur1.contratCadre;
 
-import java.util.ArrayList;
+
 import java.util.LinkedList;
 import java.util.List;
 
