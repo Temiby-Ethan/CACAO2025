@@ -102,5 +102,4 @@ public class ExempleTransformateurContratCadreVendeurAcheteur extends ExempleTra
 	}
 
 
-
 }
