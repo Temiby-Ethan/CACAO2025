@@ -33,54 +33,54 @@ public class Plantation extends Producteur2recolte {
                 this.dureeDeVie = 960;  // 40 ans
                 this.tempsAvantProduction = 72;  // 3 ans
                 this.productionParParcelle = 126666; // 126666 cabosses par parcelle a chaque next
-                this.prix_achat = 2250000;
-                this.prix_vente = 1450000;
-                this.prix_replantation = 800000;
+                this.prix_achat = 225000;
+                this.prix_vente = 145000;
+                this.prix_replantation = 80000;
                 this.salaire_employe = 6600;
                 break;
             case F_BQ_E:
                 this.dureeDeVie = 960;  // 40 ans
                 this.tempsAvantProduction = 72;  // 3 ans
                 this.productionParParcelle = 126666; // 126666 cabosses par parcelle a chaque next
-                this.prix_achat = 2250000;
-                this.prix_vente = 1450000;
-                this.prix_replantation = 800000;
+                this.prix_achat = 225000;
+                this.prix_vente = 145000;
+                this.prix_replantation = 80000;
                 this.salaire_employe = 30000;
                 break;
             case F_MQ:
                 this.dureeDeVie = 960;
                 this.tempsAvantProduction = 96; // 4 ans
                 this.productionParParcelle = 93750;
-                this.prix_achat = 4250000;
-                this.prix_vente = 2850000;
-                this.prix_replantation = 1400000;
+                this.prix_achat = 425000;
+                this.prix_vente = 285000;
+                this.prix_replantation = 140000;
                 this.salaire_employe = 5400;
                 break;
             case F_MQ_E:
                 this.dureeDeVie = 960;
                 this.tempsAvantProduction = 96; // 4 ans
                 this.productionParParcelle = 93750;
-                this.prix_achat = 4250000;
-                this.prix_vente = 2850000;
-                this.prix_replantation = 1400000;
+                this.prix_achat = 425000;
+                this.prix_vente = 285000;
+                this.prix_replantation = 140000;
                 this.salaire_employe = 22500;
                 break;
             case F_HQ_E:
                 this.dureeDeVie = 960;
                 this.tempsAvantProduction = 120; // 5 ans
                 this.productionParParcelle = 41666;
-                this.prix_achat = 7000000;
-                this.prix_vente = 4650000;
-                this.prix_replantation = 2350000;
+                this.prix_achat = 700000;
+                this.prix_vente = 465000;
+                this.prix_replantation = 235000;
                 this.salaire_employe = 15000;
                 break;
             case F_HQ_BE:
                 this.dureeDeVie = 960;
                 this.tempsAvantProduction = 120; // 5 ans
                 this.productionParParcelle = 29166;
-                this.prix_achat = 7000000;
-                this.prix_vente = 4650000;
-                this.prix_replantation = 2350000;
+                this.prix_achat = 700000;
+                this.prix_vente = 465000;
+                this.prix_replantation = 235000;
                 this.salaire_employe = 15000;
                 break;
             default:
