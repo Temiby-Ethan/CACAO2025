@@ -25,9 +25,9 @@ public class Transformateur1VendeurAppelDoffre extends Transformateur1AcheteurBo
 
 	@Override
 	public OffreVente proposerVente(AppelDOffre offre) {
-		System.err.println(offre.toString());
+		//System.err.println(offre.toString());
 		double prix = 0;
-		if (stockChocoMarque.keySet().contains(offre.getProduit()) && offre.getQuantiteT() <= stockChocoMarque.get(offre.getProduit())) {
+		if (stockChocoMarque != null && stockChocoMarque.keySet().contains(offre.getProduit()) && offre.getQuantiteT() <= stockChocoMarque.get(offre.getProduit())) {
 			double T = offre.getQuantiteT();
             if (((ChocolatDeMarque) offre.getProduit()).getChocolat() == Chocolat.C_BQ) {
 				prix = prix_BQ * T * pourcentageTransfo.get(Feve.F_BQ).get(Chocolat.C_BQ);
@@ -47,9 +47,9 @@ public class Transformateur1VendeurAppelDoffre extends Transformateur1AcheteurBo
 
 	@Override
 	public void notifierVenteAO(OffreVente propositionRetenue) {
-		System.out.println("Votre proposition de vente a été retenue");
+		//System.out.println("Votre proposition de vente a été retenue");
 		this.journalTransactions.ajouter("J'ai vendu " + propositionRetenue.getQuantiteT() + " tonnes de " + propositionRetenue.getProduit() + " au cours de " + propositionRetenue.getPrixT() + " euros par tonne.");
-	
+	 
 		/* Mettre à jour les autres variables */
 		stockChocoMarque.put((ChocolatDeMarque)(propositionRetenue.getProduit()), stockChocoMarque.get(propositionRetenue.getProduit()) - propositionRetenue.getQuantiteT());
 		this.journalTransactions.ajouter("J'ai maintenant " + this.stockChocoMarque.get(propositionRetenue.getProduit()) + " tonnes de " + propositionRetenue.getProduit() + " en stock.");
@@ -61,7 +61,7 @@ public class Transformateur1VendeurAppelDoffre extends Transformateur1AcheteurBo
 
 	@Override
 	public void notifierPropositionNonRetenueAO(OffreVente propositionRefusee) {
-		System.out.println("Votre proposition de vente n'a pas été retenue");
+		//System.out.println("Votre proposition de vente n'a pas été retenue");
 		this.journalTransactions.ajouter("J'ai proposé " + propositionRefusee.getQuantiteT() + " tonnes de " + propositionRefusee.getProduit() + " au cours de " + propositionRefusee.getPrixT() + " euros par tonne mais elle n'a pas été retenue.");
 		if (((ChocolatDeMarque) propositionRefusee.getProduit()).getChocolat() == Chocolat.C_BQ) {
 			prix_BQ -= 50;
