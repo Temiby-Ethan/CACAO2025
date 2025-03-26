@@ -74,7 +74,7 @@ public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
 
     @Override
     public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
-        double quantiteLivree = Math.min(quantite, stock.getStock(produit));
+        double quantiteLivree = Math.min(quantite, stock.getStockTotal(produit));
         stock.retirer(produit, quantiteLivree);
         journal.ajouter("Livraison de " + quantiteLivree + " de " + produit + " pour le contrat " + contrat);
         return quantiteLivree;
