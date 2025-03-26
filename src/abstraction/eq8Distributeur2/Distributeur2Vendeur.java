@@ -105,16 +105,16 @@ public void setPrix(ChocolatDeMarque choco) {
 		else {
 			
 			if (choco.toString().contains("C_MQ_E")) {
-				double x = (capaciteDeVente*0.30);
+				double x = (capaciteDeVente*0.30/nombreMarquesParType.get(Chocolat.C_MQ_E));
 				return Math.max(Math.min(x , this.getQuantiteEnStock(choco,crypto)),0.0);
 			}
 			
 			if (choco.toString().contains("C_HQ_BE")) {
-				double x = (capaciteDeVente*0.30);
+				double x = (capaciteDeVente*0.30/nombreMarquesParType.get(Chocolat.C_HQ_BE));
 				return Math.max(Math.min(x , this.getQuantiteEnStock(choco,crypto)),0.0);
 			}
 			if (choco.toString().contains("C_HQ_E")) {
-				double x = (capaciteDeVente*0.40);
+				double x = (capaciteDeVente*0.40/nombreMarquesParType.get(Chocolat.C_HQ_E));
 				return Math.max(Math.min(x , this.getQuantiteEnStock(choco,crypto)),0.0);
 			}
 			
