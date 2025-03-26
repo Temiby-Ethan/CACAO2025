@@ -15,7 +15,7 @@ public class Producteur1 extends Producteur1Acteur implements IVendeurContratCad
 
     public Producteur1() {
         super();
-        this.contratCadre = new Producteur1ContratCadre(this); // ✅ on passe le Producteur1 en paramètre
+        this.contratCadre = new Producteur1ContratCadre(); // Initialisation de l'instance
     }
 
     @Override

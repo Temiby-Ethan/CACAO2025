@@ -7,50 +7,69 @@ import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Stock {
-
-    private Map<Feve, Double> stocks;
+    private Map<Feve, Double> stocks; // Map pour gérer les stocks de fèves
+    private basse_qualite stockBasseQualite;
+    private moyenne_qualite stockMoyenneQualite;
+    private haute_qualite stockHauteQualite;
+    protected Producteur1 Producteur1;
 
     public Stock() {
-        this.stocks = new HashMap<>();
+        this.stocks = new HashMap<>(); // Initialisation du Map
+        this.stockBasseQualite = new basse_qualite(Producteur1);
+        this.stockMoyenneQualite = new moyenne_qualite(Producteur1);
+        this.stockHauteQualite = new haute_qualite(Producteur1);
 
-        // Initialisation avec zéro stock pour chaque type connu
-        for (Feve f : Feve.values()) {
-            stocks.put(f, 0.0);
-        }
+        // Initialisation des stocks pour chaque type de fève
+        this.stocks.put(Feve.F_BQ, stockBasseQualite.getStock());
+        this.stocks.put(Feve.F_MQ, stockMoyenneQualite.getStock());
+        this.stocks.put(Feve.F_HQ, stockHauteQualite.getStock());
     }
 
     // Ajouter une quantité pour une fève donnée
     public void ajouter(IProduit produit, double quantite) {
         if (produit instanceof Feve) {
-            Feve f = (Feve) produit;
-            double actuel = stocks.getOrDefault(f, 0.0);
-            stocks.put(f, actuel + quantite);
+            Feve feve = (Feve) produit;
+            double actuel = stocks.getOrDefault(feve, 0.0);
+            stocks.put(feve, actuel + quantite);
         }
     }
 
     // Retirer une quantité si possible, retourne true si réussi
     public boolean retirer(IProduit produit, double quantite) {
         if (produit instanceof Feve) {
-            Feve f = (Feve) produit;
-            double actuel = stocks.getOrDefault(f, 0.0);
+            Feve feve = (Feve) produit;
+            double actuel = stocks.getOrDefault(feve, 0.0);
             if (actuel >= quantite) {
-                stocks.put(f, actuel - quantite);
+                stocks.put(feve, actuel - quantite);
                 return true;
             }
         }
         return false;
     }
 
-    // Obtenir la quantité disponible pour une fève
-    public double getStock(IProduit produit) {
-        if (produit instanceof Feve) {
-            return stocks.getOrDefault((Feve) produit, 0.0);
-        }
-        return 0.0;
+    // Obtenir le stock d'une fève donnée
+    public double getStockFMQ() {
+        return stockMoyenneQualite.getStock();
+    }
+
+    public double getStockFBQ() {
+        return stockBasseQualite.getStock();
+    }
+
+    public double getStockFHQ() {
+        return stockHauteQualite.getStock();
+    }
+
+    // Ajouter des quantités pour chaque type de fève
+    public void ajouterStock(double quantiteFMQ, double quantiteFBQ, double quantiteFHQ) {
+        ajouter(Feve.F_MQ, quantiteFMQ); // Ajoute au stock de fèves moyenne qualité
+        ajouter(Feve.F_BQ, quantiteFBQ); // Ajoute au stock de fèves basse qualité
+        ajouter(Feve.F_HQ, quantiteFHQ); // Ajoute au stock de fèves haute qualité
     }
 
     // Obtenir le stock total (toutes fèves confondues)
     public double getStockTotal() {
+        // Somme des stocks de chaque type de fève 
         return stocks.values().stream().mapToDouble(Double::doubleValue).sum();
     }
-   }
+}

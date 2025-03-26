@@ -9,9 +9,10 @@ public class Producteur1arbes extends plantation {
     private plantation basse_qualite;
     private plantation moyenne_qualite;
     private plantation haute_qualite;
-    
-    public Producteur1arbes(plantation basse_qualite, plantation moyenne_qualite, plantation haute_qualite){
-        super();
+    protected static Producteur1 Producteur1;
+        
+        public Producteur1arbes(plantation basse_qualite, plantation moyenne_qualite, plantation haute_qualite){
+            super(Producteur1);
 
     }
 

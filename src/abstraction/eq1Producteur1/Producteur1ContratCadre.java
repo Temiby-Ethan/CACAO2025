@@ -13,12 +13,9 @@ public class Producteur1ContratCadre extends Producteur1Acteur implements IVende
     private Producteur1 vendeur; // Référence au Producteur1 principal
     private Stock stock;
     private List<ExemplaireContratCadre> contrats;
-    private Journal journalContrat;
 
-
-    public Producteur1ContratCadre(Producteur1 vendeur) {
+    public Producteur1ContratCadre() {
         super();
-        this.vendeur = vendeur;
         this.stock = new Stock();
         this.contrats = new ArrayList<>();
 
@@ -38,7 +35,7 @@ public class Producteur1ContratCadre extends Producteur1Acteur implements IVende
         IProduit produit = contrat.getProduit();
         Echeancier echeancierPropose = contrat.getEcheancier();
 
-        double stockDispo = stock.getStock(produit);
+        double stockDispo = stock.getStockTotal();
         double quantiteMax = 0.25 * stockDispo;
 
         if (echeancierPropose.getQuantiteTotale() > quantiteMax) {
@@ -75,13 +72,12 @@ public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
     journalContrat.ajouter("Nouveau contrat cadre accepté : " + contrat);
 }
 
-@Override
-public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
-    double quantiteLivree = Math.min(quantite, stock.getStock(produit));
-    stock.retirer(produit, quantiteLivree);
-    journalContrat.ajouter("Livraison de " + quantiteLivree + "T de " + produit + " pour le contrat " + contrat);
-    return quantiteLivree;
-}
-
+    @Override
+    public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
+        double quantiteLivree = Math.min(quantite, stock.getStock(produit));
+        stock.retirer(produit, quantiteLivree);
+        journal.ajouter("Livraison de " + quantiteLivree + " de " + produit + " pour le contrat " + contrat);
+        return quantiteLivree;
+    }
 }
     

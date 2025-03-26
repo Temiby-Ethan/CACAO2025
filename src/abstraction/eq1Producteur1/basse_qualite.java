@@ -5,7 +5,7 @@ import java.util.Random;
 public class basse_qualite extends plantation {
 
     public basse_qualite(Producteur1 producteur1){
-        super();
+        super(producteur1);
         this.typedeplant = "basse_qualite";
         this.nombre_arbes = 950; // par arbre par hecatre
         this.temps_avant_production = 72; // en steps
@@ -31,7 +31,7 @@ public class basse_qualite extends plantation {
         return r.nextInt((max - min) + 1) + min;
     }
 
-    public double nombre_feves_total(){
+    public double getStock(){
         double nb = this.nombre_feves_total;
         return nb;
     }

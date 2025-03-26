@@ -5,7 +5,7 @@ import java.util.Random;
 public class moyenne_qualite extends plantation {
 
     public moyenne_qualite(Producteur1 producteur1){
-        super();
+        super(producteur1);
         this.typedeplant = "moyenne_qualite";
         this.nombre_arbes = 750; // par arbre par hecatre
         this.temps_avant_production = 96; // en steps
@@ -35,7 +35,7 @@ public class moyenne_qualite extends plantation {
         return 750;
     }
 
-    public  double nombre_feves_total(){
+    public double getStock(){
         double nb = this.nombre_feves_total;
         return nb;
     }
