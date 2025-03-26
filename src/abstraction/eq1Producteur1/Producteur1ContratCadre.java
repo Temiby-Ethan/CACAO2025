@@ -10,9 +10,10 @@ public class Producteur1ContratCadre extends Producteur1Acteur implements IVende
 
     private Stock stock;
     private List<ExemplaireContratCadre> contrats;
+    protected static Producteur1 producteur1;
 
     public Producteur1ContratCadre() {
-        super();
+        super(producteur1);
         this.stock = new Stock();
         this.contrats = new ArrayList<>();
 
@@ -32,7 +33,7 @@ public class Producteur1ContratCadre extends Producteur1Acteur implements IVende
         IProduit produit = contrat.getProduit();
         Echeancier echeancierPropose = contrat.getEcheancier();
 
-        double stockDispo = stock.getStock(produit);
+        double stockDispo = stock.getStockTotal();
         double quantiteMax = 0.25 * stockDispo;
 
         if (echeancierPropose.getQuantiteTotale() > quantiteMax) {
@@ -71,7 +72,7 @@ public class Producteur1ContratCadre extends Producteur1Acteur implements IVende
 
     @Override
     public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
-        double quantiteLivree = Math.min(quantite, stock.getStock(produit));
+        double quantiteLivree = Math.min(quantite, stock.getStockTotal());
         stock.retirer(produit, quantiteLivree);
         journal.ajouter("Livraison de " + quantiteLivree + " de " + produit + " pour le contrat " + contrat);
         return quantiteLivree;

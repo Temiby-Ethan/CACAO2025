@@ -32,13 +32,10 @@ public class haute_qualite extends plantation {
         return r.nextInt((max - min) + 1) + min;
     }
 
-    public static double nombre_arbes(){
-        return 500;
+    
+    public double getStock(){
+        double nb = this.nombre_feves_total;
+        return nb;
     }
-
-    public double nombre_feves_total(){
-        Object nb = this.nombre_feves_total;
-        return (double) nb;
-}
 }
 

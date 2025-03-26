@@ -8,7 +8,7 @@ public class Producteur1 extends Producteur1Acteur implements IVendeurContratCad
     private Producteur1ContratCadre contratCadre; // Composition : instance de Producteur1ContratCadre
 
     public Producteur1() {
-        super();
+        super(producteur1);
         this.contratCadre = new Producteur1ContratCadre(); // Initialisation de l'instance
     }
 
