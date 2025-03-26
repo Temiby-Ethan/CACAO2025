@@ -6,6 +6,11 @@ import abstraction.eqXRomu.general.Journal;
 
 // Amal Moncer
 public class plantation extends Producteur1Acteur {
+
+    public plantation(Producteur1 producteur1) {
+            super(producteur1);
+        }
+        
     protected String typedeplant;
     protected int nombre_arbes;
     protected int temps_avant_production; // en steps
@@ -23,6 +28,7 @@ public class plantation extends Producteur1Acteur {
     protected int nombre_feves;
     protected int nombre_feves_total;
     protected Producteur1 producteur1;
+
 
 }
 

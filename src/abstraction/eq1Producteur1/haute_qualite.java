@@ -5,7 +5,7 @@ import java.util.Random;
 public class haute_qualite extends plantation {
 
     public haute_qualite(Producteur1 producteur1){
-        super();
+        super(producteur1);
         this.typedeplant = "haute_qualite";
         this.nombre_arbes = 500; // par arbre par hecatre
         this.temps_avant_production = 120; // en steps
