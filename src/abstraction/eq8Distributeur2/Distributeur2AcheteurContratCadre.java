@@ -29,42 +29,67 @@ public class Distributeur2AcheteurContratCadre extends Distributeur2Vendeur impl
 	protected List<ExemplaireContratCadre> contrat_en_cours;
 	protected List<ExemplaireContratCadre> contrat_term;
 	protected Journal journalCC;
-	protected  int test;
+	
 	protected List<ExemplaireContratCadre> choix;
 	protected Double attract_tot;
+    protected List<ChocolatDeMarque> produit_voulue;
 
 	public Distributeur2AcheteurContratCadre() {
 		super();
 		this.contrat_en_cours = new LinkedList<ExemplaireContratCadre>();
-		this.contrat_term= new LinkedList<ExemplaireContratCadre>();
-		this.journalCC= new Journal (this.getNom() + "journal CC", this);
-		this.choix=new LinkedList<ExemplaireContratCadre>();
-		this.test=1;
+		this.contrat_term = new LinkedList<ExemplaireContratCadre>();
+		this.journalCC = new Journal (this.getNom() + "journal CC", this);
+		this.choix = new LinkedList<ExemplaireContratCadre>();
+		this.produit_voulue = new LinkedList<ChocolatDeMarque>();
+        for (ChocolatDeMarque cm : chocolats){
+            if (cm.getChocolat() == Chocolat.C_HQ_E || cm.getChocolat() == Chocolat.C_HQ_BE || cm.getChocolat() == Chocolat.C_MQ_E){
+                produit_voulue.add(cm);
+            }
+        }
+
 	}
     
     public boolean achete(IProduit produit) {
-        return produit instanceof ChocolatDeMarque && stockChocoMarque.containsKey(produit) && stockChocoMarque.get(produit) <= 100000;
+        if (produit instanceof ChocolatDeMarque 
+        && produit_voulue.contains(produit)   
+        && stock_Choco.get(produit) <= 100000){
+            journalCC.ajouter("Demande d'achat de " + produit.toString() + " acceptée.");
+            return true;
+        }
+        return false;
     }
 
     
     public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {
-        return null;
+        journalCC.ajouter("Contre-proposition sur l'échéancier pour le contrat " + contrat.toString() + " : aucun changement.");
+        return contrat.getEcheancier();
     }
+    
 
     
     public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat) {
-        return 0;
+        double prixPropose = contrat.getPrix();
+        journalCC.ajouter("Contre-proposition de prix pour le contrat " + contrat.toString() + " : " + prixPropose + " euros la tonne.");
+        // Exemple : Accepter le prix proposé. Pour renoncer aux négociations, il suffirait de retourner une valeur négative ou nulle.
+        return prixPropose;
     }
 
     
     public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
-
+        journalCC.ajouter("Nouveau contrat cadre conclu : " + contrat);
     }
 
     
     public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
-        stockChocoMarque.put((ChocolatDeMarque) p,this.stockChocoMarque.get(p)+quantiteEnTonnes);
-        journalActeur.ajouter("reception de "+quantiteEnTonnes+" tonnes de "+p.toString()+" du contrat "+ contrat.toString());
-        this.MAJStocks();
+        stock_Choco.put((ChocolatDeMarque) p,this.stock_Choco.get(p)+quantiteEnTonnes);
+        journal.ajouter("Réception de "+quantiteEnTonnes+" tonnes de "+p.toString()+" du contrat "+ contrat.toString());
+        journalCC.ajouter("Réception de " + quantiteEnTonnes + " tonnes de " + p.toString() + " pour le contrat " + contrat.toString());
     }
+
+    public List<Journal> getJournaux() {
+		
+		List<Journal> jour = super.getJournaux();
+		jour.add(this.journalCC);
+		return jour;
+	}
 }
