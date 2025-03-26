@@ -8,6 +8,8 @@ import abstraction.eqXRomu.contratsCadres.IAcheteurContratCadre;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
+import java.util.ArrayList;
+import java.util.List;
 
 class ContratCadreAcheteur extends ContratCadreVendeur implements IAcheteurContratCadre{
     public ContratCadreAcheteur() {
@@ -55,20 +57,38 @@ class ContratCadreAcheteur extends ContratCadreVendeur implements IAcheteurContr
 	 *         superviseur soumettra au vendeur.
 	 */
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat){
-		Echeancier e=contrat.getEcheancier();
-		int nbrStep = e.getNbEcheances();
-		int stepDebut = e.getStepDebut();
-		double quantite = e.getQuantite(stepDebut);
-		Feve f = (Feve) contrat.getProduit();
-		double quantiteVoulue = this.getProductionTotale()*this.getProportion(f);
+		Echeancier original = contrat.getEcheancier();
+		int stepDebut = original.getStepDebut();
+		int nbEcheances = original.getNbEcheances();
+		double quantiteTotale = original.getQuantiteTotale();
 
-		if (quantite > (quantiteVoulue)*1.1){
-			e.ajouter(quantiteVoulue*1.1 -quantite);
+		Feve f = (Feve) contrat.getProduit();
+		double prodTotale = this.getProductionTotale();
+		double proportion = this.getProportion(f);
+
+		double quantiteMin = prodTotale * proportion * 0.1;
+		double quantiteMax = prodTotale * proportion * 1.1;
+
+		// Si la quantité demandée est dans la plage acceptable, on accepte tel quel
+		if (quantiteTotale >= quantiteMin && quantiteTotale <= quantiteMax) {
+			return original;
 		}
-		if (quantite < (quantiteVoulue)*0.1){
-			e.ajouter(quantiteVoulue*0.1 -quantite);
+
+		// Sinon on fait une contre-proposition sur la limite haute ou basse
+		double nouvelleQuantite = Math.max(quantiteMin, Math.min(quantiteMax, quantiteTotale));
+		double quantiteParStep = nouvelleQuantite / nbEcheances;
+
+		List<Double> quantites = new ArrayList<>();
+		for (int i = 0; i < nbEcheances; i++) {
+			quantites.add(quantiteParStep);
 		}
-		return e;
+
+		// Création d’un nouvel échéancier
+		Echeancier nouveau = new Echeancier(stepDebut, quantites);
+
+		return nouveau;
+
+
 		
 		
     }
@@ -110,6 +130,7 @@ class ContratCadreAcheteur extends ContratCadreVendeur implements IAcheteurContr
 	 * @param contrat
 	 */
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat){
+		super.journal.ajouter("nouveau contrat cadre signé"+contrat.toString());
     
     }
 
@@ -124,7 +145,8 @@ class ContratCadreAcheteur extends ContratCadreVendeur implements IAcheteurContr
 	 */
 	public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat){
         this.ajouterStock(this, p, quantiteEnTonnes, super.cryptogramme);
-		this.journal.ajouter("ajout de " + quantiteEnTonnes + " tonnes de " + p + " à notre stock grâce à un contrat cadre");	
+		this.journal.ajouter("ajout de " + quantiteEnTonnes + " tonnes de " + p + " à notre stock grâce à un contrat cadre");
+			
     }
 
 }

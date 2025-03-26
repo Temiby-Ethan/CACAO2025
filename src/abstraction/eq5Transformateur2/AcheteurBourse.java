@@ -1,6 +1,7 @@
 package abstraction.eq5Transformateur2;
 
 import abstraction.eqXRomu.bourseCacao.IAcheteurBourse;
+import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.produits.Feve;
 
 public class AcheteurBourse extends ContratCadreAcheteur implements IAcheteurBourse {
@@ -16,9 +17,15 @@ public class AcheteurBourse extends ContratCadreAcheteur implements IAcheteurBou
             double quantiteVoulueProduction= super.getProductionTotale()*super.getProportion(f);
             double difference= quantiteVoulueProduction-enStock;
 
-            if (difference>0){
-                return difference;
-            }
+            double solde = Filiere.LA_FILIERE.getBanque().getSolde(this, super.cryptogramme);
+        double montantMax = solde / cours;
+
+        if (difference > 0 && difference <= montantMax) {
+        return difference;
+        } else if (difference > 0) {
+        return montantMax;
+        }
+            
 
         
         

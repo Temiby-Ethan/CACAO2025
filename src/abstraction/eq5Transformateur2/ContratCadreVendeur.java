@@ -101,7 +101,7 @@ return null;
 	 * @param contrat
 	 */
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat){
-		this.journal.ajouter("Nouveau contrat cadre : "+contrat.toString());
+		this.journal.ajouter("Nouveau contrat cadre de vente : "+contrat.toString());
     }
 
 	/**

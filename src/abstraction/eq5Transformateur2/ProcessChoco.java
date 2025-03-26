@@ -24,12 +24,13 @@ public class ProcessChoco extends FraisAditionnel {
         return this.coutAditionnelParTablette;
     }
     
-    public void fabriquerChocolat(Chocolat chocolat,Feve feve, double quantite) { //quantite de chocolat en tonne voulu
-        this.ajouterStock(this, chocolat, quantite*10000, super.cryptogramme);    // *10000 pour passer de tonne à unité de tablette de chocolat
-        this.retirerStock(this, feve, quantite, super.cryptogramme);
-        Filiere.LA_FILIERE.getBanque().payerCout(this, super.cryptogramme,"Achat d'ingrédient secondaire",quantite*this.coutIngredientSecondaire);
-        Filiere.LA_FILIERE.getBanque().payerCout(this, super.cryptogramme,"Frais de production",quantite*10000*this.coutAditionnelParTablette);
-        
+    public void fabriquerChocolat(Chocolat chocolat,Feve feve, double quantite) {
+        if (quantite >0) { 
+            this.ajouterStock(this, chocolat, quantite*10000, super.cryptogramme);    // *10000 pour passer de tonne à unité de tablette de chocolat
+            this.retirerStock(this, feve, quantite, super.cryptogramme);
+            Filiere.LA_FILIERE.getBanque().payerCout(this, super.cryptogramme,"Achat d'ingrédient secondaire",quantite*this.coutIngredientSecondaire);
+            Filiere.LA_FILIERE.getBanque().payerCout(this, super.cryptogramme,"Frais de production",quantite*10000*this.coutAditionnelParTablette);
+        }
     }
 
     

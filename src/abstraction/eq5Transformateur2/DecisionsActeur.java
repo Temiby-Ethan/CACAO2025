@@ -33,6 +33,9 @@ public class DecisionsActeur extends ProcessChoco{
         this.objectifChangementProportion = 10.0 *10000000000.00; // augmentation de 10% de notre capitale de départ en euros
     }
     public double getProportion(Feve f){
+        if (!this.proportion.containsKey(f)) {
+            return 0.0; 
+        }
         return this.proportion.get(f);
     }
 

@@ -15,10 +15,10 @@ public class FabricantChocolatDeMarque extends AcheteurBourse  implements IFabri
         this.chocolatsProduits = new ArrayList<>();
         
         
-        this.chocolatsProduits.add(new ChocolatDeMarque(Chocolat.C_HQ_BE, "HQ Bio-equitable",100));
-        this.chocolatsProduits.add(new ChocolatDeMarque(Chocolat.C_HQ_E, "HQ Equitable",100));
-        this.chocolatsProduits.add(new ChocolatDeMarque(Chocolat.C_MQ_E, "MQ Equitable",100));
-        this.chocolatsProduits.add(new ChocolatDeMarque(Chocolat.C_MQ, "MQ Base",100));
+        this.chocolatsProduits.add(new ChocolatDeMarque(Chocolat.C_HQ_BE, "ChocoParfait",100));
+        this.chocolatsProduits.add(new ChocolatDeMarque(Chocolat.C_HQ_E, "ChocoHautEq",100));
+        this.chocolatsProduits.add(new ChocolatDeMarque(Chocolat.C_MQ_E, "ChocoMoyenEq",100));
+        this.chocolatsProduits.add(new ChocolatDeMarque(Chocolat.C_MQ, "ChocoMoyen",100));
 
     }
 

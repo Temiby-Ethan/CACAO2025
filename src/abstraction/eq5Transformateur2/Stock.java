@@ -106,7 +106,7 @@ public class Stock extends Transformateur2Acteur{
             this.stockFeveTotal.ajouter(this, this.stockFeve.get(f).getValeur());
         }
         for (Chocolat c : Chocolat.values()) {
-            this.stockChocoTotal.ajouter(this, this.stockChoco.get(c).getValeur());
+            this.stockChocoTotal.ajouter(this, this.stockChoco.get(c).getValeur()/100); // on passe de tablette à tonne
         }
        
     }
