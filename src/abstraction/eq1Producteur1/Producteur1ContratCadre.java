@@ -3,16 +3,22 @@ package abstraction.eq1Producteur1;
 import java.util.*;
 
 import abstraction.eqXRomu.contratsCadres.*;
+import abstraction.eqXRomu.filiere.Filiere;
+import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Producteur1ContratCadre extends Producteur1Acteur implements IVendeurContratCadre {
 
+    private Producteur1 vendeur; // Référence au Producteur1 principal
     private Stock stock;
     private List<ExemplaireContratCadre> contrats;
+    private Journal journalContrat;
 
-    public Producteur1ContratCadre() {
+
+    public Producteur1ContratCadre(Producteur1 vendeur) {
         super();
+        this.vendeur = vendeur;
         this.stock = new Stock();
         this.contrats = new ArrayList<>();
 
@@ -64,16 +70,18 @@ public class Producteur1ContratCadre extends Producteur1Acteur implements IVende
     }
 
     @Override
-    public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
-        this.contrats.add(contrat);
-        journal.ajouter("Nouveau contrat cadre accepté : " + contrat);
-    }
-
-    @Override
-    public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
-        double quantiteLivree = Math.min(quantite, stock.getStock(produit));
-        stock.retirer(produit, quantiteLivree);
-        journal.ajouter("Livraison de " + quantiteLivree + " de " + produit + " pour le contrat " + contrat);
-        return quantiteLivree;
-    }
+public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
+    this.contrats.add(contrat);
+    journalContrat.ajouter("Nouveau contrat cadre accepté : " + contrat);
 }
+
+@Override
+public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
+    double quantiteLivree = Math.min(quantite, stock.getStock(produit));
+    stock.retirer(produit, quantiteLivree);
+    journalContrat.ajouter("Livraison de " + quantiteLivree + "T de " + produit + " pour le contrat " + contrat);
+    return quantiteLivree;
+}
+
+}
+    

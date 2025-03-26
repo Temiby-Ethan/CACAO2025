@@ -53,4 +53,4 @@ public class Stock {
     public double getStockTotal() {
         return stocks.values().stream().mapToDouble(Double::doubleValue).sum();
     }
-}
+   }

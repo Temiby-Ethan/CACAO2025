@@ -2,68 +2,61 @@ package abstraction.eq1Producteur1;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import abstraction.eqXRomu.bourseCacao.IVendeurBourse;
 import abstraction.eqXRomu.filiere.Filiere;
-import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
-import abstraction.eqXRomu.general.Variable;
-import abstraction.eqXRomu.general.VariableReadOnly;
 import abstraction.eqXRomu.produits.Feve;
-import abstraction.eqXRomu.produits.Gamme;
-import abstraction.eqXRomu.produits.IProduit;
 
-//Adam Sebiane
+public class Producteur1Bourse extends Producteur1Acteur implements IVendeurBourse {
 
+    private Journal journalBourse;
 
-public class Producteur1Bourse extends Producteur1Acteur implements IVendeurBourse{
-
-
-        private Journal journalTransactions;
-    
-        public Producteur1Bourse() {
-            super();
-            this.journalTransactions = new Journal(this.getNom() + " - Journal des transactions boursières de l'équipe 1", this);
-        }
-    //Détermine la quantité de fèves que nous sommes prêt à vendre à un certain prix
-        @Override
-        public double offre(Feve typeFeve, double prixCourant) {
-            if (typeFeve.getGamme() == stockFBQ) { // On vend uniquement des fèves de haute qualité (HQ)
-                double quantiteOfferte = 980.0; // Quantité fixe à offrir
-                journalTransactions.ajouter(Filiere.LA_FILIERE.getEtape() + " : Offre de " + quantiteOfferte + " tonnes de " + typeFeve + " à " + prixCourant + " €/tonne");
-                return quantiteOfferte;
-            } else {
-                journalTransactions.ajouter(Filiere.LA_FILIERE.getEtape() + " : Aucune offre pour " + typeFeve + " (gamme non supportée)");
-                return 0.0; // Pas d'offre pour les autres gammes
-            }
-        }
-    
-        @Override
-        public double notificationVente(Feve typeFeve, double quantiteVendue, double prixVente) {
-            double quantiteRetiree = Math.min(this.stock.get(typeFeve).getValeur(), quantiteVendue);
-            this.stock.get(typeFeve).retirer(this, quantiteRetiree, cryptogramme);
-            journalTransactions.ajouter(Filiere.LA_FILIERE.getEtape() + " : Vente de " + quantiteVendue + " tonnes de " + typeFeve + " à " + prixVente + " €/tonne. Stock restant : " + this.stock.get(typeFeve).getValeur((Integer) cryptogramme));
-            super.mettreAJourStock();
-            return quantiteRetiree;
-        }
-    
-        @Override
-        public void notificationBlackList(int dureeBlacklist) {
-            journalTransactions.ajouter(Filiere.LA_FILIERE.getEtape() + " : Blacklisté pour " + dureeBlacklist + " étapes.");
-        }
-    
-        @Override
-        public void next() {
-            super.next();
-        }
-    
-        @Override
-        public List<Journal> getJournaux() {
-            List<Journal> journaux = new ArrayList<>();
-            journaux.add(journalTransactions);
-            journaux.add(super.getJournalPrincipal());
-            return journaux;
-        }
+    public Producteur1Bourse() {
+        super();
+        this.journalBourse = new Journal(getNom() + " - Journal Bourse", this);
     }
+
+    @Override
+    public double offre(Feve typeFeve, double prixCourant) {
+        // On vend BQ et MQ
+        if (typeFeve.equals(Feve.F_BQ) || typeFeve.equals(Feve.F_MQ)) {
+            double stockDispo = stock.getStock(typeFeve);
+            double quantiteOfferte = Math.min(stockDispo, 1000.0);
+            journalBourse.ajouter("Étape " + Filiere.LA_FILIERE.getEtape() +
+                " : Offre bourse de " + quantiteOfferte + " tonnes de " + typeFeve);
+            return quantiteOfferte;
+        }
+        return 0.0;
+    }
+
+    @Override
+    public double notificationVente(Feve typeFeve, double quantiteVendue, double prixVente) {
+        double stockDispo = stock.getStock(typeFeve);
+        double quantiteLivree = Math.min(stockDispo, quantiteVendue);
+        stock.retirer(typeFeve, quantiteLivree); // méthode ajoutée dans Stock.java
+        journalBourse.ajouter("Étape " + Filiere.LA_FILIERE.getEtape() +
+            " : VENTE bourse de " + quantiteLivree + " tonnes de " + typeFeve +
+            " à " + prixVente + " €/tonne");
+        return quantiteLivree;
+    }
+
+    @Override
+    public void notificationBlackList(int dureeBlacklist) {
+        journalBourse.ajouter("Blacklisté pour " + dureeBlacklist + " étapes.");
+    }
+
+    @Override
+    public void next() {
+        super.next();
+    }
+
+    @Override
+    public List<Journal> getJournaux() {
+        List<Journal> res = new ArrayList<>();
+        res.add(journalBourse);
+        res.add(super.getJournalPrincipal());
+        return res;
+    }
+}
