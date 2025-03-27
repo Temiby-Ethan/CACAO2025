@@ -21,27 +21,17 @@ public class Producteur1Bourse extends Producteur1ContratCadre implements IVende
 
     @Override
     public double offre(Feve typeFeve, double prixCourant) {
-        // On vend uniquement les fèves de basse qualité (BQ) et moyenne qualité (MQ)
-        if (typeFeve.equals(Feve.F_BQ)) {
-            double stockBQ = stock.getStockFBQ(); // Stock spécifique pour F_BQ
-            double quantiteOfferte = Math.min(stockBQ, 1000.0); // Limite à 1000 tonnes
+        double stockDisponible = stock.getStock(typeFeve);
+        if (stockDisponible <= 0) {
             journalBourse.ajouter("Étape " + Filiere.LA_FILIERE.getEtape() +
-                " : Offre bourse de " + quantiteOfferte + " tonnes de fèves BQ.");
-            return quantiteOfferte;
-        } else if (typeFeve.equals(Feve.F_MQ)) {
-            double stockMQ = stock.getStockFMQ(); // Stock spécifique pour F_MQ
-            double quantiteOfferte = Math.min(stockMQ, 1000.0); // Limite à 1000 tonnes
-            journalBourse.ajouter("Étape " + Filiere.LA_FILIERE.getEtape() +
-                " : Offre bourse de " + quantiteOfferte + " tonnes de fèves MQ.");
-            return quantiteOfferte;
-        } else {
-            // Si le type de fève n'est pas pris en charge, aucune offre n'est faite
-            journalBourse.ajouter("Étape " + Filiere.LA_FILIERE.getEtape() +
-                " : Aucune offre pour le type de fève " + typeFeve + ".");
-            return 0.0;
+                " : Pas d'offre pour les fèves " + typeFeve + ", stock insuffisant.");
+            return 0.0; // Pas d'offre si le stock est insuffisant
         }
+        double quantiteOfferte = Math.min(stockDisponible, 1000.0); // Limite à 1000 tonnes
+        journalBourse.ajouter("Étape " + Filiere.LA_FILIERE.getEtape() +
+            " : Offre bourse de " + quantiteOfferte + " tonnes de fèves " + typeFeve + ".");
+        return quantiteOfferte;
     }
-
     @Override
     public double notificationVente(Feve typeFeve, double quantiteVendue, double prixVente) {
         double stockDispo = stock.getStockTotal();

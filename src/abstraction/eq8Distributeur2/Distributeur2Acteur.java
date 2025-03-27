@@ -26,19 +26,19 @@ public class Distributeur2Acteur implements IActeur {
 	protected Variable stockTotal;
 	protected Journal journal;
 	protected int cryptogramme;
-	protected double coutStockage;
+	
 	protected IProduit produit;
 	protected List<ChocolatDeMarque> chocolats;
 	protected HashMap<ChocolatDeMarque, Double> stock_Choco;
 	protected HashMap<Chocolat,Integer> nombreMarquesParType;
 	protected HashMap<Chocolat, Variable> variables;
-	protected List<ChocolatDeMarque> chocoProduits;
+	
 
 	public Distributeur2Acteur() {
 		
 		this.journal= new Journal(this.getNom()+" journal", this);
 		this.chocolats = new LinkedList<ChocolatDeMarque>();
-		this.chocoProduits = new LinkedList<ChocolatDeMarque>();
+		
 		this.stockTotal = new VariablePrivee("Eq8DStockChocoMarque","Quantite totale de chocolat de marque en stock",this,0);
 		this.variables= new HashMap<Chocolat, Variable>();
 		for (Chocolat c : Chocolat.values()) {
