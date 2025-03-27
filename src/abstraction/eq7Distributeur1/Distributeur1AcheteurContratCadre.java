@@ -26,7 +26,6 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 	protected String name;
 	protected Color color;
 	protected List<Double> predictionsVentesPourcentage;
-	protected IAcheteurContratCadre identityContratCadre;
 	//private HashMap<ChocolatDeMarque,Variable> stock;
 
 	public Distributeur1AcheteurContratCadre() {
@@ -146,7 +145,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 		SuperviseurVentesContratCadre superviseur = (SuperviseurVentesContratCadre)(Filiere.LA_FILIERE.getActeur("Sup.CCadre"));
 		for (int i=0; i<chocolats.size(); i++) {
 			List<IVendeurContratCadre> vendeurList = superviseur.getVendeurs(chocolats.get(i));
-			superviseur.demandeAcheteur(this.identityContratCadre, vendeurList.get(0), chocolats.get(i), new Echeancier(Filiere.LA_FILIERE.getEtape(), 8, requiredQuantities.get(i)), this.cryptogramme, false);
+			superviseur.demandeAcheteur(this, vendeurList.get(0), chocolats.get(i), new Echeancier(Filiere.LA_FILIERE.getEtape(), 8, requiredQuantities.get(i)), this.cryptogramme, false);
 		}
 		
 	}

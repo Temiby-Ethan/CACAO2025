@@ -20,12 +20,12 @@ public class Distributeur1Miseenstock extends Distributeur1 {
         this.etape = Filiere.LA_FILIERE.getEtape();
 
         this.chocolats = new ArrayList<ChocolatDeMarque>();
-		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_HQ_BE, "Hexafridge", 50));
-		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_HQ_E, "Hexafridge", 50));
-		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_MQ_E, "Hexafridge", 50));
-		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_MQ, "Hexafridge", 50));
-		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_BQ_E, "Hexafridge", 50));
-		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_BQ, "Hexafridge", 50));
+		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_HQ_BE, Filiere.LA_FILIERE.getMarquesChocolat().get(1), 50));
+		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_HQ_E, Filiere.LA_FILIERE.getMarquesChocolat().get(1), 50));
+		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_MQ_E, Filiere.LA_FILIERE.getMarquesChocolat().get(1), 50));
+		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_MQ, Filiere.LA_FILIERE.getMarquesChocolat().get(1), 50));
+		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_BQ_E, Filiere.LA_FILIERE.getMarquesChocolat().get(1), 50));
+		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_BQ, Filiere.LA_FILIERE.getMarquesChocolat().get(1), 50));
 
         //Toute cette initialisation sera à refaire plus tard
         stockVenteChocolat.put(chocolats.get(0), new Variable("7stockVenteHQBE", this)); // CHOCOLAT HAUTE QUALITE BIO EQUITABLE
