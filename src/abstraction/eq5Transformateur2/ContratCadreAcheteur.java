@@ -1,9 +1,15 @@
+//Simon
 package abstraction.eq5Transformateur2;
 
+import abstraction.eqXRomu.bourseCacao.BourseCacao;
 import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 import abstraction.eqXRomu.contratsCadres.IAcheteurContratCadre;
+import abstraction.eqXRomu.filiere.Filiere;
+import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
+import java.util.ArrayList;
+import java.util.List;
 
 class ContratCadreAcheteur extends ContratCadreVendeur implements IAcheteurContratCadre{
     public ContratCadreAcheteur() {
@@ -19,8 +25,22 @@ class ContratCadreAcheteur extends ContratCadreVendeur implements IAcheteurContr
 	 *         negocier un contrat cadre pour ce type de produit).
 	 */
 	public boolean achete(IProduit produit){
-            return false;
+		if (produit == Feve.F_MQ){
+			return true;
 		}
+		if (produit == Feve.F_MQ_E){
+			return true;
+		}
+		if (produit == Feve.F_HQ_E){
+			return true;
+		}
+		if (produit == Feve.F_HQ_BE){
+			return true;
+		}
+
+        return false;
+
+	}
 
 	/**
 	 * Methode appelee par le SuperviseurVentesContratCadre lors des negociations
@@ -37,7 +57,40 @@ class ContratCadreAcheteur extends ContratCadreVendeur implements IAcheteurContr
 	 *         superviseur soumettra au vendeur.
 	 */
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat){
-        return contrat.getEcheancier();
+		Echeancier original = contrat.getEcheancier();
+		int stepDebut = original.getStepDebut();
+		int nbEcheances = original.getNbEcheances();
+		double quantiteTotale = original.getQuantiteTotale();
+
+		Feve f = (Feve) contrat.getProduit();
+		double prodTotale = this.getProductionTotale();
+		double proportion = this.getProportion(f);
+
+		double quantiteMin = prodTotale * proportion * 0.1;
+		double quantiteMax = prodTotale * proportion * 1.1;
+
+		// Si la quantité demandée est dans la plage acceptable, on accepte tel quel
+		if (quantiteTotale >= quantiteMin && quantiteTotale <= quantiteMax) {
+			return original;
+		}
+
+		// Sinon on fait une contre-proposition sur la limite haute ou basse
+		double nouvelleQuantite = Math.max(quantiteMin, Math.min(quantiteMax, quantiteTotale));
+		double quantiteParStep = nouvelleQuantite / nbEcheances;
+
+		List<Double> quantites = new ArrayList<>();
+		for (int i = 0; i < nbEcheances; i++) {
+			quantites.add(quantiteParStep);
+		}
+
+		// Création d’un nouvel échéancier
+		Echeancier nouveau = new Echeancier(stepDebut, quantites);
+
+		return nouveau;
+
+
+		
+		
     }
 	
 	/**
@@ -54,7 +107,16 @@ class ContratCadreAcheteur extends ContratCadreVendeur implements IAcheteurContr
 	 *         un autre prix correspondant a sa contreproposition.
 	 */
 	public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat){
-        return contrat.getPrix();
+        Double prixVendeur= contrat.getPrix();
+		Feve f = (Feve) contrat.getProduit();
+		BourseCacao bc =  ((BourseCacao) (Filiere.LA_FILIERE.getActeur("BourseCacao")));
+		Double prixBourse= bc.getCours(f).getValeur();
+		if (prixVendeur <= prixBourse){  
+			return prixVendeur;
+		}
+		else{
+			return prixBourse;
+		}
     }
 
 	/**
@@ -68,6 +130,7 @@ class ContratCadreAcheteur extends ContratCadreVendeur implements IAcheteurContr
 	 * @param contrat
 	 */
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat){
+		super.journal.ajouter("nouveau contrat cadre signé"+contrat.toString());
     
     }
 
@@ -82,6 +145,8 @@ class ContratCadreAcheteur extends ContratCadreVendeur implements IAcheteurContr
 	 */
 	public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat){
         this.ajouterStock(this, p, quantiteEnTonnes, super.cryptogramme);
+		this.journal.ajouter("ajout de " + quantiteEnTonnes + " tonnes de " + p + " à notre stock grâce à un contrat cadre");
+			
     }
 
 }
