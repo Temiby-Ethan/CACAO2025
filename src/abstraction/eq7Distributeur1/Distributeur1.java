@@ -115,6 +115,12 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 
         //journal.ajouter("Étape " + etape + " : Ajout de " + quantiteAjoutee + " t de " + produit + " en rayon.");
 		
+		journal.ajouter("stock : " + this.stocksChocolats.get(chocolats.get(0)).getValeur() + " "
+		+ this.stocksChocolats.get(chocolats.get(2)).getValeur()  + " "
+		+ this.stocksChocolats.get(chocolats.get(3)).getValeur()  + " "
+		+ this.stocksChocolats.get(chocolats.get(4)).getValeur()  + " "
+		+ this.stocksChocolats.get(chocolats.get(5)).getValeur()  + " ");
+
 		// définition des capacités de ventes
 
 		for (int i=0; i<this.chocolats.size(); i++) {
