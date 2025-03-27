@@ -7,9 +7,7 @@ import abstraction.eqXRomu.contratsCadres.SuperviseurVentesContratCadre;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.IProduit;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.HashMap;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,13 +23,12 @@ import abstraction.eqXRomu.produits.IProduit;
 
 public class Distributeur2AcheteurContratCadre extends Distributeur2Vendeur implements IAcheteurContratCadre{
 
-	private SuperviseurVentesContratCadre supCC;
+	
 	protected List<ExemplaireContratCadre> contrat_en_cours;
 	protected List<ExemplaireContratCadre> contrat_term;
 	protected Journal journalCC;
 	
-	protected List<ExemplaireContratCadre> choix;
-	protected Double attract_tot;
+	
     protected List<ChocolatDeMarque> produit_voulue;
 
 	public Distributeur2AcheteurContratCadre() {
@@ -39,15 +36,20 @@ public class Distributeur2AcheteurContratCadre extends Distributeur2Vendeur impl
 		this.contrat_en_cours = new LinkedList<ExemplaireContratCadre>();
 		this.contrat_term = new LinkedList<ExemplaireContratCadre>();
 		this.journalCC = new Journal (this.getNom() + "journal CC", this);
-		this.choix = new LinkedList<ExemplaireContratCadre>();
+
 		this.produit_voulue = new LinkedList<ChocolatDeMarque>();
+        
+	}
+
+    public void initialiser() {
+		super.initialiser();
         for (ChocolatDeMarque cm : chocolats){
             if (cm.getChocolat() == Chocolat.C_HQ_E || cm.getChocolat() == Chocolat.C_HQ_BE || cm.getChocolat() == Chocolat.C_MQ_E){
                 produit_voulue.add(cm);
             }
         }
-
-	}
+        
+    }
     
     public boolean achete(IProduit produit) {
         if (produit instanceof ChocolatDeMarque 
@@ -82,7 +84,7 @@ public class Distributeur2AcheteurContratCadre extends Distributeur2Vendeur impl
     
     public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
         stock_Choco.put((ChocolatDeMarque) p,this.stock_Choco.get(p)+quantiteEnTonnes);
-        journal.ajouter("Réception de "+quantiteEnTonnes+" tonnes de "+p.toString()+" du contrat "+ contrat.toString());
+        journal.ajouter("Réception de " + quantiteEnTonnes + " tonnes de " + p.toString() + " du contrat " + contrat.toString());
         journalCC.ajouter("Réception de " + quantiteEnTonnes + " tonnes de " + p.toString() + " pour le contrat " + contrat.toString());
     }
 
