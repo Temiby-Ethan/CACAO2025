@@ -15,7 +15,7 @@ public class Distributeur3Distributeur extends Distributeur3Acteur implements ID
     // Implémentée par Héloïse
     // protected HashMap<ChocolatDeMarque, Double> stocks;
     protected HashMap<ChocolatDeMarque, Float> prix;
-    private VariablePrivee stockTotal;
+    protected VariablePrivee stockTotal;
     private VariablePrivee stockBQ;
     private VariablePrivee stockBQ_E;
 
@@ -66,6 +66,7 @@ public class Distributeur3Distributeur extends Distributeur3Acteur implements ID
 
     @Override
     public double quantiteEnVente(ChocolatDeMarque choco, int crypto) {
+
         if (this.cryptogramme==crypto && this.stockChocoMarque.containsKey(choco)) {
             if(this.stockChocoMarque.get(choco)>=100) {
                 this.journalActeur.ajouter("Mise en rayon de 100 tonnes de "+choco.getNom());
@@ -129,5 +130,12 @@ public class Distributeur3Distributeur extends Distributeur3Acteur implements ID
     @Override
     public void notificationRayonVide(ChocolatDeMarque choco, int crypto) {
         this.journalActeur.ajouter("Le rayon de "+choco.toString()+" est vide ");
+    }
+
+    @Override
+    public void next() {
+        this.journalStocks.ajouter("Stock Total avant  : "+this.stockTotal.getValeur(this.cryptogramme));
+        super.next();
+        this.journalStocks.ajouter("Stock Total après : "+this.stockTotal.getValeur(this.cryptogramme));
     }
 }
