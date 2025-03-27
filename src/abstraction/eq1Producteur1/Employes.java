@@ -10,9 +10,9 @@ public class Employes {
     private int adultesNonFormes; // Nombre d'adultes non formés employés
     private int adultesFormes; // Nombre d'adultes formés employés
 
-    private final double coutEnfant = 6.0; // Coût d'entretien par step pour un enfant
-    private final double coutAdulteNonForme = 15.0; // Coût d'entretien par step pour un adulte non formé
-    private final double coutAdulteForme = 37.5; // Coût d'entretien par step pour un adulte formé
+    private final double coutEnfant = 2.0; // Coût d'entretien par step pour un enfant
+    private final double coutAdulteNonForme = 5.0; // Coût d'entretien par step pour un adulte non formé
+    private final double coutAdulteForme = 12.5; // Coût d'entretien par step pour un adulte formé
 
     public Employes() {
         // Initialisation des employés selon les besoins en main-d'œuvre (V1)
