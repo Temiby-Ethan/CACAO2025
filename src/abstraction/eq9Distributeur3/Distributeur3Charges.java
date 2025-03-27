@@ -29,7 +29,6 @@ public class Distributeur3Charges extends Distributeur3ContratCadre {
                 totalEnRayon += this.quantiteEnVente(choco,cryptogramme);
             }
         }
-        System.out.println("total en vente "+totalEnRayon);
         Filiere.LA_FILIERE.getBanque().payerCout(this,this.cryptogramme,"Mise en rayon",Filiere.LA_FILIERE.getParametre("cout mise en rayon").getValeur()*totalEnRayon);
         this.journalCharges.ajouter("paiement mise en rayon "+Filiere.LA_FILIERE.getParametre("cout mise en rayon").getValeur()*totalEnRayon);
         Filiere.LA_FILIERE.getBanque().payerCout(this,this.cryptogramme,"Salaires",salaireEmployes*nbEmployes);
