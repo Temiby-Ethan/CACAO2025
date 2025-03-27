@@ -10,46 +10,56 @@ import java.util.LinkedList;
 
 public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1ContratCadreVendeur implements IAcheteurContratCadre {
     
-    protected List<ExemplaireContratCadre> mesContratEnTantQuAcheteur;
+    
     protected double qttInitialementVoulue;	
 	protected double prixInitialementVoulu;
 	protected double epsilon;
 
 
-	//A MODIFIER 
-	//Adapater l'écriture pour prendre en compte la nouvelle gestion des stocks
 	public Transformateur1ContratCadreVendeurAcheteur() {
 		super();
 		this.mesContratEnTantQuAcheteur=new LinkedList<ExemplaireContratCadre>();
         this.epsilon  = 0.1;
-        this.qttInitialementVoulue = 11;//On cherche à acheter de quoi remplir notre stock //A MODIFIER
+
+        this.qttInitialementVoulue = 0.5*STOCK_MAX_TOTAL_FEVES;//On cherche à acheter de quoi remplir ou vendre notre stock à hauteur de 50%
+
         this.prixInitialementVoulu = 0.75*9500; //Une valeur arbitraire s'appuyant sur le prix moyen des fèves de cacao en 2024
 	}
 
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {
-		//On ne contrepropose que si la quantité figurant dans le contrat actuellement est supérieur au minimum de quantité totale de marchandise
-		if (contrat.getEcheancier().getQuantiteTotale() > SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER) {
-			//Si la qtt proposée est cohérente avec la quantité que nous voulions initialement, on accepte l'echeancier
-			if (Math.abs(this.qttInitialementVoulue-contrat.getEcheancier().getQuantiteTotale())/this.qttInitialementVoulue <= epsilon){
+
+        //Si la qtt proposée est cohérente avec la quantité que nous voulions initialement, on accepte l'echeancier
+		if (contrat.getEcheancier().getQuantiteTotale()>SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER){
+			if (Math.abs((this.qttInitialementVoulue - contrat.getEcheancier().getQuantiteTotale())/this.qttInitialementVoulue) <= epsilon){
+
 				return contrat.getEcheancier();
 			}
-			//Sinon on négocie par dichotomie
+			//Sinon on négocie par dichotomie particulière
 			else{
+
+				double qttContrat = contrat.getEcheancier().getQuantiteTotale();
+				double qttVoulue = 0.25*qttContrat + 0.75 * this.qttInitialementVoulue;
+
+				//Si on calcule une quantité voulue inférieure à celle du contrat, on accepte la dernière offre
+				if (qttVoulue<SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER) return contrat.getEcheancier();
+
 				//Mise à jour de l'échéancier pour prendre en compte ces modifications
 				Echeancier e = contrat.getEcheancier();
-				//On procède par dichotomie en augmentant ou diminuant le volume de vente de nos produits
-				double delta = contrat.getEcheancier().getQuantiteTotale()- qttInitialementVoulue;
-				double signe = delta/Math.abs(delta);
-				this.qttInitialementVoulue = this.qttInitialementVoulue * (1 + signe*0.125);//si detla<0, proposition trop faible donc on diminue notre demande
-																							//si delta>0, proposition trop forte donc on augmante notre demande
 
 				//Redistribution uniforme de la hausse ou de la baisse des qtt vendues 
 				for(int i = e.getStepDebut() ; i< e.getStepFin() ; i++){
-					double qtti = e.getQuantite(i);
-					e.set(i, qtti*(1+signe*0.125));
+					double qtti = e.getQuantite(i)*(qttVoulue/qttContrat);
+
+					//Si la quantité par step ne respecte pas les exigeances des règles du contrat, on met la part minimale
+					//Mais si cette condition est vérifiée, il risque d'y avoir une augmentation de la qtt totale et donc que le problème se reporte sur d'autres step
+					if (qtti<qttVoulue/(10*e.getNbEcheances())){
+
+						e.set(i, qttVoulue/(10*e.getNbEcheances()));
+					}
 				}
-				if (e.getQuantiteTotale()>SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER) return e;
-				else return null;
+				if (e.getQuantiteTotale()<SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER) return contrat.getEcheancier();
+				else return e;
+
 			}
 		}
 		else {
@@ -82,6 +92,9 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 		}
 	}
 
+	public void initialiser(){
+		super.initialiser();
+	}
 
 	public void next() {
 		super.next();
@@ -94,15 +107,14 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 			}
 		}
 		this.mesContratEnTantQuAcheteur.removeAll(contratsObsoletes);
+
 		
-		//A MODIFIER
-		//Pour tous nos produits, on cherche des contrats cadre pour acheter des fèves
-		//Cette rechercche est systématique, il faudrait en réalité prendre en compte la nécessité de faire un CC
-		if (totalStocksFeves.getValeur()< 0.75*this.STOCK_MAX_TOTAL_FEVES){
-		
-			journalCC.ajouter("Recherche d'un vendeur aupres de qui acheter des fèves");
-			for(IProduit produit : stockFeves.keySet()){
-				
+
+		// OU proposition d'un contrat a un des vendeurs choisi aleatoirement
+		for(IProduit produit : pourcentageTransfo.keySet()){
+			if(stockFeves.get(produit)< 0.1*STOCK_MAX_TOTAL_FEVES){
+				journalCC.ajouter("Recherche d'un vendeur aupres de qui acheter");
+
 				List<IVendeurContratCadre> vendeurs = supCCadre.getVendeurs(produit);
 				if (vendeurs.contains(this)) {
 					vendeurs.remove(this);
@@ -117,19 +129,14 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 				}
 				if (vendeur!=null) {
 					journalCC.ajouter("Demande au superviseur de debuter les negociations pour un contrat cadre de "+produit+" avec le vendeur "+vendeur);
-					ExemplaireContratCadre cc = supCCadre.demandeAcheteur((IAcheteurContratCadre)this, vendeur, produit, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10, 20.), cryptogramme,false);
+					ExemplaireContratCadre cc = supCCadre.demandeAcheteur((IAcheteurContratCadre)this, vendeur, produit, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10, (SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER+10.0)/10), cryptogramme,false);
 					journalCC.ajouter("-->aboutit au contrat "+cc);
 				}
 			}
-			
 		}
-
-		//A MODIFIER
-		//Pour tous nos produits, on cherche des contrats cadre pour vendre notre production
-		//Cette rechercche est systématique, il faudrait en réalité prendre en compte la nécessité de faire un CC
-		journalCC.ajouter("Recherche d'un acheteur aupres de qui vendre");
-		for (IProduit produit : stockChoco.keySet()){
-			// Proposition d'un contrat a un des achteur choisi aleatoirement
+		// Proposition d'un contrat a un des achteur choisi aleatoirement
+		for(IProduit produit : stockChoco.keySet()){
+			journalCC.ajouter("Recherche d'un acheteur aupres de qui vendre");
 
 			List<IAcheteurContratCadre> acheteurs = supCCadre.getAcheteurs(produit);
 			if (acheteurs.contains(this)) {
@@ -157,8 +164,10 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 	}
 
 	public boolean achete(IProduit produit) {
-		return true;
+		//On n'achète que les fèves nous permettant de produire les chocolats que l'on veut produire
+		return pourcentageTransfo.keySet().contains(produit);
 	}
+
 	public String toString() {
 		return this.getNom();
 	}

@@ -1,61 +1,63 @@
-// Henri ROTH
+// Henri ROTH, Florian MALVEAU
 package abstraction.eq6Transformateur3;
 import java.util.ArrayList;
 import java.util.List;
 
-import abstraction.eqXRomu.bourseCacao.IAcheteurBourse;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
-import abstraction.eqXRomu.produits.Feve;
 
+public class Transformateur3 extends Transformateur3AcheteurBourse{
 
-public class Transformateur3 extends Transformateur3Acteur implements IAcheteurBourse  {
-	
-	private Journal jdb;
-	private int etape;
-	private Variable totalstock;
-	private Feve feve;
-	
 	public Transformateur3() {
-		super();
-		this.jdb = new Journal("Journal de bord", this);
-		this.totalstock = new Variable(this.getNom()+" volume total de notre stock", this, 300);
-		this.feve = Feve.F_MQ;
 	}
 
-	protected Feve getFeve() {
-		return this.feve;
+	public void initialiser(){
+		super.initialiser();
 	}
 
 	public void next(){
-		etape = Filiere.LA_FILIERE.getEtape();
-		jdb.ajouter("Etape " + etape);
+		super.next();
+		super.jdb.ajouter("NEXT - TRANSFORMATEUR3");
+		//stockChoco.addToStock(super.lesChocolats.get(0), 500.0);
+		//stockChoco.addToStock(lesChocolats.get(1), 800.0);
+
+		//stockFeves.remove(abstraction.eqXRomu.produits.Feve.F_BQ, 100.0);
+
+		//Récupération des stocks de fèves et choco
+		double stockTotal = super.stockFeves.getStockTotal()+super.stockChoco.getStockTotal();
+		//On paye les coûts de stockage
+
+		super.coutStockage = 4*Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur();
+		super.LaBanque.payerCout(this, super.cryptogramme, "Coûts de stockage", super.coutStockage*stockTotal);
+
+		super.stockFeves.display();
+		super.stockChoco.display();
+		super.jdb.ajouter("");//Saut de ligne de fin de next
 	}
 
 	public List<Journal> getJournaux() {
-	ArrayList<Journal> res = new ArrayList<Journal>();
-	res.add(this.jdb);
-	return res;
+		ArrayList<Journal> res = new ArrayList<Journal>();
+		res.add(super.jdb);
+		res.add(super.journalStock);
+		res.add(super.journalTransac);
+		res.add(super.journalCC);
+		res.add(super.journalBourse);
+		return res;
 	}
 
 	public List<Variable> getIndicateurs() {
 		List<Variable> res =  new ArrayList<Variable>();
-		res.add(this.totalstock);
+		res.add(super.eq6_Q_BQ_0);
+		res.add(super.eq6_Q_BQ_1);
+		res.add(super.eq6_Q_MQ_0);
+		res.add(super.eq6_Q_MQ_1);
+		res.add(super.eq6_Q_HQ_1);
+		res.add(super.eq6_Q_HQ_2);
+		res.add(super.eq6_Q_Fraudo);
+		res.add(super.eq6_Q_Bollo);
+		res.add(super.eq6_Q_Hypo);
+		res.add(super.eq6_Q_Arna);
 		return res;
-	}
-
-	public double demande(Feve f, double cours) {
-		if (this.getFeve().equals(f)) {
-			return 80;
-		} else {
-			return 0.0;
-		}
-	}
-	public void notificationAchat(Feve f, double quantiteEnT, double coursEnEuroParT) {
-		this.totalstock.setValeur(this, this.totalstock.getValeur()+quantiteEnT);
-	}
-	public void notificationBlackList(int dureeEnStep) {
-		this.jdb.ajouter("Aie... je suis blackliste... j'aurais du verifier que j'avais assez d'argent avant de passer une trop grosse commande en bourse...");
 	}
 }

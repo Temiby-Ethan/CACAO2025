@@ -1,18 +1,22 @@
 package abstraction.eq4Transformateur1;
 
 import abstraction.eq4Transformateur1.contratCadre.Transformateur1ContratCadreVendeurAcheteur;
-import abstraction.eq4Transformateur1.contratCadre.TransformateurContratCadre;
+
 import abstraction.eqXRomu.bourseCacao.IAcheteurBourse;
 import abstraction.eqXRomu.produits.Feve;
 
-public class Transformateur1AcheteurBourse extends Transformateur1Stocks implements IAcheteurBourse{
+/**
+ * @author YAOU Reda
+ */
+
+public class Transformateur1AcheteurBourse extends Transformateur1ContratCadreVendeurAcheteur implements IAcheteurBourse{
 	
 	private Feve feve;
 	private double T;
  
 	public Transformateur1AcheteurBourse() {
 		super();
-		this.feve = Feve.F_MQ;
+		this.feve = Feve.F_BQ;
 		this.T = 80.0;
 	}
 
@@ -29,10 +33,9 @@ public class Transformateur1AcheteurBourse extends Transformateur1Stocks impleme
 	@Override
 	public void notificationAchat(Feve f, double quantiteEnT, double coursEnEuroParT) {
 
-		this.totalStocksFeves.setValeur(this, this.totalStocksFeves.getValeur(this.cryptogramme) +quantiteEnT, this.cryptogramme);
 		this.journalTransactions.ajouter("J'ai achete " + quantiteEnT + " tonnes de " + f + " au cours de " + coursEnEuroParT + " euros par tonne.");
 		
-		if (this.stockFeves.get(f) == null){
+		if (this.stockFeves == null || this.stockFeves.get(f) == null){
 			this.stockFeves.put(f, quantiteEnT);
 		}
 		else{
@@ -40,6 +43,9 @@ public class Transformateur1AcheteurBourse extends Transformateur1Stocks impleme
 		}
 
 		this.journalTransactions.ajouter("J'ai maintenant " + this.stockFeves.get(f) + " tonnes de " + f + " en stock.");
+
+		this.totalStocksFeves.setValeur(this, this.totalStocksFeves.getValeur(this.cryptogramme) + quantiteEnT, this.cryptogramme);
+		this.journalTransactions.ajouter("J'ai maintenant " + this.totalStocksFeves.getValeur(this.cryptogramme) + " tonnes de feves en stock.");
 	}
 
 	@Override
