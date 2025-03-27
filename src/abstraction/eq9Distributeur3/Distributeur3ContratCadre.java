@@ -15,8 +15,6 @@ public class Distributeur3ContratCadre extends Distributeur3Distributeur impleme
     @Override
     public void next() {
 
-
-
         super.next();
        SuperviseurVentesContratCadre superviseur = (SuperviseurVentesContratCadre) Filiere.LA_FILIERE.getActeur("Sup.CCadre");
         List<ChocolatDeMarque> listeChcocolatPertinents = new ArrayList<ChocolatDeMarque>();
@@ -27,20 +25,20 @@ public class Distributeur3ContratCadre extends Distributeur3Distributeur impleme
        for(ChocolatDeMarque choco :  Filiere.LA_FILIERE.getChocolatsProduits()){
            if(choco.getGamme()== Gamme.BQ){
                listeChcocolatPertinents.add(choco);
-               System.out.println("Chocolat de marque: " + choco.toString());
+               //System.out.println("Chocolat de marque: " + choco.toString());
            }
        }
 
 
        for (IActeur a : transfo){
            if(a instanceof IVendeurContratCadre && Filiere.LA_FILIERE.getActeursSolvables().contains(a)){
-               System.out.println("le transfo potentiel est : "+a.toString());
+               //System.out.println("le transfo potentiel est : "+a.toString());
                for(ChocolatDeMarque choco : listeChcocolatPertinents) {
-                   System.out.println("Fait une demande de contrat cadre : ");
-                   System.out.println("chocolat : "+choco.toString());
+                   //System.out.println("Fait une demande de contrat cadre : ");
+                   //System.out.println("chocolat : "+choco.toString());
                    Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1,8,200);
-                   System.out.println("échéancier : "+e.toString());
-                   System.out.println("deuxième parti :"+a.toString());
+                   //System.out.println("échéancier : "+e.toString());
+                   //System.out.println("deuxième parti :"+a.toString());
                    superviseur.demandeAcheteur(this, (IVendeurContratCadre) a,choco,e,this.cryptogramme,false);
                }
            }
@@ -71,11 +69,15 @@ public class Distributeur3ContratCadre extends Distributeur3Distributeur impleme
 
     @Override
     public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat) {
-        double fourchetteLimiteNegociation  = 1500;
+        journalContrats.ajouter("negocie le contrat");
+        //double fourchetteLimiteNegociation  = 1500;
+
+        // a enlever, on laisse juste ça pour pouvoir négocier avec les autres
+        double fourchetteLimiteNegociation  = 2100;
         double fourchetteLimiteAchat = 1000;
-        double baisseNego = 0.8; // Correspond a 80% du prix proposé soit une baisse de 20%
-        if(contrat.getPrix()/contrat.getQuantiteTotale()<fourchetteLimiteNegociation){
-            if(contrat.getPrix()/contrat.getQuantiteTotale()<fourchetteLimiteAchat){
+        double baisseNego = 0.5; // Correspond a 50% du prix proposé soit une baisse de 50%
+        if(contrat.getPrix()<fourchetteLimiteNegociation){
+            if(contrat.getPrix()<fourchetteLimiteAchat){
                 return contrat.getPrix();
             }else{
                 return contrat.getPrix()*baisseNego;
@@ -83,6 +85,7 @@ public class Distributeur3ContratCadre extends Distributeur3Distributeur impleme
         }else{
             return -1;
         }
+
     }
 
     @Override
