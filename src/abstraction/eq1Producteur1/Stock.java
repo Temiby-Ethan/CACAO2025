@@ -8,21 +8,14 @@ import abstraction.eqXRomu.produits.IProduit;
 
 public class Stock {
     private Map<Feve, Double> stocks; // Map pour gérer les stocks de fèves
-    private basse_qualite stockBasseQualite;
-    private moyenne_qualite stockMoyenneQualite;
-    private haute_qualite stockHauteQualite;
-    protected Producteur1 Producteur1;
 
     public Stock() {
         this.stocks = new HashMap<>(); // Initialisation du Map
-        this.stockBasseQualite = new basse_qualite();
-        this.stockMoyenneQualite = new moyenne_qualite();
-        this.stockHauteQualite = new haute_qualite();
 
         // Initialisation des stocks pour chaque type de fève
-        this.stocks.put(Feve.F_BQ, stockBasseQualite.getStock());
-        this.stocks.put(Feve.F_MQ, stockMoyenneQualite.getStock());
-        this.stocks.put(Feve.F_HQ_E, stockHauteQualite.getStock());
+        this.stocks.put(Feve.F_BQ, 50000.0); // Stock initial pour fèves basse qualité
+        this.stocks.put(Feve.F_MQ, 30000.0); // Stock initial pour fèves moyenne qualité
+        this.stocks.put(Feve.F_HQ_E, 20000.0); // Stock initial pour fèves haute qualité
     }
 
     // Ajouter une quantité pour une fève donnée
@@ -59,20 +52,11 @@ public class Stock {
             }
         }
         return false;
-    }    
- 
+    }
 
     // Obtenir le stock d'une fève donnée
-    public double getStockFMQ() {
-        return stockMoyenneQualite.getStock();
-    }
-
-    public double getStockFBQ() {
-        return stockBasseQualite.getStock();
-    }
-
-    public double getStockFHQ() {
-        return stockHauteQualite.getStock();
+    public double getStock(Feve feve) {
+        return stocks.getOrDefault(feve, 0.0);
     }
 
     // Ajouter des quantités pour chaque type de fève
@@ -87,6 +71,4 @@ public class Stock {
         // Somme des stocks de chaque type de fève 
         return stocks.values().stream().mapToDouble(Double::doubleValue).sum();
     }
-
 }
-
