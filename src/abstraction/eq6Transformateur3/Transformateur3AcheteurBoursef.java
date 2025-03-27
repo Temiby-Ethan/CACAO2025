@@ -165,7 +165,7 @@ public class Transformateur3AcheteurBoursef extends Transformateur3ContratCadreA
     public void notificationAchat(Feve f, double quantiteEnT, double coursEnEuroParT) {
         //avertir l'acheteur qu'il vient d'acheter quantiteEnT tonnes de feve f 
         //au prix de  coursEnEuroParT euros par tonne.
-        journalBourse.ajouter("vous venez d'acheter de la fève"+f+"au prix de"+coursEnEuroParT+"par tonne");
+        journalBourse.ajouter("vous venez d'acheter "+quantiteEnT +" de la fève "+f+" au prix de "+coursEnEuroParT+" par tonne");
         //L'acteur this doit augmenter son stock de feves de type f de la quantite quantiteEnT.
         super.stockFeves.addToStock(f,quantiteEnT);
         //rajouter à liste de stocks et de fèves et de prix faits
