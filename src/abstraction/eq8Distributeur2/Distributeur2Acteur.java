@@ -218,7 +218,4 @@ public class Distributeur2Acteur implements IActeur {
 		
 	}
 	
-	
-
-	
 }
