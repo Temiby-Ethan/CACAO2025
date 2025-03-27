@@ -45,7 +45,6 @@ public class Producteur1ContratCadre extends Producteur1Acteur implements IVende
             }
             return contreProp;
         }
-
         return echeancierPropose;
     }
 
