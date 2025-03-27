@@ -25,7 +25,6 @@ import abstraction.eqXRomu.produits.IProduit;
 public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurEncheres implements IAcheteurAO  {
 
 	//protected Integer cryptogramme;
-	protected IAcheteurAO identity;
 	//private List<Double> requiredQuantities;
 	//private Color color;
 	//private String name;
@@ -101,11 +100,11 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurEncher
 
 	public void next(){
 		SuperviseurVentesAO superviseur = (SuperviseurVentesAO)(Filiere.LA_FILIERE.getActeur("Sup.AO"));
-		superviseur.acheterParAO(this.identity,this.cryptogramme, Chocolat.C_BQ , this.requiredQuantities.get(0));
-		superviseur.acheterParAO(this.identity,this.cryptogramme, Chocolat.C_BQ_E , this.requiredQuantities.get(1));
-		superviseur.acheterParAO(this.identity,this.cryptogramme, Chocolat.C_MQ , this.requiredQuantities.get(2));
-		superviseur.acheterParAO(this.identity,this.cryptogramme, Chocolat.C_MQ_E , this.requiredQuantities.get(3));
-		superviseur.acheterParAO(this.identity,this.cryptogramme, Chocolat.C_HQ_E , this.requiredQuantities.get(4));
+		superviseur.acheterParAO(this,this.cryptogramme, Chocolat.C_BQ , this.requiredQuantities.get(0));
+		superviseur.acheterParAO(this,this.cryptogramme, Chocolat.C_BQ_E , this.requiredQuantities.get(1));
+		superviseur.acheterParAO(this,this.cryptogramme, Chocolat.C_MQ , this.requiredQuantities.get(2));
+		superviseur.acheterParAO(this,this.cryptogramme, Chocolat.C_MQ_E , this.requiredQuantities.get(3));
+		superviseur.acheterParAO(this,this.cryptogramme, Chocolat.C_HQ_E , this.requiredQuantities.get(4));
 	}
 
 	public List<Variable> getIndicateurs(){

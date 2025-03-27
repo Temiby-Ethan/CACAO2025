@@ -128,10 +128,6 @@ public class Distributeur1AcheteurEncheres extends Distributeur1AcheteurContratC
 		return(journaux);
 	}
 
-	public void setCryptogramme(Integer crypto){
-		this.cryptogramme = crypto;
-	}
-
 	public void notificationFaillite(IActeur acteur){
 
 	}

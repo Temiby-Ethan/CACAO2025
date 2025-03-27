@@ -38,6 +38,10 @@ public class Distributeur1Stock extends Distributeur1Acteur{
 		return this.stocksChocolats.get(c);
 	}
 
+	public void setCryptogramme(Integer crypto){
+		this.cryptogramme = crypto;
+	}
+
 	public double VolumetoBuy(ChocolatDeMarque choco, int crypto){ // par Ethan
 		int etape = Filiere.LA_FILIERE.getEtape();
 		double ancient_value_mid = 0.0;

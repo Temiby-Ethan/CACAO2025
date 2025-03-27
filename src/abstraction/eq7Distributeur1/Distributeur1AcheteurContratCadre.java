@@ -30,12 +30,9 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 
 	public Distributeur1AcheteurContratCadre() {
 		super();
-		int cryptogramme = -1;
 
 		String name = "EQ7";
 		Color color = new Color(162, 207, 238);
-
-		this.cryptogramme = cryptogramme;
 		this.name = name;
 		this.color = color;
 		//this.stock = stock;
@@ -145,9 +142,10 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 		SuperviseurVentesContratCadre superviseur = (SuperviseurVentesContratCadre)(Filiere.LA_FILIERE.getActeur("Sup.CCadre"));
 		for (int i=0; i<chocolats.size(); i++) {
 			List<IVendeurContratCadre> vendeurList = superviseur.getVendeurs(chocolats.get(i));
-			superviseur.demandeAcheteur(this, vendeurList.get(0), chocolats.get(i), new Echeancier(Filiere.LA_FILIERE.getEtape(), 8, requiredQuantities.get(i)), this.cryptogramme, false);
+			if (vendeurList.size()>0){
+				superviseur.demandeAcheteur(this, vendeurList.get(0), chocolats.get(i), new Echeancier(Filiere.LA_FILIERE.getEtape(), 8, requiredQuantities.get(i)), this.cryptogramme, false);
+			}
 		}
-		
 	}
 
 	public List<Variable> getIndicateurs(){
@@ -165,9 +163,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 		return(journaux);
 	}
 
-	public void setCryptogramme(Integer crypto){
-		this.cryptogramme = crypto;
-	}
+
 
 	public void notificationFaillite(IActeur acteur){
 
