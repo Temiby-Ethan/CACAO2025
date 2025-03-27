@@ -21,8 +21,11 @@ public class Producteur2Acteur implements IActeur {
 	protected Variable stockTotal;
 	private int numero = 0;
 	protected Journal num = new Journal("Journal Eq2", this);
+	protected Journal JournalBanque;
 
 	public Producteur2Acteur() {
+
+		this.JournalBanque = new Journal("Journal Banque Eq2", this);
 		// A REMPLIR
     }
 	
@@ -87,7 +90,7 @@ public class Producteur2Acteur implements IActeur {
 	// votre cryptogramme personnel, indispensable pour les
 	// transactions.
 	public void setCryptogramme(Integer crypto) {
-		this.cryptogramme = crypto;System.out.println(cryptogramme);
+		this.cryptogramme = crypto;
 	}
 
 	// Appelee lorsqu'un acteur fait faillite (potentiellement vous)
