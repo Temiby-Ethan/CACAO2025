@@ -21,15 +21,25 @@ public class Producteur1Bourse extends Producteur1ContratCadre implements IVende
 
     @Override
     public double offre(Feve typeFeve, double prixCourant) {
-        // On vend BQ et MQ
-        if (typeFeve.equals(Feve.F_BQ) || typeFeve.equals(Feve.F_MQ)) {
-            double stockDispo = stock.getStockTotal();
-            double quantiteOfferte = Math.min(stockDispo, 1000.0);
+        // On vend uniquement les fèves de basse qualité (BQ) et moyenne qualité (MQ)
+        if (typeFeve.equals(Feve.F_BQ)) {
+            double stockBQ = stock.getStockFBQ(); // Stock spécifique pour F_BQ
+            double quantiteOfferte = Math.min(stockBQ, 1000.0); // Limite à 1000 tonnes
             journalBourse.ajouter("Étape " + Filiere.LA_FILIERE.getEtape() +
-                " : Offre bourse de " + quantiteOfferte + " tonnes de " + typeFeve);
+                " : Offre bourse de " + quantiteOfferte + " tonnes de fèves BQ.");
             return quantiteOfferte;
+        } else if (typeFeve.equals(Feve.F_MQ)) {
+            double stockMQ = stock.getStockFMQ(); // Stock spécifique pour F_MQ
+            double quantiteOfferte = Math.min(stockMQ, 1000.0); // Limite à 1000 tonnes
+            journalBourse.ajouter("Étape " + Filiere.LA_FILIERE.getEtape() +
+                " : Offre bourse de " + quantiteOfferte + " tonnes de fèves MQ.");
+            return quantiteOfferte;
+        } else {
+            // Si le type de fève n'est pas pris en charge, aucune offre n'est faite
+            journalBourse.ajouter("Étape " + Filiere.LA_FILIERE.getEtape() +
+                " : Aucune offre pour le type de fève " + typeFeve + ".");
+            return 0.0;
         }
-        return 0.0;
     }
 
     @Override
