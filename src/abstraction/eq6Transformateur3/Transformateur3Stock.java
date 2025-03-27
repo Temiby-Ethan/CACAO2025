@@ -38,7 +38,6 @@ public class Transformateur3Stock {
         this.listProduitSorted = listProduit;
         
         for (IProduit prod : listProduit) {
-            journalStock.ajouter(prod.toString());
 			stockProduit.put(prod, initial_value);
             dicoIndicateur.get(prod).setValeur(monActeur, initial_value);
 		}
@@ -57,6 +56,10 @@ public class Transformateur3Stock {
 
     public boolean contains(IProduit prod){
         return stockProduit.containsKey(prod);
+    }
+
+    public double getStockTotal(){
+        return this.stockTotal;
     }
 
     public void addToStock(IProduit prod, double quantity){
