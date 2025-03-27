@@ -58,6 +58,10 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
         if (product.isEquitable()){
             idProduct++;
         }
+		if(idProduct == 5)
+		{
+			return 4;
+		}
 		if(idProduct == 6)
 		{
 			return 5;

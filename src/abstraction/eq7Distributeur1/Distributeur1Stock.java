@@ -16,11 +16,9 @@ import java.lang.reflect.Array;
 public class Distributeur1Stock extends Distributeur1Acteur{
     protected Map<ChocolatDeMarque, Variable> stocksChocolats;
     protected List<ChocolatDeMarque> chocolats;
-	protected Integer cryptogramme;
 
     public Distributeur1Stock()
     {
-		this.cryptogramme = -1;
         this.stocksChocolats = new HashMap<>();
 
         this.chocolats = new ArrayList<ChocolatDeMarque>();
