@@ -38,6 +38,7 @@ public class Producteur2VenteCC extends Producteur2couts implements IVendeurBour
 
     }
     // CONTRAT CADRE //
+
 	public void initialiser() {
 		super.initialiser();
 		this.supCC = (SuperviseurVentesContratCadre) Filiere.LA_FILIERE.getActeur("Sup.CCadre");
@@ -224,7 +225,7 @@ public class Producteur2VenteCC extends Producteur2couts implements IVendeurBour
 		double stockActuel = stockvar.get(produit).getValeur((Integer)cryptogramme);
 		double aLivre = Math.min(quantite, stockActuel);
 		JournalEQ2CC.ajouter("   Livraison de "+aLivre+" T de "+produit+" sur "+quantite+" exigees pour contrat "+contrat.getNumero());
-		stockvar.get(produit).setValeur(this, aLivre, (Integer)cryptogramme);
+		DeleteStock((Feve)produit, aLivre);
 		return aLivre;
 	}
 
