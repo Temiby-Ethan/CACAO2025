@@ -12,7 +12,7 @@ import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Producteur1Acteur implements IActeur {
-    
+
     protected int cryptogramme;
 
     protected Journal journal;
@@ -28,15 +28,15 @@ public class Producteur1Acteur implements IActeur {
         this.stock = new Stock();
 
         // Initialisation du stock
-        stock.ajouter(Feve.F_BQ, 1000);
-        stock.ajouter(Feve.F_MQ, 1000);
-        stock.ajouter(Feve.F_HQ_BE, 1000); //  corrigé ici
+        stock.ajouter(Feve.F_BQ, 1000); // Fèves basse qualité
+        stock.ajouter(Feve.F_MQ, 1000); // Fèves moyenne qualité
+        stock.ajouter(Feve.F_HQ_E, 1000); // Fèves haute qualité
 
         // Initialisation des indicateurs
         this.stockTotal = new Variable("Stock Total", this, stock.getStockTotal());
-        this.stockFMQ = new Variable("Stock FMQ", this, stock.getStockFMQ());
-        this.stockFBQ = new Variable("Stock FBQ", this, stock.getStockFBQ());
-        this.stockFHQ = new Variable("Stock FHQ", this, stock.getStockFHQ()); // 
+        this.stockFMQ = new Variable("Stock FMQ", this, stock.getStock(Feve.F_MQ));
+        this.stockFBQ = new Variable("Stock FBQ", this, stock.getStock(Feve.F_BQ));
+        this.stockFHQ = new Variable("Stock FHQ", this, stock.getStock(Feve.F_HQ_E));
     }
 
     public void initialiser() {
@@ -47,7 +47,8 @@ public class Producteur1Acteur implements IActeur {
     public String getNom() {
         return "EQ1";
     }
-    
+
+    @Override
     public String toString() {
         return this.getNom();
     }
@@ -57,58 +58,66 @@ public class Producteur1Acteur implements IActeur {
         journal.ajouter("Étape " + etape);
 
         // Ajout de production fictive chaque étape
-        stock.ajouter(Feve.F_BQ, 10);
-        stock.ajouter(Feve.F_MQ, 10);
-        stock.ajouter(Feve.F_HQ_BE, 10); //  
+        stock.ajouter(Feve.F_BQ, 10); // Production de fèves basse qualité
+        stock.ajouter(Feve.F_MQ, 10); // Production de fèves moyenne qualité
+        stock.ajouter(Feve.F_HQ_E, 10); // Production de fèves haute qualité
 
         // Mise à jour des indicateurs avec les nouvelles valeurs des stocks
         stockTotal.setValeur(this, stock.getStockTotal());
-        stockFMQ.setValeur(this, stock.getStockFMQ());
-        stockFBQ.setValeur(this, stock.getStockFBQ());
-        stockFHQ.setValeur(this, stock.getStockFHQ()); // 
+        stockFMQ.setValeur(this, stock.getStock(Feve.F_MQ));
+        stockFBQ.setValeur(this, stock.getStock(Feve.F_BQ));
+        stockFHQ.setValeur(this, stock.getStock(Feve.F_HQ_E));
 
+        // Journalisation des stocks
         journal.ajouter("Stock mis à jour :");
-        journal.ajouter("→ FMQ : " + stock.getStockFMQ());
-        journal.ajouter("→ FBQ : " + stock.getStockFBQ());
-        journal.ajouter("→ FHQ : " + stock.getStockFHQ()); // 
+        journal.ajouter("→ FMQ : " + stock.getStock(Feve.F_MQ));
+        journal.ajouter("→ FBQ : " + stock.getStock(Feve.F_BQ));
+        journal.ajouter("→ FHQ : " + stock.getStock(Feve.F_HQ_E));
     }
 
     @Override
     public Color getColor() {
-        return new Color(243, 165, 175); 
+        return new Color(243, 165, 175);
     }
 
+    @Override
     public String getDescription() {
         return "Producteur de fèves de cacao simples (BQ, MQ, HQ).";
     }
 
+    @Override
     public List<Variable> getIndicateurs() {
         List<Variable> res = new ArrayList<>();
         res.add(stockTotal); // Indicateur du stock total
-        res.add(stockFMQ); // Indicateur du stock de fève moyenne qualité
-        res.add(stockFBQ); // Indicateur du stock de fève basse qualité
-        res.add(stockFHQ); // Indicateur du stock de fève haute qualité
+        res.add(stockFMQ);   // Indicateur du stock de fèves moyenne qualité
+        res.add(stockFBQ);   // Indicateur du stock de fèves basse qualité
+        res.add(stockFHQ);   // Indicateur du stock de fèves haute qualité
         return res;
     }
 
+    @Override
     public List<Variable> getParametres() {
         return new ArrayList<>();
     }
 
+    @Override
     public List<Journal> getJournaux() {
         List<Journal> res = new ArrayList<>();
         res.add(journal);
         return res;
     }
 
+    @Override
     public void setCryptogramme(Integer crypto) {
         this.cryptogramme = crypto;
     }
 
+    @Override
     public void notificationFaillite(IActeur acteur) {
         journal.ajouter("Faillite de " + acteur.getNom());
     }
 
+    @Override
     public void notificationOperationBancaire(double montant) {
         journal.ajouter("Opération bancaire : " + montant + " €");
     }
@@ -117,30 +126,21 @@ public class Producteur1Acteur implements IActeur {
         return Filiere.LA_FILIERE.getBanque().getSolde(Filiere.LA_FILIERE.getActeur(getNom()), cryptogramme);
     }
 
+    @Override
     public List<String> getNomsFilieresProposees() {
         return new ArrayList<>();
     }
 
+    @Override
     public Filiere getFiliere(String nom) {
         return Filiere.LA_FILIERE;
     }
 
     @Override
     public double getQuantiteEnStock(IProduit p, int cryptogramme) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getQuantiteEnStock'");
+        if (this.cryptogramme == cryptogramme && p instanceof Feve) {
+            return stock.getStock((Feve) p);
+        }
+        return 0.0;
     }
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
