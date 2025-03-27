@@ -142,7 +142,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 		return("Acheteur contrat cadre de l'equipe 7");
 	}
 
-	public void next(){
+	public void next_cc(){
 		SuperviseurVentesContratCadre superviseur = (SuperviseurVentesContratCadre)(Filiere.LA_FILIERE.getActeur("Sup.CCadre"));
 		for (int i=0; i<chocolats.size(); i++) {
 			List<IVendeurContratCadre> vendeurList = superviseur.getVendeurs(chocolats.get(i));

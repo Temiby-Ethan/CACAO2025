@@ -102,7 +102,7 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurEncher
 		return("Appelleur d'offre de l'equipe 7");
 	}
 
-	public void next(){
+	public void next_ao(){
 		SuperviseurVentesAO superviseur = (SuperviseurVentesAO)(Filiere.LA_FILIERE.getActeur("Sup.AO"));
 		superviseur.acheterParAO(this,this.cryptogramme, Chocolat.C_BQ , this.requiredQuantities.get(0));
 		superviseur.acheterParAO(this,this.cryptogramme, Chocolat.C_BQ_E , this.requiredQuantities.get(1));

@@ -15,7 +15,10 @@ import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.appelDOffre.IAcheteurAO;
 import abstraction.eqXRomu.clients.ClientFinal;
+import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.IAcheteurContratCadre;
+import abstraction.eqXRomu.contratsCadres.IVendeurContratCadre;
+import abstraction.eqXRomu.contratsCadres.SuperviseurVentesContratCadre;
 import abstraction.eqXRomu.general.Variable;
 
 public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements IDistributeurChocolatDeMarque {
@@ -93,15 +96,18 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 		for (int i=0; i<6; i++){
 			requiredQuantities.add(acteurStock.VolumetoBuy(chocolats.get(i),this.cryptogramme)*0.95);
 		}
+		
 		if (step%8==0){
-			IAcheteurContratCadre acheteurContratCadre = new Distributeur1AcheteurContratCadre();
-			acheteurContratCadre.next();
+			//IAcheteurContratCadre acheteurContratCadre = new Distributeur1AcheteurContratCadre();
+			this.next_cc();
 			for (int i = 0 ; i<6 ; i++){
 				requiredQuantities.set(i, requiredQuantities.get(i)/19);
 			}}
 		
-		IAcheteurAO acheteurAppelOffre = new Distributeur1AcheteurAppelOffre();
-		acheteurAppelOffre.next();
+		//IAcheteurAO acheteurAppelOffre = new Distributeur1AcheteurAppelOffre();
+		this.next_ao();
+		
+
 		//ChocolatDeMarque produit = new ChocolatDeMarque(Chocolat.C_MQ, "Villors", 50); // Produit choisi
         //double quantiteAjoutee = 100.0; // 100 tonnes
 
