@@ -36,7 +36,7 @@ public class Plantation {
                 this.prix_achat = 225000;
                 this.prix_vente = 145000;
                 this.prix_replantation = 80000;
-                this.salaire_employe = 10200;
+                this.salaire_employe = 3400;
                 break;
             case F_BQ_E:
                 this.dureeDeVie = 960;  // 40 ans
@@ -45,7 +45,7 @@ public class Plantation {
                 this.prix_achat = 225000;
                 this.prix_vente = 145000;
                 this.prix_replantation = 80000;
-                this.salaire_employe = 30000;
+                this.salaire_employe = 10000;
                 break;
             case F_MQ:
                 this.dureeDeVie = 960;
@@ -54,7 +54,7 @@ public class Plantation {
                 this.prix_achat = 425000;
                 this.prix_vente = 285000;
                 this.prix_replantation = 140000;
-                this.salaire_employe = 7800;
+                this.salaire_employe = 3000;
                 break;
             case F_MQ_E:
                 this.dureeDeVie = 960;
@@ -63,7 +63,7 @@ public class Plantation {
                 this.prix_achat = 425000;
                 this.prix_vente = 285000;
                 this.prix_replantation = 140000;
-                this.salaire_employe = 22500;
+                this.salaire_employe = 8750;
                 break;
             case F_HQ_E:
                 this.dureeDeVie = 960;
@@ -72,7 +72,7 @@ public class Plantation {
                 this.prix_achat = 700000;
                 this.prix_vente = 465000;
                 this.prix_replantation = 235000;
-                this.salaire_employe = 15000;
+                this.salaire_employe = 6250;
                 break;
             case F_HQ_BE:
                 this.dureeDeVie = 960;
@@ -81,7 +81,7 @@ public class Plantation {
                 this.prix_achat = 700000;
                 this.prix_vente = 465000;
                 this.prix_replantation = 235000;
-                this.salaire_employe = 15000;
+                this.salaire_employe = 6250;
                 break;
             default:
                 throw new IllegalArgumentException("Type de fève non reconnu !");
