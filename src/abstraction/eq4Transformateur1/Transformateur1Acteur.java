@@ -44,6 +44,8 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 		this.journalCC = new Journal("Journal CC " + this.getNom(), this);
 		this.journalTransactions = new Journal("Journal Transactions " + this.getNom(), this);
 
+		this.stockFeves = new HashMap<Feve, Double>();
+
 		//Constructions des variables de stocks (quantités globales)
 		this.totalStocksFeves = new VariablePrivee("Eq4TStockFeves", "<html>Quantite totale de feves en stock</html>",this, 0.0, 1000000.0, 0.0);
 		this.totalStocksChoco = new VariablePrivee("Eq4TStockTotalChoco", "<html>Quantite totale de chocolat en stock</html>",this, 0.0, 1000000.0, 0.0);
@@ -53,17 +55,20 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 
 	public void initialiser() {
 		this.lesFeves = new LinkedList<Feve>();
-		for (Feve f : Feve.values()) {
-			this.lesFeves.add(f);
-		}
+		this.lesFeves.add(Feve.F_HQ_BE);
+		this.lesFeves.add(Feve.F_MQ_E);
+		this.lesFeves.add(Feve.F_BQ_E);
+		this.lesFeves.add(Feve.F_MQ);
+		this.lesFeves.add(Feve.F_BQ);
 		this.journal.ajouter("N° Etape " + Filiere.LA_FILIERE.getEtape());
 
 		//Test stock de fèves
 		this.stockFeves=new HashMap<Feve,Double>();
 		for (Feve f : this.lesFeves) {
-			this.stockFeves.put(f, 20000.0);
-			this.totalStocksFeves.ajouter(this, 20000.0, this.cryptogramme);
-			this.journalStock.ajouter("ajout de 20000 de "+f+" au stock de feves --> total="+this.totalStocksFeves.getValeur(this.cryptogramme));
+
+			this.stockFeves.put(f, 0.0);
+			this.totalStocksFeves.ajouter(this, 0.0, this.cryptogramme);
+			this.journalStock.ajouter("Initialisation de 0 de "+f+" au stock de fèves --> total="+this.totalStocksFeves.getValeur(this.cryptogramme));
 		}
 
 		//Test stock de choco
