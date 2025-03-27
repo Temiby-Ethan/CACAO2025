@@ -4,9 +4,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 import abstraction.eqXRomu.bourseCacao.IAcheteurBourse;
+import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 //de quoi hérite notre classe ? aucun héritage mais une interface : IActeur 
 //on importe cette interface : 
+import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.Feve;
+import abstraction.eqXRomu.bourseCacao.BourseCacao;
 
 
 // @author Eric SCHILTZ
@@ -68,7 +71,9 @@ public class Transformateur3AcheteurBourse extends Transformateur3ContratCadreAc
         //fève MQ
         //fève HQ équitable 
         // tout cela c'est la filière le code mère qui va s'en occuper ce n'est pas notre rôle
-        super.next();
+        //on pourra implémenter ici notre stratégie
+
+        
     }
 
     //méthodes pour correspondre à l'interface IAcheteur
@@ -82,26 +87,19 @@ public class Transformateur3AcheteurBourse extends Transformateur3ContratCadreAc
 	 */
     @Override
     public double demande(Feve f, double cours) {
+        //seules les fèbes BQ et MQ sont côtés en Bourse. 
         //fève BQ de nom java : Feve.F_BQ
         if (f==Feve.F_BQ){
             double a = super.stockFeves.getQuantityOf(Feve.F_BQ);
-            if (a<100000){
-                double b = 100000 - a;
-                //rajouter à la liste de feves, stock et prix voulu 
-                StockFevevouluencours.add(b);
-                Fevevoulueencours.add(f);
-                Prixvoulusencours.add(a*cours);
-                return b;
-            }
-            else{
+            //si le cours est supérieur à un certain seuil on n'achète pas 
+            //un prix vraiment trop cher
+            if (cours>25000){
                 return 0;
             }
-        }
-        //fève BQ équitable  
-        if (f==Feve.F_BQ_E){
-            double a = super.stockFeves.getQuantityOf(Feve.F_BQ_E);
-            if (a<100000){
-                double b = 100000 - a;
+            if (a<25000){
+                //les producteurs produisent 300 000 par tour on doit donc en acheter environ 
+                //100 000 fèves donc environ 25000 de chaque type
+                double b = 25000 - a;
                 //rajouter à la liste de feves, stock et prix voulu 
                 StockFevevouluencours.add(b);
                 Fevevoulueencours.add(f);
@@ -115,23 +113,15 @@ public class Transformateur3AcheteurBourse extends Transformateur3ContratCadreAc
         //fève MQ
         if (f==Feve.F_MQ){
             double a = super.stockFeves.getQuantityOf(Feve.F_MQ);
-            if (a<100000){
-                double b = 100000 - a;
-                //rajouter à la liste de feves, stock et prix voulu 
-                StockFevevouluencours.add(b);
-                Fevevoulueencours.add(f);
-                Prixvoulusencours.add(a*cours);
-                return b;
-            }
-            else{
+            //si le cours est supérieur à un certain seuil on n'achète pas 
+            //un prix vraiment trop cher
+            if (cours>2500){
                 return 0;
             }
-        }
-        //fève HQ équitable 
-        if (f==Feve.F_HQ_E){
-            double a = super.stockFeves.getQuantityOf(Feve.F_HQ_E);
-            if (a<100000){
-                double b = 100000 - a;
+            if (a<25000){
+                //les producteurs produisent 300 000 par tour on doit donc en acheter environ 
+                //100 000 fèves donc environ 25000 de chaque type
+                double b = 25000 - a;
                 //rajouter à la liste de feves, stock et prix voulu 
                 StockFevevouluencours.add(b);
                 Fevevoulueencours.add(f);
