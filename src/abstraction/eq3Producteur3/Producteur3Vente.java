@@ -79,9 +79,9 @@ public class Producteur3Vente extends Producteur3GestionDesCoûts implements IVe
     public boolean vend(IProduit produit) {
         if (produit instanceof Feve) {
             Feve feve = (Feve)produit;
-            boolean A = feve.getGamme().equals(Gamme.MQ) && feve.isEquitable();
-            boolean B = feve.getGamme().equals(Gamme.BQ) && !feve.isEquitable();
-            boolean C = feve.getGamme().equals(Gamme.HQ) && feve.isBio();
+            boolean A = feve.getGamme().equals(Gamme.MQ) && feve.isEquitable() && calculTotalStockParticulier(feve) >= 0;
+            boolean B = feve.getGamme().equals(Gamme.BQ) && !feve.isEquitable()&& calculTotalStockParticulier(feve) >= 0;
+            boolean C = feve.getGamme().equals(Gamme.HQ) && feve.isBio()&& calculTotalStockParticulier(feve) >= 0;
             return A || B || C;
         }
         return false;
