@@ -85,23 +85,12 @@ public class Transformateur3AcheteurBourse extends Transformateur3ContratCadreAc
         //fève BQ de nom java : Feve.F_BQ
         if (f==Feve.F_BQ){
             double a = super.stockFeves.getQuantityOf(Feve.F_BQ);
-            if (a<100000){
-                double b = 100000 - a;
-                //rajouter à la liste de feves, stock et prix voulu 
-                StockFevevouluencours.add(b);
-                Fevevoulueencours.add(f);
-                Prixvoulusencours.add(a*cours);
-                return b;
-            }
-            else{
+            //un prix vraiment trop cher
+            if (cours>2500){
                 return 0;
             }
-        }
-        //fève BQ équitable  
-        if (f==Feve.F_BQ_E){
-            double a = super.stockFeves.getQuantityOf(Feve.F_BQ_E);
-            if (a<100000){
-                double b = 100000 - a;
+            if (a<25000){
+                double b = 25000 - a;
                 //rajouter à la liste de feves, stock et prix voulu 
                 StockFevevouluencours.add(b);
                 Fevevoulueencours.add(f);
@@ -115,23 +104,12 @@ public class Transformateur3AcheteurBourse extends Transformateur3ContratCadreAc
         //fève MQ
         if (f==Feve.F_MQ){
             double a = super.stockFeves.getQuantityOf(Feve.F_MQ);
-            if (a<100000){
-                double b = 100000 - a;
-                //rajouter à la liste de feves, stock et prix voulu 
-                StockFevevouluencours.add(b);
-                Fevevoulueencours.add(f);
-                Prixvoulusencours.add(a*cours);
-                return b;
-            }
-            else{
+            //un prix vraiment trop cher
+            if (cours>2500){
                 return 0;
             }
-        }
-        //fève HQ équitable 
-        if (f==Feve.F_HQ_E){
-            double a = super.stockFeves.getQuantityOf(Feve.F_HQ_E);
-            if (a<100000){
-                double b = 100000 - a;
+            if (a<25000){
+                double b = 25000 - a;
                 //rajouter à la liste de feves, stock et prix voulu 
                 StockFevevouluencours.add(b);
                 Fevevoulueencours.add(f);
