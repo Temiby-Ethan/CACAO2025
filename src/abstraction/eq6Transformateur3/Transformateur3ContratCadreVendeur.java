@@ -53,7 +53,7 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
 
     @Override
     public double propositionPrix(ExemplaireContratCadre contrat) {
-        return 500;
+        return 3000;
     }
 
     @Override
