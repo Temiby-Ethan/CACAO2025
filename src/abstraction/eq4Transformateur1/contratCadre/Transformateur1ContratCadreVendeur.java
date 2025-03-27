@@ -1,6 +1,6 @@
 package abstraction.eq4Transformateur1.contratCadre;
 
-import java.util.ArrayList;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -17,7 +17,7 @@ import abstraction.eqXRomu.contratsCadres.*;
 
 public class Transformateur1ContratCadreVendeur extends TransformateurContratCadre implements IVendeurContratCadre {
 
-	protected List<ExemplaireContratCadre> mesContratEnTantQueVendeur;//Contient tous les contrats de vente
+	
 	protected double partInitialementVoulue;	
 	protected double prixInitialementVoulu;
 	protected double epsilon;
@@ -25,8 +25,10 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 	public Transformateur1ContratCadreVendeur() {
 		super();
 		this.mesContratEnTantQueVendeur=new LinkedList<ExemplaireContratCadre>();
+
 		this.partInitialementVoulue = 0.6; //A MODIFIER On cherche initialement à vendre 60% du stock du produit dont il est question
 		this.epsilon = 0.1;  //A MODIFIER Pourcentage d'erreur entre la quantite voulue et celle du contrat actuel
+
 
 	}
 
@@ -39,6 +41,7 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 			IProduit produit = contrat.getProduit();
 			if (contrat.getProduit().equals(produit)) {
 				double qtt_totale_voulue = partInitialementVoulue*stockChoco.get(contrat.getProduit());
+
 
 				if (contrat.getEcheancier().getQuantiteTotale()< stockChoco.get((Chocolat) produit)) {  //On chercher à honorer le contrat sur les qtts
 
@@ -64,14 +67,16 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 						if (e.getQuantiteTotale() > SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER) return e;
 						else return null;
 					}
-				} else {
+				} 
+				else {
 					return null; // on est frileux : on ne s'engage dans un contrat cadre que si on a toute la quantite en stock (on pourrait accepter meme si nous n'avons pas tout car nous pouvons produire/acheter pour tenir les engagements) 
 				}
-			} else {
+			} 
+			else {
 				return null;// on ne vend pas de ce produit
 			}
 		}
-		else return null;
+		return null ; //On annule les négociations si le nouveau contrat a une quantité insuffisante
 	}
 
 
@@ -83,11 +88,10 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 	//adopter une stratégie selon celui-ci
 	public double propositionPrix(ExemplaireContratCadre contrat) {
 		if(contrat.getQuantiteTotale() >= 2000){
-			this.prixInitialementVoulu = 0.75*5226;
-			return 0.75*5226; 
+			this.prixInitialementVoulu = 15000;
+			return 0.75*15000; 
 		}
-		this.prixInitialementVoulu = 5226*(1 - 0.25*contrat.getQuantiteTotale()/2000);
-		return 5226*(1 - 0.25*contrat.getQuantiteTotale()/2000);// plus la quantite est elevee, plus le prix est interessant
+		return 15000*(1 - 0.25*contrat.getQuantiteTotale()/2000);// plus la quantite est elevee, plus le prix est interessant
 	}
 
 
@@ -97,7 +101,7 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
 		//Si le prix est beaucoup trop faible, l'algorithme par dichotomie risque de ne pas fonctionner 
 		// et de nous faire vendre à perte. On arrête donc les négociations.
-		if (contrat.getPrix() < 0.65*5226){
+		if (contrat.getPrix() < 0.65*15000){
 			return -1;
 		}
 		else{
@@ -121,11 +125,15 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
 		this.mesContratEnTantQueVendeur.add(contrat);
-		this.journalCC.ajouter("Nouveau contrat cadre obtenu avec" + contrat.getAcheteur());
+		this.journalCC.ajouter("Nouveau contrat cadre obtenu \n");
+		this.journalCC.ajouter("Acheteur : " + contrat.getAcheteur() + " ; Vendeur : " + contrat.getVendeur() + "\n");
+		this.journalCC.ajouter("Produit :  " + contrat.getProduit() + "\n");
+		this.journalCC.ajouter("Echeancier : " + contrat.getEcheancier() + "\n");
 	}
 	
 
 	public void next() {
+
 		super.next();
 
 		List<ExemplaireContratCadre> contratsObsoletes=new LinkedList<ExemplaireContratCadre>();
@@ -142,12 +150,13 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 	//On ne prend pas en compte le fait que l'on ait possiblement d'autre livraisons à réaliser sur la même période
 	//Il faudra s'assurer que l'on ait du stock pour cette transaction spécifiquement
 	public boolean vend(IProduit produit) {
-		return produit.getType().equals("Chocolat") && stockChoco.get(produit)>0;
+		return produit.getType().equals("Chocolat") && stockChoco.get(produit)>=0;
 	}
 
 	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
 		double livre = Math.min(stockChoco.get((Chocolat) produit), quantite);
 		if (livre>0.0) {
+
 			totalStocksChoco.retirer(this,  livre, cryptogramme);
 			this.journalStock.ajouter("Retrait de " + livre + "T" + contrat.getProduit() + "(CC avec "+ contrat.getAcheteur() + ")");
 			double currStockChoco = stockChoco.get(produit);
@@ -164,6 +173,7 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 			}
 		}
 		return false;
+
 	}
 	public String toString() {
 		return this.getNom();

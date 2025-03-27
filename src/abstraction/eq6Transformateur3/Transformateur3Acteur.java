@@ -2,25 +2,92 @@ package abstraction.eq6Transformateur3;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import abstraction.eqXRomu.filiere.Banque;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
+import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
+
 
 public class Transformateur3Acteur implements IActeur {
 	
 	protected int cryptogramme;
-	private Journal journalTransfo;
-	private int nEtape = 0;
+	protected int etape;
+	protected double coutStockage;
+
+	//Récupération des entitées utiles
+	protected Banque LaBanque;
+
+	protected Journal jdb;
+	protected Journal journalStock;
+	protected Journal journalTransac;
+	protected Journal journalCC;
+	protected Journal journalBourse;
+
+	protected List<IProduit> lesFeves;
+	protected List<IProduit> lesChocolats;
+	protected HashMap<IProduit, Variable> dicoIndicateurFeves;
+	protected Transformateur3Stock stockFeves;
+	protected Transformateur3Stock stockChoco;
+
+	protected Variable eq6_Q_MQ_0;
+	protected Variable eq6_Q_MQ_1;
+	protected Variable eq6_Q_BQ_0;
+	protected Variable eq6_Q_BQ_1;
+	protected Variable eq6_Q_HQ_1;
+	protected Variable eq6_Q_HQ_2;
+	protected Variable eq6_Q_Fraudo;
+	protected Variable eq6_Q_Bollo;
+	protected Variable eq6_Q_Arna;
+	protected Variable eq6_Q_Hypo;
 
 	public Transformateur3Acteur() {
-		this.journalTransfo = new Journal("Activites Transfo_6", this);
+		// Initialisation des journaux
+		this.jdb = new Journal("Journal de bord", this);
+		this.journalStock = new Journal("Journal des stocks", this);
+		this.journalTransac = new Journal("Journal des transactions", this);
+		this.journalCC = new Journal("Journal des contrats cadre", this);
+		this.journalBourse = new Journal("Journal de la Bourse", this);
+
+
+		// Initialisation des indicateurs
+		this.eq6_Q_BQ_0 = new Variable(this.getNom()+": quantité de cacao de BQ non labellisé", this, 0);
+		this.eq6_Q_BQ_1 = new Variable(this.getNom()+": quantité de cacao de BQ équitable", this, 0);
+		this.eq6_Q_MQ_0 = new Variable(this.getNom()+": quantité de cacao de MQ non labellisé", this, 0);
+		this.eq6_Q_MQ_1 = new Variable(this.getNom()+": quantité de cacao de MQ équitable", this, 0);
+		this.eq6_Q_HQ_1 = new Variable(this.getNom()+": quantité de cacao de HQ équitable", this, 0);
+		this.eq6_Q_HQ_2 = new Variable(this.getNom()+": quantité de cacao de HQ bio & équitable", this, 0);
+		this.eq6_Q_Fraudo = new Variable(this.getNom()+": quantité de tablette Fraudolat", this, 0);
+		this.eq6_Q_Bollo = new Variable(this.getNom()+": quantité de tablette Bollorolat", this, 0);
+		this.eq6_Q_Arna = new Variable(this.getNom()+": quantité de tablette Arnaquolat", this, 0);
+		this.eq6_Q_Hypo = new Variable(this.getNom()+": quantité de tablette Hypocritolat", this, 0);
+
+		//Dico d'indicateur fèves
+		this.dicoIndicateurFeves = new HashMap<IProduit, Variable>();
+		this.dicoIndicateurFeves.put(abstraction.eqXRomu.produits.Feve.F_BQ,eq6_Q_BQ_0);
+		this.dicoIndicateurFeves.put(abstraction.eqXRomu.produits.Feve.F_BQ_E,eq6_Q_BQ_1);
+		this.dicoIndicateurFeves.put(abstraction.eqXRomu.produits.Feve.F_MQ,eq6_Q_MQ_0);
+		this.dicoIndicateurFeves.put(abstraction.eqXRomu.produits.Feve.F_MQ_E,eq6_Q_MQ_1);
+		this.dicoIndicateurFeves.put(abstraction.eqXRomu.produits.Feve.F_HQ_E,eq6_Q_HQ_1);
+		this.dicoIndicateurFeves.put(abstraction.eqXRomu.produits.Feve.F_HQ_BE,eq6_Q_HQ_2);
+
 	}
 	
 	public void initialiser() {
+		// Récupération des instances utiles
+		this.LaBanque = Filiere.LA_FILIERE.getBanque();
+		// Lister les fèves qui existent
+		this.lesFeves = new ArrayList<IProduit>();
+		for (Feve f : Feve.values()) {
+			this.lesFeves.add(f);
+		}
+		//Création du stock de fèves
+		stockFeves = new Transformateur3Stock(this, journalStock, "fèves", 300.0, lesFeves, dicoIndicateurFeves);
 	}
 
 	public String getNom() {// NE PAS MODIFIER
@@ -36,9 +103,9 @@ public class Transformateur3Acteur implements IActeur {
 	////////////////////////////////////////////////////////
 
 	public void next() {
-		//"agios \"autorises\" de "+Journal.texteColore(a.getColor(), Color.BLACK, Journal.texteSurUneLargeurDe(a.getNom(),10))+" d'un mondant de "+Journal.doubleSur(montantAgiosAutorises, 15,3))
-		this.journalTransfo.ajouter("Étape n°"+this.nEtape);
-		this.nEtape++;
+		this.jdb.ajouter("NEXT - TRANSFORMATEUR3ACTEUR");
+		etape = Filiere.LA_FILIERE.getEtape();
+		jdb.ajouter("Accteur Etape " + etape);
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
