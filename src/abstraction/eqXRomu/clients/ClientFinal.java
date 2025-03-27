@@ -239,7 +239,7 @@ public class ClientFinal implements IActeur, IAssermente, PropertyChangeListener
 			if (quantiteTG>(quantiteTotale*POURCENTAGE_MAX_EN_TG)+0.001) {
 				throw new IllegalStateException("Le distributeur "+distri.getNom()+" met en vente en tete de gondole un volume de "+quantiteTG+" superieur a "+(POURCENTAGE_MAX_EN_TG*100.0)+"% du volume total mis en vente ("+quantiteTotale+")");
 			} else {
-				this.JournalDistribution.ajouter("---"+Journal.texteColore(distri, distri.getNom())+" met en TG "+Journal.doubleSur(quantiteTG, 2)+" T / "+Journal.doubleSur(quantiteTotale, 2)+" T au prix de "+pri);
+			//	this.JournalDistribution.ajouter("---"+Journal.texteColore(distri, distri.getNom())+" met en TG "+Journal.doubleSur(quantiteTG, 2)+" T / "+Journal.doubleSur(quantiteTotale, 2)+" T au prix de "+pri);
 			}
 		}
 
