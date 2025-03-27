@@ -51,14 +51,7 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 
 
 		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*4;
-		this.coutProd = 2400; //A MODIFIER il s'agit du cout de la production d'une tonne de chocolat, valeur arbitraire censée contenir salaires, ingrédients secondaires, et autres couts fixes
-
-		//Initialisation des fèves dont on a besoin 
-		this.lesFeves = new LinkedList<Feve>();
-		this.lesFeves.add(Feve.F_HQ_BE);
-		this.lesFeves.add(Feve.F_MQ_E);
-		this.lesFeves.add(Feve.F_BQ_E);
-		this.lesFeves.add(Feve.F_BQ);
+		this.coutProd = 400; //A MODIFIER il s'agit du cout de la production d'une tonne de chocolat, valeur arbitraire censée contenir salaires, ingrédients secondaires, et autres couts fixes
 
 		//Initialisation des prix de base des chocolats que l'on veut produire
 		this.prixTChocoBase.put(Chocolat.C_BQ, 0.);
@@ -74,7 +67,7 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 		}
 		
 		//Initialisation des stocks de chocolat à 0
-		for (Chocolat c : Chocolat.values()) {
+		for (Chocolat c : lesChocolats) {
 			this.stockChoco.put(c, 0.0);
 			this.totalStocksChoco.ajouter(this, 0.0, this.cryptogramme);
 			this.journal.ajouter("Initialisation de 0 de "+c+" au stock de chocolat --> total="+this.totalStocksChoco.getValeur(this.cryptogramme));
@@ -104,7 +97,7 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 		
 
 		//Initialisation du stock des chocolats de marque à 40000T 
-		for (Feve f : Feve.values()) {
+		for (Feve f : lesFeves) {
 			if (this.pourcentageTransfo.keySet().contains(f)) {
 				for (Chocolat c : this.pourcentageTransfo.get(f).keySet()) {
 					int pourcentageCacao =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+c.getGamme()).getValeur());
@@ -120,6 +113,12 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 				}
 			}
 		}
+
+		//Initialisation des quantités de fève entrantes
+		this.qttEntrantesFeve.put(Feve.F_BQ, 0.);
+		this.qttEntrantesFeve.put(Feve.F_BQ_E, 0.);
+		this.qttEntrantesFeve.put(Feve.F_HQ_BE, 0.);
+		this.qttEntrantesFeve.put(Feve.F_MQ_E, 0.);
 	}
 
 
@@ -201,11 +200,11 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 		for (Feve f : pourcentageTransfo.keySet()){
 			for (ExemplaireContratCadre cc : mesContratEnTantQuAcheteur){
 				if (cc.getProduit() == f){
-					if (qttEntrantesFeve.containsKey(f)){
-						qttEntrantesFeve.put(f, cc.getPrix()+qttEntrantesFeve.get(f));
+					if (this.qttEntrantesFeve.containsKey(f)){
+						this.qttEntrantesFeve.put(f, cc.getPrix()+qttEntrantesFeve.get(f));
 					}
 					else {
-						qttEntrantesFeve.put(f, cc.getPrix());
+						this.qttEntrantesFeve.put(f, cc.getPrix());
 					}
 				}
 			}
@@ -229,7 +228,7 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 	public void determinerPrixTFevesStockees(){
 		determinerQttEntrantFeves();
 		
-		for (Feve f : pourcentageTransfo.keySet()){
+		for (Feve f : lesFeves){
 
 			//On calcule le prix pour les fèves issues des contrats cadres
 			double prix = 0;

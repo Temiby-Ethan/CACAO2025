@@ -112,8 +112,8 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 
 		// OU proposition d'un contrat a un des vendeurs choisi aleatoirement
 		for(IProduit produit : pourcentageTransfo.keySet()){
-			if(stockFeves.get(produit)< 0.1*STOCK_MAX_TOTAL_FEVES){
-				journalCC.ajouter("Recherche d'un vendeur aupres de qui acheter");
+			if(qttEntrantesFeve.get((Feve)produit)< 0.1*STOCK_MAX_TOTAL_FEVES){
+				journalCC.ajouter("Recherche d'un vendeur aupres de qui acheter " + produit);
 
 				List<IVendeurContratCadre> vendeurs = supCCadre.getVendeurs(produit);
 				if (vendeurs.contains(this)) {
@@ -136,22 +136,18 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 		}
 		// Proposition d'un contrat a un des achteur choisi aleatoirement
 		for(IProduit produit : stockChoco.keySet()){
-			journalCC.ajouter("Recherche d'un acheteur aupres de qui vendre");
+			journalCC.ajouter("Recherche d'un acheteur aupres de qui vendre " + produit);
 
 			List<IAcheteurContratCadre> acheteurs = supCCadre.getAcheteurs(produit);
 			if (acheteurs.contains(this)) {
 				acheteurs.remove(this);
 			}
-			IAcheteurContratCadre acheteur = null;
-			if (acheteurs.size()==1) {
-				acheteur=acheteurs.get(0);
-			} else if (acheteurs.size()>1) {
-				acheteur = acheteurs.get((int)( Filiere.random.nextDouble()*acheteurs.size()));
-			}
-			if (acheteur!=null) {
-				journalCC.ajouter("Demande au superviseur de debuter les negociations pour un contrat cadre de "+produit+" avec l'acheteur "+acheteur);
-				ExemplaireContratCadre cc = supCCadre.demandeVendeur(acheteur, (IVendeurContratCadre)this, produit, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10, (SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER+10.0)/10), cryptogramme,false);
-				journalCC.ajouter("-->aboutit au contrat "+cc);
+			for(IAcheteurContratCadre acheteur : acheteurs){
+				if (acheteur!=null) {
+					journalCC.ajouter("Demande au superviseur de debuter les negociations pour un contrat cadre de "+produit+" avec l'acheteur "+acheteur);
+					ExemplaireContratCadre cc = supCCadre.demandeVendeur(acheteur, (IVendeurContratCadre)this, produit, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10, (SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER+10.0)/10), cryptogramme,false);
+					journalCC.ajouter("-->aboutit au contrat "+cc);
+				}
 			}
 		}
 	}

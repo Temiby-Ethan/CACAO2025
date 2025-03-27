@@ -26,6 +26,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 	protected int cryptogramme;
 
 	protected List<Feve> lesFeves; 
+	protected List<Chocolat> lesChocolats;
 	protected HashMap<Feve, Double> stockFeves;
 	protected HashMap<Chocolat, Double> stockChoco;
 	protected HashMap<ChocolatDeMarque, Double> stockChocoMarque;
@@ -58,8 +59,15 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 		this.lesFeves.add(Feve.F_HQ_BE);
 		this.lesFeves.add(Feve.F_MQ_E);
 		this.lesFeves.add(Feve.F_BQ_E);
-		this.lesFeves.add(Feve.F_MQ);
 		this.lesFeves.add(Feve.F_BQ);
+
+		this.lesChocolats = new LinkedList<Chocolat>();
+		this.lesChocolats.add(Chocolat.C_BQ);
+		this.lesChocolats.add(Chocolat.C_BQ_E);
+		this.lesChocolats.add(Chocolat.C_MQ_E);
+		this.lesChocolats.add(Chocolat.C_HQ_BE);
+
+
 		this.journal.ajouter("N° Etape " + Filiere.LA_FILIERE.getEtape());
 
 		//Test stock de fèves

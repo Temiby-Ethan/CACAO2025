@@ -7,6 +7,7 @@ import java.util.List;
 
 import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.produits.Chocolat;
+import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.contratsCadres.*;
 
 
@@ -88,10 +89,10 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 	//adopter une stratégie selon celui-ci
 	public double propositionPrix(ExemplaireContratCadre contrat) {
 		if(contrat.getQuantiteTotale() >= 2000){
-			this.prixInitialementVoulu = 15000;
-			return 0.75*15000; 
+			this.prixInitialementVoulu = 9000;
+			return 0.75*9000; 
 		}
-		return 15000*(1 - 0.25*contrat.getQuantiteTotale()/2000);// plus la quantite est elevee, plus le prix est interessant
+		return 9000*(1 - 0.25*contrat.getQuantiteTotale()/2000);// plus la quantite est elevee, plus le prix est interessant
 	}
 
 
@@ -101,7 +102,7 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
 		//Si le prix est beaucoup trop faible, l'algorithme par dichotomie risque de ne pas fonctionner 
 		// et de nous faire vendre à perte. On arrête donc les négociations.
-		if (contrat.getPrix() < 0.65*15000){
+		if (contrat.getPrix() < 0.65*9000){
 			return -1;
 		}
 		else{
@@ -124,7 +125,13 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 	}
 
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
-		this.mesContratEnTantQueVendeur.add(contrat);
+		if(contrat.getAcheteur() == this){
+			this.mesContratEnTantQuAcheteur.add(contrat);
+		}
+		else{
+			this.mesContratEnTantQueVendeur.add(contrat);
+		}
+
 		this.journalCC.ajouter("Nouveau contrat cadre obtenu \n");
 		this.journalCC.ajouter("Acheteur : " + contrat.getAcheteur() + " ; Vendeur : " + contrat.getVendeur() + "\n");
 		this.journalCC.ajouter("Produit :  " + contrat.getProduit() + "\n");
@@ -150,7 +157,7 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 	//On ne prend pas en compte le fait que l'on ait possiblement d'autre livraisons à réaliser sur la même période
 	//Il faudra s'assurer que l'on ait du stock pour cette transaction spécifiquement
 	public boolean vend(IProduit produit) {
-		return produit.getType().equals("Chocolat") && stockChoco.get(produit)>=0;
+		return (produit.getType().equals("Chocolat") || produit.getType().equals("ChocolatDeMarque")) && stockChoco.get(produit)!=null;
 	}
 
 	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
@@ -158,9 +165,21 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 		if (livre>0.0) {
 
 			totalStocksChoco.retirer(this,  livre, cryptogramme);
-			this.journalStock.ajouter("Retrait de " + livre + "T" + contrat.getProduit() + "(CC avec "+ contrat.getAcheteur() + ")");
-			double currStockChoco = stockChoco.get(produit);
-			stockChoco.put((Chocolat) produit, currStockChoco-livre);
+
+			if (produit.getType() == "ChocolatDeMarque"){
+				totalStocksChocoMarque.retirer(this, livre, this.cryptogramme);
+				stockChocoMarque.put((ChocolatDeMarque)produit, stockChocoMarque.get((ChocolatDeMarque)produit)-livre);
+
+				double currStockChoco = stockChoco.get(produit);
+				stockChoco.put(((ChocolatDeMarque) produit).getChocolat(), currStockChoco-livre);
+			}
+			else{
+				totalStocksChocoNonMarquee.retirer(this, livre, this.cryptogramme);
+				double currStockChoco = stockChoco.get(produit);
+				stockChoco.put((Chocolat) produit, currStockChoco-livre);
+			}
+			this.journalStock.ajouter("Retrait de " + livre + "T " + contrat.getProduit() + "(CC avec "+ contrat.getAcheteur() + ")");
+			
 		}
 		return livre;
 	}
