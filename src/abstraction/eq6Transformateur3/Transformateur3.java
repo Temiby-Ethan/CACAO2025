@@ -7,7 +7,7 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
 
-public class Transformateur3 extends Transformateur3AcheteurBourse{
+public class Transformateur3 extends Transformateur3AO{
 
 	public Transformateur3() {
 	}
@@ -43,6 +43,7 @@ public class Transformateur3 extends Transformateur3AcheteurBourse{
 		res.add(super.journalTransac);
 		res.add(super.journalCC);
 		res.add(super.journalBourse);
+		res.add(super.journalAO);
 		return res;
 	}
 

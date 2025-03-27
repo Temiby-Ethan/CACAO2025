@@ -35,25 +35,26 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
 
     @Override
     public boolean vend(IProduit produit) {
-        if(produit == super.fraud
-            || produit == super.arna
-            || produit == super.hypo
-            || produit == super.bollo){
+        if(super.lesChocolats.contains(produit)){
             if(stockChoco.getQuantityOf(produit)>100){
                 return true;
             }
-            }
+        }
         return false;
     }
 
     @Override
     public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
-        return contrat.getEcheancier();
+        IProduit p = contrat.getProduit();
+        if(super.lesChocolats.contains(p)){
+            return contrat.getEcheancier();
+        }
+        return null;
     }
 
     @Override
     public double propositionPrix(ExemplaireContratCadre contrat) {
-        return 500;
+        return 3000;
     }
 
     @Override
