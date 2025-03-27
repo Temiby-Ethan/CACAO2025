@@ -27,7 +27,7 @@ public class Producteur2VenteCC extends Producteur2couts implements IVendeurBour
 	private List<ExemplaireContratCadre> contratsTermines;
 	private Journal JournalEQ2CC;
    
-		private int PRIX_DEFAUT = 3500; // Default price initialized to 3500 (example value)
+		private int PRIX_DEFAUT = 5000; // Default price initialized to 3500 (example value)
 	   
 		public Producteur2VenteCC() {
         super();
@@ -50,7 +50,7 @@ public class Producteur2VenteCC extends Producteur2couts implements IVendeurBour
     
 	public void next() {
 		super.next();
-		this.JournalEQ2CC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
+		JournalEQ2CC.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 		for (Feve f : stock.keySet()) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
 			if (stockvar.get(f).getValeur()-restantDu(f)>1200) { // au moins 100 tonnes par step pendant 6 mois
 				this.JournalEQ2CC.ajouter("   "+f+" suffisamment en stock pour passer un CC");
@@ -73,6 +73,7 @@ public class Producteur2VenteCC extends Producteur2couts implements IVendeurBour
 			}
 		}
 		// On archive les contrats termines
+		/*
 		for (ExemplaireContratCadre c : this.contratsEnCours) {
 			if (c.getQuantiteRestantALivrer()==0.0) {
 				this.contratsTermines.add(c);
@@ -85,21 +86,21 @@ public class Producteur2VenteCC extends Producteur2couts implements IVendeurBour
 		for (ExemplaireContratCadre cc: this.contratsEnCours) {
 			this.JournalEQ2CC.ajouter(cc.toString());
 		}
-		for (Feve f : stock.keySet()) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
+		or (Feve f : stock.keySet()) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
 			this.JournalEQ2CC.ajouter("Feve "+f+" en stock="+stockvar.get(f).getValeur()+" restant du="+restantDu(f));
-		}
+		}*/
 		this.JournalEQ2CC.ajouter("=================================");
 	}
 
 
     public double restantDu(Feve f) {
 		double res=0;
-		this.JournalEQ2CC.ajouter("RESTANT DU "+f+" ----");
+		//JournalEQ2CC.ajouter("RESTANT DU "+f+" ----");
 		for (ExemplaireContratCadre c : this.contratsEnCours) {
 			if (c.getProduit().equals(f)) {
 				res+=c.getQuantiteRestantALivrer();
 			}
-			this.JournalEQ2CC.ajouter("contrat "+c.getNumero()+" feve "+c.getProduit()+" vs "+f+" RD="+res);
+			//this.JournalEQ2CC.ajouter("contrat "+c.getNumero()+" feve "+c.getProduit()+" vs "+f+" RD="+res);
 		}
 		return res;
 	}
@@ -145,7 +146,7 @@ public class Producteur2VenteCC extends Producteur2couts implements IVendeurBour
 		Echeancier ec = contrat.getEcheancier();
 		IProduit produit = contrat.getProduit();
 		Echeancier res = ec;
-		JournalEQ2CC.ajouter("Echeancier contrat #"+contrat.getNumero()+" volume total="+ec.getQuantiteTotale()+" stock="+stockvar.get((Feve)produit).getValeur()+" restantdu="+restantDu((Feve)produit));
+		//JournalEQ2CC.ajouter("Echeancier contrat #"+contrat.getNumero()+" volume total="+ec.getQuantiteTotale()+" stock="+stockvar.get((Feve)produit).getValeur()+" restantdu="+restantDu((Feve)produit));
 		boolean acceptable = produit.getType().equals("Feve")
 				&& ec.getQuantiteTotale()>=1200  // au moins 100 tonnes par step pendant 6 mois
 				&& ec.getStepFin()-ec.getStepDebut()>=11   // duree totale d'au moins 12 etapes
@@ -186,7 +187,7 @@ public class Producteur2VenteCC extends Producteur2couts implements IVendeurBour
 			PRIX_DEFAUT=(int)(PRIX_DEFAUT*0.98); // on enleve 2% tant qu'on n'a pas passe un contrat
 		}
 		double res = prixCC>cours ? prixCC*1.25 : (cours<PRIX_DEFAUT ? PRIX_DEFAUT : (int)(cours*1.5));
-		JournalEQ2CC.ajouter("      propositionPrix retourne "+res);
+		JournalEQ2CC.ajouter("      propositionPrix en retour est "+res);
 		return res;
 	}
 
@@ -207,11 +208,11 @@ public class Producteur2VenteCC extends Producteur2couts implements IVendeurBour
 					return contrat.getPrix();
 				} else {
 					double res = (prix.get(prix.size()-2)+contrat.getPrix())/2.0; // la mmoyenne des deux derniers prix
-					JournalEQ2CC.ajouter("      contreproposition("+contrat.getPrix()+") retourne "+res);
+					JournalEQ2CC.ajouter("      contreproposition à ("+contrat.getPrix()+") contre "+res);
 					return res;
 				}
 			} else {
-				JournalEQ2CC.ajouter("      contreproposition("+contrat.getPrix()+") retourne "+prix.get(0)*1.05);
+				JournalEQ2CC.ajouter("      contreproposition("+contrat.getPrix()+") contre "+prix.get(0)*1.05);
 				return prix.get(0)*1.05;
 			}
 		}
@@ -224,7 +225,7 @@ public class Producteur2VenteCC extends Producteur2couts implements IVendeurBour
 	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
 		double stockActuel = stockvar.get(produit).getValeur((Integer)cryptogramme);
 		double aLivre = Math.min(quantite, stockActuel);
-		JournalEQ2CC.ajouter("   Livraison de "+aLivre+" T de "+produit+" sur "+quantite+" exigees pour contrat "+contrat.getNumero());
+		//JournalEQ2CC.ajouter("   Livraison de "+aLivre+" T de "+produit+" sur "+quantite+" exigees pour contrat "+contrat.getNumero());
 		JournalStock.ajouter("Vente lié aux contrats cadres : ");
 		DeleteStock((Feve)produit, aLivre);
 		return aLivre;
