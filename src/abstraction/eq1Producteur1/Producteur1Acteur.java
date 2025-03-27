@@ -34,9 +34,9 @@ public class Producteur1Acteur implements IActeur {
 
         // Initialisation des indicateurs
         this.stockTotal = new Variable("Stock Total", this, stock.getStockTotal());
-        this.stockFMQ = new Variable("Stock FMQ", this, stock.getStock(Feve.F_MQ));
-        this.stockFBQ = new Variable("Stock FBQ", this, stock.getStock(Feve.F_BQ));
-        this.stockFHQ = new Variable("Stock FHQ", this, stock.getStock(Feve.F_HQ_BE)); // 
+        this.stockFMQ = new Variable("Stock FMQ", this, stock.getStockFMQ());
+        this.stockFBQ = new Variable("Stock FBQ", this, stock.getStockFBQ());
+        this.stockFHQ = new Variable("Stock FHQ", this, stock.getStockFHQ()); // 
     }
 
     public void initialiser() {
@@ -63,14 +63,14 @@ public class Producteur1Acteur implements IActeur {
 
         // Mise à jour des indicateurs avec les nouvelles valeurs des stocks
         stockTotal.setValeur(this, stock.getStockTotal());
-        stockFMQ.setValeur(this, stock.getStock(Feve.F_MQ));
-        stockFBQ.setValeur(this, stock.getStock(Feve.F_BQ));
-        stockFHQ.setValeur(this, stock.getStock(Feve.F_HQ_BE)); // 
+        stockFMQ.setValeur(this, stock.getStockFMQ());
+        stockFBQ.setValeur(this, stock.getStockFBQ());
+        stockFHQ.setValeur(this, stock.getStockFHQ()); // 
 
         journal.ajouter("Stock mis à jour :");
-        journal.ajouter("→ FMQ : " + stock.getStock(Feve.F_MQ));
-        journal.ajouter("→ FBQ : " + stock.getStock(Feve.F_BQ));
-        journal.ajouter("→ FHQ : " + stock.getStock(Feve.F_HQ_BE)); // 
+        journal.ajouter("→ FMQ : " + stock.getStockFMQ());
+        journal.ajouter("→ FBQ : " + stock.getStockFBQ());
+        journal.ajouter("→ FHQ : " + stock.getStockFHQ()); // 
     }
 
     @Override
@@ -97,7 +97,7 @@ public class Producteur1Acteur implements IActeur {
 
     public List<Journal> getJournaux() {
         List<Journal> res = new ArrayList<>();
-        res.add(journalPrincipal);
+        res.add(journal);
         return res;
     }
 
@@ -110,7 +110,7 @@ public class Producteur1Acteur implements IActeur {
     }
 
     public void notificationOperationBancaire(double montant) {
-        journalPrincipal.ajouter("Opération bancaire : " + montant + " €");
+        journal.ajouter("Opération bancaire : " + montant + " €");
     }
 
     protected double getSolde() {
@@ -127,8 +127,11 @@ public class Producteur1Acteur implements IActeur {
 
     @Override
     public double getQuantiteEnStock(IProduit p, int cryptogramme) {
-        return this.cryptogramme == cryptogramme ? stock.getStock(p) : 0;
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getQuantiteEnStock'");
     }
+
+
 }
 
 

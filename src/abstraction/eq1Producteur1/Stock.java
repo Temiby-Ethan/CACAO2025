@@ -15,14 +15,14 @@ public class Stock {
 
     public Stock() {
         this.stocks = new HashMap<>(); // Initialisation du Map
-        this.stockBasseQualite = new basse_qualite(Producteur1);
-        this.stockMoyenneQualite = new moyenne_qualite(Producteur1);
-        this.stockHauteQualite = new haute_qualite(Producteur1);
+        this.stockBasseQualite = new basse_qualite();
+        this.stockMoyenneQualite = new moyenne_qualite();
+        this.stockHauteQualite = new haute_qualite();
 
         // Initialisation des stocks pour chaque type de fève
         this.stocks.put(Feve.F_BQ, stockBasseQualite.getStock());
         this.stocks.put(Feve.F_MQ, stockMoyenneQualite.getStock());
-        this.stocks.put(Feve.F_HQ, stockHauteQualite.getStock());
+        this.stocks.put(Feve.F_HQ_E, stockHauteQualite.getStock());
     }
 
     // Ajouter une quantité pour une fève donnée
@@ -64,7 +64,7 @@ public class Stock {
     public void ajouterStock(double quantiteFMQ, double quantiteFBQ, double quantiteFHQ) {
         ajouter(Feve.F_MQ, quantiteFMQ); // Ajoute au stock de fèves moyenne qualité
         ajouter(Feve.F_BQ, quantiteFBQ); // Ajoute au stock de fèves basse qualité
-        ajouter(Feve.F_HQ, quantiteFHQ); // Ajoute au stock de fèves haute qualité
+        ajouter(Feve.F_HQ_E, quantiteFHQ); // Ajoute au stock de fèves haute qualité
     }
 
     // Obtenir le stock total (toutes fèves confondues)

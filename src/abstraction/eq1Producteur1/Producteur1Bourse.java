@@ -9,9 +9,10 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 
-public class Producteur1Bourse extends Producteur1Acteur implements IVendeurBourse {
+public class Producteur1Bourse extends Producteur1ContratCadre implements IVendeurBourse {
 
     private Journal journalBourse;
+
 
     public Producteur1Bourse() {
         super();
@@ -22,7 +23,7 @@ public class Producteur1Bourse extends Producteur1Acteur implements IVendeurBour
     public double offre(Feve typeFeve, double prixCourant) {
         // On vend BQ et MQ
         if (typeFeve.equals(Feve.F_BQ) || typeFeve.equals(Feve.F_MQ)) {
-            double stockDispo = stock.getStock(typeFeve);
+            double stockDispo = stock.getStockTotal();
             double quantiteOfferte = Math.min(stockDispo, 1000.0);
             journalBourse.ajouter("Étape " + Filiere.LA_FILIERE.getEtape() +
                 " : Offre bourse de " + quantiteOfferte + " tonnes de " + typeFeve);
@@ -33,7 +34,7 @@ public class Producteur1Bourse extends Producteur1Acteur implements IVendeurBour
 
     @Override
     public double notificationVente(Feve typeFeve, double quantiteVendue, double prixVente) {
-        double stockDispo = stock.getStock(typeFeve);
+        double stockDispo = stock.getStockTotal();
         double quantiteLivree = Math.min(stockDispo, quantiteVendue);
         stock.retirer(typeFeve, quantiteLivree); // méthode ajoutée dans Stock.java
         journalBourse.ajouter("Étape " + Filiere.LA_FILIERE.getEtape() +
@@ -54,9 +55,8 @@ public class Producteur1Bourse extends Producteur1Acteur implements IVendeurBour
 
     @Override
     public List<Journal> getJournaux() {
-        List<Journal> res = new ArrayList<>();
+        List<Journal> res = super.getJournaux();
         res.add(journalBourse);
-        res.add(super.getJournalPrincipal());
         return res;
     }
 }

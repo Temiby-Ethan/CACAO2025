@@ -4,8 +4,7 @@ import java.util.Random;
 
 public class moyenne_qualite extends plantation {
 
-    public moyenne_qualite(Producteur1 producteur1){
-        super(producteur1);
+    public moyenne_qualite(){
         this.typedeplant = "moyenne_qualite";
         this.nombre_arbes = 750; // par arbre par hecatre
         this.temps_avant_production = 96; // en steps
@@ -20,7 +19,6 @@ public class moyenne_qualite extends plantation {
         this.nombre_feves = this.nombre_arbes * this.production_par_arbre * this.nb_feves_par_cabosse;
         this.nombre_hectares = 120000; // en milliers d'hectares
         this.nombre_feves_total = this.nombre_feves * this.nombre_hectares;
-        this.producteur1=producteur1;
     }
 
     private int getRandomNumberInRange(int min, int max) {

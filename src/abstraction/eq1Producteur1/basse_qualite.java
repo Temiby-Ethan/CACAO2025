@@ -4,8 +4,7 @@ import java.util.Random;
 
 public class basse_qualite extends plantation {
 
-    public basse_qualite(Producteur1 producteur1){
-        super(producteur1);
+    public basse_qualite(){
         this.typedeplant = "basse_qualite";
         this.nombre_arbes = 950; // par arbre par hecatre
         this.temps_avant_production = 72; // en steps
@@ -20,7 +19,7 @@ public class basse_qualite extends plantation {
         this.nombre_hectares = 840; 
         this.nombre_feves = this.nombre_arbes * this.production_par_arbre * this.nb_feves_par_cabosse;
         this.nombre_feves_total = this.nombre_feves * this.nombre_hectares;
-        this.producteur1=producteur1;
+
     }
 
     private int getRandomNumberInRange(int min, int max) {
