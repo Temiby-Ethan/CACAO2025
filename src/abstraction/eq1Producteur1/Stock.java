@@ -28,9 +28,14 @@ public class Stock {
     // Ajouter une quantité pour une fève donnée
     public void ajouter(IProduit produit, double quantite) {
         if (produit instanceof Feve) {
+            if (quantite < 0) {
+                System.err.println("Erreur : Tentative d'ajouter une quantité négative pour " + produit);
+                return;
+            }
             Feve feve = (Feve) produit;
             double actuel = stocks.getOrDefault(feve, 0.0);
             stocks.put(feve, actuel + quantite);
+            System.out.println("Ajouté " + quantite + " au stock de " + feve + ". Nouveau stock : " + (actuel + quantite));
         }
     }
 
@@ -39,13 +44,23 @@ public class Stock {
         if (produit instanceof Feve) {
             Feve feve = (Feve) produit;
             double actuel = stocks.getOrDefault(feve, 0.0);
-            if (actuel >= quantite) {
+            if (quantite < 0) {
+                System.err.println("Erreur : Tentative de retirer une quantité négative pour " + produit
+                        + ". Retrait annulé.");
+                return false;
+            } else if (actuel < quantite) {
+                System.err.println("Erreur : Tentative de retirer plus que le stock disponible pour " + produit
+                        + ". Retrait annulé.");
+                return false;
+            } else {
                 stocks.put(feve, actuel - quantite);
+                System.out.println("Retiré " + quantite + " du stock de " + feve + ". Nouveau stock : " + (actuel - quantite));
                 return true;
             }
         }
         return false;
-    }
+    }    
+ 
 
     // Obtenir le stock d'une fève donnée
     public double getStockFMQ() {
@@ -72,4 +87,6 @@ public class Stock {
         // Somme des stocks de chaque type de fève 
         return stocks.values().stream().mapToDouble(Double::doubleValue).sum();
     }
+
 }
+
