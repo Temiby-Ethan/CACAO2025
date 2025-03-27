@@ -14,7 +14,7 @@ public class Producteur3Employés extends Producteur3Stock {
     // Paul
     double getMasseSalariale(){
         double masseSalariale = 0;
-        double[] salaires = {6,15,37.5};
+        double[] salaires = {2,5,12.5};
         for (int i = 0; i < 3; i++){
             masseSalariale += effectifs[i] * salaires[i];
         }
@@ -24,27 +24,27 @@ public class Producteur3Employés extends Producteur3Stock {
     double getMasseSalarialeParticulier(Feve feve){
         if(feve.getGamme().equals(Gamme.BQ)){
             if(feve.isEquitable()){
-                double masseSalariale = 100*nbParcellesBQ_E*8*37.5;
+                double masseSalariale = 100*nbParcellesBQ_E*8*12.5;
                 return masseSalariale;
             }else{
-                double masseSalariale = 100*nbParcellesBQ*(2*15+12*6);
+                double masseSalariale = 100*nbParcellesBQ*(2*5+12*2);
                 return masseSalariale;
             }
         }
         else if(feve.getGamme().equals(Gamme.MQ)){
             if(feve.isEquitable()){
-                double masseSalariale = 100*nbParcellesMQ_E*6*37.5;
+                double masseSalariale = 100*nbParcellesMQ_E*6*12.5;
                 return masseSalariale;
             }else{
-                double masseSalariale = 100*nbParcellesMQ*6*15;
+                double masseSalariale = 100*nbParcellesMQ*6*5;
                 return masseSalariale;
             }
         }else{
             if (feve.isBio()){
-                double masseSalariale = 100*nbParcellesHQ_B*4*37.5;
+                double masseSalariale = 100*nbParcellesHQ_B*4*12.5;
                 return masseSalariale;
             }else{
-                double masseSalariale = 100*nbParcellesHQ*4*37.5;
+                double masseSalariale = 100*nbParcellesHQ*4*12.5;
                 return masseSalariale;
             }
         }

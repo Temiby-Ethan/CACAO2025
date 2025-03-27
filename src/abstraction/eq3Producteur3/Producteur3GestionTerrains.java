@@ -56,16 +56,16 @@ public class Producteur3GestionTerrains extends Producteur3Acteur{
             terrainMQ.add(new Parcelle(q,0));//modifier date de début
             deficteTerrain.add(q.achat);
             if(((QualiteMQ) q).equitable){
-                effectifs[2]+=600;
+                effectifs[2]+=700;
                 nbParcellesMQ_E += 1;
             }else{
-                effectifs[1]+=600;
+                effectifs[1]+=700;
                 nbParcellesMQ += 1;
             }
         }else if( q instanceof QualiteHQ){
             terrainHQ.add(new Parcelle(q,0));//modifier date de début
             deficteTerrain.add(q.achat);
-            effectifs[2]+=400;
+            effectifs[2]+=500;
             if (bio){
                 nbParcellesHQ_B += 1;
             }
@@ -93,16 +93,16 @@ public class Producteur3GestionTerrains extends Producteur3Acteur{
             terrainMQ.removeFirst();
             beneficeTerrain.add(q.vente);
             if(((QualiteMQ) q).equitable){
-                effectifs[2]-=600;
+                effectifs[2]-=700;
                 nbParcellesMQ_E -= 1;
             }else{
-                effectifs[1]-=600;
+                effectifs[1]-=700;
                 nbParcellesMQ -= 1;
             }
         }else if( q instanceof QualiteHQ){
             terrainMQ.removeFirst();
             beneficeTerrain.add(q.vente);
-            effectifs[2]-=400;
+            effectifs[2]-=500;
             if (((QualiteHQ) q).bio){
                 nbParcellesHQ_B -= 1;
             }
@@ -126,7 +126,7 @@ public class Producteur3GestionTerrains extends Producteur3Acteur{
             int mois = Filiere.random.nextInt(11);
             int annee = Filiere.random.nextInt(35)+5;
 
-            effectifs[2]+=400;
+            effectifs[2]+=500;
 
             Parcelle p = new Parcelle(new QualiteHQ(true,true), annee);
             nbParcellesHQ_B += 1;
@@ -137,7 +137,7 @@ public class Producteur3GestionTerrains extends Producteur3Acteur{
             int mois = Filiere.random.nextInt(11);
             int annee = Filiere.random.nextInt(36)+4;
 
-            effectifs[2]+=600;
+            effectifs[2]+=700;
 
             Parcelle p = new Parcelle(new QualiteMQ(true), annee);
             nbParcellesMQ_E += 1;
