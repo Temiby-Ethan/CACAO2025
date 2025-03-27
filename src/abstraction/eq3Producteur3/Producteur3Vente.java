@@ -92,12 +92,12 @@ public class Producteur3Vente extends Producteur3GestionDesCoûts implements IVe
         Echeancier echeancier = contrat.getEcheancier();
         double qteTotale = contrat.getQuantiteTotale();
         double stockActuel = calculTotalStockParticulier((Feve)contrat.getProduit());
-        if (qteTotale <= stockActuel*0.7 && qteTotale >= stockActuel*0.1)  {
-            return echeancier;
-        }
         int stepDebut = contrat.getEcheancier().getStepDebut();
         int stepFin = contrat.getEcheancier().getStepFin();
         int nbStep = stepFin - stepDebut + 1;
+        if (qteTotale <= stockActuel*0.7 && qteTotale >= stockActuel*0.1 && qteTotale >= 100*nbStep){
+            return echeancier;
+        }
         double contreQuantite = (qteTotale + stockActuel*0.5)/2;
         if (contreQuantite < stepFin*101){
             return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, nbStep, 101);
