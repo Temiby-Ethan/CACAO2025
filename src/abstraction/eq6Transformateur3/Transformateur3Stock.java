@@ -9,7 +9,6 @@ import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.filiere.IActeur;
-import abstraction.eqXRomu.produits.Feve;
 
 public class Transformateur3Stock {
     private double stockTotal;
@@ -39,7 +38,6 @@ public class Transformateur3Stock {
         this.listProduitSorted = listProduit;
         
         for (IProduit prod : listProduit) {
-            journalStock.ajouter(prod.toString());
 			stockProduit.put(prod, initial_value);
             dicoIndicateur.get(prod).setValeur(monActeur, initial_value);
 		}
@@ -58,6 +56,10 @@ public class Transformateur3Stock {
 
     public boolean contains(IProduit prod){
         return stockProduit.containsKey(prod);
+    }
+
+    public double getStockTotal(){
+        return this.stockTotal;
     }
 
     public void addToStock(IProduit prod, double quantity){
@@ -119,7 +121,7 @@ public class Transformateur3Stock {
 			for(int i=0;i<nbspace;i++){
 				space=space+".";
 			}
-			this.journalStock.ajouter(prod+space+" : "+this.stockProduit.get(prod));
+			this.journalStock.ajouter(prod+space+" : "+Math.round(this.stockProduit.get(prod)));
 		}
 		journalStock.ajouter("");
 	}

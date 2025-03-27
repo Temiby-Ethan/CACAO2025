@@ -3,7 +3,6 @@ package abstraction.eq6Transformateur3;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 
 import abstraction.eqXRomu.filiere.Banque;
@@ -11,10 +10,8 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
-import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
-import abstraction.eq6Transformateur3.Transformateur3Stock;
 
 
 public class Transformateur3Acteur implements IActeur {
@@ -48,14 +45,6 @@ public class Transformateur3Acteur implements IActeur {
 	protected Variable eq6_Q_Bollo;
 	protected Variable eq6_Q_Arna;
 	protected Variable eq6_Q_Hypo;
-	protected Variable eq6_Q_ingre;
-	protected Variable eq6_Q_machine;
-	protected Variable eq6_capacite_machine;
-	protected Variable eq6_nb_employe;
-	protected Variable eq6_jours_decouvert;
-	protected Variable eq6_cout_stockage;
-	protected Variable eq6_Q_cacao_CC;
-	protected Variable eq6_Q_tablette_CC;
 
 	public Transformateur3Acteur() {
 		// Initialisation des journaux
@@ -77,15 +66,7 @@ public class Transformateur3Acteur implements IActeur {
 		this.eq6_Q_Bollo = new Variable(this.getNom()+": quantité de tablette Bollorolat", this, 0);
 		this.eq6_Q_Arna = new Variable(this.getNom()+": quantité de tablette Arnaquolat", this, 0);
 		this.eq6_Q_Hypo = new Variable(this.getNom()+": quantité de tablette Hypocritolat", this, 0);
-		this.eq6_Q_ingre = new Variable(this.getNom()+": quantité d'ingédient secondaire", this, 0);
-		this.eq6_Q_machine = new Variable(this.getNom()+": quantité de machine", this, 0);
-		this.eq6_capacite_machine = new Variable(this.getNom()+": capacité de production des machines", this, 0);
-		this.eq6_jours_decouvert = new Variable(this.getNom()+": nombre de jours à découvert", this, 0);
-		this.eq6_nb_employe = new Variable(this.getNom()+": nombre d'employés", this, 0);
-		this.eq6_cout_stockage = new Variable(this.getNom()+": coûts de stockage pour ce step", this, 0);
-		this.eq6_Q_cacao_CC = new Variable(this.getNom()+": quantité de cacaco que l'on reçoit ", this, 0);
-		this.eq6_Q_tablette_CC = new Variable(this.getNom()+": quantité de tablette à produire", this, 0);
-	
+
 		//Dico d'indicateur fèves
 		this.dicoIndicateurFeves = new HashMap<IProduit, Variable>();
 		this.dicoIndicateurFeves.put(abstraction.eqXRomu.produits.Feve.F_BQ,eq6_Q_BQ_0);

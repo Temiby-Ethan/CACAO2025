@@ -4,12 +4,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import abstraction.eqXRomu.bourseCacao.IAcheteurBourse;
-import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 //de quoi hérite notre classe ? aucun héritage mais une interface : IActeur 
 //on importe cette interface : 
-import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.Feve;
-import abstraction.eqXRomu.bourseCacao.BourseCacao;
 
 
 // @author Eric SCHILTZ
@@ -22,7 +19,7 @@ import abstraction.eqXRomu.bourseCacao.BourseCacao;
 //Notre entreprise finale sera une instance de notre classe. 
 //On va s'inspirer de ce qu'a fait Henri
 //on doit pouvoir respecter la nomenclature commune et donc correspondre à l'interface IAcheteur
-public class Transformateur3AcheteurBoursef extends Transformateur3ContratCadreAcheteur implements IAcheteurBourse{
+public class Transformateur3AcheteurBourse extends Transformateur3ContratCadreAcheteur implements IAcheteurBourse{
     //il faut voir le pb comme si on était la classe principale de notre boîte, la dernière. 
     //il faut que l'instance qu'elle créée soit notre entreprise
     //des attributs
@@ -41,7 +38,7 @@ public class Transformateur3AcheteurBoursef extends Transformateur3ContratCadreA
     protected List<Double> Prixvoulusfaits;
     //des constructeurs
     //notre contrainte et que l'on veut rien en variable 
-    public Transformateur3AcheteurBoursef(){
+    public Transformateur3AcheteurBourse(){
         //on construit les arguments précédents
         this.StockFevevouluencours = new LinkedList<Double>();
         this.Fevevoulueencours = new LinkedList<Feve>();
@@ -71,9 +68,7 @@ public class Transformateur3AcheteurBoursef extends Transformateur3ContratCadreA
         //fève MQ
         //fève HQ équitable 
         // tout cela c'est la filière le code mère qui va s'en occuper ce n'est pas notre rôle
-        //on pourra implémenter ici notre stratégie
-
-        
+        super.next();
     }
 
     //méthodes pour correspondre à l'interface IAcheteur

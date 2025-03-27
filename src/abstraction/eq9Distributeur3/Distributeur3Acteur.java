@@ -18,6 +18,7 @@ public class Distributeur3Acteur implements IActeur {
 	protected int cryptogramme;
 	protected Journal journalActeur;
 	protected Journal journalDeVente;
+	protected Journal journalContrats;
 
 
 	protected HashMap<ChocolatDeMarque, Double> stockChocoMarque;
@@ -28,6 +29,7 @@ public class Distributeur3Acteur implements IActeur {
 
 		this.journalActeur = new Journal("journal équipe 9 stocks",this);
 		this.journalDeVente = new Journal("journal de vente équipe 9",this);
+		this.journalContrats = new Journal("Journal de contrats cadre",this);
 	}
 	
 	public void initialiser() {
@@ -75,6 +77,7 @@ public class Distributeur3Acteur implements IActeur {
 		List<Journal> res=new ArrayList<Journal>();
 		res.add(journalActeur);
 		res.add(journalDeVente);
+		res.add(journalContrats);
 		return res;
 	}
 
@@ -88,7 +91,7 @@ public class Distributeur3Acteur implements IActeur {
 	public void setCryptogramme(Integer crypto) {
 
 		this.cryptogramme = crypto;
-		System.out.println("set crypto : "+this.cryptogramme);
+		//System.out.println("set crypto : "+this.cryptogramme);
 
 	}
 
