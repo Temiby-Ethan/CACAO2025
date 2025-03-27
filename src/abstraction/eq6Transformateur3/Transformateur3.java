@@ -3,6 +3,7 @@ package abstraction.eq6Transformateur3;
 import java.util.ArrayList;
 import java.util.List;
 
+import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
 
@@ -22,6 +23,13 @@ public class Transformateur3 extends Transformateur3AO{
 		//stockChoco.addToStock(lesChocolats.get(1), 800.0);
 
 		//stockFeves.remove(abstraction.eqXRomu.produits.Feve.F_BQ, 100.0);
+
+		//Récupération des stocks de fèves et choco
+		double stockTotal = super.stockFeves.getStockTotal()+super.stockChoco.getStockTotal();
+		//On paye les coûts de stockage
+
+		super.coutStockage = 4*Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur();
+		super.LaBanque.payerCout(this, super.cryptogramme, "Coûts de stockage", super.coutStockage*stockTotal);
 
 		super.stockFeves.display();
 		super.stockChoco.display();

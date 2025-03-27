@@ -1,6 +1,6 @@
 package abstraction.eq4Transformateur1.contratCadre;
 
-import java.util.ArrayList;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -17,7 +17,7 @@ import abstraction.eqXRomu.contratsCadres.*;
 
 public class Transformateur1ContratCadreVendeur extends TransformateurContratCadre implements IVendeurContratCadre {
 
-	protected List<ExemplaireContratCadre> mesContratEnTantQueVendeur;//Contient tous les contrats de vente
+	
 	protected double partInitialementVoulue;	
 	protected double prixInitialementVoulu;
 	protected double epsilon;
@@ -88,10 +88,10 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 	//adopter une stratégie selon celui-ci
 	public double propositionPrix(ExemplaireContratCadre contrat) {
 		if(contrat.getQuantiteTotale() >= 2000){
-			this.prixInitialementVoulu = 9000;
-			return 0.75*9000; 
+			this.prixInitialementVoulu = 15000;
+			return 0.75*15000; 
 		}
-		return 9000*(1 - 0.25*contrat.getQuantiteTotale()/2000);// plus la quantite est elevee, plus le prix est interessant
+		return 15000*(1 - 0.25*contrat.getQuantiteTotale()/2000);// plus la quantite est elevee, plus le prix est interessant
 	}
 
 
@@ -101,7 +101,7 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
 		//Si le prix est beaucoup trop faible, l'algorithme par dichotomie risque de ne pas fonctionner 
 		// et de nous faire vendre à perte. On arrête donc les négociations.
-		if (contrat.getPrix() < 0.65*5226){
+		if (contrat.getPrix() < 0.65*15000){
 			return -1;
 		}
 		else{
