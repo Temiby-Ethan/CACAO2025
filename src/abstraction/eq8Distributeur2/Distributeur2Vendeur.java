@@ -14,6 +14,7 @@ import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import java.util.LinkedList;
 import java.util.List;
 
+import abstraction.eqXRomu.acteurs.Romu;
 import abstraction.eqXRomu.clients.ClientFinal;
 
 import abstraction.eqXRomu.general.Journal;
@@ -68,22 +69,20 @@ public class Distributeur2Vendeur extends Distributeur2Acteur implements IDistri
 
 
 public void setPrix(ChocolatDeMarque choco) {
-	if (Filiere.LA_FILIERE.getEtape()<1) {
-			
-			
-		if (choco.getChocolat() == Chocolat.C_MQ_E) {
-			ListPrix.put(choco, (double) 10000);
-		}
-		
-	
-		if (choco.getChocolat() == Chocolat.C_HQ_E) {
-			ListPrix.put(choco, (double) 22000);
-		}
-		if (choco.getChocolat() == Chocolat.C_HQ_BE) {
-			ListPrix.put(choco, (double) 30000);
-		}
-	} 
+
+	if (choco.getChocolat() == Chocolat.C_MQ_E) {
+		ListPrix.put(choco, (double) 10000);
 	}
+	
+
+	if (choco.getChocolat() == Chocolat.C_HQ_E) {
+		ListPrix.put(choco, (double) 22000);
+	}
+	if (choco.getChocolat() == Chocolat.C_HQ_BE) {
+		ListPrix.put(choco, (double) 30000);
+	}
+
+}
 
 
 
@@ -106,16 +105,16 @@ public void setPrix(ChocolatDeMarque choco) {
 		else {
 			
 			if (choco.toString().contains("C_MQ_E")) {
-				double x = (capaciteDeVente*0.30);
+				double x = (capaciteDeVente*0.30/nombreMarquesParType.get(Chocolat.C_MQ_E));
 				return Math.max(Math.min(x , this.getQuantiteEnStock(choco,crypto)),0.0);
 			}
 			
 			if (choco.toString().contains("C_HQ_BE")) {
-				double x = (capaciteDeVente*0.30);
+				double x = (capaciteDeVente*0.30/nombreMarquesParType.get(Chocolat.C_HQ_BE));
 				return Math.max(Math.min(x , this.getQuantiteEnStock(choco,crypto)),0.0);
 			}
 			if (choco.toString().contains("C_HQ_E")) {
-				double x = (capaciteDeVente*0.40);
+				double x = (capaciteDeVente*0.40/nombreMarquesParType.get(Chocolat.C_HQ_E));
 				return Math.max(Math.min(x , this.getQuantiteEnStock(choco,crypto)),0.0);
 			}
 			
@@ -134,16 +133,17 @@ public void setPrix(ChocolatDeMarque choco) {
 
 
 	public double quantiteEnVenteTG(ChocolatDeMarque choco, int crypto){
-        if (crypto!=this.cryptogramme) {
+        if (crypto == this.cryptogramme) {
 			double capaciteDeVenteTG = this.quantiteEnVenteTotal() * ClientFinal.POURCENTAGE_MAX_EN_TG;
 			
 
 			if(choco.getChocolat() == Chocolat.C_HQ_E){
-				return (0.3 * capaciteDeVenteTG);
+				
+				return ((0.3 * capaciteDeVenteTG)/nombreMarquesParType.get(Chocolat.C_HQ_E));
 			}
 
 			if(choco.getChocolat() == Chocolat.C_HQ_BE){
-				return (0.7 * capaciteDeVenteTG);
+				return ((0.7 * capaciteDeVenteTG)/nombreMarquesParType.get(Chocolat.C_HQ_BE));
 			}
 			
 			return 0.0;
@@ -151,7 +151,7 @@ public void setPrix(ChocolatDeMarque choco) {
 		else {return 0.0;}
     }
 
-	public double quantiteEnVenteTotalTG(){
+	public double quantiteEnVenteTGTotal(){
 		double qte = 0;
 
 		for (ChocolatDeMarque cm :this.chocolats){
@@ -184,6 +184,27 @@ public void setPrix(ChocolatDeMarque choco) {
 		List<Journal> jour = super.getJournaux();
 		jour.add(this.journalVente);
 		return jour;
+	}
+
+
+
+	public void next() {
+		super.next();
+		journalVente.ajouter("");
+		journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE,"==================== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
+		journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE,"QuantitéEnVenteTotal à l'Etape "+Filiere.LA_FILIERE.getEtape()+" : " +this.quantiteEnVenteTotal());
+		journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE,"QuantitéEnVenteTGTotal à l'Etape "+Filiere.LA_FILIERE.getEtape()+" : "+this.quantiteEnVenteTGTotal());
+		journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE,"=================================");
+		journalVente.ajouter("");
+		for (ChocolatDeMarque choco : chocolats) {
+			journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE,"prix de vente pour le chocolats "+choco+" est de : "+this.prix(choco));
+		}
+		
+		for (int i=0;i<this.ListPrix.size(); i++) {
+			this.setPrix(chocolats.get(i));
+		}
+		
+		
 	}
 
 }

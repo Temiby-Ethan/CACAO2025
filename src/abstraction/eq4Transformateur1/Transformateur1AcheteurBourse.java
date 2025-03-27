@@ -16,7 +16,7 @@ public class Transformateur1AcheteurBourse extends Transformateur1ContratCadreVe
  
 	public Transformateur1AcheteurBourse() {
 		super();
-		this.feve = Feve.F_MQ;
+		this.feve = Feve.F_BQ;
 		this.T = 80.0;
 	}
 
@@ -35,7 +35,7 @@ public class Transformateur1AcheteurBourse extends Transformateur1ContratCadreVe
 
 		this.journalTransactions.ajouter("J'ai achete " + quantiteEnT + " tonnes de " + f + " au cours de " + coursEnEuroParT + " euros par tonne.");
 		
-		if (this.stockFeves.get(f) == null){
+		if (this.stockFeves == null || this.stockFeves.get(f) == null){
 			this.stockFeves.put(f, quantiteEnT);
 		}
 		else{
