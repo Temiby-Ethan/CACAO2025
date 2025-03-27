@@ -24,6 +24,8 @@ public class Producteur2stock extends Producteur2sechage {
     protected HashMap<Feve,Double> seuil_stock;
 	protected Variable stockTotal;
     private Journal JournalStock;
+    protected HashMap<Feve,Double> stock_initial;
+
     double cout_stockage = 7.5;
 
 
@@ -35,6 +37,15 @@ public class Producteur2stock extends Producteur2sechage {
         this.stockvar = new HashMap<Feve,Variable>();
 		this.prodParStep = new HashMap<Feve, Double>();
         this.JournalStock = new Journal("Journal Stock Eq2",this);
+        this.stock_initial = new HashMap<Feve,Double>();
+
+        this.stock_initial.put(Feve.F_BQ,22900.0*2);
+        this.stock_initial.put(Feve.F_BQ_E,2100.0*2);
+        this.stock_initial.put(Feve.F_MQ,6500.0*2);
+        this.stock_initial.put(Feve.F_MQ_E,1600.0*2);
+        this.stock_initial.put(Feve.F_HQ_E,0.0*2);
+        this.stock_initial.put(Feve.F_HQ_BE,560.0*2);
+
         
 
         double totalInitialStock = 0.0;
@@ -51,7 +62,7 @@ public class Producteur2stock extends Producteur2sechage {
         		
        for (Feve f : Feve.values()) {
 
-            double initialStock = 12000; //On commence avec 12000T de chaque fèves
+            double initialStock = this.stock_initial.get(f); //On commence avec 12000T de chaque fèves
             this.stockvar.put(f, new VariableReadOnly(this+"Stock"+f.toString().substring(2), "<html>Stock de feves "+f+"</html>",this, 0.0, prodParStep.get(f)*24, initialStock));
             
             Queue<Stock> initStock = new LinkedList<>();
@@ -198,7 +209,7 @@ public class Producteur2stock extends Producteur2sechage {
 
     }
 
-    public void Check(){
+    public void Check(){ //Supprime les fèves dont la date de stockage est dépassée
 
         for (Feve f : Feve.values()){
 
