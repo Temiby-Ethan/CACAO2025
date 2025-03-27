@@ -72,7 +72,7 @@ public class Transformateur3AcheteurBourse extends Transformateur3ContratCadreAc
         //fève HQ équitable 
         // tout cela c'est la filière le code mère qui va s'en occuper ce n'est pas notre rôle
         //on pourra implémenter ici notre stratégie
-
+        super.next();
         
     }
 
@@ -93,7 +93,7 @@ public class Transformateur3AcheteurBourse extends Transformateur3ContratCadreAc
             double a = super.stockFeves.getQuantityOf(Feve.F_BQ);
             //si le cours est supérieur à un certain seuil on n'achète pas 
             //un prix vraiment trop cher
-            if (cours>25000){
+            if (cours>2500){
                 return 0;
             }
             if (a<25000){
