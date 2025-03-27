@@ -10,7 +10,7 @@ import java.util.LinkedList;
 
 public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1ContratCadreVendeur implements IAcheteurContratCadre {
     
-    protected List<ExemplaireContratCadre> mesContratEnTantQuAcheteur;
+    
     protected double qttInitialementVoulue;	
 	protected double prixInitialementVoulu;
 	protected double epsilon;
@@ -112,7 +112,7 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 
 		// OU proposition d'un contrat a un des vendeurs choisi aleatoirement
 		for(IProduit produit : pourcentageTransfo.keySet()){
-			if(stockFeves.get(produit)< 0.75*STOCK_MAX_TOTAL_FEVES){
+			if(stockFeves.get(produit)< 0.1*STOCK_MAX_TOTAL_FEVES){
 				journalCC.ajouter("Recherche d'un vendeur aupres de qui acheter");
 
 				List<IVendeurContratCadre> vendeurs = supCCadre.getVendeurs(produit);

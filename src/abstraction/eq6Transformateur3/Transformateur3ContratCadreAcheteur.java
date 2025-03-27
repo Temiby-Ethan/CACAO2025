@@ -15,7 +15,7 @@ import abstraction.eqXRomu.produits.Feve;
 
 // @author Eric SCHILTZ & Henri Roth
 
-public class Transformateur3ContratCadreAcheteur extends Transformateur3Fabriquant implements IAcheteurContratCadre{
+public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratCadreVendeur implements IAcheteurContratCadre{
 	protected List<ExemplaireContratCadre> ContratsAcheteur;
 	protected List<ExemplaireContratCadre> contratsObsoletes;
 
@@ -32,6 +32,7 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3Fabriqua
 		return contrat.getPrix();
 	}
 	public void next() {
+		super.next();
 		SuperviseurVentesContratCadre supCCadre = (SuperviseurVentesContratCadre) Filiere.LA_FILIERE.getActeur("Sup.CCadre");
 
 		journalCC.ajouter("======= Contrats cadres finis période"+Filiere.LA_FILIERE.getEtape()+"=======");
@@ -42,6 +43,12 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3Fabriqua
 			}
 		}
 		this.ContratsAcheteur.removeAll(contratsObsoletes);
+		for (ExemplaireContratCadre contrat : this.ContratsVendeur) {
+			if (contrat.getQuantiteRestantALivrer()==0.0 && contrat.getMontantRestantARegler()==0.0) {
+				contratsObsoletes.add(contrat);
+			}
+		}
+		this.ContratsVendeur.removeAll(contratsObsoletes);
 		journalCC.ajouter("==============");
 		
 		// Proposition d'un nouveau contrat a tous les vendeurs possibles
@@ -51,24 +58,6 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3Fabriqua
 				supCCadre.demandeAcheteur((IAcheteurContratCadre)this, ((IVendeurContratCadre)acteur), produit, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10, 100.0), cryptogramme, false);
 			}
 		}
-		// OU proposition d'un contrat a un des vendeurs choisi aleatoirement
-		/*
-		journalCC.ajouter("Recherche d'un vendeur aupres de qui acheter");
-		List<IVendeurContratCadre> vendeurs = supCCadre.getVendeurs(produit);
-		if (vendeurs.contains(this)) {
-			vendeurs.remove(this);
-		}
-		IVendeurContratCadre vendeur = null;
-		if (vendeurs.size()==1) {
-			vendeur=vendeurs.get(0);
-		} else if (vendeurs.size()>1) {
-			vendeur = vendeurs.get((int)( Filiere.random.nextDouble()*vendeurs.size()));
-		}
-		if (vendeur!=null) {
-			journalCC.ajouter("Demande au superviseur de debuter les negociations pour un contrat cadre de "+produit+" avec le vendeur "+vendeur);
-			ExemplaireContratCadre cc = supCCadre.demandeAcheteur((IAcheteurContratCadre)this, vendeur, produit, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10, (SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER+10.0)/10), cryptogramme,false);
-			journalCC.ajouter("-->aboutit au contrat "+cc);
-		}*/
 	}
 
 	public void receptionner(IProduit produit, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
@@ -77,7 +66,15 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3Fabriqua
 	}
 
 	public boolean achete(IProduit produit) {
-		return true;
+		if(produit == Feve.F_BQ
+		|| produit == Feve.F_BQ_E
+		|| produit == Feve.F_MQ
+		|| produit == Feve.F_HQ_E){
+			if(stockFeves.getQuantityOf(produit)<500){
+				return true;
+			}
+		}
+		return false;
 	}
 	public String toString() {
 		return this.getNom();
@@ -91,5 +88,6 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3Fabriqua
 	@Override
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
 		journalCC.ajouter("Nouveau contrat cadre" +contrat);
+		ContratsAcheteur.add(contrat);
 	}
 }
