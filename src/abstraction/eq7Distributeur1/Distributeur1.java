@@ -90,7 +90,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 		List<Double> requiredQuantities = new ArrayList<>();
 		Distributeur1Stock acteurStock = new Distributeur1Stock();
 		int step = Filiere.LA_FILIERE.getEtape(); // Récupération du numéro de l'étape
-		for (int i=0; i<5; i++){
+		for (int i=0; i<6; i++){
 			requiredQuantities.add(acteurStock.VolumetoBuy(chocolats.get(i),this.cryptogramme)*0.95);
 		}
 		if (step%8==0){
