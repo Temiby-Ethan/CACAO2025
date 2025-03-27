@@ -175,14 +175,13 @@ public class Producteur2VenteCC extends Producteur2couts implements IVendeurBour
 				JournalEQ2CC.ajouter("      j'accepte l'echeancier");
 				return res;
 	}
-
 	public double propositionPrix(ExemplaireContratCadre contrat) {
 		if (!contrat.getProduit().getType().equals("Feve")) {
 			return 0; // ne peut pas etre le cas normalement 
 		}
 		BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
 		double cours = ((Feve)(contrat.getProduit())).isEquitable() ? 0.0 : bourse.getCours((Feve)contrat.getProduit()).getValeur();
-		double prixCC = prix((Feve)contrat.getProduit());
+		double prixCC = prix.get((Feve) contrat.getProduit());
 		if (prixCC==0.0) {
 			PRIX_DEFAUT=(int)(PRIX_DEFAUT*0.98); // on enleve 2% tant qu'on n'a pas passe un contrat
 		}
