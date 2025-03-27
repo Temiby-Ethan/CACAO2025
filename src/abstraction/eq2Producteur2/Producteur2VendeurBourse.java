@@ -22,7 +22,7 @@ import abstraction.eqXRomu.produits.IProduit;
 
 
 
-public class Producteur2VendeurBourse extends Producteur2couts implements IVendeurBourse{
+public class Producteur2VendeurBourse extends Producteur2VenteCC implements IVendeurBourse{
 
 	private Journal journalBourse;
 	
