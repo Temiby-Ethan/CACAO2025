@@ -42,10 +42,12 @@ public class Producteur2VendeurBourse extends Producteur2VenteCC implements IVen
 			double coursf = bourse.getCours(f).getValeur();
 			double offre = 0 ;
 			double stock_a = stockvar.get(f).getValeur();
+			double a_garder = restantDu(f);
+
 			journalBourse.ajouter("Valeur du cours : "+coursf+"\nValeur du prix : "+prix.get(f));
 
-			if((stock_a > seuil_stock.get(f))&&(prix.get(f) < coursf)){
-				offre = stock_a - seuil_stock.get(f);
+			if((stock_a - a_garder > seuil_stock.get(f))&&(prix.get(f) < coursf)){
+				offre = stock_a - a_garder - seuil_stock.get(f);
 				journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" Je mets en vente "+offre+" T de "+f);
 				
 			}
