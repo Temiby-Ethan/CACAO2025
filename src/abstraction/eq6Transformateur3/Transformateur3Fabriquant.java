@@ -28,11 +28,10 @@ public class Transformateur3Fabriquant extends Transformateur3Marques implements
     private double nbMachine = 128;
     
     private double capacite_machine = 1e7; //tablette/step
-    private double capacite_ouvrier = 15000; // tab/step
+    //private double capacite_ouvrier = 15000; // tab/step
 
     private double coutIngredient = 450.0; // €/tonnes
     private double salaireOuvrier = 4500.0; // €
-    private double coutStockage;
     
     private double coutTotalProd = 0;
     private double quantiteTotaleProduite = 0;
@@ -72,7 +71,7 @@ public class Transformateur3Fabriquant extends Transformateur3Marques implements
         this.dicoIndicateurChoco.put(bollo,super.eq6_Q_Bollo);
 
         //Création du stock de chocolat
-		super.stockChoco = new Transformateur3Stock(this, super.journalStock, "chocolat", 200000.0, super.lesChocolats, this.dicoIndicateurChoco);
+		super.stockChoco = new Transformateur3Stock(this, super.journalStock, "chocolat", 0.0, super.lesChocolats, this.dicoIndicateurChoco);
     
         //Initialisation de la demande
         this.DemandeProdChoco = new HashMap<IProduit, Double>();
@@ -84,7 +83,7 @@ public class Transformateur3Fabriquant extends Transformateur3Marques implements
 
     public void initialiser(){
         super.initialiser();
-        coutStockage = 4*Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur();
+        //coutStockage = 4*Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur();
     }
 
     public void next(){
@@ -120,7 +119,7 @@ public class Transformateur3Fabriquant extends Transformateur3Marques implements
         this.coutTotalProd += prixOuvrier + coutFixe + coutVariable;
         //Les coûts de stockage seront considéré en fin de next
         super.LaBanque.payerCout(this, super.cryptogramme, "Coûts de production", coutTotalProd);
-        
+
         //Afficher les comptes
         double div = 1000.0;
         String suff = " k€";
@@ -157,7 +156,7 @@ public class Transformateur3Fabriquant extends Transformateur3Marques implements
 
         // Étape 1 : Détermine les fèves utilisable pour la production
         int indexLastFeve=-1;
-        int indexFeveMin = 0;
+        //int indexFeveMin = 0;
 
         //Si chocolat est Hypocritolat - C_HQ_E
         if(choco.getGamme()==Gamme.HQ){
