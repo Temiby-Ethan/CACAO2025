@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 // Paul
-public class Producteur3Vente extends Producteur3Stock implements IVendeurBourse, IVendeurContratCadre{
+public class Producteur3Vente extends Producteur3GestionDesCoûts implements IVendeurBourse, IVendeurContratCadre{
     protected List<ExemplaireContratCadre> mesContratCadres = new ArrayList<ExemplaireContratCadre>();
 
    
@@ -79,7 +79,10 @@ public class Producteur3Vente extends Producteur3Stock implements IVendeurBourse
     public boolean vend(IProduit produit) {
         if (produit instanceof Feve) {
             Feve feve = (Feve)produit;
-            return feve.getGamme().equals(Gamme.MQ) && feve.isEquitable();
+            boolean A = feve.getGamme().equals(Gamme.MQ) && feve.isEquitable() && calculTotalStockParticulier(feve) >= 0;
+            boolean B = feve.getGamme().equals(Gamme.BQ) && !feve.isEquitable()&& calculTotalStockParticulier(feve) >= 0;
+            boolean C = feve.getGamme().equals(Gamme.HQ) && feve.isBio()&& calculTotalStockParticulier(feve) >= 0;
+            return A || B || C;
         }
         return false;
     }
@@ -88,38 +91,57 @@ public class Producteur3Vente extends Producteur3Stock implements IVendeurBourse
     public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
         Echeancier echeancier = contrat.getEcheancier();
         double qteTotale = contrat.getQuantiteTotale();
-        double qteInit = contrat.getEcheanciers().get(0).getQuantiteTotale();
-        if (qteTotale >= qteInit*1.1) {
-            return echeancier;
-        }
+        double stockActuel = calculTotalStockParticulier((Feve)contrat.getProduit());
         int stepDebut = contrat.getEcheancier().getStepDebut();
         int stepFin = contrat.getEcheancier().getStepFin();
-        int nbStep = stepFin - stepDebut;
-        return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, nbStep,(int)(qteInit*1.2/nbStep));
+        int nbStep = stepFin - stepDebut + 1;
+        if (qteTotale <= stockActuel*0.7 && qteTotale >= stockActuel*0.1 && qteTotale >= 100*nbStep){
+            return echeancier;
+        }
+        double contreQuantite = (qteTotale + stockActuel*0.5)/2;
+        if (contreQuantite < stepFin*101){
+            return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, nbStep, 101);
+        }
+        else{
+            return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, nbStep, (int)(contreQuantite/nbStep));
+        }
     }
 
 
     @Override
     public double propositionPrix(ExemplaireContratCadre contrat) {
         Feve feve = (Feve)contrat.getProduit();
+        double Cump = getCump(feve);
         Gamme gamme = feve.getGamme();
-        BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
-        double cours = bourse.getCours(Feve.get(gamme, false, false)).getValeur();
-        return cours*1.5;
+        if (gamme.equals(Gamme.HQ)){
+            return Cump*1.2;
+        }
+        else{
+            BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
+            double cours = bourse.getCours(Feve.get(gamme,false,false)).getValeur();
+            if (Cump*1.2 >= cours*1.5) {
+                return Cump*1.2;
+            }
+            else{
+                return cours*1.5;
+            }
+        }
+        
     }
 
 
     @Override
     public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
-        Feve feve = (Feve)contrat.getProduit();
-        Gamme gamme = feve.getGamme();
         Double prixProp = contrat.getPrix();
-        BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
-        double cours = bourse.getCours(Feve.get(gamme, false, false)).getValeur();
-        if (prixProp >= cours*1.1) {
-            return prixProp;
+        Feve feve = (Feve)contrat.getProduit();
+        double Cump = getCump(feve);
+        double ancienneOffre = contrat.getListePrix().get(contrat.getListePrix().size()-2);
+        double nouvelleOffre = (ancienneOffre + prixProp)/2;
+        if (Cump*1.1 >= nouvelleOffre) {
+            return Cump*1.1;
         }
-        return cours*1.1;
+        else{
+            return nouvelleOffre;}
     }
 
 
