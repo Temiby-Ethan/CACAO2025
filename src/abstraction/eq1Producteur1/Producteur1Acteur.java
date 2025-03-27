@@ -8,34 +8,42 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
+import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
-
 
 public class Producteur1Acteur implements IActeur {
     
     protected int cryptogramme;
-    
-	// Adrien BUECHER --> Stocks ; Adam SEBIANE --> journal
-	protected Journal journal; // Journal pour enregistrer les étapes
-    private Variable stockTotal; // Indicateur du volume total du stock
-    private Variable stockFMQ; // Indicateur du stock de fève moyenne qualité
-    private Variable stockFBQ; // Indicateur du stock de fève bonne qualité
-    private Variable stockFHQ; // Indicateur du stock de fève haute qualité
+
+    protected Journal journal;
     protected Stock stock;
-    
+
+    private Variable stockTotal;
+    private Variable stockFMQ;
+    private Variable stockFBQ;
+    private Variable stockFHQ;
+
     public Producteur1Acteur() {
-		// Adrien BUECHER --> Stocks ; Adam SEBIANE --> journal
-		this.journal = new Journal(this.getNom() + " Journal", this);
-        this.stockTotal = new Variable("Stock Total", this, 0.0); // Initialisation du stock total à 0
-		this.stockFBQ = new Variable("Stock FBQ", this, 0.0); // Initialisation du stock de fève basse qualité à 0
-        this.stockFMQ = new Variable("Stock FMQ", this, 0.0); // Initialisation du stock de fève moyenne qualité à 0
-        this.stockFHQ = new Variable("Stock FHQ", this, 0.0); // Initialisation du stock de fève haute qualité à 0
-        this.stock =new Stock();  }
-    
+        this.journal = new Journal(getNom() + " Journal", this);
+        this.stock = new Stock();
+
+        // Initialisation du stock
+        stock.ajouter(Feve.F_BQ, 1000);
+        stock.ajouter(Feve.F_MQ, 1000);
+        stock.ajouter(Feve.F_HQ_BE, 1000); //  corrigé ici
+
+        // Initialisation des indicateurs
+        this.stockTotal = new Variable("Stock Total", this, stock.getStockTotal());
+        this.stockFMQ = new Variable("Stock FMQ", this, stock.getStockFMQ());
+        this.stockFBQ = new Variable("Stock FBQ", this, stock.getStockFBQ());
+        this.stockFHQ = new Variable("Stock FHQ", this, stock.getStockFHQ()); // 
+    }
+
     public void initialiser() {
         journal.ajouter("Initialisation du producteur");
     }
 
+    @Override
     public String getNom() {
         return "EQ1";
     }
@@ -45,42 +53,40 @@ public class Producteur1Acteur implements IActeur {
     }
 
     public void next() {
-        int etape = Filiere.LA_FILIERE.getEtape(); // Récupération du numéro de l'étape
-        journal.ajouter("Étape " + etape); // Ajout uniquement du numéro de l'étape dans le journal
+        int etape = Filiere.LA_FILIERE.getEtape();
+        journal.ajouter("Étape " + etape);
 
-        // Mise à jour des stocks de fèves
-        double ajoutStock = 10;
-        stock.ajouterStock(ajoutStock, ajoutStock, ajoutStock); // Ajout de 10 pour chaque type de fève
+        // Ajout de production fictive chaque étape
+        stock.ajouter(Feve.F_BQ, 10);
+        stock.ajouter(Feve.F_MQ, 10);
+        stock.ajouter(Feve.F_HQ_BE, 10); //  
 
         // Mise à jour des indicateurs avec les nouvelles valeurs des stocks
         stockTotal.setValeur(this, stock.getStockTotal());
         stockFMQ.setValeur(this, stock.getStockFMQ());
         stockFBQ.setValeur(this, stock.getStockFBQ());
-        stockFHQ.setValeur(this, stock.getStockFHQ());
+        stockFHQ.setValeur(this, stock.getStockFHQ()); // 
 
-        // Vendre 120 tonnes de fève moyenne qualité si le stock le permet
-        double quantiteARechercher = 120.0; // Quantité de fève moyenne qualité à vendre
-
-        if (stock.vendreStockFMQ(quantiteARechercher)) {
-            journal.ajouter("Vente de " + quantiteARechercher + " tonnes de fève moyenne qualité en bourse");
-        } else {
-            journal.ajouter("Stock de fève moyenne qualité insuffisant pour vendre " + quantiteARechercher + " tonnes.");
-        }
+        journal.ajouter("Stock mis à jour :");
+        journal.ajouter("→ FMQ : " + stock.getStockFMQ());
+        journal.ajouter("→ FBQ : " + stock.getStockFBQ());
+        journal.ajouter("→ FHQ : " + stock.getStockFHQ()); // 
     }
 
+    @Override
     public Color getColor() {
         return new Color(243, 165, 175); 
     }
 
     public String getDescription() {
-        return "Bla bla bla";
+        return "Producteur de fèves de cacao simples (BQ, MQ, HQ).";
     }
 
     public List<Variable> getIndicateurs() {
         List<Variable> res = new ArrayList<>();
         res.add(stockTotal); // Indicateur du stock total
         res.add(stockFMQ); // Indicateur du stock de fève moyenne qualité
-        res.add(stockFBQ); // Indicateur du stock de fève bonne qualité
+        res.add(stockFBQ); // Indicateur du stock de fève basse qualité
         res.add(stockFHQ); // Indicateur du stock de fève haute qualité
         return res;
     }
@@ -100,15 +106,15 @@ public class Producteur1Acteur implements IActeur {
     }
 
     public void notificationFaillite(IActeur acteur) {
-        journal.ajouter("Notification de faillite de " + acteur.getNom());
+        journal.ajouter("Faillite de " + acteur.getNom());
     }
 
     public void notificationOperationBancaire(double montant) {
-        journal.ajouter("Opération bancaire : " + montant);
+        journal.ajouter("Opération bancaire : " + montant + " €");
     }
 
     protected double getSolde() {
-        return Filiere.LA_FILIERE.getBanque().getSolde(Filiere.LA_FILIERE.getActeur(getNom()), this.cryptogramme);
+        return Filiere.LA_FILIERE.getBanque().getSolde(Filiere.LA_FILIERE.getActeur(getNom()), cryptogramme);
     }
 
     public List<String> getNomsFilieresProposees() {
@@ -119,13 +125,13 @@ public class Producteur1Acteur implements IActeur {
         return Filiere.LA_FILIERE;
     }
 
+    @Override
     public double getQuantiteEnStock(IProduit p, int cryptogramme) {
-        if (this.cryptogramme == cryptogramme) { // Vérification d'accès sécurisé
-            return stock.getStockTotal(); // Renvoie la valeur du stock total
-        } else {
-            return 0; // Accès refusé
-        }
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getQuantiteEnStock'");
     }
+
+
 }
 
 
