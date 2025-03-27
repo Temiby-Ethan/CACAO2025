@@ -30,7 +30,6 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 	protected List<Integer> successedSell = new ArrayList<Integer>();
 	protected List<Double> priceProduct = new ArrayList<Double>();
 	protected List<Double> requiredQuantities  = new ArrayList<Double>();
-	protected int cryptogramme;
 	protected int step = 0;
 	protected String name = "HexaFridge";
 	protected Color color = new Color(162, 207, 238);
@@ -92,7 +91,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 		Distributeur1Stock acteurStock = new Distributeur1Stock();
 		int step = Filiere.LA_FILIERE.getEtape(); // Récupération du numéro de l'étape
 		for (int i=0; i<5; i++){
-			requiredQuantities.add(acteurStock.VolumetoBuy(chocolats.get(i),cryptogramme)*0.95);
+			requiredQuantities.add(acteurStock.VolumetoBuy(chocolats.get(i),this.cryptogramme)*0.95);
 		}
 		if (step%8==0){
 			IAcheteurContratCadre acheteurContratCadre = new Distributeur1AcheteurContratCadre();

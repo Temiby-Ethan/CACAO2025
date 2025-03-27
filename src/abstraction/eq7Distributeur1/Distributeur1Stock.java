@@ -20,6 +20,7 @@ public class Distributeur1Stock extends Distributeur1Acteur{
 
     public Distributeur1Stock()
     {
+		this.cryptogramme = -1;
         this.stocksChocolats = new HashMap<>();
 
         this.chocolats = new ArrayList<ChocolatDeMarque>();
