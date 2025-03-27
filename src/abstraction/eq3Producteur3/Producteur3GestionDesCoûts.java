@@ -24,7 +24,13 @@ public class Producteur3GestionDesCoûts extends Producteur3Employés{
     }
 
     public double getCoutUnitaire(Feve feve) {
-        return 7.5 + (getMasseSalarialeParticulier(feve) / getNouveauStockParticulier(feve));
+        if (getNouveauStockParticulier(feve) == 0) {
+            return 7.5;
+        }
+        else {
+            return 7.5 + (getMasseSalarialeParticulier(feve) / getNouveauStockParticulier(feve));
+        }
+        
     }
 
     public double getCump(Feve feve) {
