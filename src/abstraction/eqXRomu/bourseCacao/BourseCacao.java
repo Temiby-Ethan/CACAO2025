@@ -269,7 +269,7 @@ public class BourseCacao implements IActeur, IAssermente {
                     double totalLivre=0;
 					for (IVendeurBourse v : offres.keySet()){
 						// La quantite vendue est au prorata de la quantite mis en vente
-						double quantite = (totalDemandes*offres.get(v))/totalOffres; 
+						double quantite = Math.min(offres.get(v),(totalDemandes*offres.get(v))/totalOffres); 
 						double livre = v.notificationVente(f, quantite,cours);
 						totalLivre+=livre;
 						obtenusV.get(f).get(v).ajouter(etape, quantite);
@@ -295,6 +295,8 @@ public class BourseCacao implements IActeur, IAssermente {
 								a.notificationBlackList(DUREE_BLACKLIST);
 								blackListA.put(a,DUREE_BLACKLIST);
 							}
+						} else {
+							obtenusA.get(f).get(a).ajouter(etape, 0);
 						}
 					}
 				} else if (totalOffres<=totalDemandes && totalOffres>0.0){ // offre<demande : Les vendeurs vont vendre tout ce qu'ils ont mis en vente et les acheteurs auront des feves au prorata de leur proposition d'achat
@@ -303,6 +305,7 @@ public class BourseCacao implements IActeur, IAssermente {
 					for (IVendeurBourse v : offres.keySet()){
 						// Chaque vendeur vend tout ce qu'il a annonce vouloir vendre
 						double quantite = offres.get(v); 
+						journal.get(f).ajouter("vendeur "+v+" vend tout ="+quantite);
 						obtenusV.get(f).get(v).ajouter(etape, quantite);
 						double livre = v.notificationVente(f, quantite,cours);
 						if (livre+EPSILON>=quantite) {
@@ -310,6 +313,7 @@ public class BourseCacao implements IActeur, IAssermente {
 							totalLivre+=livre;
 							journal.get(f).ajouter(Journal.texteColore((IActeur)v, ((IActeur)v).getNom()+" vend "+Journal.doubleSur(quantite, 2)+"T, livre "+livre+"T et est paye "+Journal.doubleSur(cours*quantite, 2)));
 						} else {
+							journal.get(f).ajouter(Journal.texteColore((IActeur)v, "vendeur "+v+" blackliste : demande a vendre "+quantite+" mais livre "+livre));
 							v.notificationBlackList(DUREE_BLACKLIST);
 							blackListV.put(v,DUREE_BLACKLIST);
 						}
@@ -325,10 +329,13 @@ public class BourseCacao implements IActeur, IAssermente {
 									a.notificationAchat(f, quantite, cours);
 									journal.get(f).ajouter(Journal.texteColore((IActeur)a, ((IActeur)a).getNom()+" obtient "+Journal.doubleSur(quantite,2)+" et paye "+Journal.doubleSur(cours*quantite, 2)));
 								} else {
+									journal.get(f).ajouter(Journal.texteColore((IActeur)a, "acheteur "+a+" blackliste : ne parvient pas a payer ce qu'il a demande en bourse"));
 									a.notificationBlackList(DUREE_BLACKLIST);
 									blackListA.put(a,DUREE_BLACKLIST);
 								}
 							}
+						} else {
+							obtenusA.get(f).get(a).ajouter(etape, 0);
 						}
 					}
 				}
@@ -402,11 +409,14 @@ public class BourseCacao implements IActeur, IAssermente {
 							s=i+";";
 							for (IAcheteurBourse a : ab) {
 								s=s+souhaitsA.get(f).get(a).getY(i)+";";
-								s=s+obtenusA.get(f).get(a).getY(i)+";";
+								s=s+(souhaitsA.get(f).get(a).getY(i)>0?obtenusA.get(f).get(a).getY(i):0)+";";
 							}
 							for (IVendeurBourse a : vb) {
 								s=s+souhaitsV.get(f).get(a).getY(i)+";";
-								s=s+obtenusV.get(f).get(a).getY(i)+";";
+								s=s+(souhaitsV.get(f).get(a).getY(i)>0?obtenusV.get(f).get(a).getY(i):0)+";";
+								// if (souhaitsV.get(f).get(a).getY(i)<obtenusV.get(f).get(a).getY(i)) {
+								// 	System.out.println(">>> "+a+" veut "+souhaitsV.get(f).get(a).getY(i)+" et obtient "+obtenusV.get(f).get(a).getY(i));
+								// }
 							}
 							aEcrire.println( s );
 //							System.out.println(s);
