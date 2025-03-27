@@ -27,7 +27,7 @@ public class Transformateur1VendeurEncheres extends Transformateur1VendeurAppelD
 		this.numero=NB_INSTANCES;
 		this.choco = Chocolat.C_BQ;
 		this.marque = "LimDt";
-		this.prixMin = 2400.0;
+		this.prixMin = prixTChocoBase.get(choco);
 	}
 
 	public void initialiser() {
@@ -53,6 +53,8 @@ public class Transformateur1VendeurEncheres extends Transformateur1VendeurAppelD
 				if (retenue!=null) {
 					this.stockChocoMarque.put(getChocolatDeMarque(), this.stockChocoMarque.get(getChocolatDeMarque())-retenue.getMiseAuxEncheres().getQuantiteT());
 					this.stockChoco.put(choco, this.stockChoco.get(choco) - retenue.getMiseAuxEncheres().getQuantiteT());
+					this.totalStocksChocoMarque.setValeur(this, this.totalStocksChocoMarque.getValeur(this.cryptogramme)-retenue.getMiseAuxEncheres().getQuantiteT(), this.cryptogramme);
+					this.totalStocksChoco.setValeur(this, this.totalStocksChoco.getValeur(this.cryptogramme)-retenue.getMiseAuxEncheres().getQuantiteT(), this.cryptogramme);
 					journalTransactions.ajouter("vente de "+retenue.getMiseAuxEncheres().getQuantiteT()+" T a "+retenue.getAcheteur().getNom());
 				} else {
 					journalTransactions.ajouter("pas d'offre retenue");
