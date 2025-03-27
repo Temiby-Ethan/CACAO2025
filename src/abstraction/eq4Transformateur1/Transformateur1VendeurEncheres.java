@@ -27,12 +27,14 @@ public class Transformateur1VendeurEncheres extends Transformateur1VendeurAppelD
 		this.numero=NB_INSTANCES;
 		this.choco = Chocolat.C_BQ;
 		this.marque = "LimDt";
-		this.prixMin = prixTChocoBase.get(choco);
+		
 	}
 
 	public void initialiser() {
 
 		super.initialiser();
+
+		this.prixMin = prixTChocoBase.get(choco);
 
 		this.superviseur = (SuperviseurVentesAuxEncheres)(Filiere.LA_FILIERE.getActeur("Sup.Encheres"));
 		journalTransactions.ajouter("PrixMin== " + this.prixMin);

@@ -7,6 +7,7 @@ import java.util.List;
 
 import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.produits.Chocolat;
+import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.contratsCadres.*;
 
 
@@ -158,9 +159,21 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 		if (livre>0.0) {
 
 			totalStocksChoco.retirer(this,  livre, cryptogramme);
-			this.journalStock.ajouter("Retrait de " + livre + "T" + contrat.getProduit() + "(CC avec "+ contrat.getAcheteur() + ")");
-			double currStockChoco = stockChoco.get(produit);
-			stockChoco.put((Chocolat) produit, currStockChoco-livre);
+
+			if (produit.getType() == "ChocolatDeMarque"){
+				totalStocksChocoMarque.retirer(this, livre, this.cryptogramme);
+				stockChocoMarque.put((ChocolatDeMarque)produit, stockChocoMarque.get((ChocolatDeMarque)produit)-livre);
+
+				double currStockChoco = stockChoco.get(produit);
+				stockChoco.put(((ChocolatDeMarque) produit).getChocolat(), currStockChoco-livre);
+			}
+			else{
+				totalStocksChocoNonMarquee.retirer(this, livre, this.cryptogramme);
+				double currStockChoco = stockChoco.get(produit);
+				stockChoco.put((Chocolat) produit, currStockChoco-livre);
+			}
+			this.journalStock.ajouter("Retrait de " + livre + "T " + contrat.getProduit() + "(CC avec "+ contrat.getAcheteur() + ")");
+			
 		}
 		return livre;
 	}

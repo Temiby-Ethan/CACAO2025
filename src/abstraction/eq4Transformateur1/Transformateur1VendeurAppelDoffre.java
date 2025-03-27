@@ -13,14 +13,25 @@ import abstraction.eqXRomu.produits.ChocolatDeMarque;
 
 public class Transformateur1VendeurAppelDoffre extends Transformateur1AcheteurBourse implements IVendeurAO {
 
-	double prix_BQ = prixTChocoBase.get(Chocolat.C_BQ);
-	double prix_BQ_E = prixTChocoBase.get(Chocolat.C_BQ_E);
-	double prix_MQ_E = prixTChocoBase.get(Chocolat.C_MQ_E);
-	double prix_HQ_BE = prixTChocoBase.get(Chocolat.C_HQ_BE);
+	double prix_BQ;
+	double prix_BQ_E;
+	double prix_MQ_E;
+	double prix_HQ_BE;
 
     public Transformateur1VendeurAppelDoffre() {
 		super();
 	}
+
+
+	public void initialiser(){
+		super.initialiser();
+
+		prix_BQ = prixTChocoBase.get(Chocolat.C_BQ);
+		prix_BQ_E = prixTChocoBase.get(Chocolat.C_BQ_E);
+		prix_MQ_E = prixTChocoBase.get(Chocolat.C_MQ_E);
+		prix_HQ_BE = prixTChocoBase.get(Chocolat.C_HQ_BE);
+	}
+
 
 	@Override
 	public OffreVente proposerVente(AppelDOffre offre) {
