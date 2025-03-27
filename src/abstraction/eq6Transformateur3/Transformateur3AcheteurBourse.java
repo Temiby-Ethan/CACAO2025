@@ -72,6 +72,7 @@ public class Transformateur3AcheteurBourse extends Transformateur3ContratCadreAc
         //fève HQ équitable 
         // tout cela c'est la filière le code mère qui va s'en occuper ce n'est pas notre rôle
         //on pourra implémenter ici notre stratégie
+        //on récupère le next de tous les pères
         super.next();
         
     }
