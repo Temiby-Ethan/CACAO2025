@@ -20,7 +20,7 @@ import abstraction.eqXRomu.produits.IProduit;
 
 public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implements IAcheteurContratCadre{
 
-	protected Integer cryptogramme;
+	
 	protected List<Double> priceProduct;
 	protected List<Double> requiredQuantities;
 	protected String name;
