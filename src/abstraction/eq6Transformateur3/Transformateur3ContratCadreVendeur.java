@@ -10,7 +10,7 @@ import abstraction.eqXRomu.contratsCadres.SuperviseurVentesContratCadre;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.produits.IProduit;
-
+// @author Henri Roth & Eric Schiltz
 public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquant implements IVendeurContratCadre {
 
     protected LinkedList<ExemplaireContratCadre> ContratsVendeur;
@@ -26,7 +26,7 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
             if(stockChoco.getQuantityOf(choco)>1000){
                 for (IActeur acteur : Filiere.LA_FILIERE.getActeurs()) {
 			        if (acteur!=this && acteur instanceof IAcheteurContratCadre && ((IAcheteurContratCadre)acteur).achete(choco)) {
-				        supCCadre.demandeVendeur((IAcheteurContratCadre)acteur, (IVendeurContratCadre)this,(IProduit) choco, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10, 100.0), cryptogramme, false);
+				        supCCadre.demandeVendeur((IAcheteurContratCadre)acteur, (IVendeurContratCadre)this,(IProduit) choco, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10, 25000.0), cryptogramme, false);
                     }
                 }
             }
@@ -54,7 +54,7 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
 
     @Override
     public double propositionPrix(ExemplaireContratCadre contrat) {
-        return 3000;
+        return 10000;
     }
 
     @Override

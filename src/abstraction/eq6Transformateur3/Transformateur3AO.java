@@ -4,7 +4,7 @@ import abstraction.eqXRomu.appelDOffre.AppelDOffre;
 import abstraction.eqXRomu.appelDOffre.IVendeurAO;
 import abstraction.eqXRomu.appelDOffre.OffreVente;
 import abstraction.eqXRomu.produits.IProduit;
-
+// @author Henri Roth
 public class Transformateur3AO extends Transformateur3AcheteurBourse implements IVendeurAO {
 
     public Transformateur3AO(){
@@ -16,7 +16,7 @@ public class Transformateur3AO extends Transformateur3AcheteurBourse implements 
         if (stockChoco.contains(produit)){
             double Q = offre.getQuantiteT();
             if(stockChoco.getQuantityOf(produit) > Q){
-                double prix = Q;
+                double prix = Q*3;
                 OffreVente offrevente = new OffreVente(offre, this, produit, prix);
                 return offrevente;
             }
