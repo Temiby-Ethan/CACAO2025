@@ -92,12 +92,12 @@ public class Producteur3Vente extends Producteur3GestionDesCoûts implements IVe
         Echeancier echeancier = contrat.getEcheancier();
         double qteTotale = contrat.getQuantiteTotale();
         double stockActuel = calculTotalStockParticulier((Feve)contrat.getProduit());
-        if (qteTotale <= stockActuel*0.7 && qteTotale >= stockActuel*0.2)  {
+        if (qteTotale <= stockActuel*0.7 && qteTotale >= stockActuel*0.1)  {
             return echeancier;
         }
         int stepDebut = contrat.getEcheancier().getStepDebut();
         int stepFin = contrat.getEcheancier().getStepFin();
-        int nbStep = stepFin - stepDebut;
+        int nbStep = stepFin - stepDebut + 1;
         double contreQuantite = (qteTotale + stockActuel*0.5)/2;
         return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, nbStep,(int)(contreQuantite/nbStep));
     }
@@ -106,15 +106,22 @@ public class Producteur3Vente extends Producteur3GestionDesCoûts implements IVe
     @Override
     public double propositionPrix(ExemplaireContratCadre contrat) {
         Feve feve = (Feve)contrat.getProduit();
-        BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
-        double cours = bourse.getCours(feve).getValeur();
         double Cump = getCump(feve);
-        if (Cump*1.2 >= cours*1.5) {
+        Gamme gamme = feve.getGamme();
+        if (gamme.equals(Gamme.HQ)){
             return Cump*1.2;
         }
         else{
-            return cours*1.5;
+            BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
+            double cours = bourse.getCours(Feve.get(gamme,false,false)).getValeur();
+            if (Cump*1.2 >= cours*1.5) {
+                return Cump*1.2;
+            }
+            else{
+                return cours*1.5;
+            }
         }
+        
     }
 
 
