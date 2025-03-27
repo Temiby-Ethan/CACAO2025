@@ -44,7 +44,7 @@ public class Producteur2VendeurBourse extends Producteur2VenteCC implements IVen
 			double stock_a = stockvar.get(f).getValeur();
 			journalBourse.ajouter("Valeur du cours : "+coursf+"\nValeur du prix : "+prix.get(f));
 
-			if((stock_a > seuil_stock.get(f))&&(coursf >= prix.get(f))) {
+			if((stock_a > seuil_stock.get(f)) {
 				offre = stock_a - seuil_stock.get(f);
 				journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" Je mets en vente "+offre+" T de "+f);
 				
@@ -58,6 +58,7 @@ public class Producteur2VendeurBourse extends Producteur2VenteCC implements IVen
 
 	public double notificationVente(Feve f, double quantiteEnT, double coursEnEuroParT) {
 		double retire = Math.min(this.stockvar.get(f).getValeur(), quantiteEnT);
+		JournalStock.ajouter("Vente en bourse :");
 		journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : j'ai vendu "+quantiteEnT+" T de "+f);
 		DeleteStock(f,retire);
 

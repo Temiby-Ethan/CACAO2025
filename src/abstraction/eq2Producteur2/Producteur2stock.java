@@ -23,7 +23,7 @@ public class Producteur2stock extends Producteur2sechage {
     protected HashMap<Feve,Variable> stockvar;
     protected HashMap<Feve,Double> seuil_stock;
 	protected Variable stockTotal;
-    private Journal JournalStock;
+    protected Journal JournalStock;
     protected HashMap<Feve,Double> stock_initial;
 
     double cout_stockage = 7.5;
