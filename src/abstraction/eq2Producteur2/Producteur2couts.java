@@ -1,4 +1,4 @@
-//Maxime Philippon
+//Maxime Philippon a
 package abstraction.eq2Producteur2;
 
 import java.util.HashMap;
