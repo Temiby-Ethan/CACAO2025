@@ -11,5 +11,5 @@ public class QualiteMQ extends Qualite {
     public QualiteMQ(boolean equitable){
         super(75000,960,96,6,30,12,1,425000,140000,285000, equitable);
     }
-
+    
 }
