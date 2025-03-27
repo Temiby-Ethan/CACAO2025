@@ -11,7 +11,6 @@ import abstraction.eqXRomu.produits.IProduit;
 public class Producteur1ContratCadre extends Producteur1Acteur implements IVendeurContratCadre {
 
     private Producteur1 vendeur; // Référence au Producteur1 principal
-    private Stock stock;
     private List<ExemplaireContratCadre> contrats;
 
     public Producteur1ContratCadre() {
@@ -69,12 +68,12 @@ public class Producteur1ContratCadre extends Producteur1Acteur implements IVende
     @Override
 public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
     this.contrats.add(contrat);
-    journalContrat.ajouter("Nouveau contrat cadre accepté : " + contrat);
+    journal.ajouter("Nouveau contrat cadre accepté : " + contrat);
 }
 
     @Override
     public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
-        double quantiteLivree = Math.min(quantite, stock.getStock(produit));
+        double quantiteLivree = Math.min(quantite, stock.getStockTotal());
         stock.retirer(produit, quantiteLivree);
         journal.ajouter("Livraison de " + quantiteLivree + " de " + produit + " pour le contrat " + contrat);
         return quantiteLivree;
