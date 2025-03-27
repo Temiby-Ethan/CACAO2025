@@ -27,20 +27,20 @@ public class Distributeur3ContratCadre extends Distributeur3Distributeur impleme
        for(ChocolatDeMarque choco :  Filiere.LA_FILIERE.getChocolatsProduits()){
            if(choco.getGamme()== Gamme.BQ){
                listeChcocolatPertinents.add(choco);
-               System.out.println("Chocolat de marque: " + choco.toString());
+               // System.out.println("Chocolat de marque: " + choco.toString());
            }
        }
 
 
        for (IActeur a : transfo){
            if(a instanceof IVendeurContratCadre && Filiere.LA_FILIERE.getActeursSolvables().contains(a)){
-               System.out.println("le transfo potentiel est : "+a.toString());
+               // System.out.println("le transfo potentiel est : "+a.toString());
                for(ChocolatDeMarque choco : listeChcocolatPertinents) {
-                   System.out.println("Fait une demande de contrat cadre : ");
-                   System.out.println("chocolat : "+choco.toString());
+                   // System.out.println("Fait une demande de contrat cadre : ");
+                   // System.out.println("chocolat : "+choco.toString());
                    Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1,8,200);
-                   System.out.println("échéancier : "+e.toString());
-                   System.out.println("deuxième parti :"+a.toString());
+                   // System.out.println("échéancier : "+e.toString());
+                   // System.out.println("deuxième parti :"+a.toString());
                    superviseur.demandeAcheteur(this, (IVendeurContratCadre) a,choco,e,this.cryptogramme,false);
                }
            }
@@ -87,7 +87,7 @@ public class Distributeur3ContratCadre extends Distributeur3Distributeur impleme
 
     @Override
     public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
-        System.out.println("Nouveau contrat signé pour l'équipe 9");
+        // System.out.println("Nouveau contrat signé pour l'équipe 9");
         this.journalActeur.ajouter("Nouveau contrat signé n°" + contrat.getNumero() + " : " + contrat.getQuantiteTotale() + " tonnes de " + contrat.getProduit() + " pour" + contrat.getPrix() + "€/tonne");
     }
 
