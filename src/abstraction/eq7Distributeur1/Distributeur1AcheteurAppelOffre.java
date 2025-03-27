@@ -57,6 +57,10 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurEncher
         if (product.isEquitable()){
             idProduct++;
         }
+		if(idProduct == 5)
+		{
+			return 4;
+		}
 		if(idProduct == 6)
 		{
 			return 5;
