@@ -84,7 +84,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 		Echeancier echeancierActuel = null;
 		if (listeEcheancier.isEmpty()){
 			tour = 0;
-			echeancierActuel = new Echeancier(0, 12, requiredQuantities.get(getInt(chocolat)));
+			echeancierActuel = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, requiredQuantities.get(getInt(chocolat)));
 		}
 		else {
 			tour = listeEcheancier.size();
@@ -147,7 +147,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 		for (int i=0; i<chocolats.size(); i++) {
 			List<IVendeurContratCadre> vendeurList = superviseur.getVendeurs(chocolats.get(i));
 			if (vendeurList.size()>0){
-				superviseur.demandeAcheteur(this, vendeurList.get(0), chocolats.get(i), new Echeancier(Filiere.LA_FILIERE.getEtape(), 8, requiredQuantities.get(i)), this.cryptogramme, false);
+				superviseur.demandeAcheteur(this, vendeurList.get(0), chocolats.get(i), new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 8, requiredQuantities.get(i)), this.cryptogramme, false);
 			}
 		}
 	}

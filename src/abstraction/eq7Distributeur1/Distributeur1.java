@@ -77,7 +77,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
     }
 
 	public double prix(ChocolatDeMarque choco) { // par Alexiho
-		ChocolatDeMarque chocoM = new ChocolatDeMarque(choco.getChocolat(), "Villors", 50);
+		ChocolatDeMarque chocoM = new ChocolatDeMarque(choco.getChocolat(), "Villors", 90);
 		int pos= (chocolats.indexOf(chocoM));
 		if (pos<0) {
 			return 8880.0;
@@ -134,7 +134,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 			return 0.0;
 		} else {
 			//int pos= (chocolats.indexOf(choco));
-			ChocolatDeMarque chocoM = new ChocolatDeMarque(choco.getChocolat(), "Villors", 50);
+			ChocolatDeMarque chocoM = new ChocolatDeMarque(choco.getChocolat(), "Villors", 90);
 			int pos= (chocolats.indexOf(chocoM));
 			//journal.ajouter("pos : " + pos + "chocoval : " + this.getStock(chocoM).getValeur() + "capa : " + capaciteDeVente.get(pos));
 			if (pos<0) {
@@ -153,7 +153,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 			return 0.0;
 		} else {
 			//int pos= (chocolats.indexOf(choco));
-			ChocolatDeMarque chocoM = new ChocolatDeMarque(choco.getChocolat(), "Villors", 50);
+			ChocolatDeMarque chocoM = new ChocolatDeMarque(choco.getChocolat(), "Villors", 90);
 			int pos= (chocolats.indexOf(chocoM));
 			if (pos<0) {
 				return 0.0;
