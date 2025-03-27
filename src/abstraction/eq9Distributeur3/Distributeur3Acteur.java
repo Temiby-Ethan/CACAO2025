@@ -20,6 +20,7 @@ public class Distributeur3Acteur implements IActeur {
 	protected Journal journalDeVente;
 	protected Journal journalContrats;
 	protected Journal journalStocks;
+	protected Journal journalCharges;
 
 
 	protected HashMap<ChocolatDeMarque, Double> stockChocoMarque;
@@ -32,6 +33,7 @@ public class Distributeur3Acteur implements IActeur {
 		this.journalDeVente = new Journal("journal de vente équipe 9",this);
 		this.journalContrats = new Journal("Journal de contrats cadre",this);
 		this.journalStocks = new Journal("Journal stocks",this);
+		this.journalCharges = new Journal("Journal des charges",this);
 	}
 	
 	public void initialiser() {
@@ -81,6 +83,7 @@ public class Distributeur3Acteur implements IActeur {
 		res.add(journalDeVente);
 		res.add(journalContrats);
 		res.add(journalStocks);
+		res.add(journalCharges);
 		return res;
 	}
 
