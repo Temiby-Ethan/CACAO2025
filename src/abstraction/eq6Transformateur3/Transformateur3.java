@@ -6,7 +6,7 @@ import java.util.List;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
 
-public class Transformateur3 extends Transformateur3AcheteurBoursef{
+public class Transformateur3 extends Transformateur3AcheteurBourse{
 
 	public Transformateur3() {
 	}
