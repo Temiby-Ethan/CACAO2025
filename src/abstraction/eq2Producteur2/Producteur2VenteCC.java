@@ -34,7 +34,7 @@ public class Producteur2VenteCC extends Producteur2couts implements IVendeurBour
         this.contratsEnCours=new LinkedList<ExemplaireContratCadre>();
 		this.contratsTermines=new LinkedList<ExemplaireContratCadre>();
 		this.JournalEQ2CC = new Journal("JournalCCEq2",this);
-		System.out.println("Producteur2VenteCC initialisé !");
+		//System.out.println("Producteur2VenteCC initialisé !");
 
     }
     // CONTRAT CADRE //
@@ -42,7 +42,7 @@ public class Producteur2VenteCC extends Producteur2couts implements IVendeurBour
 		super.initialiser();
 		this.supCC = (SuperviseurVentesContratCadre) Filiere.LA_FILIERE.getActeur("Sup.CCadre");
 		this.JournalEQ2CC.ajouter("Journal initialisé pour Producteur2VenteCC");
-		System.out.println("Méthode initialiser appelée pour Producteur2VenteCC");
+		//System.out.println("Méthode initialiser appelée pour Producteur2VenteCC");
 	}
    
 
