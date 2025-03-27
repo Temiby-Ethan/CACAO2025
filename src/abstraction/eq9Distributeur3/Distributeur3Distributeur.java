@@ -44,10 +44,10 @@ public class Distributeur3Distributeur extends Distributeur3Acteur implements ID
                 if(cm.getChocolat().isEquitable()){
                     stockBQ_E.ajouter(this,quantiteinit,this.cryptogramme);
 
-                    this.prix.put(cm, 1500.0F);
+                    this.prix.put(cm, 2500.0F);
                 }else{
                     stockBQ.ajouter(this,quantiteinit,this.cryptogramme);
-                    this.prix.put(cm, 2000.0F);
+                    this.prix.put(cm, 3000.0F);
                 }
             }
         }
@@ -56,7 +56,6 @@ public class Distributeur3Distributeur extends Distributeur3Acteur implements ID
 
     @Override
     public double prix(ChocolatDeMarque choco) {
-        // System.out.println("demande de prix de "+choco.getNom());
         if(this.stockChocoMarque.containsKey(choco)) {
             return prix.get(choco);
         }else{
