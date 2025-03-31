@@ -138,6 +138,10 @@ public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
 		if (!(acheteur instanceof IDistributeurChocolatDeMarque) && tg) {
 			throw new IllegalArgumentException(" appel de demandeAcheteur(...) de SuperViseurVentesContratCadre par l'acheteur "+acheteur.getNom()+" avec tg==true alors que l'acheteur n'est pas un distributeur (seuls les distributeurs peuvent s'engager a vendre en tete de gondole)");
 		}
+		if (produit instanceof ChocolatDeMarque && !Filiere.LA_FILIERE.getMarquesDistributeur().contains(((ChocolatDeMarque)produit).getMarque()) && !Filiere.LA_FILIERE.getProprietaireMarque(((ChocolatDeMarque)produit).getMarque()).equals(vendeur)) {
+			System.err.println(acheteur.getNom()+" souhaite acheter du "+produit+" a "+vendeur.getNom()+" alors qu'il ne s'agit pas d'une marque distributeur et qu'elle est la proprietee de "+Filiere.LA_FILIERE.getProprietaireMarque(((ChocolatDeMarque)produit).getMarque()));
+			Filiere.LA_FILIERE.getBanque().faireFaillite(acheteur, this, cryptos.get(this));
+		}
 		if (echeancier.getQuantiteTotale()<QUANTITE_MIN_ECHEANCIER) {
 			if (Filiere.LA_FILIERE.getActeursSolvables().contains(acheteur)) {
 				System.err.println("supCC : mise en faillite de "+acheteur.getNom()+" qui met en vente une quentite inferieure aux accords (on ne peut pas creer de contrat de moins de "+QUANTITE_MIN_ECHEANCIER+")");
