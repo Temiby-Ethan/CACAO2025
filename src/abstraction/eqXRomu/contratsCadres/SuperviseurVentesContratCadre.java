@@ -449,7 +449,8 @@ public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
 					acheteur.receptionner(cc.getProduit(),lotLivre, new ExemplaireContratCadre(cc));
 					cc.livrer(lotLivre);
 				} else if (lotLivre<0.0) {
-					throw new Error(" La methode livrer() du vendeur "+vendeur.getNom()+" retourne un negatif");
+					System.err.println(" La methode livrer() du vendeur "+vendeur.getNom()+" retourne un negatif --> mise en faillite");
+					Filiere.LA_FILIERE.getBanque().faireFaillite(vendeur, this, cryptos.get(this));
 				}
 			} else {
 				this.journal.ajouter("- rien a livrer a cette etape");
