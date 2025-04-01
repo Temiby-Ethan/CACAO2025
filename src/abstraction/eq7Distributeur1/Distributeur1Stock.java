@@ -43,6 +43,7 @@ public class Distributeur1Stock extends Distributeur1Acteur{
 		double ancient_value_mid = 0.0;
 		double val1 = 0.0;
 		double val2 = 0.0;
+		double val_demand = 0.0;
 		
 		if (etape > 3){
 			val1 = Filiere.LA_FILIERE.getVentes(choco, etape-27)+ Filiere.LA_FILIERE.getVentes(choco, etape-26) + Filiere.LA_FILIERE.getVentes(choco, etape-25) ;
@@ -52,8 +53,13 @@ public class Distributeur1Stock extends Distributeur1Acteur{
 		else{
 		ancient_value_mid = Filiere.LA_FILIERE.getVentes(choco, etape-24) ;
 		}
-
-		return 1.05*ancient_value_mid - getQuantiteEnStock(choco, crypto) ;
+		val_demand = 1.05*ancient_value_mid - getQuantiteEnStock(choco, crypto);
+		if (val_demand > 5.0){
+			return val_demand;
+		}
+		else{
+			return 5.0;
+		}
 	}
 
 	public Map<ChocolatDeMarque, Variable> getStocksChocolats() { // par Alexiho
