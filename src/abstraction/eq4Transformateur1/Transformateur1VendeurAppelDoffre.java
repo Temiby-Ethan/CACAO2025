@@ -1,5 +1,6 @@
 package abstraction.eq4Transformateur1;
 
+import abstraction.eqXRomu.acteurs.Romu;
 import abstraction.eqXRomu.appelDOffre.AppelDOffre;
 import abstraction.eqXRomu.appelDOffre.IVendeurAO;
 import abstraction.eqXRomu.appelDOffre.OffreVente;
@@ -53,7 +54,7 @@ public class Transformateur1VendeurAppelDoffre extends Transformateur1AcheteurBo
 				return null;
 			}
 			
-			this.journalTransactions.ajouter("Je propose " + offre.getQuantiteT() + " tonnes de " + offre.getProduit() + " au cours de " + prixT + " euros par tonne.");
+			this.journalTransactions.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_GREEN, "AO: Je propose " + offre.getQuantiteT() + " tonnes de " + offre.getProduit() + " au cours de " + prixT + " euros par tonne.");
 			return new OffreVente(offre, this, offre.getProduit(), prixT);
 		} else {
 			return null;	
@@ -63,7 +64,7 @@ public class Transformateur1VendeurAppelDoffre extends Transformateur1AcheteurBo
 	@Override
 	public void notifierVenteAO(OffreVente propositionRetenue) {
 		//System.out.println("Votre proposition de vente a été retenue");
-		this.journalTransactions.ajouter("J'ai vendu " + propositionRetenue.getQuantiteT() + " tonnes de " + propositionRetenue.getProduit() + " au cours de " + propositionRetenue.getPrixT() + " euros par tonne.");
+		this.journalTransactions.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_GREEN, "AO: J'ai vendu " + propositionRetenue.getQuantiteT() + " tonnes de " + propositionRetenue.getProduit() + " au prix par T de " + propositionRetenue.getPrixT() + " euros par tonne.");
 	 
 		//Mettre à jour les autres variables
 		ChocolatDeMarque chocoMarqueAO = (ChocolatDeMarque) propositionRetenue.getProduit();
@@ -71,18 +72,20 @@ public class Transformateur1VendeurAppelDoffre extends Transformateur1AcheteurBo
 
 		stockChocoMarque.put(chocoMarqueAO, stockChocoMarque.get(chocoMarqueAO) - propositionRetenue.getQuantiteT());
 		stockChoco.put(chocoAO, stockChoco.get(chocoAO) - propositionRetenue.getQuantiteT());
-		this.journalTransactions.ajouter("J'ai maintenant " + this.stockChocoMarque.get(propositionRetenue.getProduit()) + " tonnes de " + propositionRetenue.getProduit() + " en stock.");
+		this.journalTransactions.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_GREEN, "AO: J'ai maintenant " + this.stockChocoMarque.get(propositionRetenue.getProduit()) + " tonnes de " + propositionRetenue.getProduit() + " en stock.");
 
 		totalStocksChocoMarque.setValeur(this, this.totalStocksChocoMarque.getValeur(this.cryptogramme) - propositionRetenue.getQuantiteT(), this.cryptogramme);
 		totalStocksChoco.setValeur(this, this.totalStocksChoco.getValeur(this.cryptogramme) - propositionRetenue.getQuantiteT(), this.cryptogramme);
-		this.journalTransactions.ajouter("J'ai maintenant " + this.totalStocksChocoMarque.getValeur(this.cryptogramme) + " tonnes de chocolat de marque en stock.");
+		this.journalTransactions.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_GREEN, "AO: J'ai maintenant " + this.totalStocksChocoMarque.getValeur(this.cryptogramme) + " tonnes de chocolat de marque en stock.");
+		this.journalTransactions.ajouter("\n");
 	}
 	
 
 	@Override
 	public void notifierPropositionNonRetenueAO(OffreVente propositionRefusee) {
 		//System.out.println("Votre proposition de vente n'a pas été retenue");
-		this.journalTransactions.ajouter("J'ai proposé " + propositionRefusee.getQuantiteT() + " tonnes de " + propositionRefusee.getProduit() + " au cours de " + propositionRefusee.getPrixT() + " euros par tonne mais elle n'a pas été retenue.");
+		this.journalTransactions.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_GREEN, "AO: Vente non retenue.");
+		this.journalTransactions.ajouter("\n");
 		/*if (((ChocolatDeMarque) propositionRefusee.getProduit()).getChocolat() == Chocolat.C_BQ) {
 			prix_BQ = prix_BQ*0.95;
 		} else if (((ChocolatDeMarque) propositionRefusee.getProduit()).getChocolat() == Chocolat.C_BQ_E) {
