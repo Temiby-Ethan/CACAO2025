@@ -77,7 +77,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 	public boolean achete(IProduit produit){
 		if (produit instanceof ChocolatDeMarque){
 			ChocolatDeMarque chocolat = (ChocolatDeMarque) produit;
-			return(requiredQuantities.get(getInt(chocolat))>0); 
+			return(requiredQuantities.get(cdmToInt(chocolat))>0); 
 		}
 		return(false);
 	}
@@ -89,7 +89,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 		Echeancier echeancierActuel = null;
 		if (listeEcheancier.isEmpty()){
 			tour = 0;
-			echeancierActuel = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, requiredQuantities.get(getInt(chocolat)));
+			echeancierActuel = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, requiredQuantities.get(cdmToInt(chocolat)));
 		}
 		else {
 			tour = listeEcheancier.size();
@@ -97,7 +97,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 		}
 		for (int step = echeancierActuel.getStepDebut(); step<=echeancierActuel.getStepFin() ; step++){
 			double quantiteDemandee = echeancierActuel.getQuantite(step);
-			double quantiteVoulue = requiredQuantities.get(getInt(chocolat))/predictionsVentesPourcentage.get(echeancierActuel.getStepDebut()%24)*predictionsVentesPourcentage.get(step%24);
+			double quantiteVoulue = requiredQuantities.get(cdmToInt(chocolat))/predictionsVentesPourcentage.get(echeancierActuel.getStepDebut()%24)*predictionsVentesPourcentage.get(step%24);
 			if (quantiteDemandee > quantiteVoulue*(1+0.01*tour)){
 				echeancierActuel.set(step, quantiteVoulue*(1+0.01*tour));
 			}
@@ -115,20 +115,20 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 		Double dernierPrix = 0.0;
 		if (listePrix.isEmpty()){
 			tour = 0;
-			dernierPrix = 10 * priceProduct.get(getInt(chocolat));
+			dernierPrix = 10 * priceProduct.get(cdmToInt(chocolat));
 		}
 		else {
 			tour = listePrix.size();
 			dernierPrix = listePrix.get(listePrix.size()-1);
 		}
-		double prixPropose = priceProduct.get(getInt(chocolat))*(0.87+0.04*tour);
+		double prixPropose = priceProduct.get(cdmToInt(chocolat))*(0.87+0.04*tour);
 		if (tour<6 && dernierPrix>prixPropose){
 			return(prixPropose);
 		}
 		if (dernierPrix<=prixPropose){
 			return(listePrix.get(listePrix.size()-1));
 		}
-		return(priceProduct.get(getInt(chocolat)));
+		return(priceProduct.get(cdmToInt(chocolat)));
 	}
 
 	public void initialiser(){

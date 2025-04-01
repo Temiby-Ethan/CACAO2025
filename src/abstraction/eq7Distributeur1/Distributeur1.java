@@ -75,8 +75,8 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 	}
 
 	public double prix(ChocolatDeMarque choco) { // par Alexiho
-		ChocolatDeMarque chocoM = new ChocolatDeMarque(choco.getChocolat(), "Villors", 90);
-		int pos= (chocolats.indexOf(chocoM));
+		//ChocolatDeMarque chocoM = new ChocolatDeMarque(choco.getChocolat(), "Villors", 90);
+		int pos= (chocolats.indexOf(choco));
 		if (pos<0) {
 			return 8880.0;
 		} else {
@@ -91,14 +91,14 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 		List<Double> requiredQuantities = new ArrayList<>();
 		Distributeur1Stock acteurStock = new Distributeur1Stock();
 		int step = Filiere.LA_FILIERE.getEtape(); // Récupération du numéro de l'étape
-		for (int i=0; i<6; i++){
+		for (int i=0; i<chocolats.size(); i++){
 			requiredQuantities.add(acteurStock.VolumetoBuy(chocolats.get(i),this.cryptogramme)*0.95);
 		}
 		
 		if (step%8==0){
 			//IAcheteurContratCadre acheteurContratCadre = new Distributeur1AcheteurContratCadre();
 			this.next_cc();
-			for (int i = 0 ; i<6 ; i++){
+			for (int i = 0 ; i<chocolats.size() ; i++){
 				requiredQuantities.set(i, requiredQuantities.get(i)/19);
 			}}
 		
@@ -113,11 +113,13 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 
         //journal.ajouter("Étape " + etape + " : Ajout de " + quantiteAjoutee + " t de " + produit + " en rayon.");
 		
-		journal.ajouter("stock : " + this.stocksChocolats.get(chocolats.get(0)).getValeur() + " "
-		+ this.stocksChocolats.get(chocolats.get(2)).getValeur()  + " "
-		+ this.stocksChocolats.get(chocolats.get(3)).getValeur()  + " "
-		+ this.stocksChocolats.get(chocolats.get(4)).getValeur()  + " "
-		+ this.stocksChocolats.get(chocolats.get(5)).getValeur()  + " ");
+		String str_journal = "stock : ";
+
+		for (int i = 0 ; i<chocolats.size() ; i++){
+			str_journal += this.stocksChocolats.get(chocolats.get(i)).getValeur();
+		}
+
+		journal.ajouter(str_journal);
 
 		// définition des capacités de ventes
 
@@ -137,14 +139,13 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 			journal.ajouter("Quelqu'un essaye de me pirater !");
 			return 0.0;
 		} else {
-			//int pos= (chocolats.indexOf(choco));
-			ChocolatDeMarque chocoM = new ChocolatDeMarque(choco.getChocolat(), "Villors", 90);
-			int pos= (chocolats.indexOf(chocoM));
+			//ChocolatDeMarque chocoM = new ChocolatDeMarque(choco.getChocolat(), "Villors", 90);
+			int pos= (chocolats.indexOf(choco));
 			//journal.ajouter("pos : " + pos + "chocoval : " + this.getStock(chocoM).getValeur() + "capa : " + capaciteDeVente.get(pos));
 			if (pos<0) {
 				return 0.0;
 			} else {
-				return Math.min(capaciteDeVente.get(pos), this.getStock(chocoM).getValeur());
+				return Math.min(capaciteDeVente.get(pos), this.getStock(choco).getValeur());
 			}
 		}
 	}
@@ -156,13 +157,12 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 			journal.ajouter("Quelqu'un essaye de me pirater !");
 			return 0.0;
 		} else {
-			//int pos= (chocolats.indexOf(choco));
-			ChocolatDeMarque chocoM = new ChocolatDeMarque(choco.getChocolat(), "Villors", 90);
-			int pos= (chocolats.indexOf(chocoM));
+			//ChocolatDeMarque chocoM = new ChocolatDeMarque(choco.getChocolat(), "Villors", 90);
+			int pos= (chocolats.indexOf(choco));
 			if (pos<0) {
 				return 0.0;
 			} else {
-				return Math.min(capaciteDeVente.get(pos), this.getStock(chocoM).getValeur())/10.0;
+				return Math.min(capaciteDeVente.get(pos), this.getStock(choco).getValeur())/10.0;
 			}
 		}
 	}
