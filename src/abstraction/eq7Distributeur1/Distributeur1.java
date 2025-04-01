@@ -116,7 +116,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 		String str_journal = "stock : ";
 
 		for (int i = 0 ; i<chocolats.size() ; i++){
-			str_journal += this.stocksChocolats.get(chocolats.get(i)).getValeur();
+			str_journal += this.stocksChocolats.get(chocolats.get(i)).getValeur() + " ";
 		}
 
 		journal.ajouter(str_journal);
