@@ -119,7 +119,7 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
 
     @Override //@author Henri Roth
     public double propositionPrix(ExemplaireContratCadre contrat) {
-        // Calcul de la quantite par step de chocolat à livrer
+        // on retourne notre proposition de prix pour chaque 
         IProduit choco = contrat.getProduit();
         if(choco.equals((IProduit)fraud)){
             return 150000;
@@ -137,6 +137,7 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
 
     @Override //@author Henri Roth
     public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
+        //à chaque fois on propose 1.2 fois le prix proposé par l'acheteur
         return contrat.getPrix()*1.2;
     }
 
