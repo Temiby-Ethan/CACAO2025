@@ -45,28 +45,40 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurEncher
 	}
 	
 	public OffreVente choisirOV(List<OffreVente> propositions){
+		if (propositions == null || propositions.isEmpty()) {
+			return null; // Return null if there are no propositions
+		}
+
 		int indice = -1;
 		double volume = propositions.get(0).getQuantiteT();
 		IProduit product = propositions.get(0).getProduit();
 		if (product instanceof ChocolatDeMarque) {
-        	ChocolatDeMarque chocolat = (ChocolatDeMarque) product;
+			ChocolatDeMarque chocolat = (ChocolatDeMarque) product;
 			int idProduct = cdmToInt(chocolat);
-			double price = 1.03*this.priceProduct.get(idProduct)*volume ;
-			for (int i=0; i<propositions.size(); i++){
+	
+			// Ensure priceProduct has an entry for the given idProduct
+			if (idProduct < 0 || idProduct >= this.priceProduct.size()) {
+				return null; // Invalid product index
+			}
+	
+			double price = 1.03 * this.priceProduct.get(idProduct) * volume;
+	
+			for (int i = 0; i < propositions.size(); i++) {
 				double priceProposed = propositions.get(i).getPrixT();
-				if (priceProposed<price){
+				if (priceProposed < price) {
 					indice = i;
 					price = priceProposed;
-					}
 				}
-				this.priceProduct.set(idProduct,price/volume);
 			}
-		
-		if (indice == -1){
-			return(null);
+	
+			// Update priceProduct for the selected product
+			if (indice != -1) {
+				this.priceProduct.set(idProduct, price / volume);
+			}
 		}
-		return(propositions.get(indice));
-		}
+	
+		return (indice == -1) ? null : propositions.get(indice);
+	}
 	
 
 
