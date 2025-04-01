@@ -41,6 +41,9 @@ public class Transformateur3Fabriquant extends Transformateur3Marques implements
     //Demande de production
     protected HashMap<IProduit, Double> DemandeProdChoco; //Demande pour chaque choco en tonnes
     
+    //Capacité de vente de chocolat
+    protected HashMap<IProduit, Double> capacite_vente;
+
 
     public Transformateur3Fabriquant(){
         super();
@@ -79,6 +82,8 @@ public class Transformateur3Fabriquant extends Transformateur3Marques implements
         this.DemandeProdChoco.put(hypo,productionMax/6);
         this.DemandeProdChoco.put(arna,productionMax/6);
         this.DemandeProdChoco.put(bollo,productionMax/3);
+        this.capacite_vente = DemandeProdChoco;
+
     }
 
     public void initialiser(){

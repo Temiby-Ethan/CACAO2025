@@ -1,6 +1,5 @@
 package abstraction.eq6Transformateur3;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 
 import abstraction.eqXRomu.contratsCadres.Echeancier;
@@ -15,12 +14,10 @@ import abstraction.eqXRomu.produits.IProduit;
 public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquant implements IVendeurContratCadre {
     //des attributs
     protected LinkedList<ExemplaireContratCadre> ContratsVendeur;
-    protected HashMap<IProduit, Double> capacite_vente;
     //des constructeurs
     //on utilise à chaque fois des instances de cette classe quand on fait des contrats cadres
     public Transformateur3ContratCadreVendeur() {
         this.ContratsVendeur=new LinkedList<ExemplaireContratCadre>();
-        this.capacite_vente = DemandeProdChoco;
 	}
     //des méthodes
     //à chaque next on va proposer des contrats cadres pour vendre du chocolat
