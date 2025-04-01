@@ -74,6 +74,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
         return(idProduct);
     }
 	
+	@Override
 	public boolean achete(IProduit produit){
 		if (produit instanceof ChocolatDeMarque){
 			ChocolatDeMarque chocolat = (ChocolatDeMarque) produit;
@@ -82,6 +83,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 		return(false);
 	}
 
+	@Override
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat){
 		List<Echeancier> listeEcheancier = contrat.getEcheanciers();
 		int tour = 0;
@@ -108,6 +110,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 		return(echeancierActuel);
 	}
 
+	@Override
 	public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat){
 		List<Double> listePrix = contrat.getListePrix();
 		ChocolatDeMarque chocolat = (ChocolatDeMarque) contrat.getProduit();
@@ -115,7 +118,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 		Double dernierPrix = 0.0;
 		if (listePrix.isEmpty()){
 			tour = 0;
-			dernierPrix = 10 * priceProduct.get(cdmToInt(chocolat));
+			dernierPrix = 2 * priceProduct.get(cdmToInt(chocolat));
 		}
 		else {
 			tour = listePrix.size();
@@ -131,18 +134,21 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 		return(priceProduct.get(cdmToInt(chocolat)));
 	}
 
+	@Override
 	public void initialiser(){
-
 	}
 
+	@Override
 	public String getNom(){
 		return(this.name);
 	}
 
+	@Override
 	public Color getColor(){
 		return(this.color);
 	}
 
+	@Override
 	public String getDescription(){
 		return("Acheteur contrat cadre de l'equipe 7");
 	}
@@ -151,47 +157,54 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 		SuperviseurVentesContratCadre superviseur = (SuperviseurVentesContratCadre)(Filiere.LA_FILIERE.getActeur("Sup.CCadre"));
 		for (int i=0; i<chocolats.size(); i++) {
 			List<IVendeurContratCadre> vendeurList = superviseur.getVendeurs(chocolats.get(i));
-			if (vendeurList.size()>0){
+			if (!vendeurList.isEmpty()){
 				superviseur.demandeAcheteur(this, vendeurList.get(0), chocolats.get(i), new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 8, requiredQuantities.get(i)), this.cryptogramme, false);
 			}
 		}
 	}
 
+	@Override
 	public List<Variable> getIndicateurs(){
 		List<Variable> indicateurs = new ArrayList<Variable>();
 		return(indicateurs);
 	}
 
+	@Override
 	public List<Variable> getParametres(){
 		List<Variable> parametres = new ArrayList<Variable>();
 		return(parametres);
 	}
 
+	@Override
 	public List<Journal> getJournaux(){
 		List<Journal> journaux = new ArrayList<Journal>();
 		return(journaux);
 	}
 
 
-
+	@Override
 	public void notificationFaillite(IActeur acteur){
 
 	}
 
+	@Override
 	public void notificationOperationBancaire(double montant){
 
 	}
 
+	@Override
 	public List<String> getNomsFilieresProposees(){
 		List<String> noms = new ArrayList<String>();
 		return(noms);
 	}
 
+	@Override
 	public Filiere getFiliere(String nom){
 		Filiere test = new Filiere(0);
 		return(test);
 	}
 
+	@Override
 	public double getQuantiteEnStock(IProduit p, int cryptogramme ){
 		if (this.cryptogramme == cryptogramme){
 			if (p instanceof ChocolatDeMarque){
@@ -205,10 +218,12 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 		return(0);
 	}
 
+	@Override
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat){
 		
 	}
-	
+
+	@Override
 	public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat){
 
 	}
