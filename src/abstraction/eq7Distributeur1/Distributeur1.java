@@ -50,6 +50,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 		this.capaciteDeVente = new ArrayList<Double>();
     }
 
+	@Override
 	public void initialiser() // par Alexiho
 	{
 		this.chocolats= Filiere.LA_FILIERE.getChocolatsProduits();
@@ -74,6 +75,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 		}
 	}
 
+	@Override
 	public double prix(ChocolatDeMarque choco) { // par Alexiho
 		//ChocolatDeMarque chocoM = new ChocolatDeMarque(choco.getChocolat(), "Villors", 90);
 		int pos= (chocolats.indexOf(choco));
@@ -81,18 +83,19 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 			return 8880.0;
 		} else {
 			//return prix.get(pos);
-			double price = 1.08*this.priceProduct.get(pos) ;
+			double price = 1.30*this.priceProduct.get(pos) ;
 			return price;
 		}
 	}
 
+	@Override
 	public void next() // par Alexiho
 	{
-		List<Double> requiredQuantities = new ArrayList<>();
-		Distributeur1Stock acteurStock = new Distributeur1Stock();
+		//List<Double> requiredQuantities = new ArrayList<>();
+		//Distributeur1Stock acteurStock = new Distributeur1Stock();
 		int step = Filiere.LA_FILIERE.getEtape(); // Récupération du numéro de l'étape
 		for (int i=0; i<chocolats.size(); i++){
-			requiredQuantities.add(acteurStock.VolumetoBuy(chocolats.get(i),this.cryptogramme)*0.95);
+			requiredQuantities.set(i, this.VolumetoBuy(chocolats.get(i),this.cryptogramme)*0.95);
 		}
 		
 		if (step%8==0){
@@ -116,7 +119,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 		String str_journal = "stock : ";
 
 		for (int i = 0 ; i<chocolats.size() ; i++){
-			str_journal += this.stocksChocolats.get(chocolats.get(i)).getValeur();
+			str_journal += this.stocksChocolats.get(chocolats.get(i)).getValeur() + " ";
 		}
 
 		journal.ajouter(str_journal);
@@ -124,7 +127,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 		// définition des capacités de ventes
 
 		for (int i=0; i<this.chocolats.size(); i++) {
-			this.capaciteDeVente.set(i, stocksChocolats.get(chocolats.get(i)).getValeur()/2);
+			this.capaciteDeVente.set(i, stocksChocolats.get(chocolats.get(i)).getValeur()/1.05);
 		}
 	}
 
@@ -134,6 +137,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 		return marques;
 	}
 
+	@Override
 	public double quantiteEnVente(ChocolatDeMarque choco, int crypto) { // par Alexiho
 		if (crypto!=this.cryptogramme) {
 			journal.ajouter("Quelqu'un essaye de me pirater !");
@@ -150,6 +154,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 		}
 	}
 
+	@Override
 	// On met 10% de ce tout ce qu'on met en vente (on pourrait mettre l'accente sur
 	// un produit a promouvoir mais il s'agit ici d'un exemple simpliste
 	public double quantiteEnVenteTG(ChocolatDeMarque choco, int crypto) { // par Alexiho
@@ -167,13 +172,14 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 		}
 	}
 
+	@Override
 	public void vendre(ClientFinal client, ChocolatDeMarque choco, double quantite, double montant, int crypto) { // par Alexiho
 		int pos= (chocolats.indexOf(choco));
 		if (pos>=0) {
 			this.getStock(choco).retirer(this, quantite);
 		}
 	}
-
+	@Override
 	public Variable getStock(ChocolatDeMarque c) { // par Alexiho
 		return this.stocksChocolats.get(c);
 	}
@@ -181,7 +187,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 	public Map<ChocolatDeMarque, Variable> getStocksChocolats() { // par Alexiho
 		return this.stocksChocolats;
 	}
-
+	@Override
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) { // par Alexiho
 		if (this.cryptogramme==cryptogramme) {
 			for (ChocolatDeMarque c : this.stocksChocolats.keySet()) {
@@ -198,12 +204,12 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 	public void notificationRayonVide(ChocolatDeMarque choco) {
 		journal.ajouter(" Aie... j'aurais du mettre davantage de "+choco.getNom()+" en vente");
 	}
-
+	@Override
 	public void notificationRayonVide(ChocolatDeMarque choco, int crypto)
 	{
 		journal.ajouter(" Aie... j'aurais du mettre davantage de "+choco.getNom()+" en vente");
 	}
-
+	@Override
 	// Renvoie les journaux
 	public List<Journal> getJournaux() { // par Alexiho
 		List<Journal> res=new ArrayList<Journal>();
