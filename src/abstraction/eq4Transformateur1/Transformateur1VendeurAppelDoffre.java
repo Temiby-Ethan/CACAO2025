@@ -48,6 +48,11 @@ public class Transformateur1VendeurAppelDoffre extends Transformateur1AcheteurBo
 			} else if (((ChocolatDeMarque) offre.getProduit()).getChocolat() == Chocolat.C_HQ_BE) {
 				prixT = prix_HQ_BE;
 			}
+
+			if (prixT == 0) {
+				return null;
+			}
+			
 			this.journalTransactions.ajouter("Je propose " + offre.getQuantiteT() + " tonnes de " + offre.getProduit() + " au cours de " + prixT + " euros par tonne.");
 			return new OffreVente(offre, this, offre.getProduit(), prixT);
 		} else {
