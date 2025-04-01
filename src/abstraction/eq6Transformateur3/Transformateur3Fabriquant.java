@@ -35,7 +35,7 @@ public class Transformateur3Fabriquant extends Transformateur3Marques implements
     private double coutTotalProd = 0;
     private double quantiteTotaleProduite = 0;
 
-    //Production maximale : 128 000 T x2 
+    //Production maximale : 128 000 T x2 = 256 000 T
     private double productionMax = nbMachine*capacite_machine*2;
 
     //Demande de production
