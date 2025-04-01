@@ -19,6 +19,8 @@ public class Producteur3Acteur implements IActeur {
 	
 	protected int cryptogramme;
 	protected Journal journal = new Journal("Journal Eq3",this);
+	protected Journal journalMasseSalariale = new Journal("Journal Masse Salariale",this);
+	protected Journal journalCump = new Journal("Journal Cump",this);
 	protected List<Variable> res = new ArrayList<Variable>();
 	protected VariablePrivee stock;
 
@@ -67,6 +69,8 @@ public class Producteur3Acteur implements IActeur {
 	public List<Journal> getJournaux() {
 		List<Journal> res=new ArrayList<Journal>();
 		res.add(journal);
+		res.add(journalMasseSalariale);
+		res.add(journalCump);
 		return res;
 	}
 

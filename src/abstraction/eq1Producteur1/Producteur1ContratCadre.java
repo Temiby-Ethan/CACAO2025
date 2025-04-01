@@ -33,6 +33,7 @@ public class Producteur1ContratCadre extends Producteur1Acteur implements IVende
     public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
         IProduit produit = contrat.getProduit();
         Echeancier echeancierPropose = contrat.getEcheancier();
+        
 
         double stockDispo = stock.getStockTotal();
         double quantiteMax = 0.25 * stockDispo;
@@ -41,6 +42,10 @@ public class Producteur1ContratCadre extends Producteur1Acteur implements IVende
             Echeancier contreProp = new Echeancier(echeancierPropose.getStepDebut());
             for (int step = echeancierPropose.getStepDebut(); step <= echeancierPropose.getStepFin(); step++) {
                 double q = echeancierPropose.getQuantite(step);
+                if (Math.min(q, quantiteMax / echeancierPropose.getNbEcheances())<0) {
+                    System.out.println("Aie aie aie eq1 contreporposition vendeur cc");
+                    return null;
+                }
                 contreProp.ajouter(Math.min(q, quantiteMax / echeancierPropose.getNbEcheances()));
             }
             return contreProp;

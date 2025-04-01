@@ -14,8 +14,7 @@ public class Producteur2sechage extends Producteur2recolte {
     private HashMap<Feve, List<Double>> fileSechage;
     private HashMap<Feve, List<Integer>> fileSechageSteps;
     private HashMap<Feve, List<Double>> filecout;
-    protected HashMap<Feve, Double> cout_unit; 
-    protected HashMap<Feve, Double> cout_unit_t;
+    protected HashMap<Feve, Double> cout_unit;
     private Journal journalSechage;
 
     public Producteur2sechage() {
@@ -26,7 +25,6 @@ public class Producteur2sechage extends Producteur2recolte {
         this.filecout = new HashMap<Feve, List<Double>>();
         this.cout_unit = new HashMap<Feve, Double>();
         this.journalSechage = new Journal("Journal Sechage Eq2",this);
-        this.cout_unit_t = new HashMap<Feve, Double>();
 
         for (Feve f : Feve.values()) {
             this.fevesSeches.put(f, 0.0);
@@ -34,7 +32,6 @@ public class Producteur2sechage extends Producteur2recolte {
             this.fileSechageSteps.put(f, new ArrayList<>());
             this.filecout.put(f, new ArrayList<>());
             this.cout_unit.put(f, 0.0);
-            this.cout_unit_t.put(f, 0.0);
         }
         
     }
@@ -58,38 +55,7 @@ public class Producteur2sechage extends Producteur2recolte {
         }
     }
 
-    public void calcul_cout_unit_t() {
-        for (Feve f : Feve.values()) {
-            double cout = cout_recolte.get(f);
-            switch (f) {
-                case F_BQ:
-                    double quantite_T_BQ = feve_recolte.get(f) * 0.000000753;
-                    cout_unit_t.put(f, cout / quantite_T_BQ);
-                    break;
-                case F_BQ_E:
-                    double quantite_T_BQ_E = feve_recolte.get(f) * 0.000000753;
-                    cout_unit_t.put(f, cout / quantite_T_BQ_E);
-                    break;
-                case F_MQ:
-                    double quantite_T_MQ = feve_recolte.get(f) * 0.00000075;
-                    cout_unit_t.put(f, cout / quantite_T_MQ);
-                    break;
-                case F_MQ_E:
-                    double quantite_T_MQ_E = feve_recolte.get(f) * 0.00000075;
-                    cout_unit_t.put(f, cout / quantite_T_MQ_E);
-                    break;
-                case F_HQ_E:
-                    double quantite_T_HQ_E = feve_recolte.get(f) * 0.000000765;
-                    cout_unit_t.put(f, cout / quantite_T_HQ_E);
-                    break;
-                case F_HQ_BE:
-                    double quantite_T_HQ_BE = feve_recolte.get(f) * 0.000000765;
-                    cout_unit_t.put(f, cout / quantite_T_HQ_BE);
-                    break;
-            }
-            
-        }
-    }
+    
     /**
      * Met à jour le séchage des fèves, libère celles qui ont atteint leur step de fin.
      */
