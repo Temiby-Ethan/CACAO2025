@@ -122,6 +122,7 @@ public void setPrix(ChocolatDeMarque choco) {
 		return 0.0;
 	}
 
+	//@author ArmandCHANANE
 	public double quantiteEnVenteTotal(){
 		double qte = 0;
 
@@ -132,6 +133,7 @@ public void setPrix(ChocolatDeMarque choco) {
 	}
 
 
+	//@author ArmandCHANANE
 	public double quantiteEnVenteTG(ChocolatDeMarque choco, int crypto){
         if (crypto == this.cryptogramme) {
 			double capaciteDeVenteTG = this.quantiteEnVenteTotal() * ClientFinal.POURCENTAGE_MAX_EN_TG;
@@ -151,6 +153,7 @@ public void setPrix(ChocolatDeMarque choco) {
 		else {return 0.0;}
     }
 
+	//@author ArmandCHANANE
 	public double quantiteEnVenteTGTotal(){
 		double qte = 0;
 

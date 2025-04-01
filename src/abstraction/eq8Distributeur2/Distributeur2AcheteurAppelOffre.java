@@ -18,7 +18,6 @@ import abstraction.eqXRomu.produits.IProduit;
 
 
 
-
 public class Distributeur2AcheteurAppelOffre extends Distributeur2AcheteurContratCadre implements IAcheteurAO {
     
     
