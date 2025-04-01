@@ -1,5 +1,6 @@
 package abstraction.eq6Transformateur3;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 
 import abstraction.eqXRomu.contratsCadres.Echeancier;
@@ -14,13 +15,15 @@ import abstraction.eqXRomu.produits.IProduit;
 public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquant implements IVendeurContratCadre {
     //des attributs
     protected LinkedList<ExemplaireContratCadre> ContratsVendeur;
+    protected HashMap<IProduit, Double> capacite_vente;
     //des constructeurs
     public Transformateur3ContratCadreVendeur() {
         this.ContratsVendeur=new LinkedList<ExemplaireContratCadre>();
+        this.capacite_vente = DemandeProdChoco;
 	}
     //des méthodes
     //à chaque next on va proposer des contrats cadres pour vendre du chocolat
-    @Override
+    @Override //@author Henri Roth
     public void next(){
         //on récupère le next de tous les pères
         super.next();
@@ -40,11 +43,11 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
                         //par step et avec ou non tête de gondole ici en fonction du chocolat
                         // pour hypocritolat on le demande pas 
                         if (choco==hypo){
-                            supCCadre.demandeVendeur((IAcheteurContratCadre)acteur, (IVendeurContratCadre)this,(IProduit) choco, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10, 100.0), cryptogramme, false);
+                            supCCadre.demandeVendeur((IAcheteurContratCadre)acteur, (IVendeurContratCadre)this,(IProduit) choco, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10, 1000.0), cryptogramme, false);
                         }
                         //pour tous les autres chocolats on le demande
                         else {
-                            supCCadre.demandeVendeur((IAcheteurContratCadre)acteur, (IVendeurContratCadre)this,(IProduit) choco, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10, 100.0), cryptogramme, true);
+                            supCCadre.demandeVendeur((IAcheteurContratCadre)acteur, (IVendeurContratCadre)this,(IProduit) choco, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10, 1000.0), cryptogramme, true);
                         }
                     }
                 }
@@ -52,7 +55,7 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
         }
     }
 
-    @Override
+    @Override //@author Eric Schiltz
     public boolean vend(IProduit produit) {
         if(super.lesChocolats.contains(produit)){
             if(stockChoco.getQuantityOf(produit)>100){
@@ -62,32 +65,66 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
         return false;
     }
 
-    @Override
+    @Override //@author Eric Schiltz
     public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
         IProduit p = contrat.getProduit();
         if(super.lesChocolats.contains(p)){
-            return contrat.getEcheancier();
+            // Calcul de la quantite par step de chocolat à livrer
+            double capa = capacite_vente.get(p);
+            Echeancier e = contrat.getEcheancier();
+            int stepdebut = e.getStepDebut();
+            double QuantiteStep = e.getQuantite(stepdebut);
+            if(QuantiteStep < capa){
+                return contrat.getEcheancier();
+            }
+            else{
+                if(capa < 100){
+                    return null;
+                }
+                if(capa >100 && capa<1000){
+                    int nb = e.getNbEcheances();
+                    return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, nb, capa);
+                }
+            }
         }
         return null;
     }
 
-    @Override
+    @Override //@author Henri Roth
     public double propositionPrix(ExemplaireContratCadre contrat) {
-        return 10000;
+        // Calcul de la quantite par step de chocolat à livrer
+        IProduit choco = contrat.getProduit();
+        if(choco.equals((IProduit)fraud)){
+            return 150000;
+        }
+        if(choco.equals((IProduit)bollo)){
+            return 200000;
+        }
+        if(choco.equals((IProduit)arna)){
+            return 300000;
+        }
+        else{
+            return 500000;
+        }
     }
 
-    @Override
+    @Override //@author Henri Roth
     public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
-        return contrat.getPrix();
+        return contrat.getPrix()*1.2;
     }
 
-    @Override
+    @Override //@author Henri Roth
     public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
         journalCC.ajouter("Nouveau contrat cadre" +contrat);
         ContratsVendeur.add(contrat);
+        IProduit produit = contrat.getProduit();
+        double QuantiteAuStep = contrat.getQuantiteALivrerAuStep();
+        double c_v = capacite_vente.get(produit);
+        c_v -= QuantiteAuStep;
+        capacite_vente.replace(produit, c_v);
     }
 
-    @Override
+    @Override //@author Henri Roth
     public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
         double stockActuel = stockChoco.getQuantityOf(produit);
 		double aLivre = Math.min(quantite, stockActuel);

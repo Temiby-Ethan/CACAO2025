@@ -23,14 +23,15 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratC
 		this.ContratsAcheteur=new LinkedList<ExemplaireContratCadre>();
 		this.contratsObsoletes =new LinkedList<ExemplaireContratCadre>();
 	}
-
+	//@author Henri Roth
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {
 		return contrat.getEcheancier(); // on ne cherche pas a negocier sur le previsionnel de livraison
 	}
-
+	//@author Henri Roth
 	public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat) {
 		return contrat.getPrix();
 	}
+	// @author Eric Schiltz
 	public void next() {
 		super.next();
 		SuperviseurVentesContratCadre supCCadre = (SuperviseurVentesContratCadre) Filiere.LA_FILIERE.getActeur("Sup.CCadre");
@@ -49,7 +50,7 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratC
 			}
 		}
 		this.ContratsVendeur.removeAll(contratsObsoletes);
-		journalCC.ajouter("==============");
+		journalCC.ajouter("======================");
 		
 		// Proposition d'un nouveau contrat a tous les vendeurs possibles
 		IProduit produit = Feve.F_BQ;
@@ -59,12 +60,12 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratC
 			}
 		}
 	}
-
+	//@author Henri Roth
 	public void receptionner(IProduit produit, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
 		journalCC.ajouter("Reception de "+quantiteEnTonnes+" de T de chococal en provenance du contrat "+contrat.getNumero());
 		super.stockFeves.addToStock(produit, quantiteEnTonnes);
 	}
-
+	//@author Henri Roth
 	public boolean achete(IProduit produit) {
 		if(produit == Feve.F_BQ
 		|| produit == Feve.F_BQ_E
@@ -76,16 +77,17 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratC
 		}
 		return false;
 	}
+	//@author Henri Roth
 	public String toString() {
 		return this.getNom();
 	}
-
+	//@author Henri Roth
 	public int fixerPourcentageRSE(IAcheteurContratCadre acheteur, IVendeurContratCadre vendeur, IProduit produit,
 			Echeancier echeancier, long cryptogramme, boolean tg) {
 		return 5;
 	}
 
-	@Override
+	@Override //@author Henri Roth
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
 		journalCC.ajouter("Nouveau contrat cadre" +contrat);
 		ContratsAcheteur.add(contrat);
