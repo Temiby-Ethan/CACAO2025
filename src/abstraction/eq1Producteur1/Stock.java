@@ -3,14 +3,17 @@ package abstraction.eq1Producteur1;
 import java.util.HashMap;
 import java.util.Map;
 
+import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
 public class Stock {
     private Map<Feve, Double> stocks; // Map pour gérer les stocks de fèves
+    private Journal journal; // Journal pour enregistrer les messages
 
-    public Stock() {
+    public Stock(Journal journal) {
         this.stocks = new HashMap<>(); // Initialisation du Map
+        this.journal = journal; // Initialisation du journal
 
         // Initialisation des stocks pour chaque type de fève
         this.stocks.put(Feve.F_BQ, 50000.0); // Stock initial pour fèves basse qualité
@@ -22,13 +25,13 @@ public class Stock {
     public void ajouter(IProduit produit, double quantite) {
         if (produit instanceof Feve) {
             if (quantite < 0) {
-                System.err.println("Erreur : Tentative d'ajouter une quantité négative pour " + produit);
+                journal.ajouter("Erreur : Tentative d'ajouter une quantité négative pour " + produit);
                 return;
             }
             Feve feve = (Feve) produit;
             double actuel = stocks.getOrDefault(feve, 0.0);
             stocks.put(feve, actuel + quantite);
-            System.out.println("Ajouté " + quantite + " au stock de " + feve + ". Nouveau stock : " + (actuel + quantite));
+            journal.ajouter("Ajouté " + quantite + " au stock de " + feve + ". Nouveau stock : " + (actuel + quantite));
         }
     }
 
@@ -38,16 +41,14 @@ public class Stock {
             Feve feve = (Feve) produit;
             double actuel = stocks.getOrDefault(feve, 0.0);
             if (quantite < 0) {
-                System.err.println("Erreur : Tentative de retirer une quantité négative pour " + produit
-                        + ". Retrait annulé.");
+                journal.ajouter("Erreur : Tentative de retirer une quantité négative pour " + produit + ". Retrait annulé.");
                 return false;
             } else if (actuel < quantite) {
-                System.err.println("Erreur : Tentative de retirer plus que le stock disponible pour " + produit
-                        + ". Retrait annulé.");
+                journal.ajouter("Erreur : Tentative de retirer plus que le stock disponible pour " + produit + ". Retrait annulé.");
                 return false;
             } else {
                 stocks.put(feve, actuel - quantite);
-                System.out.println("Retiré " + quantite + " du stock de " + feve + ". Nouveau stock : " + (actuel - quantite));
+                journal.ajouter("Retiré " + quantite + " du stock de " + feve + ". Nouveau stock : " + (actuel - quantite));
                 return true;
             }
         }
@@ -72,3 +73,4 @@ public class Stock {
         return stocks.values().stream().mapToDouble(Double::doubleValue).sum();
     }
 }
+

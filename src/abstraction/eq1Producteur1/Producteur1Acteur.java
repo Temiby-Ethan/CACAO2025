@@ -25,19 +25,15 @@ public class Producteur1Acteur implements IActeur {
 
     public Producteur1Acteur() {
         this.journal = new Journal(getNom() + " Journal", this);
-        this.stock = new Stock();
-
-        // Initialisation du stock
-        stock.ajouter(Feve.F_BQ, 1000); // Fèves basse qualité
-        stock.ajouter(Feve.F_MQ, 1000); // Fèves moyenne qualité
-        stock.ajouter(Feve.F_HQ_E, 1000); // Fèves haute qualité
-
+        this.stock = new Stock(this.journal); // Passe le journal au stock
+    
         // Initialisation des indicateurs
         this.stockTotal = new Variable("Stock Total", this, stock.getStockTotal());
         this.stockFMQ = new Variable("Stock FMQ", this, stock.getStock(Feve.F_MQ));
         this.stockFBQ = new Variable("Stock FBQ", this, stock.getStock(Feve.F_BQ));
         this.stockFHQ = new Variable("Stock FHQ", this, stock.getStock(Feve.F_HQ_E));
     }
+
 
     public void initialiser() {
         journal.ajouter("Initialisation du producteur");

@@ -15,7 +15,7 @@ public class Producteur1ContratCadre extends Producteur1Acteur implements IVende
 
     public Producteur1ContratCadre() {
         super();
-        this.stock = new Stock();
+        this.stock = new Stock(journal);
         this.contrats = new ArrayList<>();
 
         // Initialisation des stocks pour chaque type de fève
@@ -52,7 +52,7 @@ public class Producteur1ContratCadre extends Producteur1Acteur implements IVende
     public double propositionPrix(ExemplaireContratCadre contrat) {
         IProduit produit = contrat.getProduit();
 
-        if (produit.equals(Feve.F_BQ)) return 1.2;
+        if (produit.equals(Feve.F_BQ)) return 1.2; // à changer 
         if (produit.equals(Feve.F_MQ)) return 1.8;
         if (produit.equals(Feve.F_HQ_BE)) return 2.5;
 

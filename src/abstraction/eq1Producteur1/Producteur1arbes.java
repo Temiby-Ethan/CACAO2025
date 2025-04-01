@@ -30,7 +30,25 @@ public class Producteur1arbes extends plantation {
         this.journal.ajouter("Plantation de la parcelle de type " + this.haute_qualite);
     }
 
+    public void vie_arbre(){
+        HashMap<Integer, Integer> arbre = new HashMap<>();
+        for (int i = 0; i < 40; i++) { 
+            arbre.put(i, 1/40*nombre_arbes);
+        }
+        for (int i = 0; i < 40; i++){
+            if (arbre.get(i) == 40){
+                arbre.remove(i);
+            }
+        }
+    }
 
+    public void next() {
+        // Logique de mise à jour des arbres
+        this.vie_arbre();
+    }
+    public void setJournal(Journal journal) {
+        this.journal = journal;
 
+}
 
 }
