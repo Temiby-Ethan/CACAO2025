@@ -41,11 +41,13 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
                         //par step et avec ou non tête de gondole ici en fonction du chocolat
                         // pour hypocritolat on le demande pas 
                         if (choco==hypo){
-                            supCCadre.demandeVendeur((IAcheteurContratCadre)acteur, (IVendeurContratCadre)this,(IProduit) choco, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10, 1000.0), cryptogramme, false);
+                            double capa = capacite_vente.get(hypo);
+                            supCCadre.demandeVendeur((IAcheteurContratCadre)acteur, (IVendeurContratCadre)this,(IProduit) choco, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10, capa), cryptogramme, false);
                         }
                         //pour tous les autres chocolats on le demande
                         else {
-                            supCCadre.demandeVendeur((IAcheteurContratCadre)acteur, (IVendeurContratCadre)this,(IProduit) choco, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10, 1000.0), cryptogramme, true);
+                            double capa = capacite_vente.get(choco);
+                            supCCadre.demandeVendeur((IAcheteurContratCadre)acteur, (IVendeurContratCadre)this,(IProduit) choco, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10, capa), cryptogramme, true);
                         }
                     }
                 }
