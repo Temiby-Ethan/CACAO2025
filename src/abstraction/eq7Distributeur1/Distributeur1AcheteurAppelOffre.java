@@ -43,7 +43,8 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurEncher
 		//this.identity = identity;
 
 	}
-	
+
+	@Override
 	public OffreVente choisirOV(List<OffreVente> propositions){
 		int indice = -1;
 		double volume = propositions.get(0).getQuantiteT();
@@ -69,11 +70,12 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurEncher
 		}
 	
 
-
+	@Override
 	public void initialiser(){
 
 	}
 
+	@Override
 	public String getDescription(){
 		return("Appelleur d'offre de l'equipe 7");
 	}
@@ -85,22 +87,22 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurEncher
 			superviseur.acheterParAO(this,this.cryptogramme, chocolats.get(i) , this.requiredQuantities.get(i));
 		}
 	}
-
+	@Override
 	public List<Variable> getIndicateurs(){
 		List<Variable> indicateurs = new ArrayList<Variable>();
 		return(indicateurs);
 	}
-
+	@Override
 	public List<Variable> getParametres(){
 		List<Variable> parametres = new ArrayList<Variable>();
 		return(parametres);
 	}
-
+	@Override
 	public List<Journal> getJournaux(){
 		List<Journal> journaux = new ArrayList<Journal>();
 		return(journaux);
 	}
-
+	@Override
 	public List<String> getNomsFilieresProposees(){
 		List<String> noms = new ArrayList<String>();
 		return(noms);
