@@ -115,7 +115,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 		Double dernierPrix = 0.0;
 		if (listePrix.isEmpty()){
 			tour = 0;
-			dernierPrix = 10 * priceProduct.get(cdmToInt(chocolat));
+			dernierPrix = 2 * priceProduct.get(cdmToInt(chocolat));
 		}
 		else {
 			tour = listePrix.size();

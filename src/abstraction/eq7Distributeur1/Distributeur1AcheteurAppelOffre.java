@@ -51,7 +51,7 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurEncher
 		if (product instanceof ChocolatDeMarque) {
         	ChocolatDeMarque chocolat = (ChocolatDeMarque) product;
 			int idProduct = cdmToInt(chocolat);
-			double price = 1.03*this.priceProduct.get(idProduct)*volume ;
+			double price = 1.03*this.priceProduct.get(idProduct) ;
 			for (int i=0; i<propositions.size(); i++){
 				double priceProposed = propositions.get(i).getPrixT();
 				if (priceProposed<price){
@@ -59,7 +59,7 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurEncher
 					price = priceProposed;
 					}
 				}
-				this.priceProduct.set(idProduct,price/volume);
+				this.priceProduct.set(idProduct,price);
 			}
 		
 		if (indice == -1){

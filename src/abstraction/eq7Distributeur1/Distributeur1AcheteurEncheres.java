@@ -42,7 +42,7 @@ public class Distributeur1AcheteurEncheres extends Distributeur1AcheteurContratC
 		//this.requiredQuantities = requiredQuantities;
 		//this.stock = stock;
 		this.successedSell = successedSell;
-	}
+	} 
 
 	public double proposerPrix(MiseAuxEncheres encheres){
 		IProduit product = encheres.getProduit();
@@ -54,9 +54,9 @@ public class Distributeur1AcheteurEncheres extends Distributeur1AcheteurContratC
 			double wantedquantity = this.requiredQuantities.get(idProduct);
 			int numberSuccessedSell = this.successedSell.get(idProduct);
 			if (wantedquantity<volume){
-				return(price*(0.9+0.1*(1-Math.exp(-1*numberSuccessedSell/5))*(1-Math.exp((wantedquantity-volume)/1000))));
+				return(Math.min(price*(0.9+0.1*(1-Math.exp(-1*numberSuccessedSell/5))*(1-Math.exp((wantedquantity-volume)/1000))), price*1.2));
 			}
-		return(price*(1.1+0.02*numberSuccessedSell));
+		return(Math.min(price*(1.1+0.02*numberSuccessedSell),price*1.2));
 		}
 		return(0);
 	}
