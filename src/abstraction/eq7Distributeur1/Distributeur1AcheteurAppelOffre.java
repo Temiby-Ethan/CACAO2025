@@ -43,30 +43,6 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurEncher
 		//this.identity = identity;
 
 	}
-
-	public int getInt(Chocolat product){
-        int idProduct = 0;
-        switch(product.getGamme()){
-            case BQ : idProduct=0;
-            case MQ : idProduct=2;
-            case HQ : idProduct=4;
-        }
-        if (product.isBio()){
-            idProduct++;
-        }
-        if (product.isEquitable()){
-            idProduct++;
-        }
-		if(idProduct == 5)
-		{
-			return 4;
-		}
-		if(idProduct == 6)
-		{
-			return 5;
-		}
-        return(idProduct);
-    }
 	
 	public OffreVente choisirOV(List<OffreVente> propositions){
 		int indice = -1;
@@ -74,7 +50,7 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurEncher
 		IProduit product = propositions.get(0).getProduit();
 		if (product instanceof ChocolatDeMarque) {
         	ChocolatDeMarque chocolat = (ChocolatDeMarque) product;
-			int idProduct = getInt(chocolat.getChocolat());
+			int idProduct = getInt(chocolat);
 			double price = 1.03*this.priceProduct.get(idProduct)*volume ;
 			for (int i=0; i<propositions.size(); i++){
 				double priceProposed = propositions.get(i).getPrixT();
@@ -104,11 +80,10 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurEncher
 
 	public void next_ao(){
 		SuperviseurVentesAO superviseur = (SuperviseurVentesAO)(Filiere.LA_FILIERE.getActeur("Sup.AO"));
-		superviseur.acheterParAO(this,this.cryptogramme, Chocolat.C_BQ , this.requiredQuantities.get(0));
-		superviseur.acheterParAO(this,this.cryptogramme, Chocolat.C_BQ_E , this.requiredQuantities.get(1));
-		superviseur.acheterParAO(this,this.cryptogramme, Chocolat.C_MQ , this.requiredQuantities.get(2));
-		superviseur.acheterParAO(this,this.cryptogramme, Chocolat.C_MQ_E , this.requiredQuantities.get(3));
-		superviseur.acheterParAO(this,this.cryptogramme, Chocolat.C_HQ_E , this.requiredQuantities.get(4));
+
+		for (int i=0; i<chocolats.size(); i++){
+			superviseur.acheterParAO(this,this.cryptogramme, chocolats.get(i) , this.requiredQuantities.get(i));
+		}
 	}
 
 	public List<Variable> getIndicateurs(){
