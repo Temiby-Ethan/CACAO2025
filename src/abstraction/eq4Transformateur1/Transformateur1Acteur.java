@@ -49,6 +49,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 	protected Variable totalStocksChocoMarque;  // La quantite totale de stock de chocolat de marque
 	protected Variable totalStocksChocoNonMarquee; // La quantie totale de stock de chocolat non marquee
 
+
 	public Transformateur1Acteur() {
 
 		this.journal = new Journal("Journal " + this.getNom(), this);
