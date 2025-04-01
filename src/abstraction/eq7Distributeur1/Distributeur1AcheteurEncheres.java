@@ -55,6 +55,10 @@ public class Distributeur1AcheteurEncheres extends Distributeur1AcheteurContratC
         if (product.isEquitable()){
             idProduct++;
         }
+		if(idProduct == 5)
+		{
+			return 4;
+		}
 		if(idProduct == 6)
 		{
 			return 5;
@@ -126,10 +130,6 @@ public class Distributeur1AcheteurEncheres extends Distributeur1AcheteurContratC
 	public List<Journal> getJournaux(){
 		List<Journal> journaux = new ArrayList<Journal>();
 		return(journaux);
-	}
-
-	public void setCryptogramme(Integer crypto){
-		this.cryptogramme = crypto;
 	}
 
 	public void notificationFaillite(IActeur acteur){

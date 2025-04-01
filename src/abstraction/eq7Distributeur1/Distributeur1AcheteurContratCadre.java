@@ -20,23 +20,19 @@ import abstraction.eqXRomu.produits.IProduit;
 
 public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implements IAcheteurContratCadre{
 
-	protected Integer cryptogramme;
+	
 	protected List<Double> priceProduct;
 	protected List<Double> requiredQuantities;
 	protected String name;
 	protected Color color;
 	protected List<Double> predictionsVentesPourcentage;
-	protected IAcheteurContratCadre identityContratCadre;
 	//private HashMap<ChocolatDeMarque,Variable> stock;
 
 	public Distributeur1AcheteurContratCadre() {
 		super();
-		int cryptogramme = -1;
 
 		String name = "EQ7";
 		Color color = new Color(162, 207, 238);
-
-		this.cryptogramme = cryptogramme;
 		this.name = name;
 		this.color = color;
 		//this.stock = stock;
@@ -62,6 +58,10 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
         if (product.isEquitable()){
             idProduct++;
         }
+		if(idProduct == 5)
+		{
+			return 4;
+		}
 		if(idProduct == 6)
 		{
 			return 5;
@@ -84,7 +84,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 		Echeancier echeancierActuel = null;
 		if (listeEcheancier.isEmpty()){
 			tour = 0;
-			echeancierActuel = new Echeancier(0, 12, requiredQuantities.get(getInt(chocolat)));
+			echeancierActuel = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, requiredQuantities.get(getInt(chocolat)));
 		}
 		else {
 			tour = listeEcheancier.size();
@@ -142,13 +142,14 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 		return("Acheteur contrat cadre de l'equipe 7");
 	}
 
-	public void next(){
+	public void next_cc(){
 		SuperviseurVentesContratCadre superviseur = (SuperviseurVentesContratCadre)(Filiere.LA_FILIERE.getActeur("Sup.CCadre"));
 		for (int i=0; i<chocolats.size(); i++) {
 			List<IVendeurContratCadre> vendeurList = superviseur.getVendeurs(chocolats.get(i));
-			superviseur.demandeAcheteur(this.identityContratCadre, vendeurList.get(0), chocolats.get(i), new Echeancier(Filiere.LA_FILIERE.getEtape(), 8, requiredQuantities.get(i)), this.cryptogramme, false);
+			if (vendeurList.size()>0){
+				superviseur.demandeAcheteur(this, vendeurList.get(0), chocolats.get(i), new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 8, requiredQuantities.get(i)), this.cryptogramme, false);
+			}
 		}
-		
 	}
 
 	public List<Variable> getIndicateurs(){
@@ -166,9 +167,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 		return(journaux);
 	}
 
-	public void setCryptogramme(Integer crypto){
-		this.cryptogramme = crypto;
-	}
+
 
 	public void notificationFaillite(IActeur acteur){
 
