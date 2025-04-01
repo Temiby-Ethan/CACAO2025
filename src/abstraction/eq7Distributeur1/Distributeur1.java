@@ -24,7 +24,8 @@ import abstraction.eqXRomu.general.Variable;
 public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements IDistributeurChocolatDeMarque {
 	
 	// défi 1 et 2 par Alexiho
-	protected Journal journal;  // Déclaration du journal
+	protected Journal journal; // Déclaration du journal
+	protected Journal journalE;  // Déclaration du journal
 	// protected Map<ChocolatDeMarque, Variable> stocksChocolats; // Table de hachage pour stocker les quantités de chocolat
 	//protected List<ChocolatDeMarque> chocolats;
 	protected List<Double> prix;
@@ -42,7 +43,9 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
     public Distributeur1() {
 		super();
         
-        this.journal = new Journal("Journal de EQ7", this); // Initialisation du journal
+        this.journal = new Journal("Journal stock de EQ7", this); // Initialisation du journal
+		this.journalE = new Journal("Journal de vente de EQ7", this); // Initialisation du journal
+
 		
 		predictionsVentesPourcentage = Arrays.asList(3.6 , 3.6 , 5.0 , 3.6 , 3.6 , 3.6 , 3.6 , 7.0 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 13.0);
 
@@ -65,7 +68,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 
 		for (int i = 0; i < this.chocolats.size(); i++) {
 			this.stocksChocolats.put(chocolats.get(i), new Variable(this.getNom()+"Stock"+chocolats.get(i).getNom(), this, 1000.0));
-			this.capaciteDeVente.set(i, stocksChocolats.get(chocolats.get(i)).getValeur()/1.05);
+			this.capaciteDeVente.set(i, stocksChocolats.get(chocolats.get(i)).getValeur()/1.5);
 		}
 	}
 
@@ -110,18 +113,21 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 
         //journal.ajouter("Étape " + etape + " : Ajout de " + quantiteAjoutee + " t de " + produit + " en rayon.");
 		
-		String str_journal = "stock : ";
+		String str_journal_stock = "";
+		String str_journal_vente = "";
 
 		for (int i = 0 ; i<chocolats.size() ; i++){
-			str_journal += this.stocksChocolats.get(chocolats.get(i)).getValeur() + " ";
+			str_journal_stock += this.stocksChocolats.get(chocolats.get(i)).getNom() + " = " + this.stocksChocolats.get(chocolats.get(i)).getValeur() + " ; ";
+			str_journal_vente += "a";
 		}
 
-		journal.ajouter(str_journal);
+		journal.ajouter(str_journal_stock);
+		journalE.ajouter(str_journal_vente);
 
 		// définition des capacités de ventes
 
 		for (int i=0; i<this.chocolats.size(); i++) {
-			this.capaciteDeVente.set(i, stocksChocolats.get(chocolats.get(i)).getValeur()/1.05);
+			this.capaciteDeVente.set(i, stocksChocolats.get(chocolats.get(i)).getValeur()/2);
 		}
 	}
 
@@ -178,6 +184,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 		return this.stocksChocolats.get(c);
 	}
 
+	@Override
 	public Map<ChocolatDeMarque, Variable> getStocksChocolats() { // par Alexiho
 		return this.stocksChocolats;
 	}
@@ -208,6 +215,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 	public List<Journal> getJournaux() { // par Alexiho
 		List<Journal> res=new ArrayList<Journal>();
 		res.add(journal);
+		res.add(journalE);
 		return res;
 	}
 	
