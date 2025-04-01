@@ -68,14 +68,14 @@ public class Distributeur1AcheteurEncheres extends Distributeur1AcheteurContratC
 		IProduit product = enchereRetenue.getProduit();
 		if (product instanceof ChocolatDeMarque){
 			ChocolatDeMarque chocolat = (ChocolatDeMarque) product;
-		this.successedSell.set(cdmToInt(chocolat),this.successedSell.get(cdmToInt(chocolat)+1));
+		this.successedSell.set(cdmToInt(chocolat),this.successedSell.get(cdmToInt(chocolat))+1);
 		}
 	}
 	public void notifierEnchereNonRetenue(Enchere enchereNonRetenue){
 		IProduit product = enchereNonRetenue.getProduit();
 		if (product instanceof ChocolatDeMarque){
 			ChocolatDeMarque chocolat = (ChocolatDeMarque) product;
-		this.successedSell.set(cdmToInt(chocolat),this.successedSell.get(cdmToInt(chocolat)-1));
+		this.successedSell.set(cdmToInt(chocolat),this.successedSell.get(cdmToInt(chocolat))-1);
 		}
 	}
 
