@@ -40,6 +40,7 @@ public class Transformateur3Stock {
         for (IProduit prod : listProduit) {
 			stockProduit.put(prod, initial_value);
             dicoIndicateur.get(prod).setValeur(monActeur, initial_value);
+            this.stockTotal += initial_value;
 		}
 
         journalStock.ajouter("Initialisation du stock de "+this.nomProduit);

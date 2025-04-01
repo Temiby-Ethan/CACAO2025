@@ -45,6 +45,7 @@ public class Transformateur3 extends Transformateur3AO{
 	public List<Journal> getJournaux() {
 		ArrayList<Journal> res = new ArrayList<Journal>();
 		res.add(super.jdb);
+		res.add(super.journalProduction);
 		res.add(super.journalStock);
 		res.add(super.journalTransac);
 		res.add(super.journalCC);
