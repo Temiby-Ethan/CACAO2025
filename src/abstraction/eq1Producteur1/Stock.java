@@ -7,7 +7,7 @@ import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class Stock {
+public class Stock  {
     private Map<Feve, Double> stocks; // Map pour gérer les stocks de fèves
     private Journal journal; // Journal pour enregistrer les messages
 

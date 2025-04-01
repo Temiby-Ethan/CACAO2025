@@ -5,7 +5,7 @@ package abstraction.eq1Producteur1;
 import abstraction.eqXRomu.general.Journal;
 
 // Amal Moncer
-public class plantation {
+public class plantation extends Producteur1Acteur {
 
     protected String typedeplant;
     protected int nombre_arbes;

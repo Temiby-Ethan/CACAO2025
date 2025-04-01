@@ -33,14 +33,13 @@ public class Producteur1arbes extends plantation {
     public void vie_arbre(){
         HashMap<Integer, Integer> arbre = new HashMap<>();
         for (int i = 0; i < 40; i++) { 
-            arbre.put(i, 1/40*nombre_arbes);
+            arbre.put(i, (1/(40*24))*nombre_arbes);
         }
-        for (int i = 0; i < 40; i++){
-            if (arbre.get(i) == 40){
-                arbre.remove(i);
-            }
+        for (int i = 40*24; i >=1; i--){
+            arbre.put(i,arbre.get(i-1));
         }
-    }
+
+        }
 
     public void next() {
         // Logique de mise à jour des arbres

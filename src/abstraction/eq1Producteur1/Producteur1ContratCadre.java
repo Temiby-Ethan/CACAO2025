@@ -8,7 +8,7 @@ import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class Producteur1ContratCadre extends Producteur1Acteur implements IVendeurContratCadre {
+public class Producteur1ContratCadre extends Producteur1arbes implements IVendeurContratCadre {
 
     private Producteur1 vendeur; // Référence au Producteur1 principal
     private List<ExemplaireContratCadre> contrats;
