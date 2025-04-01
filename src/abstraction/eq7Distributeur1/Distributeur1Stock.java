@@ -51,6 +51,14 @@ public class Distributeur1Stock extends Distributeur1Acteur{
 		}*/
 	}
 
+	public int cdmToInt(ChocolatDeMarque c){ // par Alexiho
+		return chocolats.indexOf(c);
+	}
+
+	public ChocolatDeMarque intToCdm(int i){ // par Alexiho
+		return chocolats.get(i);
+	}
+
     public Variable getStock(ChocolatDeMarque c) { // par Alexiho
 		return this.stocksChocolats.get(c);
 	}
