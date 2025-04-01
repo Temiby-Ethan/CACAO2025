@@ -45,9 +45,11 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 		this.prixTFeveStockee = new HashMap<Feve, Double>();
 		this.prixTChocoBase = new HashMap<Chocolat, Double>();
 
+		
 		this.stockChocoMarque=new HashMap<ChocolatDeMarque,Double>();
 
 		this.marges = new HashMap<Chocolat, Double>();
+
 	}
 	
 	public void initialiser() {
@@ -112,6 +114,7 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 					int pourcentageCacao =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+c.getGamme()).getValeur());
 
 					ChocolatDeMarque cm= new ChocolatDeMarque(c, "LimDt", pourcentageCacao);
+					
 
 					this.chocolatsLimDt.add(cm);
 					this.stockChocoMarque.put(cm, 40000.0);
@@ -304,7 +307,7 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 
 		this.transformation();
 
-		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", (this.totalStocksFeves.getValeur(cryptogramme)+this.totalStocksChoco.getValeur(cryptogramme)+this.totalStocksChocoMarque.getValeur(cryptogramme))*this.coutStockage);
+		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", (this.totalStocksFeves.getValeur(cryptogramme)+this.totalStocksChoco.getValeur(cryptogramme))*this.coutStockage);
 
 	}
 
