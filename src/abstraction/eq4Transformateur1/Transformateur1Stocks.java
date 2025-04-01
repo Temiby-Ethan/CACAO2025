@@ -14,6 +14,7 @@ import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
+import abstraction.eqXRomu.general.Variable;
 
 public class Transformateur1Stocks extends Transformateur1Acteur implements IFabricantChocolatDeMarque {
 
@@ -37,6 +38,7 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 
 	public Transformateur1Stocks() {
 		super();
+
 		this.chocosProduits = new LinkedList<ChocolatDeMarque>();
 		this.pourcentageTransfo = new HashMap<Feve, HashMap<Chocolat, Double>>();
 		this.chocolatsLimDt=new LinkedList<ChocolatDeMarque>();
@@ -45,12 +47,17 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 		this.prixTFeveStockee = new HashMap<Feve, Double>();
 		this.prixTChocoBase = new HashMap<Chocolat, Double>();
 
-		
+
 		this.stockChocoMarque=new HashMap<ChocolatDeMarque,Double>();
 
 		this.marges = new HashMap<Chocolat, Double>();
 
 	}
+
+
+
+
+
 	
 	public void initialiser() {
 		super.initialiser();
@@ -65,19 +72,7 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 		this.prixTChocoBase.put(Chocolat.C_HQ_BE, 0.);
 		this.prixTChocoBase.put(Chocolat.C_MQ_E, 0.);
 		
-		//initialisation des stocks de fèves à 2000T
-		for (Feve f : this.lesFeves) {
-			this.stockFeves.put(f, 20000.0);
-			this.totalStocksFeves.ajouter(this, 20000.0, this.cryptogramme);
-			this.journal.ajouter("ajout de 20000 de "+f+" au stock de feves --> total="+this.totalStocksFeves.getValeur(this.cryptogramme));
-		}
 		
-		//Initialisation des stocks de chocolat à 0
-		for (Chocolat c : lesChocolats) {
-			this.stockChoco.put(c, 0.0);
-			this.totalStocksChoco.ajouter(this, 0.0, this.cryptogramme);
-			this.journal.ajouter("Initialisation de 0 de "+c+" au stock de chocolat --> total="+this.totalStocksChoco.getValeur(this.cryptogramme));
-		}
 
 		//Initialisation des marges que l'on va faire sur les différents produits
 		this.marges.put(Chocolat.C_BQ, 1.5);
@@ -137,6 +132,15 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 	////////////////////////////////////////////////////////
 	//      En lien avec la comptabilité et production    //
 	////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
 
 	/**
 	 * @author ABBASSI Rayenne
@@ -202,6 +206,14 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 	}
 
 
+
+
+
+
+
+
+
+
 	/**
 	 * @author MURY Julien
 	 * Une méthode qui permet de déterminer la quantitié de fèves entrant dans le stock à la période actuelle selon les contrats négociés et achats en bourse
@@ -231,6 +243,14 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 
 
 	}
+
+
+
+
+
+
+
+
 
 
 
@@ -267,6 +287,13 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 			prixTFeveStockee.put(f, prix);
 		}
 	}
+
+
+
+
+
+
+
 
 
 
@@ -309,6 +336,50 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", (this.totalStocksFeves.getValeur(cryptogramme)+this.totalStocksChoco.getValeur(cryptogramme))*this.coutStockage);
 
+	}
+
+
+
+
+
+
+
+
+
+
+	public List<Variable> getIndicateurs(){
+		List<Variable> res = super.getIndicateurs();
+
+		//initialisation des variables
+		stock_C_BQ.setValeur(this, stockChoco.get(Chocolat.C_BQ));
+		stock_C_BQ_E.setValeur(this, stockChoco.get(Chocolat.C_BQ_E));
+		stock_C_MQ_E.setValeur(this, stockChoco.get(Chocolat.C_MQ_E));
+		stock_C_HQ_BE.setValeur(this, stockChoco.get(Chocolat.C_HQ_BE));
+		for (ChocolatDeMarque cm : stockChocoMarque.keySet()){
+			if (cm.getChocolat().equals(Chocolat.C_BQ)){
+				stock_C_BQ_Limdt.setValeur(this, this.stockChocoMarque.get(cm));
+			} else if (cm.getChocolat().equals(Chocolat.C_BQ_E)){
+				stock_C_BQ_E_Limdt.setValeur(this, this.stockChocoMarque.get(cm));
+			} else if (cm.getChocolat().equals(Chocolat.C_MQ_E)){
+				stock_C_MQ_E_Limdt.setValeur(this, this.stockChocoMarque.get(cm));
+			} else if (cm.getChocolat().equals(Chocolat.C_HQ_BE)){
+				stock_C_HQ_BE_Limdt.setValeur(this, this.stockChocoMarque.get(cm));
+			}
+			
+	
+		}
+
+		res.add(this.stock_C_BQ);
+		res.add(this.stock_C_BQ_E);
+		res.add(this.stock_C_MQ_E);
+		res.add(this.stock_C_HQ_BE);
+		res.add(this.stock_C_BQ_Limdt);
+		res.add(this.stock_C_BQ_E_Limdt);
+		res.add(this.stock_C_MQ_E_Limdt);
+		res.add(this.stock_C_HQ_BE_Limdt);
+
+
+		return res;
 	}
 
 

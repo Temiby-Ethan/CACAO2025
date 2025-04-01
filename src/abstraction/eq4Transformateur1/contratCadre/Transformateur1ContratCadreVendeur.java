@@ -163,7 +163,7 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 		IProduit produit = contrat.getProduit();
 
 		//Si le produit vendu est un chocolat BQ, on négocie de manière à avoir de très grandes marges
-		if (produit == Chocolat.C_BQ || (produit.getType()=="ChocolatDeMarque" && ((ChocolatDeMarque)produit).getChocolat()==Chocolat.C_BQ)){
+		if (produit.equals(Chocolat.C_BQ) || (produit.getType()=="ChocolatDeMarque" && ((ChocolatDeMarque)produit).getChocolat().equals(Chocolat.C_BQ))){
 			//Si le prix proposé est plus élevé que celui que l'on a calculé, on accepte le contrat
 			if (contrat.getPrix() > prixTChocoBase.get(Chocolat.C_BQ) * marges.get(Chocolat.C_BQ)){
 				return contrat.getPrix();
@@ -192,7 +192,7 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 		}
 
 		//Si le produit vendu est BQ_E, on cherche a des marges réduites ce qui réduit le champ des négociations
-		if (produit == Chocolat.C_BQ_E || (produit.getType()=="ChocolatDeMarque" && ((ChocolatDeMarque)produit).getChocolat()==Chocolat.C_BQ_E)){
+		if (produit.equals(Chocolat.C_BQ_E) || (produit.getType()=="ChocolatDeMarque" && ((ChocolatDeMarque)produit).getChocolat().equals(Chocolat.C_BQ_E))){
 			//Si le prix proposé est plus élevé que celui que l'on a calculé, on vérifie que le prix n'est pas trop élevé non plus pour maitriser un minimum le prix de vente final
 			if (contrat.getPrix() > prixTChocoBase.get(Chocolat.C_BQ_E) * marges.get(Chocolat.C_BQ_E)){
 				return contrat.getPrix();
@@ -222,7 +222,7 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 
 
 		//Idem, si le produit est de moyenne gamme équitable, on veut avoir des marges faibles et controler le prix de vente sans pour autant vendre à perte
-		if (produit == Chocolat.C_MQ_E || (produit.getType()=="ChocolatDeMarque" && ((ChocolatDeMarque)produit).getChocolat()==Chocolat.C_MQ_E)){
+		if (produit.equals(Chocolat.C_MQ_E) || (produit.getType()=="ChocolatDeMarque" && ((ChocolatDeMarque)produit).getChocolat().equals(Chocolat.C_MQ_E))){
 			//Si le prix proposé est plus élevé que celui que l'on a calculé, on accepte le contrat
 			if (contrat.getPrix() > prixTChocoBase.get(Chocolat.C_MQ_E) * marges.get(Chocolat.C_MQ_E)){
 				return contrat.getPrix();
@@ -251,7 +251,7 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 		}
 
 		//Si le produit vendu est HQ_BE, on peut se permettre de prendre des marges plus grandes car un acheteur de haut de gamme sera peu regardant sur le prix, cherchant principalement à se faire plaisir
-		if (produit == Chocolat.C_HQ_BE || (produit.getType()=="ChocolatDeMarque" && ((ChocolatDeMarque)produit).getChocolat()==Chocolat.C_HQ_BE)){
+		if (produit.equals(Chocolat.C_HQ_BE) || (produit.getType()=="ChocolatDeMarque" && ((ChocolatDeMarque)produit).getChocolat().equals(Chocolat.C_HQ_BE))){
 			//Si le prix proposé est plus élevé que celui que l'on a calculé, on accepte le contrat
 			if (contrat.getPrix() > prixTChocoBase.get(Chocolat.C_HQ_BE) * marges.get(Chocolat.C_HQ_BE)){
 				return contrat.getPrix();
