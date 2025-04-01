@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import abstraction.eqXRomu.acteurs.Romu;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.filiere.IMarqueChocolat;
@@ -135,9 +136,6 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 		this.StocksVar.add(stock_C_MQ_E_Limdt);
 		this.StocksVar.add(stock_C_HQ_BE_Limdt);
 
-
-		this.journal.ajouter("N° Etape " + Filiere.LA_FILIERE.getEtape());
-
 		//Test stock de fèves
 		this.stockFeves=new HashMap<Feve,Double>();
 		for (Feve f : this.lesFeves) {
@@ -146,6 +144,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 			this.totalStocksFeves.ajouter(this, 0.0, this.cryptogramme);
 			this.journalStock.ajouter("Initialisation de 0 de "+f+" au stock de fèves --> total="+this.totalStocksFeves.getValeur(this.cryptogramme));
 		}
+		this.journalStock.ajouter("\n");
 
 		//Test stock de choco
 		this.stockChoco=new HashMap<Chocolat,Double>();
@@ -157,7 +156,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 			this.totalStocksChoco.ajouter(this, 0.0, this.cryptogramme);
 			this.journalStock.ajouter("Initialisation de 0 de "+c+" au stock de chocolat --> total="+this.totalStocksChoco.getValeur(this.cryptogramme));
 		}
-
+        this.journalStock.ajouter("\n");
 	}
 
 	public void main(){
@@ -182,7 +181,10 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 		this.journalStock.ajouter("Stock de fèves : " + this.totalStocksFeves.getValeur(this.cryptogramme));
 		this.journalStock.ajouter("Stock de chocolat : " + this.totalStocksChoco.getValeur(this.cryptogramme));
 		this.journalStock.ajouter("Stock de chocolat de marque : " + this.totalStocksChocoMarque.getValeur(this.cryptogramme));
+		this.journalStock.ajouter("\n");
+
 		this.journal.ajouter("Solde : " + this.getSolde());
+		this.journal.ajouter("\n");
 
 	}
 
@@ -242,6 +244,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 	// operation est appelee pour vous en informer
 	public void notificationOperationBancaire(double montant) {
 		journal.ajouter("Opération sur compte bancaire : " +  montant);
+		this.journal.ajouter("\n");
 	}
 	
 	// Renvoie le solde actuel de l'acteur

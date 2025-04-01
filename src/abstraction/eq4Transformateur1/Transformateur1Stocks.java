@@ -72,7 +72,6 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 		this.prixTChocoBase.put(Chocolat.C_HQ_BE, 0.);
 		this.prixTChocoBase.put(Chocolat.C_MQ_E, 0.);
 		
-		
 
 		//Initialisation des marges que l'on va faire sur les différents produits
 		this.marges.put(Chocolat.C_BQ, 1.5);
@@ -116,9 +115,10 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 					this.totalStocksChocoMarque.ajouter(this,40000, this.cryptogramme);
 					this.totalStocksChoco.ajouter(this, 40000, this.cryptogramme);
 
-					this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN," stock("+cm+")->"+this.stockChocoMarque.get(cm));
+					this.journalStock.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN," stock("+cm+")->"+this.stockChocoMarque.get(cm));
 				}
 			}
+			this.journalStock.ajouter("\n");
 		}
 
 		//Initialisation des quantités de fève entrantes
@@ -199,6 +199,7 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 						this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN," stock("+f+")->"+this.stockFeves.get(f));
 						this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN," stock("+c+")->"+this.stockChoco.get(c));
 						this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN," stock("+cm+")->"+this.stockChocoMarque.get(cm));
+						this.journal.ajouter("\n");
 					}
 				}
 			}
@@ -305,29 +306,32 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 	public void next() {
 		super.next();
 
-
-		this.journal.ajouter("N° Etape " + Filiere.LA_FILIERE.getEtape());
-		this.journal.ajouter("Solde : " + this.getSolde());
-
-		this.journalStock.ajouter("N° Etape " + Filiere.LA_FILIERE.getEtape());
-		this.journalCC.ajouter("N° Etape " + Filiere.LA_FILIERE.getEtape());
-		this.journalTransactions.ajouter("N° Etape " + Filiere.LA_FILIERE.getEtape());
+		this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LBLUE, "N° Etape " + Filiere.LA_FILIERE.getEtape());
+		this.journalStock.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LBLUE, "N° Etape " + Filiere.LA_FILIERE.getEtape());
+		this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LBLUE, "N° Etape " + Filiere.LA_FILIERE.getEtape());
+		this.journalTransactions.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LBLUE, "N° Etape " + Filiere.LA_FILIERE.getEtape());
 
 		
-		this.journal.ajouter("Stock de fèves : " + this.totalStocksFeves.getValeur(this.cryptogramme));
-		this.journal.ajouter("Stock de chocolat : " + this.totalStocksChoco.getValeur(this.cryptogramme));
+		this.journalStock.ajouter("Stock de fèves : " + this.totalStocksFeves.getValeur(this.cryptogramme));
+		this.journalStock.ajouter("Stock de chocolat : " + this.totalStocksChoco.getValeur(this.cryptogramme));
+		this.journalStock.ajouter("\n");
 
 		this.journal.ajouter("=== STOCKS === ");
 		for (Feve f : this.lesFeves) {
-			this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN,"Stock de "+Journal.texteSurUneLargeurDe(f+"", 15)+" = "+this.stockFeves.get(f));
+			this.journalStock.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN,"Stock de "+Journal.texteSurUneLargeurDe(f+"", 15)+" = "+this.stockFeves.get(f));
 		}
+		this.journalStock.ajouter("\n");
+
 		for (Chocolat c : Chocolat.values()) {
-			this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN,"Stock de "+Journal.texteSurUneLargeurDe(c+"", 15)+" = "+this.stockChoco.get(c));
+			this.journalStock.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN,"Stock de "+Journal.texteSurUneLargeurDe(c+"", 15)+" = "+this.stockChoco.get(c));
 		}
+		this.journalStock.ajouter("\n");
+
 		if (this.stockChocoMarque.keySet().size()>0) {
 			for (ChocolatDeMarque cm : this.stockChocoMarque.keySet()) {
-				this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN,"Stock de "+Journal.texteSurUneLargeurDe(cm+"", 15)+" = "+this.stockChocoMarque.get(cm));
+				this.journalStock.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN,"Stock de "+Journal.texteSurUneLargeurDe(cm+"", 15)+" = "+this.stockChocoMarque.get(cm));
 			}
+		    this.journalStock.ajouter("\n");
 		}
 
 		this.determinerPrixTFevesStockees();
