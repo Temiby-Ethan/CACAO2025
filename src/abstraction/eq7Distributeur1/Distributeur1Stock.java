@@ -20,7 +20,7 @@ public class Distributeur1Stock extends Distributeur1Acteur{
     protected List<ChocolatDeMarque> chocolats;
 	protected List<ChocolatDeMarque> chocolats2;
 
-    public Distributeur1Stock()
+    public Distributeur1Stock() // Alexiho
     {
         this.stocksChocolats = new HashMap<>();
 		this.stocksChocolats2 = new HashMap<>();
