@@ -35,7 +35,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 	protected Variable stock_C_BQ_E;
 	protected Variable stock_C_MQ_E;
 	protected Variable stock_C_HQ_BE;
-	protected List<Variable> StocksVar;
+	protected LinkedList<Variable> StocksVar;
 
 	protected Variable stock_C_BQ_Limdt;
 	protected Variable stock_C_BQ_E_Limdt;
@@ -168,6 +168,26 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 	// Renvoie les indicateurs
 	public List<Variable> getIndicateurs() {
 		List<Variable> res = new ArrayList<Variable>();
+
+		//initialisation des variables
+		stock_C_BQ.setValeur(this, this.stockChoco.get(Chocolat.C_BQ));
+		stock_C_BQ_E.setValeur(this, this.stockChoco.get(Chocolat.C_BQ_E));
+		stock_C_MQ_E.setValeur(this, this.stockChoco.get(Chocolat.C_MQ_E));
+		stock_C_HQ_BE.setValeur(this, this.stockChoco.get(Chocolat.C_HQ_BE));
+		for (ChocolatDeMarque cm : stockChocoMarque.keySet()){
+			if (cm.getChocolat().equals(Chocolat.C_BQ)){
+				stock_C_BQ_Limdt.setValeur(this, this.stockChocoMarque.get(cm));
+			} else if (cm.getChocolat().equals(Chocolat.C_BQ_E)){
+				stock_C_BQ_E_Limdt.setValeur(this, this.stockChocoMarque.get(cm));
+			} else if (cm.getChocolat().equals(Chocolat.C_MQ_E)){
+				stock_C_MQ_E_Limdt.setValeur(this, this.stockChocoMarque.get(cm));
+			} else if (cm.getChocolat().equals(Chocolat.C_HQ_BE)){
+				stock_C_HQ_BE_Limdt.setValeur(this, this.stockChocoMarque.get(cm));
+			}
+			
+	
+		}
+
 		res.add(this.totalStocksFeves);
 		res.add(this.totalStocksChoco);
 		res.add(this.totalStocksChocoMarque);
