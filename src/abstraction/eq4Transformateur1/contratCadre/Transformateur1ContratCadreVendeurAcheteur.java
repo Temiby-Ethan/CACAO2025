@@ -134,14 +134,33 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 				}
 			}
 		}
-		// Proposition d'un contrat a un des achteur choisi aleatoirement
-		for(IProduit produit : stockChoco.keySet()){
+		// Recherche d'acheteurs de chocolat de marque
+		for(IProduit produit : stockChocoMarque.keySet()){
 			journalCC.ajouter("Recherche d'un acheteur aupres de qui vendre " + produit);
 
 			List<IAcheteurContratCadre> acheteurs = supCCadre.getAcheteurs(produit);
 			if (acheteurs.contains(this)) {
 				acheteurs.remove(this);
 			}
+			journalCC.ajouter("Voici les acheteurs potentiels : " + acheteurs);
+			for(IAcheteurContratCadre acheteur : acheteurs){
+				if (acheteur!=null) {
+					journalCC.ajouter("Demande au superviseur de debuter les negociations pour un contrat cadre de "+produit+" avec l'acheteur "+acheteur);
+					ExemplaireContratCadre cc = supCCadre.demandeVendeur(acheteur, (IVendeurContratCadre)this, produit, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10, (SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER+10.0)/10), cryptogramme,false);
+					journalCC.ajouter("-->aboutit au contrat "+cc);
+				}
+			}
+		}
+
+		//Recherche d'acheteurs de chocolat non marqué
+		for(IProduit produit : lesChocolats){
+			journalCC.ajouter("Recherche d'un acheteur aupres de qui vendre " + produit);
+
+			List<IAcheteurContratCadre> acheteurs = supCCadre.getAcheteurs(produit);
+			if (acheteurs.contains(this)) {
+				acheteurs.remove(this);
+			}
+			journalCC.ajouter("Voici les acheteurs potentiels : " + acheteurs);
 			for(IAcheteurContratCadre acheteur : acheteurs){
 				if (acheteur!=null) {
 					journalCC.ajouter("Demande au superviseur de debuter les negociations pour un contrat cadre de "+produit+" avec l'acheteur "+acheteur);
@@ -161,7 +180,7 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 
 	public boolean achete(IProduit produit) {
 		//On n'achète que les fèves nous permettant de produire les chocolats que l'on veut produire
-		return pourcentageTransfo.keySet().contains(produit);
+		return lesFeves.contains(produit);
 	}
 
 	public String toString() {

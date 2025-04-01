@@ -39,9 +39,15 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 	//Les stratégies de négociations restent les mêmes
 	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
 		if (contrat.getEcheancier().getQuantiteTotale()> SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER){
-			IProduit produit = contrat.getProduit();
+			IProduit produit;
+			if (contrat.getProduit().getType() == "ChocolatDeMarque"){
+				produit = ((ChocolatDeMarque)contrat.getProduit()).getChocolat();
+			}
+			else {
+				produit = contrat.getProduit();
+			}
 			if (contrat.getProduit().equals(produit)) {
-				double qtt_totale_voulue = partInitialementVoulue*stockChoco.get(contrat.getProduit());
+				double qtt_totale_voulue = partInitialementVoulue*stockChoco.get(produit);
 
 
 				if (contrat.getEcheancier().getQuantiteTotale()< stockChoco.get((Chocolat) produit)) {  //On chercher à honorer le contrat sur les qtts
@@ -157,7 +163,15 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 	//On ne prend pas en compte le fait que l'on ait possiblement d'autre livraisons à réaliser sur la même période
 	//Il faudra s'assurer que l'on ait du stock pour cette transaction spécifiquement
 	public boolean vend(IProduit produit) {
-		return (produit.getType().equals("Chocolat") || produit.getType().equals("ChocolatDeMarque")) && stockChoco.get(produit)!=null;
+		if (produit.getType() == "Chocolat"){
+			return stockChoco.get(produit)!=null;
+		}
+		else if (produit.getType() == "ChocolatDeMarque"){
+			return ((ChocolatDeMarque)produit).getMarque() == "LimDt" && stockChoco.get(((ChocolatDeMarque)produit).getChocolat())!=null;
+		}
+		else{
+			return false;
+		}
 	}
 
 	public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
