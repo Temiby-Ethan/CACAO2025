@@ -11,6 +11,7 @@ import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IFabricantChocolatDeMarque;
 import abstraction.eqXRomu.general.Journal;
+import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
@@ -43,7 +44,8 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 		this.prixTFeveStockee = new HashMap<Feve, Double>();
 		this.prixTChocoBase = new HashMap<Chocolat, Double>();
 
-		this.stockChocoMarque=new HashMap<ChocolatDeMarque,Double>();
+		this.stockChocoMarque= new HashMap<ChocolatDeMarque, Double>();
+
 	}
 	
 	public void initialiser() {
@@ -103,6 +105,7 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 					int pourcentageCacao =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+c.getGamme()).getValeur());
 
 					ChocolatDeMarque cm= new ChocolatDeMarque(c, "LimDt", pourcentageCacao);
+					
 
 					this.chocolatsLimDt.add(cm);
 					this.stockChocoMarque.put(cm, 40000.0);

@@ -29,7 +29,18 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 	protected List<Chocolat> lesChocolats;
 	protected HashMap<Feve, Double> stockFeves;
 	protected HashMap<Chocolat, Double> stockChoco;
-	protected HashMap<ChocolatDeMarque, Double> stockChocoMarque;
+	protected HashMap<ChocolatDeMarque,Double> stockChocoMarque;
+
+	protected Variable stock_C_BQ;
+	protected Variable stock_C_BQ_E;
+	protected Variable stock_C_MQ_E;
+	protected Variable stock_C_HQ_BE;
+	protected List<Variable> StocksVar;
+
+	protected Variable stock_C_BQ_Limdt;
+	protected Variable stock_C_BQ_E_Limdt;
+	protected Variable stock_C_MQ_E_Limdt;
+	protected Variable stock_C_HQ_BE_Limdt;
 
 
 	protected Variable totalStocksFeves;  // La quantite totale de stock de feves 
@@ -52,6 +63,14 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 		this.totalStocksChoco = new VariablePrivee("Eq4TStockTotalChoco", "<html>Quantite totale de chocolat en stock</html>",this, 0.0, 1000000.0, 0.0);
 		this.totalStocksChocoMarque = new VariablePrivee("Eq4TStockChocoMarque", "<html>Quantite totale de chocolat de marque en stock</html>",this, 0.0, 1000000.0, 0.0);
 		this.totalStocksChocoNonMarquee = new VariablePrivee("Eq4TStockChocoNonMarquee", "<html>Quantite totale de chocolat non marquee en stock</html>",this, 0.0, 1000000.0, 0.0);
+		this.stock_C_BQ=new VariablePrivee("EQ4TStockBQ", "<html>Quantite totale de C_BQ en stock</html>",this, 0.0, 1000000.0, 0.0);
+		this.stock_C_BQ_E=new VariablePrivee("EQ4TStockBQ_E", "<html>Quantite totale de C_BQ_E en stock</html>",this, 0.0, 1000000.0, 0.0);
+		this.stock_C_MQ_E=new VariablePrivee("EQ4TStockMQ_E", "<html>Quantite totale de C_MQ_E en stock</html>",this, 0.0, 1000000.0, 0.0);
+		this.stock_C_HQ_BE=new VariablePrivee("EQ4TStockHQ_BE", "<html>Quantite totale de C_HQ_BE en stock</html>",this, 0.0, 1000000.0, 0.0);
+		this.stock_C_BQ_Limdt=new VariablePrivee("EQ4TStockBQ_Limdt", "<html>Quantite totale de C_BQ_Limdt en stock</html>",this, 0.0, 1000000.0, 0.0);
+		this.stock_C_BQ_E_Limdt=new VariablePrivee("EQ4TStockBQ_E_Limdt", "<html>Quantite totale de C_BQ_E_Limdt en stock</html>",this, 0.0, 1000000.0, 0.0);
+		this.stock_C_MQ_E_Limdt=new VariablePrivee("EQ4TStockMQ_E_Limdt", "<html>Quantite totale de C_MQ_E_Limdt en stock</html>",this, 0.0, 1000000.0, 0.0);
+		this.stock_C_HQ_BE_Limdt=new VariablePrivee("EQ4TStockHQ_BE_Limdt", "<html>Quantite totale de C_HQ_BE_Limdt en stock</html>",this, 0.0, 1000000.0, 0.0);
 	}
 
 	public void initialiser() {
@@ -67,6 +86,25 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 		this.lesChocolats.add(Chocolat.C_MQ_E);
 		this.lesChocolats.add(Chocolat.C_HQ_BE);
 
+		this.stock_C_BQ= new Variable("C_BQ", this);
+		this.stock_C_BQ_E= new Variable("C_BQ_E", this);
+		this.stock_C_MQ_E= new Variable("C_MQ_E", this);
+		this.stock_C_HQ_BE= new Variable("C_HQ_BE", this);
+		this.stock_C_BQ_Limdt= new Variable("C_BQ_Limdt", this);
+		this.stock_C_BQ_E_Limdt= new Variable("C_BQ_E_Limdt", this);
+		this.stock_C_MQ_E_Limdt= new Variable("C_MQ_E_Limdt", this);
+		this.stock_C_HQ_BE_Limdt= new Variable("C_HQ_BE_Limdt", this);
+
+		this.StocksVar= new LinkedList<Variable>();
+		this.StocksVar.add(stock_C_BQ);
+		this.StocksVar.add(stock_C_BQ_E);
+		this.StocksVar.add(stock_C_MQ_E);
+		this.StocksVar.add(stock_C_HQ_BE);
+		this.StocksVar.add(stock_C_BQ_Limdt);
+		this.StocksVar.add(stock_C_BQ_E_Limdt);
+		this.StocksVar.add(stock_C_MQ_E_Limdt);
+		this.StocksVar.add(stock_C_HQ_BE_Limdt);
+
 
 		this.journal.ajouter("N° Etape " + Filiere.LA_FILIERE.getEtape());
 
@@ -81,7 +119,10 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 
 		//Test stock de choco
 		this.stockChoco=new HashMap<Chocolat,Double>();
-		for (Chocolat c : Chocolat.values()) {
+		for (Variable v: StocksVar){
+			v.setValeur(this,0.0,this.cryptogramme);
+		}
+		for (Chocolat c : this.lesChocolats) {
 			this.stockChoco.put(c, 0.0);
 			this.totalStocksChoco.ajouter(this, 0.0, this.cryptogramme);
 			this.journalStock.ajouter("Initialisation de 0 de "+c+" au stock de chocolat --> total="+this.totalStocksChoco.getValeur(this.cryptogramme));
@@ -130,6 +171,14 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 		res.add(this.totalStocksChoco);
 		res.add(this.totalStocksChocoMarque);
 		res.add(this.totalStocksChocoNonMarquee);
+		res.add(this.stock_C_BQ);
+		res.add(this.stock_C_BQ_E);
+		res.add(this.stock_C_MQ_E);
+		res.add(this.stock_C_HQ_BE);
+		res.add(this.stock_C_BQ_Limdt);
+		res.add(this.stock_C_BQ_E_Limdt);
+		res.add(this.stock_C_MQ_E_Limdt);
+		res.add(this.stock_C_HQ_BE_Limdt);
 		return res;
 	}
 
