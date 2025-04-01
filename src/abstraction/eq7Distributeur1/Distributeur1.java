@@ -15,7 +15,10 @@ import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.appelDOffre.IAcheteurAO;
 import abstraction.eqXRomu.clients.ClientFinal;
+import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.IAcheteurContratCadre;
+import abstraction.eqXRomu.contratsCadres.IVendeurContratCadre;
+import abstraction.eqXRomu.contratsCadres.SuperviseurVentesContratCadre;
 import abstraction.eqXRomu.general.Variable;
 
 public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements IDistributeurChocolatDeMarque {
@@ -30,7 +33,6 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 	protected List<Integer> successedSell = new ArrayList<Integer>();
 	protected List<Double> priceProduct = new ArrayList<Double>();
 	protected List<Double> requiredQuantities  = new ArrayList<Double>();
-	protected int cryptogramme;
 	protected int step = 0;
 	protected String name = "HexaFridge";
 	protected Color color = new Color(162, 207, 238);
@@ -47,19 +49,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 			requiredQuantities.add(0.0);
 		}
 		predictionsVentesPourcentage = Arrays.asList(3.6 , 3.6 , 5.0 , 3.6 , 3.6 , 3.6 , 3.6 , 7.0 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 13.0);
-		/*
-        this.stocksChocolats = new HashMap<>();
-        
-        // Initialisation des stocks à 0.0
 
-		this.chocolats = new ArrayList<ChocolatDeMarque>();
-		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_HQ_BE, "Hexafridge", 50));
-		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_HQ_E, "Hexafridge", 50));
-		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_MQ_E, "Hexafridge", 50));
-		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_MQ, "Hexafridge", 50));
-		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_BQ_E, "Hexafridge", 50));
-		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_BQ, "Hexafridge", 50));
-		*/
 		this.prix = new ArrayList<Double>();
 		this.capaciteDeVente = new ArrayList<Double>();
 
@@ -68,12 +58,17 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 			this.capaciteDeVente.add(0.0);
 			this.stocksChocolats.put(chocolats.get(i), new Variable(this.getNom()+"Stock"+chocolats.get(i).getNom(), this, 1000.0));
 		}
+
+		for (int i=0; i<this.chocolats.size(); i++) {
+			this.capaciteDeVente.set(i, stocksChocolats.get(chocolats.get(i)).getValeur()/1.05);
+		}
     }
 
 	public double prix(ChocolatDeMarque choco) { // par Alexiho
-		int pos= (chocolats.indexOf(choco));
+		ChocolatDeMarque chocoM = new ChocolatDeMarque(choco.getChocolat(), "Villors", 90);
+		int pos= (chocolats.indexOf(chocoM));
 		if (pos<0) {
-			return 0.0;
+			return 8880.0;
 		} else {
 			//return prix.get(pos);
 			double price = 1.08*this.priceProduct.get(pos) ;
@@ -86,18 +81,21 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 		List<Double> requiredQuantities = new ArrayList<>();
 		Distributeur1Stock acteurStock = new Distributeur1Stock();
 		int step = Filiere.LA_FILIERE.getEtape(); // Récupération du numéro de l'étape
-		for (int i=0; i<5; i++){
-			requiredQuantities.add(acteurStock.VolumetoBuy(chocolats.get(i),cryptogramme)*0.95);
+		for (int i=0; i<6; i++){
+			requiredQuantities.add(acteurStock.VolumetoBuy(chocolats.get(i),this.cryptogramme)*0.95);
 		}
+		
 		if (step%8==0){
-			IAcheteurContratCadre acheteurContratCadre = new Distributeur1AcheteurContratCadre();
-			acheteurContratCadre.next();
+			//IAcheteurContratCadre acheteurContratCadre = new Distributeur1AcheteurContratCadre();
+			this.next_cc();
 			for (int i = 0 ; i<6 ; i++){
 				requiredQuantities.set(i, requiredQuantities.get(i)/19);
 			}}
 		
-		IAcheteurAO acheteurAppelOffre = new Distributeur1AcheteurAppelOffre();
-		acheteurAppelOffre.next();
+		//IAcheteurAO acheteurAppelOffre = new Distributeur1AcheteurAppelOffre();
+		this.next_ao();
+		
+
 		//ChocolatDeMarque produit = new ChocolatDeMarque(Chocolat.C_MQ, "Villors", 50); // Produit choisi
         //double quantiteAjoutee = 100.0; // 100 tonnes
 
@@ -105,6 +103,12 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 
         //journal.ajouter("Étape " + etape + " : Ajout de " + quantiteAjoutee + " t de " + produit + " en rayon.");
 		
+		journal.ajouter("stock : " + this.stocksChocolats.get(chocolats.get(0)).getValeur() + " "
+		+ this.stocksChocolats.get(chocolats.get(2)).getValeur()  + " "
+		+ this.stocksChocolats.get(chocolats.get(3)).getValeur()  + " "
+		+ this.stocksChocolats.get(chocolats.get(4)).getValeur()  + " "
+		+ this.stocksChocolats.get(chocolats.get(5)).getValeur()  + " ");
+
 		// définition des capacités de ventes
 
 		for (int i=0; i<this.chocolats.size(); i++) {
@@ -123,11 +127,14 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 			journal.ajouter("Quelqu'un essaye de me pirater !");
 			return 0.0;
 		} else {
-			int pos= (chocolats.indexOf(choco));
+			//int pos= (chocolats.indexOf(choco));
+			ChocolatDeMarque chocoM = new ChocolatDeMarque(choco.getChocolat(), "Villors", 90);
+			int pos= (chocolats.indexOf(chocoM));
+			//journal.ajouter("pos : " + pos + "chocoval : " + this.getStock(chocoM).getValeur() + "capa : " + capaciteDeVente.get(pos));
 			if (pos<0) {
 				return 0.0;
 			} else {
-				return Math.min(capaciteDeVente.get(pos), this.getStock(choco).getValeur());
+				return Math.min(capaciteDeVente.get(pos), this.getStock(chocoM).getValeur());
 			}
 		}
 	}
@@ -139,11 +146,13 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 			journal.ajouter("Quelqu'un essaye de me pirater !");
 			return 0.0;
 		} else {
-			int pos= (chocolats.indexOf(choco));
+			//int pos= (chocolats.indexOf(choco));
+			ChocolatDeMarque chocoM = new ChocolatDeMarque(choco.getChocolat(), "Villors", 90);
+			int pos= (chocolats.indexOf(chocoM));
 			if (pos<0) {
 				return 0.0;
 			} else {
-				return Math.min(capaciteDeVente.get(pos), this.getStock(choco).getValeur())/10.0;
+				return Math.min(capaciteDeVente.get(pos), this.getStock(chocoM).getValeur())/10.0;
 			}
 		}
 	}
