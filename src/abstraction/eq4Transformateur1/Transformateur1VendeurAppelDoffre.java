@@ -37,7 +37,7 @@ public class Transformateur1VendeurAppelDoffre extends Transformateur1AcheteurBo
 	public OffreVente proposerVente(AppelDOffre offre) {
 		//System.err.println(offre.toString());
 		double prixT = 0;
-		if (stockChocoMarque != null && stockChocoMarque.keySet().contains(offre.getProduit()) && offre.getQuantiteT() <= stockChocoMarque.get(offre.getProduit())) {
+		if (stockChocoMarque.keySet().contains(offre.getProduit()) && offre.getQuantiteT() <= stockChocoMarque.get(offre.getProduit())) {
 			
             if (((ChocolatDeMarque) offre.getProduit()).getChocolat() == Chocolat.C_BQ) {
 				prixT = prix_BQ;

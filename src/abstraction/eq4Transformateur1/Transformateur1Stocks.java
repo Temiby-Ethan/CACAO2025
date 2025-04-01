@@ -33,6 +33,8 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 	protected HashMap<Chocolat, Double> prixTChocoBase;//Contient les prix des chocolats produits en s'appuyant sur le prix du stock de fèves
 
 
+	protected HashMap<Chocolat, Double> marges;
+
 	public Transformateur1Stocks() {
 		super();
 		this.chocosProduits = new LinkedList<ChocolatDeMarque>();
@@ -44,6 +46,8 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 		this.prixTChocoBase = new HashMap<Chocolat, Double>();
 
 		this.stockChocoMarque=new HashMap<ChocolatDeMarque,Double>();
+
+		this.marges = new HashMap<Chocolat, Double>();
 	}
 	
 	public void initialiser() {
@@ -73,6 +77,11 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 			this.journal.ajouter("Initialisation de 0 de "+c+" au stock de chocolat --> total="+this.totalStocksChoco.getValeur(this.cryptogramme));
 		}
 
+		//Initialisation des marges que l'on va faire sur les différents produits
+		this.marges.put(Chocolat.C_BQ, 1.5);
+		this.marges.put(Chocolat.C_BQ_E, 1.16);
+		this.marges.put(Chocolat.C_MQ_E, 1.16);
+		this.marges.put(Chocolat.C_HQ_BE, 1.3);
 
 		//Initialisation du stock de chocolat de marque
 
@@ -127,6 +136,7 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 	////////////////////////////////////////////////////////
 
 	/**
+	 * @author ABBASSI Rayenne
 	 * Cette méthode transforme une partie du stock de fève en chacun des chocolats que l'on a décidé de produire.
 	 * Elle détermine et place dans la HashMap prixTChocoBase le prix sans marge des chocolats produits en se basant sur le prix du stock de fèves
 	 * @param None
@@ -188,7 +198,9 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 		}
 	}
 
+
 	/**
+	 * @author MURY Julien
 	 * Une méthode qui permet de déterminer la quantitié de fèves entrant dans le stock à la période actuelle selon les contrats négociés et achats en bourse
 	 * Les résultats sont stockés dans la HashMap qttEntrantes
 	 * @param None
@@ -218,7 +230,9 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 	}
 
 
+
 	/**
+	 * @author MURY Julien
 	 * Une méthode qui permet de déterminer les cout en fèves entrantes dans le stock à la période actuelle selon les contrats négociés et achats en bourse
 	 * Les résultats sont stockés dans la HashMap qttEntrantes
 	 * On amalgame le prix moyen total du stock avec le prix à la tonne des fèves qui entrent dans notre stock
