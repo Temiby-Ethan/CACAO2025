@@ -74,7 +74,7 @@ public class Producteur2VenteCC extends Producteur2couts implements IVendeurBour
 			}
 		}
 		// On archive les contrats termines
-		/*
+		
 		for (ExemplaireContratCadre c : this.contratsEnCours) {
 			if (c.getQuantiteRestantALivrer()==0.0) {
 				this.contratsTermines.add(c);
@@ -87,9 +87,9 @@ public class Producteur2VenteCC extends Producteur2couts implements IVendeurBour
 		for (ExemplaireContratCadre cc: this.contratsEnCours) {
 			this.JournalEQ2CC.ajouter(cc.toString());
 		}
-		or (Feve f : stock.keySet()) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
+		for (Feve f : stock.keySet()) { // pas forcement equitable : on avise si on lance un contrat cadre pour tout type de feve
 			this.JournalEQ2CC.ajouter("Feve "+f+" en stock="+stockvar.get(f).getValeur()+" restant du="+restantDu(f));
-		}*/
+		}
 		this.JournalEQ2CC.ajouter("=================================");
 	}
 
@@ -182,12 +182,13 @@ public class Producteur2VenteCC extends Producteur2couts implements IVendeurBour
 		}
 		BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
 		double cours = ((Feve)(contrat.getProduit())).isEquitable() ? 0.0 : bourse.getCours((Feve)contrat.getProduit()).getValeur();
-		double prixCC = prix.get((Feve) contrat.getProduit());
+		double prixCC = cout_unit_t.get(contrat.getProduit());
 		if (prixCC==0.0) {
 			PRIX_DEFAUT=(int)(PRIX_DEFAUT*0.98); // on enleve 2% tant qu'on n'a pas passe un contrat
 		}
-		double res = prixCC>cours ? prixCC*1.25 : (cours<PRIX_DEFAUT ? PRIX_DEFAUT : (int)(cours*1.5));
-		JournalEQ2CC.ajouter("      propositionPrix en retour est "+res);
+		JournalEQ2CC.ajouter("Le cours de la feve est de "+cours);
+		double res = prixCC>cours ? prixCC*1.2 : (int)(cours*1.5);
+		JournalEQ2CC.ajouter("La PropositionPrix de la première négociation est "+res);
 		return res;
 	}
 
@@ -196,14 +197,16 @@ public class Producteur2VenteCC extends Producteur2couts implements IVendeurBour
 			return 0; // ne peut pas etre le cas normalement 
 		}
 		List<Double> prix = contrat.getListePrix();
-		if (prix.get(prix.size()-1)>=0.995*prix.get(0)) {
+		if (prix.get(prix.size()-1)>=0.995*prix.get(0))// Vérifie si le dernier prix de la liste est supérieur ou égal à 99,5 % du premier prix
+															// Cela permet de s'assurer que la variation du prix reste faible (moins de 0,5 % de baisse) 
+															{
 			JournalEQ2CC.ajouter("      contrePropose le prix demande : "+contrat.getPrix());
 			return contrat.getPrix();
 		} else {
 			int percent = (int)(100* Math.pow((contrat.getPrix()/prix.get(0)), prix.size()));
 			int alea = Filiere.random.nextInt(100);
 			if (alea< percent) { // d'autant moins de chance d'accepter que le prix est loin de ce qu'on proposait
-				if (Filiere.random.nextInt(100)<20) { // 1 fois sur 5 on accepte
+				if (Filiere.random.nextInt(100)<5) { // 1 fois sur 20 on accepte
 					JournalEQ2CC.ajouter("      contrePropose le prix demande : "+contrat.getPrix());
 					return contrat.getPrix();
 				} else {
