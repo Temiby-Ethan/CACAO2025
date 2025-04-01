@@ -3,6 +3,7 @@ package abstraction.eq9Distributeur3;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 
+// Auteur : Héloïse
 public class Distributeur3Charges extends Distributeur3ContratCadre {
     Distributeur3Charges(){
         super();

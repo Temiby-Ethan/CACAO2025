@@ -13,6 +13,7 @@ import java.util.List;
 public class Distributeur3ContratCadre extends Distributeur3Distributeur implements IAcheteurContratCadre{
 
     @Override
+    // Implémentée par Héloise
     public void next() {
 
         super.next();
@@ -52,6 +53,7 @@ public class Distributeur3ContratCadre extends Distributeur3Distributeur impleme
     }
 
     @Override
+    // Implémentée par Héloïse et Jeanne
     public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {
         double FourchetteHauteNego = 2000;
         double FourchetteHauteAchat = 1700;
@@ -68,6 +70,7 @@ public class Distributeur3ContratCadre extends Distributeur3Distributeur impleme
     }
 
     @Override
+    // Implémentée par Héloïse
     public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat) {
         journalContrats.ajouter("negocie le contrat");
         //double fourchetteLimiteNegociation  = 1500;
@@ -89,8 +92,9 @@ public class Distributeur3ContratCadre extends Distributeur3Distributeur impleme
     }
 
     @Override
+    // Implémentée par Jeanne
     public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
-        System.out.println("Nouveau contrat signé pour l'équipe 9");
+        // System.out.println("Nouveau contrat signé pour l'équipe 9");
         this.journalActeur.ajouter("Nouveau contrat signé n°" + contrat.getNumero() + " : " + contrat.getQuantiteTotale() + " tonnes de " + contrat.getProduit() + " pour" + contrat.getPrix() + "€/tonne");
     }
 

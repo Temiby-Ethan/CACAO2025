@@ -13,6 +13,7 @@ import abstraction.eqXRomu.general.VariablePrivee;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.IProduit;
 
+// Auteur : Héloïse
 public class Distributeur3Acteur implements IActeur {
 	
 	protected int cryptogramme;
