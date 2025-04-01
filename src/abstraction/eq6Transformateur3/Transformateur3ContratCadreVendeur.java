@@ -21,7 +21,7 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
 	}
     //des méthodes
     //à chaque next on va proposer des contrats cadres pour vendre du chocolat
-    @Override //@author Henri Roth
+    @Override //@author Henri Roth & Eric SCHILTZ
     public void next(){
         //on récupère le next de tous les pères
         super.next();
@@ -81,26 +81,37 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
 
     @Override //@author Eric Schiltz
     public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
+        //on regarde quel produit est concerné par le contrat
         IProduit p = contrat.getProduit();
+        //on regarde si on vend/produit bien de ce chocolat
         if(super.lesChocolats.contains(p)){
-            // Calcul de la quantite par step de chocolat à livrer
+            // si oui on calcule de la quantite par step de chocolat que l'on veut livrer
+            //on regarde quelle est notre capacité de vente du produit 
             double capa = capacite_vente.get(p);
+            //on récupère l'échéancier
             Echeancier e = contrat.getEcheancier();
+            //on récupère le premier step
             int stepdebut = e.getStepDebut();
+            //on rearde la quantité à livrer proposée
             double QuantiteStep = e.getQuantite(stepdebut);
+            // si la quantité à livrer proposé est dans nos capacités on accepte
             if(QuantiteStep < capa){
                 return contrat.getEcheancier();
             }
+            //sinon
             else{
+                //si elle est vrmt trop petite : on abandonne 
                 if(capa < 100){
                     return null;
                 }
+                //sinon on refait l'échéancier avec ce que l'on a; 
                 if(capa >100 && capa<1000){
                     int nb = e.getNbEcheances();
                     return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, nb, capa);
                 }
             }
         }
+        //si on ne le vend/produit pas on ne fait rien 
         return null;
     }
 

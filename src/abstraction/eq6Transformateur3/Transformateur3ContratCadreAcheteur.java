@@ -29,7 +29,7 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratC
 	}
 	//@author Henri Roth
 	public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat) {
-		return contrat.getPrix();
+		return contrat.getPrix()*1.2;
 	}
 	// @author Eric Schiltz
 	public void next() {
