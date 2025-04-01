@@ -44,36 +44,12 @@ public class Distributeur1AcheteurEncheres extends Distributeur1AcheteurContratC
 		this.successedSell = successedSell;
 	}
 
-	public int getInt(Chocolat product){
-        int idProduct = 0;
-        switch(product.getGamme()){
-            case BQ : idProduct=0;
-            case MQ : idProduct=2;
-            case HQ : idProduct=4;
-        }
-        if (product.isBio()){
-            idProduct++;
-        }
-        if (product.isEquitable()){
-            idProduct++;
-        }
-		if(idProduct == 5)
-		{
-			return 4;
-		}
-		if(idProduct == 6)
-		{
-			return 5;
-		}
-        return(idProduct);
-    }
-
 	public double proposerPrix(MiseAuxEncheres encheres){
 		IProduit product = encheres.getProduit();
 		if (product instanceof ChocolatDeMarque) {
         	ChocolatDeMarque chocolat = (ChocolatDeMarque) product;
 			double volume = encheres.getQuantiteT();
-			int idProduct = getInt(chocolat.getChocolat());
+			int idProduct = cdmToInt(chocolat);
 			double price = this.priceProduct.get(idProduct)*volume;
 			double wantedquantity = this.requiredQuantities.get(idProduct);
 			int numberSuccessedSell = this.successedSell.get(idProduct);
@@ -92,14 +68,14 @@ public class Distributeur1AcheteurEncheres extends Distributeur1AcheteurContratC
 		IProduit product = enchereRetenue.getProduit();
 		if (product instanceof ChocolatDeMarque){
 			ChocolatDeMarque chocolat = (ChocolatDeMarque) product;
-		this.successedSell.set(getInt(chocolat.getChocolat()),this.successedSell.get(getInt(chocolat.getChocolat())+1));
+		this.successedSell.set(cdmToInt(chocolat),this.successedSell.get(cdmToInt(chocolat)+1));
 		}
 	}
 	public void notifierEnchereNonRetenue(Enchere enchereNonRetenue){
 		IProduit product = enchereNonRetenue.getProduit();
 		if (product instanceof ChocolatDeMarque){
 			ChocolatDeMarque chocolat = (ChocolatDeMarque) product;
-		this.successedSell.set(getInt(chocolat.getChocolat()),this.successedSell.get(getInt(chocolat.getChocolat())-1));
+		this.successedSell.set(cdmToInt(chocolat),this.successedSell.get(cdmToInt(chocolat)-1));
 		}
 	}
 
