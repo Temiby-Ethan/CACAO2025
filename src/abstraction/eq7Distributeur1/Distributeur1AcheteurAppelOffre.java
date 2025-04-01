@@ -133,4 +133,3 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurEncher
 
 	
 }
-

@@ -45,19 +45,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
         this.journal = new Journal("Journal de EQ7", this); // Initialisation du journal
 		
 		predictionsVentesPourcentage = Arrays.asList(3.6 , 3.6 , 5.0 , 3.6 , 3.6 , 3.6 , 3.6 , 7.0 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 13.0);
-		/*
-        this.stocksChocolats = new HashMap<>();
-        
-        // Initialisation des stocks à 0.0
 
-		this.chocolats = new ArrayList<ChocolatDeMarque>();
-		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_HQ_BE, "Hexafridge", 50));
-		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_HQ_E, "Hexafridge", 50));
-		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_MQ_E, "Hexafridge", 50));
-		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_MQ, "Hexafridge", 50));
-		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_BQ_E, "Hexafridge", 50));
-		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_BQ, "Hexafridge", 50));
-		*/
 		this.prix = new ArrayList<Double>();
 		this.capaciteDeVente = new ArrayList<Double>();
     }
@@ -82,7 +70,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 		}
 
 		for (int i=0; i<this.chocolats.size(); i++) {
-			this.capaciteDeVente.set(i, stocksChocolats.get(chocolats.get(i)).getValeur()/2);
+			this.capaciteDeVente.set(i, stocksChocolats.get(chocolats.get(i)).getValeur()/1.05);
 		}
 	}
 
