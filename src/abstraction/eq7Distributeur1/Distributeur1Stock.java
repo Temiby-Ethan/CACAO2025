@@ -16,17 +16,17 @@ import java.lang.reflect.Array;
 
 public class Distributeur1Stock extends Distributeur1Acteur{
     protected Map<ChocolatDeMarque, Variable> stocksChocolats;
-	protected Map<ChocolatDeMarque, Variable> stocksChocolats2;
+	//protected Map<ChocolatDeMarque, Variable> stocksChocolats2;
     protected List<ChocolatDeMarque> chocolats;
-	protected List<ChocolatDeMarque> chocolats2;
+	//protected List<ChocolatDeMarque> chocolats2;
 
     public Distributeur1Stock() // Alexiho
     {
         this.stocksChocolats = new HashMap<>();
-		this.stocksChocolats2 = new HashMap<>();
+		//this.stocksChocolats2 = new HashMap<>();
 
         this.chocolats = new ArrayList<ChocolatDeMarque>();
-		
+		/*
 		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_HQ_BE, "Villors", 90));
 		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_HQ_E, "Villors", 90));
 		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_MQ_E, "Villors", 90));
@@ -37,8 +37,8 @@ public class Distributeur1Stock extends Distributeur1Acteur{
         for (int i=0; i<this.chocolats.size(); i++) {
 			this.stocksChocolats.put(chocolats.get(i), new Variable("Stock"+chocolats.get(i).getNom(), this, 1000.0));
 		}
-		
-		this.chocolats2 = new LinkedList<ChocolatDeMarque>();
+		*/
+		//this.chocolats2 = new LinkedList<ChocolatDeMarque>();
     }
 
 	public void initialiser()

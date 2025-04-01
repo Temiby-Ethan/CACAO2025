@@ -42,10 +42,12 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 
 		this.priceProduct = new ArrayList<Double>();
 		this.requiredQuantities = new ArrayList<Double>();
+		/*
 		for (int i=0; i<this.chocolats.size(); i++) {
 			this.priceProduct.add(1000.0);
 			this.requiredQuantities.add(1000.0);
 		}
+			*/
 	}
 
 	    public int getInt(ChocolatDeMarque product){
