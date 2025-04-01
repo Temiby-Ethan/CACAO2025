@@ -70,11 +70,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 		}
 
 		for (int i=0; i<this.chocolats.size(); i++) {
-<<<<<<< HEAD
-			this.capaciteDeVente.set(i, stocksChocolats.get(chocolats.get(i)).getValeur()/1.05);
-=======
 			this.capaciteDeVente.set(i, stocksChocolats.get(chocolats.get(i)).getValeur()/2);
->>>>>>> 356d68f882436191742e7fe2b252a9132e7952d7
 		}
 	}
 
