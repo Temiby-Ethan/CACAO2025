@@ -30,9 +30,9 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 	protected List<Double> prix;
 	protected List<Double> capaciteDeVente;
 	protected IAcheteurAO identity;
-	protected List<Integer> successedSell = new ArrayList<Integer>();
-	protected List<Double> priceProduct = new ArrayList<Double>();
-	protected List<Double> requiredQuantities  = new ArrayList<Double>();
+	//protected List<Integer> successedSell = new ArrayList<Integer>();
+	//protected List<Double> priceProduct = new ArrayList<Double>();
+	//protected List<Double> requiredQuantities  = new ArrayList<Double>();
 	protected int step = 0;
 	protected String name = "HexaFridge";
 	protected Color color = new Color(162, 207, 238);
@@ -43,16 +43,26 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 		super();
         
         this.journal = new Journal("Journal de EQ7", this); // Initialisation du journal
-		for (int i=0; i<6; i++){
-			successedSell.add(0);
-			priceProduct.add(1000.0);
-			requiredQuantities.add(0.0);
-		}
+		
 		predictionsVentesPourcentage = Arrays.asList(3.6 , 3.6 , 5.0 , 3.6 , 3.6 , 3.6 , 3.6 , 7.0 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 13.0);
 
 		this.prix = new ArrayList<Double>();
 		this.capaciteDeVente = new ArrayList<Double>();
+    }
 
+	public void initialiser() // par Alexiho
+	{
+		this.chocolats= Filiere.LA_FILIERE.getChocolatsProduits();
+
+		for (int i=0; i<this.chocolats.size(); i++) {
+			this.stocksChocolats.put(chocolats.get(i), new Variable("Stock"+chocolats.get(i).getNom(), this, 1000.0));
+		}
+
+		for (int i=0; i<this.chocolats.size(); i++){
+			successedSell.add(0);
+			priceProduct.add(1000.0);
+			requiredQuantities.add(0.0);
+		}
 		for (int i=0; i<this.chocolats.size(); i++) {
 			this.prix.add(10.0);
 			this.capaciteDeVente.add(0.0);
@@ -65,14 +75,6 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 =======
 			this.capaciteDeVente.set(i, stocksChocolats.get(chocolats.get(i)).getValeur()/2);
 >>>>>>> 356d68f882436191742e7fe2b252a9132e7952d7
-		}
-    }
-
-	public void initialiser() // par Alexiho
-	{
-		this.chocolats2= Filiere.LA_FILIERE.getChocolatsProduits();
-		for (int i=0; i<this.chocolats2.size(); i++) {
-			this.stocksChocolats2.put(chocolats2.get(i), new Variable("Stock"+chocolats2.get(i).getNom(), this, 1000.0));
 		}
 	}
 
