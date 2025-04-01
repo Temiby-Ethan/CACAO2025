@@ -2,6 +2,7 @@ package abstraction.eq6Transformateur3;
 
 import java.util.LinkedList;
 
+import abstraction.eqXRomu.contratsCadres.ContratCadre;
 import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 import abstraction.eqXRomu.contratsCadres.IAcheteurContratCadre;
@@ -15,6 +16,7 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
     //des attributs
     protected LinkedList<ExemplaireContratCadre> ContratsVendeur;
     //des constructeurs
+    //on utilise à chaque fois des instances de cette classe quand on fait des contrats cadres
     public Transformateur3ContratCadreVendeur() {
         this.ContratsVendeur=new LinkedList<ExemplaireContratCadre>();
 	}
@@ -54,8 +56,24 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
 
     @Override
     public boolean vend(IProduit produit) {
+        //quand un acheteur parcours les transformateurs à la recherche de quelqu'un qui vend en 
+        //contrat cadre tel type de chocolat. C'est la méthode de réponse à cette demande.
+        //On considère que l'on est disponible pour un contrat cadre quand notre notre stock du produit en
+        //question est supérieur à 100. Problème : si notre stock est au dessus de 100 on passe donc tous
+        //les contrats cadres qui nous sont demandé. Cette condition ne reflète pas correctement ce que
+        //l'on veut
+        //On va chercher à savoir combien de ce produit on doit livrer pour le step d'après 
+        //Pour cela on parcourt les contrats cadres déja passés et on regarde si ils correspondent au
+        // produit demandé, et combien il demande chaque step et si il faut on l'ajoute à un compteur
+        // et in fine on regarde si ce notre stock - ça est supérieur à 100. 
+        double a = 0;
+        for (ExemplaireContratCadre contrat : ContratsVendeur){
+            if (contrat.getProduit()==produit){
+                a += contrat.getQuantiteALivrerAuStep();
+            }
+        }
         if(super.lesChocolats.contains(produit)){
-            if(stockChoco.getQuantityOf(produit)>100){
+            if(stockChoco.getQuantityOf(produit)-a>100){
                 return true;
             }
         }
