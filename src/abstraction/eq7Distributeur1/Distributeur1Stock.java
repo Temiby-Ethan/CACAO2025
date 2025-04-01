@@ -23,18 +23,6 @@ public class Distributeur1Stock extends Distributeur1Acteur{
         this.stocksChocolats = new HashMap<>();
 
         this.chocolats = new ArrayList<ChocolatDeMarque>();
-		/*
-		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_HQ_BE, "Villors", 90));
-		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_HQ_E, "Villors", 90));
-		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_MQ_E, "Villors", 90));
-		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_MQ, "Villors", 90));
-		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_BQ_E, "Villors", 90));
-		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_BQ, "Villors", 90));
-
-        for (int i=0; i<this.chocolats.size(); i++) {
-			this.stocksChocolats.put(chocolats.get(i), new Variable("Stock"+chocolats.get(i).getNom(), this, 1000.0));
-		}
-		*/
     }
 
 	public int cdmToInt(ChocolatDeMarque c){ // par Alexiho
