@@ -60,27 +60,27 @@ public class Producteur2recolte extends Producteur2Acteur {
             switch (p.getTypeFeve()) {
                 case F_BQ:
                     Prod_BQ += p.prodPlantation();
-                    cout_BQ += p.getcout();
+                    cout_BQ += p.getcout_amorti();
                     break;
                 case F_BQ_E:
                     Prod_BQ_E += p.prodPlantation();
-                    cout_BQ_E += p.getcout();
+                    cout_BQ_E += p.getcout_amorti();
                     break;
                 case F_MQ:
                     Prod_MQ += p.prodPlantation();
-                    cout_MQ += p.getcout();
+                    cout_MQ += p.getcout_amorti();
                     break;
                 case F_MQ_E:
                     Prod_MQ_E += p.prodPlantation();
-                    cout_MQ_E += p.getcout();
+                    cout_MQ_E += p.getcout_amorti();
                     break;
                 case F_HQ_E:
                     Prod_HQ_E += p.prodPlantation();
-                    cout_HQ_E += p.getcout();
+                    cout_HQ_E += p.getcout_amorti();
                     break;
                 case F_HQ_BE:
                     Prod_HQ_BE += p.prodPlantation();
-                    cout_HQ_BE += p.getcout();
+                    cout_HQ_BE += p.getcout_amorti();
                     break;
                 default:
                     throw new IllegalArgumentException("Type de fève non reconnu !");
@@ -104,8 +104,8 @@ public class Producteur2recolte extends Producteur2Acteur {
     
     public void cout_plantations() {
         double cout = 0;
-        for (Feve f : Feve.values()) {
-            cout += cout_recolte.get(f);
+        for (Plantation p : plantations) {
+            cout += p.getcout();
         }
         Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Cout lié aux plantations (main d'oeuvre, achat, replantation) ", cout);
         JournalBanque.ajouter(Filiere.LA_FILIERE.getEtape()+" : Cout total lié aux plantations : "+cout);
