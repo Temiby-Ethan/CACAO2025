@@ -3,6 +3,7 @@ package abstraction.eq7Distributeur1;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
@@ -15,13 +16,20 @@ import java.lang.reflect.Array;
 
 public class Distributeur1Stock extends Distributeur1Acteur{
     protected Map<ChocolatDeMarque, Variable> stocksChocolats;
+	protected Map<ChocolatDeMarque, Variable> stocksChocolats2;
     protected List<ChocolatDeMarque> chocolats;
+	protected List<ChocolatDeMarque> chocolats2;
 
-    public Distributeur1Stock()
+    public Distributeur1Stock() // Alexiho
     {
         this.stocksChocolats = new HashMap<>();
+		this.stocksChocolats2 = new HashMap<>();
 
         this.chocolats = new ArrayList<ChocolatDeMarque>();
+<<<<<<< HEAD
+=======
+		
+>>>>>>> 356d68f882436191742e7fe2b252a9132e7952d7
 		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_HQ_BE, "Villors", 90));
 		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_HQ_E, "Villors", 90));
 		this.chocolats.add(new ChocolatDeMarque(Chocolat.C_MQ_E, "Villors", 90));
@@ -32,7 +40,19 @@ public class Distributeur1Stock extends Distributeur1Acteur{
         for (int i=0; i<this.chocolats.size(); i++) {
 			this.stocksChocolats.put(chocolats.get(i), new Variable("Stock"+chocolats.get(i).getNom(), this, 1000.0));
 		}
+		
+		this.chocolats2 = new LinkedList<ChocolatDeMarque>();
     }
+
+	public void initialiser()
+	{
+		/*
+		this.chocolats= Filiere.LA_FILIERE.getChocolatsProduits();
+
+		for (int i=0; i<this.chocolats.size(); i++) {
+			this.stocksChocolats.put(chocolats.get(i), new Variable("Stock"+chocolats.get(i).getNom(), this, 1000.0));
+		}*/
+	}
 
     public Variable getStock(ChocolatDeMarque c) { // par Alexiho
 		return this.stocksChocolats.get(c);

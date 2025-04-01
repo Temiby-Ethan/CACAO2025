@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
@@ -22,7 +23,9 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 
 	
 	protected List<Double> priceProduct;
+	//protected Map<ChocolatDeMarque, Double> priceProduct2;
 	protected List<Double> requiredQuantities;
+	//protected Map<ChocolatDeMarque, Double> requiredQuantities2;
 	protected String name;
 	protected Color color;
 	protected List<Double> predictionsVentesPourcentage;

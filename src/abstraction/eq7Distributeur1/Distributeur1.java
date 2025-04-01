@@ -60,9 +60,21 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 		}
 
 		for (int i=0; i<this.chocolats.size(); i++) {
+<<<<<<< HEAD
 			this.capaciteDeVente.set(i, stocksChocolats.get(chocolats.get(i)).getValeur()/1.05);
+=======
+			this.capaciteDeVente.set(i, stocksChocolats.get(chocolats.get(i)).getValeur()/2);
+>>>>>>> 356d68f882436191742e7fe2b252a9132e7952d7
 		}
     }
+
+	public void initialiser() // par Alexiho
+	{
+		this.chocolats2= Filiere.LA_FILIERE.getChocolatsProduits();
+		for (int i=0; i<this.chocolats2.size(); i++) {
+			this.stocksChocolats2.put(chocolats2.get(i), new Variable("Stock"+chocolats2.get(i).getNom(), this, 1000.0));
+		}
+	}
 
 	public double prix(ChocolatDeMarque choco) { // par Alexiho
 		ChocolatDeMarque chocoM = new ChocolatDeMarque(choco.getChocolat(), "Villors", 90);
