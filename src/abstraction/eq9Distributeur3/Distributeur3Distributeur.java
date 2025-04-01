@@ -85,6 +85,7 @@ public class Distributeur3Distributeur extends Distributeur3Acteur implements ID
 
     @Override
     public double quantiteEnVenteTG(ChocolatDeMarque choco, int crypto) {
+        //System.out.println(choco.getNom()+"en tête de gondole");
         return this.quantiteEnVente(choco,crypto)*ClientFinal.POURCENTAGE_MAX_EN_TG;
     }
 
