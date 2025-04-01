@@ -88,11 +88,11 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 
 	public void next() // par Alexiho
 	{
-		List<Double> requiredQuantities = new ArrayList<>();
-		Distributeur1Stock acteurStock = new Distributeur1Stock();
+		//List<Double> requiredQuantities = new ArrayList<>();
+		//Distributeur1Stock acteurStock = new Distributeur1Stock();
 		int step = Filiere.LA_FILIERE.getEtape(); // Récupération du numéro de l'étape
 		for (int i=0; i<chocolats.size(); i++){
-			requiredQuantities.add(acteurStock.VolumetoBuy(chocolats.get(i),this.cryptogramme)*0.95);
+			requiredQuantities.set(i, this.VolumetoBuy(chocolats.get(i),this.cryptogramme)*0.95);
 		}
 		
 		if (step%8==0){
