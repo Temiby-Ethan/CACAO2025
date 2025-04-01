@@ -46,8 +46,8 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 		
 		predictionsVentesPourcentage = Arrays.asList(3.6 , 3.6 , 5.0 , 3.6 , 3.6 , 3.6 , 3.6 , 7.0 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 13.0);
 
-		this.prix = new ArrayList<Double>();
-		this.capaciteDeVente = new ArrayList<Double>();
+		this.prix = new ArrayList<>();
+		this.capaciteDeVente = new ArrayList<>();
     }
 
 	@Override
@@ -57,20 +57,14 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 
 		for (int i=0; i<this.chocolats.size(); i++) {
 			this.stocksChocolats.put(chocolats.get(i), new Variable("Stock"+chocolats.get(i).getNom(), this, 1000.0));
-		}
-
-		for (int i=0; i<this.chocolats.size(); i++){
 			successedSell.add(0);
 			priceProduct.add(1000.0);
 			requiredQuantities.add(0.0);
-		}
-		for (int i=0; i<this.chocolats.size(); i++) {
 			this.prix.add(10.0);
-			this.capaciteDeVente.add(0.0);
-			this.stocksChocolats.put(chocolats.get(i), new Variable(this.getNom()+"Stock"+chocolats.get(i).getNom(), this, 1000.0));
-		}
+			this.capaciteDeVente.add(0.0);}
 
-		for (int i=0; i<this.chocolats.size(); i++) {
+		for (int i = 0; i < this.chocolats.size(); i++) {
+			this.stocksChocolats.put(chocolats.get(i), new Variable(this.getNom()+"Stock"+chocolats.get(i).getNom(), this, 1000.0));
 			this.capaciteDeVente.set(i, stocksChocolats.get(chocolats.get(i)).getValeur()/1.05);
 		}
 	}
