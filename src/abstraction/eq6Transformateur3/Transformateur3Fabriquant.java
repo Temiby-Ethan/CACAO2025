@@ -26,7 +26,7 @@ public class Transformateur3Fabriquant extends Transformateur3Marques implements
     private double nbOuvrier = 85400;
     private double nbMachine = 128;
     
-    private double capacite_machine = 1e7; //tablette/step
+    private double capacite_machine = 1e3;//1e7*1e-4; // tablette/step
     //private double capacite_ouvrier = 15000; // tab/step
 
     private double coutIngredient = 450.0; // €/tonnes
@@ -35,7 +35,8 @@ public class Transformateur3Fabriquant extends Transformateur3Marques implements
     private double coutTotalProd = 0;
     private double quantiteTotaleProduite = 0;
 
-    private double productionMax = nbMachine*capacite_machine;
+    //Production maximale : 128 000 T x2 = 256 000 T
+    private double productionMax = nbMachine*capacite_machine*2;
 
     //Demande de production
     protected HashMap<IProduit, Double> DemandeProdChoco; //Demande pour chaque choco en tonnes
@@ -87,7 +88,9 @@ public class Transformateur3Fabriquant extends Transformateur3Marques implements
 
     public void next(){
         super.next();
+
         super.jdb.ajouter("NEXT - FABRIQUANT");
+        super.journalProduction.ajouter("NEXT - FABRIQUANT");
         
         this.coutTotalProd = 0;
         this.quantiteTotaleProduite = 0;
@@ -104,6 +107,8 @@ public class Transformateur3Fabriquant extends Transformateur3Marques implements
 
         //Payer les coûts de production
         this.payerProdNext();
+
+        super.journalProduction.ajouter("");
     }
 
     public List<ChocolatDeMarque> getChocolatsProduits(){
@@ -122,11 +127,14 @@ public class Transformateur3Fabriquant extends Transformateur3Marques implements
         //Afficher les comptes
         double div = 1000.0;
         String suff = " k€";
-        super.jdb.ajouter("====> Coût total de production : "+Math.round(this.coutTotalProd/div)+suff);
-        super.jdb.ajouter("-------------------- + Coût Ingredient : "+Math.round(prixIngredient/div)+suff);
-        super.jdb.ajouter("-------------------- + Coût Ouvrier... : "+Math.round(prixOuvrier/div)+suff);
-        super.jdb.ajouter("-------------------- + Coût fixe...... : "+Math.round(coutFixe/div)+suff);
-        super.jdb.ajouter("-------------------- + Coût variable.. : "+Math.round(coutVariable/div)+suff);
+
+        super.jdb.ajouter("====> Coût total de production : "+Math.round(this.coutTotalProd/div)+suff);        
+
+        super.journalProduction.ajouter("====> Coût total de production : "+Math.round(this.coutTotalProd/div)+suff);
+        super.journalProduction.ajouter("-------------------- + Coût Ingredient : "+Math.round(prixIngredient/div)+suff);
+        super.journalProduction.ajouter("-------------------- + Coût Ouvrier... : "+Math.round(prixOuvrier/div)+suff);
+        super.journalProduction.ajouter("-------------------- + Coût fixe...... : "+Math.round(coutFixe/div)+suff);
+        super.journalProduction.ajouter("-------------------- + Coût variable.. : "+Math.round(coutVariable/div)+suff);
     }
 
     public void payerIngredient(double quantity){
