@@ -50,7 +50,7 @@ public class Transformateur1VendeurEncheres extends Transformateur1VendeurAppelD
 
 		journalTransactions.ajouter("Etape="+Filiere.LA_FILIERE.getEtape());
 		if (Filiere.LA_FILIERE.getEtape()>=1) {
-			if (this.stockChoco.get(choco)>200) {
+			if (this.stockChocoMarque.get(this.getChocolatDeMarque())>200) {
 				Enchere retenue = superviseur.vendreAuxEncheres(this, cryptogramme, getChocolatDeMarque(), stockChoco.get(choco)*0.4);
 				if (retenue!=null) {
 					this.stockChocoMarque.put(getChocolatDeMarque(), this.stockChocoMarque.get(getChocolatDeMarque())-retenue.getMiseAuxEncheres().getQuantiteT());
