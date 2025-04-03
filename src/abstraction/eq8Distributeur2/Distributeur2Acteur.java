@@ -24,14 +24,18 @@ public class Distributeur2Acteur implements IActeur {
 	
 
 	protected Variable stockTotal;
+	protected HashMap<ChocolatDeMarque, Double> stock_Choco;
+	protected HashMap<Chocolat, Variable> stock_chocolat_qualite;
+
+	
 	protected Journal journal;
 	protected int cryptogramme;
 	
 	protected IProduit produit;
 	protected List<ChocolatDeMarque> chocolats;
-	protected HashMap<ChocolatDeMarque, Double> stock_Choco;
+	
 	protected HashMap<Chocolat,Integer> nombreMarquesParType;
-	protected HashMap<Chocolat, Variable> variables;
+	
 	
 
 	public Distributeur2Acteur() {
@@ -40,9 +44,9 @@ public class Distributeur2Acteur implements IActeur {
 		this.chocolats = new LinkedList<ChocolatDeMarque>();
 		
 		this.stockTotal = new VariablePrivee("Eq8DStockChocoMarque","Quantite totale de chocolat de marque en stock",this,0);
-		this.variables= new HashMap<Chocolat, Variable>();
+		this.stock_chocolat_qualite= new HashMap<Chocolat, Variable>();
 		for (Chocolat c : Chocolat.values()) {
-			this.variables.put(c,new Variable ("EQ8 stock de : "+c,this,0));}
+			this.stock_chocolat_qualite.put(c,new Variable ("EQ8 stock de : "+c,this,0));}
 	}
 	
 	
@@ -90,7 +94,7 @@ public class Distributeur2Acteur implements IActeur {
 					totalStock += stock_Choco.get(cm);
 				}
 			}
-			this.variables.get(choc).setValeur(this, totalStock);
+			this.stock_chocolat_qualite.get(choc).setValeur(this, totalStock);
 		}
 		
 		this.journal.ajouter("");
@@ -121,7 +125,7 @@ public class Distributeur2Acteur implements IActeur {
 					x = x + this.stock_Choco.get(c);
 				}
 			}
-			this.variables.get(choc).setValeur(this, x);
+			this.stock_chocolat_qualite.get(choc).setValeur(this, x);
 		}
 	}
 
@@ -144,7 +148,7 @@ public class Distributeur2Acteur implements IActeur {
 		List<Variable> res = new ArrayList<Variable>();
 		res.add(getStockTotal());
 		for (Chocolat choc : Chocolat.values()) {
-			res.add(this.variables.get(choc));
+			res.add(this.stock_chocolat_qualite.get(choc));
 		}
 		return res;
 	}

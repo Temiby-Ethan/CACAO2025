@@ -27,6 +27,7 @@ public class Distributeur2Vendeur extends Distributeur2Acteur implements IDistri
     
     
     protected double capaciteDeVente;
+	
 	protected  HashMap<ChocolatDeMarque, Double> ListPrix;
 	protected String[] marques;
 	protected Journal journalVente;
@@ -168,12 +169,16 @@ public void setPrix(ChocolatDeMarque choco) {
     public void vendre(ClientFinal client, ChocolatDeMarque choco, double quantite, double montant, int crypto) {
 		int pos = (chocolats.indexOf(choco));
 		if (pos>=0) {
-			stock_Choco.put(choco, this.getQuantiteEnStock(choco,crypto) - quantite) ;
-			stockTotal.retirer(this, quantite, cryptogramme);
-			this.aVendu.replace(choco, 1);
+			double nouveauStock = this.getQuantiteEnStock(choco,crypto) - quantite;
+			if (nouveauStock >= 0) {
+				stock_Choco.put(choco, nouveauStock);
+				stockTotal.retirer(this, quantite, cryptogramme);
+				this.aVendu.replace(choco, 1);
+				journalVente.ajouter(client.getNom()+" a acheté "+quantite+"kg de "+choco+" pour "+montant+" d'euros ");
+			} else {
+				journalVente.ajouter("ERREUR : Tentative de vendre plus que le stock disponible pour "+choco);
+			}
 		}
-		journalVente.ajouter(client.getNom()+" a acheté "+quantite+"kg de "+choco+" pour "+montant+" d'euros ");
-
 	}
 
 
@@ -207,6 +212,12 @@ public void setPrix(ChocolatDeMarque choco) {
 			this.setPrix(chocolats.get(i));
 		}
 		
+		if (capaciteDeVente > stockTotal.getValeur()) {
+			capaciteDeVente = stockTotal.getValeur();
+		}	
+		else {
+			capaciteDeVente = 120000;
+		}
 		
 	}
 
