@@ -21,6 +21,7 @@ import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.IProduit;
 
+
 public class Distributeur2AcheteurContratCadre extends Distributeur2Vendeur implements IAcheteurContratCadre{
 
 	
@@ -28,7 +29,7 @@ public class Distributeur2AcheteurContratCadre extends Distributeur2Vendeur impl
 	protected List<ExemplaireContratCadre> contrat_term;
 	protected Journal journalCC;
 	
-	
+	// liste de produits que l'on souhaite acheter
     protected List<ChocolatDeMarque> produit_voulue;
 
 	public Distributeur2AcheteurContratCadre() {
@@ -40,9 +41,11 @@ public class Distributeur2AcheteurContratCadre extends Distributeur2Vendeur impl
 		this.produit_voulue = new LinkedList<ChocolatDeMarque>();
         
 	}
-
+    
+    //@author ArmandCHANANE
     public void initialiser() {
 		super.initialiser();
+        
         for (ChocolatDeMarque cm : chocolats){
             if (cm.getChocolat() == Chocolat.C_HQ_E || cm.getChocolat() == Chocolat.C_HQ_BE || cm.getChocolat() == Chocolat.C_MQ_E){
                 produit_voulue.add(cm);
@@ -51,6 +54,7 @@ public class Distributeur2AcheteurContratCadre extends Distributeur2Vendeur impl
         
     }
     
+    //@author tidzzz
     public boolean achete(IProduit produit) {
         if (produit instanceof ChocolatDeMarque 
         && produit_voulue.contains(produit)   
@@ -61,14 +65,14 @@ public class Distributeur2AcheteurContratCadre extends Distributeur2Vendeur impl
         return false;
     }
 
-    
+    //@author ArmandCHANANE
     public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {
         journalCC.ajouter("Contre-proposition sur l'échéancier pour le contrat " + contrat.toString() + " : aucun changement.");
         return contrat.getEcheancier();
     }
     
 
-    
+    //@author ArmandCHANANE
     public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat) {
         double prixPropose = contrat.getPrix();
         journalCC.ajouter("Contre-proposition de prix pour le contrat " + contrat.toString() + " : " + prixPropose + " euros la tonne.");
@@ -76,18 +80,19 @@ public class Distributeur2AcheteurContratCadre extends Distributeur2Vendeur impl
         return prixPropose;
     }
 
-    
+    //@author ArmandCHANANE
     public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
         journalCC.ajouter("Nouveau contrat cadre conclu : " + contrat);
     }
 
-    
+    //@author tidzzz
     public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
         stock_Choco.put((ChocolatDeMarque) p,this.stock_Choco.get(p)+quantiteEnTonnes);
         journal.ajouter("Réception de " + quantiteEnTonnes + " tonnes de " + p.toString() + " du contrat " + contrat.toString());
         journalCC.ajouter("Réception de " + quantiteEnTonnes + " tonnes de " + p.toString() + " pour le contrat " + contrat.toString());
     }
 
+    //@author tidzzz
     public List<Journal> getJournaux() {
 		
 		List<Journal> jour = super.getJournaux();
