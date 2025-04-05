@@ -22,7 +22,7 @@ public class Distributeur2Acteur implements IActeur {
 	//stockTotal et journal par Tidiane
 	private Journal journal_next = new Journal("journal next Eq8", this);
 	
-
+	// stocks
 	protected Variable stockTotal;
 	protected HashMap<ChocolatDeMarque, Double> stock_Choco;
 	protected HashMap<Chocolat, Variable> stock_chocolat_qualite;
@@ -94,7 +94,7 @@ public class Distributeur2Acteur implements IActeur {
 					totalStock += stock_Choco.get(cm);
 				}
 			}
-			this.stock_chocolat_qualite.get(choc).setValeur(this, totalStock);
+			this.stock_chocolat_qualite.get(choc).setValeur(this, totalStock, cryptogramme);
 		}
 		
 		this.journal.ajouter("");
@@ -117,16 +117,6 @@ public class Distributeur2Acteur implements IActeur {
 		//Journal par Tidiane
 		journal_next.ajouter("" + Filiere.LA_FILIERE.getEtape());
 		
-		
-		for (Chocolat choc : Chocolat.values() ) {
-			double x = 0;
-			for (ChocolatDeMarque c : chocolats) {
-				if (c.getChocolat().equals(choc)) {
-					x = x + this.stock_Choco.get(c);
-				}
-			}
-			this.stock_chocolat_qualite.get(choc).setValeur(this, x);
-		}
 	}
 
 	public Journal getJournal(){
@@ -146,7 +136,7 @@ public class Distributeur2Acteur implements IActeur {
 	// Renvoie les indicateurs
 	public List<Variable> getIndicateurs() {
 		List<Variable> res = new ArrayList<Variable>();
-		res.add(getStockTotal());
+		res.add(this.stockTotal);
 		for (Chocolat choc : Chocolat.values()) {
 			res.add(this.stock_chocolat_qualite.get(choc));
 		}
@@ -219,7 +209,14 @@ public class Distributeur2Acteur implements IActeur {
 		
 		System.out.println("Cet acteur n'est pas assermenté");
 		return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
-		
+	}
+
+	public double getQuantiteEnStockTotal() {
+		double stock = 0;
+		for (ChocolatDeMarque cm : chocolats) {
+			stock += stock_Choco.get(cm);
+		}
+		return stock;
 	}
 	
 }

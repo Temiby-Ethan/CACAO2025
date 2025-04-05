@@ -86,8 +86,6 @@ public void setPrix(ChocolatDeMarque choco) {
 }
 
 
-
-
     public double prix(ChocolatDeMarque cm){
         if (ListPrix.containsKey(cm)) {
 			return ListPrix.get(cm);
@@ -172,7 +170,6 @@ public void setPrix(ChocolatDeMarque choco) {
 			double nouveauStock = this.getQuantiteEnStock(choco,crypto) - quantite;
 			if (nouveauStock >= 0) {
 				stock_Choco.put(choco, nouveauStock);
-				stockTotal.retirer(this, quantite, cryptogramme);
 				this.aVendu.replace(choco, 1);
 				journalVente.ajouter(client.getNom()+" a acheté "+quantite+"kg de "+choco+" pour "+montant+" d'euros ");
 			} else {
@@ -198,12 +195,14 @@ public void setPrix(ChocolatDeMarque choco) {
 
 	public void next() {
 		super.next();
+		
 		journalVente.ajouter("");
 		journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE,"==================== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 		journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE,"QuantitéEnVenteTotal à l'Etape "+Filiere.LA_FILIERE.getEtape()+" : " +this.quantiteEnVenteTotal());
 		journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE,"QuantitéEnVenteTGTotal à l'Etape "+Filiere.LA_FILIERE.getEtape()+" : "+this.quantiteEnVenteTGTotal());
 		journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE,"=================================");
 		journalVente.ajouter("");
+		
 		for (ChocolatDeMarque choco : chocolats) {
 			journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE,"prix de vente pour le chocolats "+choco+" est de : "+this.prix(choco));
 		}
@@ -218,6 +217,8 @@ public void setPrix(ChocolatDeMarque choco) {
 		else {
 			capaciteDeVente = 120000;
 		}
+
+		
 		
 	}
 

@@ -29,7 +29,7 @@ public class Distributeur2AcheteurContratCadre extends Distributeur2Vendeur impl
 	protected List<ExemplaireContratCadre> contrat_term;
 	protected Journal journalCC;
 	
-	
+	// liste de produits que l'on souhaite acheter
     protected List<ChocolatDeMarque> produit_voulue;
 
 	public Distributeur2AcheteurContratCadre() {
@@ -45,6 +45,7 @@ public class Distributeur2AcheteurContratCadre extends Distributeur2Vendeur impl
     //@author ArmandCHANANE
     public void initialiser() {
 		super.initialiser();
+        
         for (ChocolatDeMarque cm : chocolats){
             if (cm.getChocolat() == Chocolat.C_HQ_E || cm.getChocolat() == Chocolat.C_HQ_BE || cm.getChocolat() == Chocolat.C_MQ_E){
                 produit_voulue.add(cm);
