@@ -171,7 +171,7 @@ public void setPrix(ChocolatDeMarque choco) {
 			if (nouveauStock >= 0) {
 				stock_Choco.put(choco, nouveauStock);
 				this.aVendu.replace(choco, 1);
-				journalVente.ajouter(client.getNom()+" a acheté "+quantite+"kg de "+choco+" pour "+montant+" d'euros ");
+				journalVente.ajouter(client.getNom()+" a acheté "+String.format("%.2f", quantite)+"kg de "+choco+" pour "+String.format("%.2f", montant)+" d'euros ");
 			} else {
 				journalVente.ajouter("ERREUR : Tentative de vendre plus que le stock disponible pour "+choco);
 			}
@@ -204,12 +204,14 @@ public void setPrix(ChocolatDeMarque choco) {
 		journalVente.ajouter("");
 		
 		for (ChocolatDeMarque choco : chocolats) {
-			journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE,"prix de vente pour le chocolats "+choco+" est de : "+this.prix(choco));
+			journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE,"prix de vente pour le chocolats "+choco+" est de : "+String.format("%.2f", this.prix(choco)));
 		}
 		
 		for (int i=0;i<this.ListPrix.size(); i++) {
 			this.setPrix(chocolats.get(i));
 		}
+
+		ajusterPrix();
 		
 		if (capaciteDeVente > stockTotal.getValeur()) {
 			capaciteDeVente = stockTotal.getValeur();
@@ -220,6 +222,81 @@ public void setPrix(ChocolatDeMarque choco) {
 
 		
 		
+	}
+
+	
+	public void ajusterPrix() {
+		for (ChocolatDeMarque cm : chocolats) {
+			if (cm.getChocolat() == Chocolat.C_HQ_E || cm.getChocolat() == Chocolat.C_HQ_BE || cm.getChocolat() == Chocolat.C_MQ_E){
+				double stockActuel = this.getQuantiteEnStock(cm, cryptogramme);
+				double prixOriginal = ListPrix.get(cm);
+				double prixActuel = prixOriginal;
+				boolean prixModifie = false;
+				String raisonModification = "";
+				
+				// Ajustement en fonction du stock
+				if (stockActuel < 3000) {
+					// Si stock faible, augmenter les prix
+					prixActuel *= 1.05; // +5%
+					prixModifie = true;
+					raisonModification = "stock faible";
+				} else if (stockActuel > 20000) {
+					// Si stock élevé, baisser les prix
+					prixActuel *= 0.98; // -2%
+					prixModifie = true;
+					raisonModification = "stock élevé";
+				}
+				
+				// Ajustement en fonction du type de chocolat
+				double prixMinimum;
+				double prixMaximum;
+				
+				if (cm.getChocolat() == Chocolat.C_MQ_E) {
+					prixMinimum = 9500;
+					prixMaximum = 13000;
+				} else if (cm.getChocolat() == Chocolat.C_HQ_E) {
+					prixMinimum = 20000;
+					prixMaximum = 25000;
+				} else if (cm.getChocolat() == Chocolat.C_HQ_BE) {
+					prixMinimum = 28000;
+					prixMaximum = 35000;
+				} else {
+					prixMinimum = 8000;
+					prixMaximum = 11000;
+				}
+				
+				// Vérifier que le prix est dans les limites
+				if (prixActuel < prixMinimum) {
+					prixActuel = prixMinimum;
+					prixModifie = true;
+					raisonModification = "prix minimum atteint";
+				} else if (prixActuel > prixMaximum) {
+					prixActuel = prixMaximum;
+					prixModifie = true;
+					raisonModification = "prix maximum atteint";
+				}
+				
+				// Mettre à jour le prix
+				ListPrix.put(cm, prixActuel);
+				
+				// Journalisation
+				if (prixModifie) {
+					String evolution = prixActuel > prixOriginal ? "augmenté" : "baissé";
+					double pourcentage = Math.abs((prixActuel - prixOriginal) / prixOriginal * 100);
+					String message = "Prix de " + cm + " " + evolution + " de " + String.format("%.2f", pourcentage) + "% (" 
+						+ String.format("%.2f", prixOriginal) + " → " + String.format("%.2f", prixActuel) 
+						+ " euros) - Raison: " + raisonModification;
+					
+					if (evolution.equals("augmenté")) {
+						journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_GREEN, message);
+					} else {
+						journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN, message);
+					}
+				} else {
+					journalVente.ajouter("Prix de " + cm + " inchangé à " + String.format("%.2f", prixActuel) + " euros");
+				}
+			}
+		}
 	}
 
 }
