@@ -12,15 +12,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 
-import abstraction.eqXRomu.filiere.Filiere;
-import abstraction.eqXRomu.filiere.IActeur;
-import abstraction.eqXRomu.general.Journal;
-import abstraction.eqXRomu.general.Variable;
-import abstraction.eqXRomu.general.VariablePrivee;
-import abstraction.eqXRomu.produits.Chocolat;
-import abstraction.eqXRomu.produits.ChocolatDeMarque;
-import abstraction.eqXRomu.produits.IProduit;
 
+import abstraction.eqXRomu.general.Journal;
+
+import abstraction.eqXRomu.produits.Chocolat;
+
+import abstraction.eqXRomu.acteurs.Romu;
 
 public class Distributeur2AcheteurContratCadre extends Distributeur2Vendeur implements IAcheteurContratCadre{
 
@@ -88,8 +85,9 @@ public class Distributeur2AcheteurContratCadre extends Distributeur2Vendeur impl
     //@author tidzzz
     public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
         stock_Choco.put((ChocolatDeMarque) p,this.stock_Choco.get(p)+quantiteEnTonnes);
-        journal.ajouter("Réception de " + quantiteEnTonnes + " tonnes de " + p.toString() + " du contrat " + contrat.toString());
-        journalCC.ajouter("Réception de " + quantiteEnTonnes + " tonnes de " + p.toString() + " pour le contrat " + contrat.toString());
+        journal.ajouter(Romu.COLOR_PURPLE, Romu.COLOR_GREEN,"Réception de " + quantiteEnTonnes + " tonnes de " + p.toString() + " du contrat " + contrat.toString());
+        journal.ajouter("");
+        journalCC.ajouter(Romu.COLOR_PURPLE, Romu.COLOR_GREEN,"Réception de " + quantiteEnTonnes + " tonnes de " + p.toString() + " pour le contrat " + contrat.toString());
     }
 
     //@author tidzzz
