@@ -38,8 +38,10 @@ public class Transformateur1VendeurAppelDoffre extends Transformateur1AcheteurBo
 	public OffreVente proposerVente(AppelDOffre offre) {
 		//System.err.println(offre.toString());
 		double prixT = 0;
-		if (stockChocoMarque.keySet().contains(offre.getProduit()) && offre.getQuantiteT() <= stockChocoMarque.get(offre.getProduit())) {
+		if (chocolatsLimDt.contains(offre.getProduit()) && offre.getQuantiteT() <= 0.4*this.getQuantiteEnStock(offre.getProduit(), this.cryptogramme)) {
 			
+			//A MODIFIER
+			//Utiliser des switch case plutot que des if else
             if (((ChocolatDeMarque) offre.getProduit()).getChocolat() == Chocolat.C_BQ) {
 				prixT = prixTChocoBase.get(Chocolat.C_BQ);
 			} else if (((ChocolatDeMarque) offre.getProduit()).getChocolat() == Chocolat.C_BQ_E) {
@@ -68,15 +70,11 @@ public class Transformateur1VendeurAppelDoffre extends Transformateur1AcheteurBo
 	 
 		//Mettre à jour les autres variables
 		ChocolatDeMarque chocoMarqueAO = (ChocolatDeMarque) propositionRetenue.getProduit();
-		Chocolat chocoAO = chocoMarqueAO.getChocolat();
 
-		stockChocoMarque.put(chocoMarqueAO, stockChocoMarque.get(chocoMarqueAO) - propositionRetenue.getQuantiteT());
-		stockChoco.put(chocoAO, stockChoco.get(chocoAO) - propositionRetenue.getQuantiteT());
+		stocksMarqueVar.get(chocoMarqueAO).ajouter(this, propositionRetenue.getQuantiteT(), this.cryptogramme);
+
+
 		this.journalTransactions.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_GREEN, "AO: J'ai maintenant " + this.stockChocoMarque.get(propositionRetenue.getProduit()) + " tonnes de " + propositionRetenue.getProduit() + " en stock.");
-
-		totalStocksChocoMarque.setValeur(this, this.totalStocksChocoMarque.getValeur(this.cryptogramme) - propositionRetenue.getQuantiteT(), this.cryptogramme);
-		totalStocksChoco.setValeur(this, this.totalStocksChoco.getValeur(this.cryptogramme) - propositionRetenue.getQuantiteT(), this.cryptogramme);
-		this.journalTransactions.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_GREEN, "AO: J'ai maintenant " + this.totalStocksChocoMarque.getValeur(this.cryptogramme) + " tonnes de chocolat de marque en stock.");
 		this.journalTransactions.ajouter("\n");
 	}
 	

@@ -23,6 +23,9 @@ public class Transformateur1VendeurEncheres extends Transformateur1VendeurAppelD
 	protected String marque;
 	protected double prixMin;
 
+
+
+
     public Transformateur1VendeurEncheres() {	
 		NB_INSTANCES++;
 		this.numero=NB_INSTANCES;
@@ -30,6 +33,10 @@ public class Transformateur1VendeurEncheres extends Transformateur1VendeurAppelD
 		this.marque = "LimDt";
 		
 	}
+
+
+
+
 
 	public void initialiser() {
 
@@ -41,22 +48,37 @@ public class Transformateur1VendeurEncheres extends Transformateur1VendeurAppelD
 		journalTransactions.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN, "E: PrixMin== " + this.prixMin);
 	}
 
+
+
+
+
 	protected ChocolatDeMarque getChocolatDeMarque() {
 		return new ChocolatDeMarque(choco,marque,  (int)(Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+choco.getGamme()).getValeur()));
 	}
+
+
+
+
 
 	public void next() {
 
 		super.next();
 
 		if (Filiere.LA_FILIERE.getEtape()>=1) {
-			if (this.stockChocoMarque.get(this.getChocolatDeMarque())>200) {
-				Enchere retenue = superviseur.vendreAuxEncheres(this, cryptogramme, getChocolatDeMarque(), stockChoco.get(choco)*0.4);
+			if (this.getQuantiteEnStock(getChocolatDeMarque(), this.cryptogramme)>200) {
+				//On veut vendre 10% de notre stock de ce chocolat de marque
+				Enchere retenue = superviseur.vendreAuxEncheres(this, cryptogramme, getChocolatDeMarque(), this.getQuantiteEnStock(getChocolatDeMarque(), this.cryptogramme)*0.1);
 				if (retenue!=null) {
+
+					this.stocksMarqueVar.get(getChocolatDeMarque()).retirer(this, retenue.getMiseAuxEncheres().getQuantiteT());
+					
+					//OBSOLETE
 					this.stockChocoMarque.put(getChocolatDeMarque(), this.stockChocoMarque.get(getChocolatDeMarque())-retenue.getMiseAuxEncheres().getQuantiteT());
 					this.stockChoco.put(choco, this.stockChoco.get(choco) - retenue.getMiseAuxEncheres().getQuantiteT());
 					this.totalStocksChocoMarque.setValeur(this, this.totalStocksChocoMarque.getValeur(this.cryptogramme)-retenue.getMiseAuxEncheres().getQuantiteT(), this.cryptogramme);
 					this.totalStocksChoco.setValeur(this, this.totalStocksChoco.getValeur(this.cryptogramme)-retenue.getMiseAuxEncheres().getQuantiteT(), this.cryptogramme);
+					
+					
 					journalTransactions.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN, "E: vente de "+retenue.getMiseAuxEncheres().getQuantiteT()+" T à "+retenue.getAcheteur().getNom());
 					this.journalTransactions.ajouter("\n");
 				} else {

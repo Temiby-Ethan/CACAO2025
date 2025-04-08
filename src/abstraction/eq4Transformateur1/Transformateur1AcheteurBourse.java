@@ -36,16 +36,11 @@ public class Transformateur1AcheteurBourse extends Transformateur1ContratCadreVe
 		this.journalTransactions.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE, "B: J'ai achete " + quantiteEnT + " tonnes de " + f + " au cours de " + coursEnEuroParT + " euros par tonne.");
 		this.journalTransactions.ajouter("\n");
 		
-		if (this.stockFeves == null || this.stockFeves.get(f) == null){
-			this.stockFeves.put(f, quantiteEnT);
-		}
-		else{
-			this.stockFeves.put(f, stockFeves.get(f) + quantiteEnT);
-		}
+		//Ajoute des fèves achetées dans notre stock
+		this.stocksFevesVar.get(f).ajouter(this, quantiteEnT, this.cryptogramme);
 
 		this.journalTransactions.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE, "B: J'ai maintenant " + this.stockFeves.get(f) + " tonnes de " + f + " en stock.");
 
-		this.totalStocksFeves.setValeur(this, this.totalStocksFeves.getValeur(this.cryptogramme) + quantiteEnT, this.cryptogramme);
 		this.journalTransactions.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE, "B: J'ai maintenant " + this.totalStocksFeves.getValeur(this.cryptogramme) + " tonnes de feves en stock.");
 		this.journalTransactions.ajouter("\n");
 	}

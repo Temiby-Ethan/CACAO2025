@@ -28,36 +28,56 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 
 	protected List<Feve> lesFeves; 
 	protected List<Chocolat> lesChocolats;
+	protected List<ChocolatDeMarque> chocolatsLimDt; 
+
+	//OBSOLETE
 	protected HashMap<Feve, Double> stockFeves;
 	protected HashMap<Chocolat, Double> stockChoco;
 	protected HashMap<ChocolatDeMarque,Double> stockChocoMarque;
 
+	//Stock de fèves
+	protected Variable stock_F_BQ;
+	protected Variable stock_F_BQ_E;
+	protected Variable stock_F_MQ_E;
+	protected Variable stock_F_HQ_BE;
+	protected HashMap<Feve, Variable> stocksFevesVar;
+
+	//Stock de chocolat NON MARQUE
 	protected Variable stock_C_BQ;
 	protected Variable stock_C_BQ_E;
 	protected Variable stock_C_MQ_E;
 	protected Variable stock_C_HQ_BE;
-	protected LinkedList<Variable> StocksVar;
+	protected HashMap<Chocolat, Variable> stocksChocoVar;
 
+	//Stock de chocolat de marque
 	protected Variable stock_C_BQ_Limdt;
 	protected Variable stock_C_BQ_E_Limdt;
 	protected Variable stock_C_MQ_E_Limdt;
 	protected Variable stock_C_HQ_BE_Limdt;
+	protected HashMap<ChocolatDeMarque, Variable> stocksMarqueVar;
 
 
+	//OBSOLETE
 	protected Variable totalStocksFeves;  // La quantite totale de stock de feves 
 	protected Variable totalStocksChoco;  // La quantite totale de stock de chocolat 
-
 	protected Variable totalStocksChocoMarque;  // La quantite totale de stock de chocolat de marque
 	protected Variable totalStocksChocoNonMarquee; // La quantie totale de stock de chocolat non marquee
 
 
+	/**
+	 * Cette classe est la plus haute dans l'arbre d'héritage du transformateur 1
+	 * On y définit les différentes variables et types construits qui nous seront nécessaires pour toutes les autres classe héritières
+	 * Il ne fait qu'initialiser ces mêmes variables et commence la mise en page des journaux
+	 */
 	public Transformateur1Acteur() {
 
+		//Initialisation des journaux
 		this.journal = new Journal("Journal " + this.getNom(), this);
 		this.journalStock = new Journal("Journal Stock " + this.getNom(), this);
 		this.journalCC = new Journal("Journal CC " + this.getNom(), this);
 		this.journalTransactions = new Journal("Journal Transactions " + this.getNom(), this);
 
+		//OBSOLETE
 		this.stockFeves = new HashMap<Feve, Double>();
 		this.stockChoco = new HashMap<Chocolat, Double>();
 
@@ -79,33 +99,57 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 
 
 
-		//Constructions des variables de stocks (quantités globales)
-		this.totalStocksFeves = new VariablePrivee("Eq4TStockFeves", "<html>Quantite totale de feves en stock</html>",this, 0.0, 1000000.0, 0.0);
-		this.totalStocksChoco = new VariablePrivee("Eq4TStockTotalChoco", "<html>Quantite totale de chocolat en stock</html>",this, 0.0, 1000000.0, 0.0);
-		this.totalStocksChocoMarque = new VariablePrivee("Eq4TStockChocoMarque", "<html>Quantite totale de chocolat de marque en stock</html>",this, 0.0, 1000000.0, 0.0);
-		this.totalStocksChocoNonMarquee = new VariablePrivee("Eq4TStockChocoNonMarquee", "<html>Quantite totale de chocolat non marquee en stock</html>",this, 0.0, 1000000.0, 0.0);
+		//OBSOLETE 
+		this.totalStocksFeves = new VariablePrivee("Eq4TStockFeves", "<html>Quantite totale de feves en stock</html>",this, 0.0, 1000000.0, 20000.0);
+		this.totalStocksChoco = new VariablePrivee("Eq4TStockTotalChoco", "<html>Quantite totale de chocolat en stock</html>",this, 0.0, 1000000.0, 40000.0);
+		this.totalStocksChocoMarque = new VariablePrivee("Eq4TStockChocoMarque", "<html>Quantite totale de chocolat de marque en stock</html>",this, 0.0, 1000000.0, 20000.0);
+		this.totalStocksChocoNonMarquee = new VariablePrivee("Eq4TStockChocoNonMarquee", "<html>Quantite totale de chocolat non marquee en stock</html>",this, 0.0, 1000000.0, 20000.0);
 
 
-		this.stock_C_BQ=new Variable("EQ4TStockBQ", "<html>Quantite totale de C_BQ en stock</html>",this, 0.0, 1000000.0, 0.0);
-		this.stock_C_BQ_E=new Variable("EQ4TStockBQ_E", "<html>Quantite totale de C_BQ_E en stock</html>",this, 0.0, 1000000.0, 0.0);
-		this.stock_C_MQ_E=new Variable("EQ4TStockMQ_E", "<html>Quantite totale de C_MQ_E en stock</html>",this, 0.0, 1000000.0, 0.0);
-		this.stock_C_HQ_BE=new Variable("EQ4TStockHQ_BE", "<html>Quantite totale de C_HQ_BE en stock</html>",this, 0.0, 1000000.0, 0.0);
-		this.stock_C_BQ_Limdt=new Variable("EQ4TStockBQ_Limdt", "<html>Quantite totale de C_BQ_Limdt en stock</html>",this, 0.0, 1000000.0, 0.0);
-		this.stock_C_BQ_E_Limdt=new Variable("EQ4TStockBQ_E_Limdt", "<html>Quantite totale de C_BQ_E_Limdt en stock</html>",this, 0.0, 1000000.0, 0.0);
-		this.stock_C_MQ_E_Limdt=new Variable("EQ4TStockMQ_E_Limdt", "<html>Quantite totale de C_MQ_E_Limdt en stock</html>",this, 0.0, 1000000.0, 0.0);
-		this.stock_C_HQ_BE_Limdt=new Variable("EQ4TStockHQ_BE_Limdt", "<html>Quantite totale de C_HQ_BE_Limdt en stock</html>",this, 0.0, 1000000.0, 0.0);
+		//Constructions des variables de stocks 
+		/**
+		 * @author MURY Julien
+		 * @author ABBASSI Rayenne
+		 */
+		this.stock_F_BQ =new Variable("F_BQ","<html>Quantite totale de F_BQ en stock</html>", this, 0., 1000000., 5000.);
+		this.stock_F_BQ_E = new Variable("F_BQ_E","<html>Quantite totale de F_BQ_E en stock</html>", this, 0., 1000000., 5000.);
+		this.stock_F_MQ_E = new Variable("F_MQ_E", "<html>Quantite totale de F_MQ_E en stock</html>", this, 0., 1000000., 5000.);
+		this.stock_F_HQ_BE = new Variable("F_HQ_BE", "<html>Quantite totale de F_HQ_BE en stock</html>", this, 0., 1000000., 5000.);
+
+		this.stock_C_BQ=new Variable("EQ4T Stock C_BQ", "<html>Quantite totale de C_BQ en stock</html>",this, 0.0, 1000000.0, 0.0);
+		this.stock_C_BQ_E=new Variable("EQ4T Stock C_BQ_E", "<html>Quantite totale de C_BQ_E en stock</html>",this, 0.0, 1000000.0, 0.0);
+		this.stock_C_MQ_E=new Variable("EQ4T Stock C_MQ_E", "<html>Quantite totale de C_MQ_E en stock</html>",this, 0.0, 1000000.0, 0.0);
+		this.stock_C_HQ_BE=new Variable("EQ4T Stock C_HQ_BE", "<html>Quantite totale de C_HQ_BE en stock</html>",this, 0.0, 1000000.0, 0.0);
+		
+		this.stock_C_BQ_Limdt=new Variable("EQ4T Stock C_BQ_Limdt", "<html>Quantite totale de C_BQ_Limdt en stock</html>",this, 0.0, 1000000.0, 40000.0);
+		this.stock_C_BQ_E_Limdt=new Variable("EQ4T Stock C_BQ_E_Limdt", "<html>Quantite totale de C_BQ_E_Limdt en stock</html>",this, 0.0, 1000000.0, 40000.0);
+		this.stock_C_MQ_E_Limdt=new Variable("EQ4T Stock C_MQ_E_Limdt", "<html>Quantite totale de C_MQ_E_Limdt en stock</html>",this, 0.0, 1000000.0, 40000.0);
+		this.stock_C_HQ_BE_Limdt=new Variable("EQ4T Stock C_HQ_BE_Limdt", "<html>Quantite totale de C_HQ_BE_Limdt en stock</html>",this, 0.0, 1000000.0, 40000.0);
 	
 
-		
+		this.stocksFevesVar = new HashMap<Feve, Variable>();
+		this.stocksFevesVar.put(Feve.F_BQ, stock_F_BQ);
+		this.stocksFevesVar.put(Feve.F_BQ_E, stock_F_BQ_E);
+		this.stocksFevesVar.put(Feve.F_MQ_E, stock_F_MQ_E);
+		this.stocksFevesVar.put(Feve.F_HQ_BE, stock_F_HQ_BE);
 
-		//initialisation des stocks de fèves à 2000T
+		this.stocksChocoVar= new HashMap<Chocolat, Variable>();
+		this.stocksChocoVar.put(Chocolat.C_BQ, stock_C_BQ);
+		this.stocksChocoVar.put(Chocolat.C_BQ_E, stock_C_BQ_E);
+		this.stocksChocoVar.put(Chocolat.C_MQ_E, stock_C_MQ_E);
+		this.stocksChocoVar.put(Chocolat.C_HQ_BE, stock_C_HQ_BE);
+
+
+		this.stocksMarqueVar = new HashMap<ChocolatDeMarque, Variable>();
+
+		//OBSOLETE
 		for (Feve f : this.lesFeves) {
 			this.stockFeves.put(f, 20000.0);
 			this.totalStocksFeves.ajouter(this, 20000.0, this.cryptogramme);
 			this.journal.ajouter("ajout de 20000 de "+f+" au stock de feves --> total="+this.totalStocksFeves.getValeur(this.cryptogramme));
 		}
 		
-		//Initialisation des stocks de chocolat à 0
+		//OBSOLETE
 		for (Chocolat c : lesChocolats) {
 			this.stockChoco.put(c, 0.0);
 			this.totalStocksChoco.ajouter(this, 0.0, this.cryptogramme);
@@ -116,41 +160,61 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 
 	public void initialiser() {
 		
+		//On fixe les chocolats de marque que l'on va produire
+		//On ne peut pas le faire dans le constructeur de la classe car pour créer un chocolat de marque on a besoin que la filière soit initialisée.
+		this.chocolatsLimDt=new LinkedList<ChocolatDeMarque>();
+		for (Chocolat c : lesChocolats) {
+			int pourcentageCacao =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+c.getGamme()).getValeur());
+			ChocolatDeMarque cm= new ChocolatDeMarque(c, "LimDt", pourcentageCacao);
+			this.chocolatsLimDt.add(cm);
 
-		this.stock_C_BQ= new Variable("C_BQ", this);
-		this.stock_C_BQ_E= new Variable("C_BQ_E", this);
-		this.stock_C_MQ_E= new Variable("C_MQ_E", this);
-		this.stock_C_HQ_BE= new Variable("C_HQ_BE", this);
-		this.stock_C_BQ_Limdt= new Variable("C_BQ_Limdt", this);
-		this.stock_C_BQ_E_Limdt= new Variable("C_BQ_E_Limdt", this);
-		this.stock_C_MQ_E_Limdt= new Variable("C_MQ_E_Limdt", this);
-		this.stock_C_HQ_BE_Limdt= new Variable("C_HQ_BE_Limdt", this);
+			//OBSOLETE
+			this.stockChocoMarque.put(cm, 40000.0);
+			this.totalStocksChocoMarque.ajouter(this,40000, this.cryptogramme);
+			this.totalStocksChoco.ajouter(this, 40000, this.cryptogramme);
 
-		this.StocksVar= new LinkedList<Variable>();
-		this.StocksVar.add(stock_C_BQ);
-		this.StocksVar.add(stock_C_BQ_E);
-		this.StocksVar.add(stock_C_MQ_E);
-		this.StocksVar.add(stock_C_HQ_BE);
-		this.StocksVar.add(stock_C_BQ_Limdt);
-		this.StocksVar.add(stock_C_BQ_E_Limdt);
-		this.StocksVar.add(stock_C_MQ_E_Limdt);
-		this.StocksVar.add(stock_C_HQ_BE_Limdt);
+					
+		}
 
-		//Test stock de fèves
+
+		//Initialisation des stocks de chocolat de marque
+		for (ChocolatDeMarque cm : chocolatsLimDt){
+			switch (cm.getChocolat()){
+				case C_BQ : 
+					stocksMarqueVar.put(cm, stock_C_BQ_Limdt);
+					break;
+				case C_BQ_E : 
+					stocksMarqueVar.put(cm, stock_C_BQ_E_Limdt);
+					break;
+				case C_MQ_E : 
+					stocksMarqueVar.put(cm, stock_C_MQ_E_Limdt);
+					break;
+				case C_HQ_BE : 
+					stocksMarqueVar.put(cm, stock_C_HQ_BE_Limdt);
+					break;
+
+				default : 
+					System.out.println("Le chocolat " + cm + " ne devrait pas être présent dans notre gammme");
+					break;
+			}
+			this.journalStock.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN," stock("+cm+")->"+this.stockChocoMarque.get(cm));
+			this.journalStock.ajouter("\n");
+		}
+
+
+
+
+		//OBSOLETE
 		this.stockFeves=new HashMap<Feve,Double>();
 		for (Feve f : this.lesFeves) {
-
 			this.stockFeves.put(f, 0.0);
 			this.totalStocksFeves.ajouter(this, 0.0, this.cryptogramme);
 			this.journalStock.ajouter("Initialisation de 0 de "+f+" au stock de fèves --> total="+this.totalStocksFeves.getValeur(this.cryptogramme));
 		}
 		this.journalStock.ajouter("\n");
 
-		//Test stock de choco
+		//OBSOLETE
 		this.stockChoco=new HashMap<Chocolat,Double>();
-		for (Variable v: StocksVar){
-			v.setValeur(this,0.0,this.cryptogramme);
-		}
 		for (Chocolat c : this.lesChocolats) {
 			this.stockChoco.put(c, 0.0);
 			this.totalStocksChoco.ajouter(this, 0.0, this.cryptogramme);
@@ -159,9 +223,6 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
         this.journalStock.ajouter("\n");
 	}
 
-	public void main(){
-		System.out.println(Feve.values());
-	}
 
 	public String getNom() {// NE PAS MODIFIER
 		return "EQ4T";
@@ -199,11 +260,6 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 	// Renvoie les indicateurs
 	public List<Variable> getIndicateurs() {
 		List<Variable> res = new ArrayList<Variable>();
-
-		res.add(this.totalStocksFeves);
-		res.add(this.totalStocksChoco);
-		res.add(this.totalStocksChocoMarque);
-		res.add(this.totalStocksChocoNonMarquee);
 		
 		return res;
 	}
@@ -274,24 +330,31 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 		return marques;
 	}
 
+
+
+	/**
+	 * @author MURY Julien
+	 * Cette méthode permet de connaitre notre stock d'un produit bien précis, très utile si on ne veut qu'accéder au stock sans nécessairement faire de modifications.
+	 * Si des modifications sont prévues, on utilisera directement les variables.
+	 */
 	@Override
 	public double getQuantiteEnStock(IProduit p, int cryptogramme) {
 		if (this.cryptogramme==cryptogramme) { // c'est donc bien un acteur assermente qui demande a consulter la quantite en stock
 			if (p instanceof Feve) {
-				if (this.stockFeves.keySet().contains(p)) {
-					return this.stockFeves.get(p);
+				if (this.lesFeves.contains(p)) {
+					return this.stocksFevesVar.get(p).getValeur();
 				} else {
 					return 0.0;
 				}
 			} else if (p instanceof Chocolat) {
-				if (this.stockChoco.keySet().contains(p)) {
-					return this.stockChoco.get(p);
+				if (this.lesChocolats.contains(p)) {
+					return this.stocksChocoVar.get(p).getValeur();
 				} else {
 					return 0.0;
 				}
 			} else {
-				if (this.stockChocoMarque.keySet().contains(p)) {
-					return this.stockChocoMarque.get(p);
+				if (this.chocolatsLimDt.contains(p)) {
+					return this.stocksMarqueVar.get(p).getValeur();
 				} else {
 					return 0.0;
 				}

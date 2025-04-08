@@ -46,7 +46,10 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 
 		double qttVoulue = contrat.getEcheancier().getQuantiteTotale();
 
-		if (qttVoulue>= SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER){
+		//A MODIFIER	
+		//On vérifie que l'échéancier renvoyé respecte les règles et que la quantité en stock de produit est au moins le quart de la quantité totale
+		//Il faudrait dans l'idéal modifier cette condition pour prendre en compte la quantité de chocolat sortante et la quantité produite par step
+		if (qttVoulue>= SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER && getQuantiteEnStock(contrat.getProduit(), this.cryptogramme)> 0.25 * contrat.getQuantiteTotale()){
 			IProduit produit;
 			//On vend des chocolat de marque
 			if (contrat.getProduit().getType() == "ChocolatDeMarque"){
@@ -58,7 +61,7 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 
 
 				//Cas d'acceptation : la quantité totale est légale et proche de la quantité que l'on souhaite vendre à 10% près
-				if(e.getQuantiteTotale()> 100. && Math.abs(e.getQuantiteTotale()-qttVoulue)/qttVoulue < 0.1){
+				if(e.getNbEcheances()> 20 && e.getQuantiteTotale()> 1000. && Math.abs(e.getQuantiteTotale()-qttVoulue)/qttVoulue < 0.1){
 					return e;
 				}
 				//On modifie l'échéancier uniformément pour se rapporcher de nos exigeances
@@ -339,7 +342,7 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 			return stockChoco.get(produit)!=null;
 		}
 		else if (produit.getType() == "ChocolatDeMarque"){
-			return ((ChocolatDeMarque)produit).getMarque() == "LimDt" && stockChoco.get(((ChocolatDeMarque)produit).getChocolat())!=null;
+			return ((ChocolatDeMarque)produit).getMarque() == "LimDt" && chocolatsLimDt.contains(produit);
 		}
 		else{
 			return false;
@@ -359,23 +362,31 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 		
 
 			if (produit.getType() == "ChocolatDeMarque"){
-				double livre = Math.min(stockChoco.get(((ChocolatDeMarque)produit).getChocolat()), quantite);
+				double livre = Math.min(getQuantiteEnStock(produit, this.cryptogramme), quantite);
 				if (livre > 0.){
+
+					stocksMarqueVar.get(produit).retirer(this, livre, this.cryptogramme);
+
+					//OBSOLETE
 					totalStocksChoco.retirer(this,  livre, cryptogramme);
 					totalStocksChocoMarque.retirer(this, livre, this.cryptogramme);
 					stockChocoMarque.put((ChocolatDeMarque)produit, stockChocoMarque.get((ChocolatDeMarque)produit)-livre);
-
 					double currStockChoco = stockChoco.get(((ChocolatDeMarque)produit).getChocolat());
 					stockChoco.put(((ChocolatDeMarque) produit).getChocolat(), currStockChoco-livre);
+
+
 				}
 				this.journalStock.ajouter("Retrait de " + livre + "T " + contrat.getProduit() + "(CC avec "+ contrat.getAcheteur() + ")");
 			
 				return livre;
 			}
 			else{
-				double livre = Math.min(stockChoco.get((Chocolat) produit), quantite);
+				double livre = Math.min(getQuantiteEnStock(produit, this.cryptogramme), quantite);
 				if (livre>0.0) {
 
+					stocksChocoVar.get(produit).retirer(this, livre, this.cryptogramme);
+
+					//OBSOLETE
 					totalStocksChoco.retirer(this,  livre, cryptogramme);
 					totalStocksChocoNonMarquee.retirer(this, livre, this.cryptogramme);
 					double currStockChoco = stockChoco.get(produit);
@@ -397,13 +408,8 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 
 	
 	public boolean peutVendre(IProduit produit) {
-		for (IProduit produi : stockChoco.keySet()){
-			if (produi.equals(produit)){
-				//On vérifie que le stock n'est pas vide et que la quantité que l'on souhaite vendre est légale
-				return stockChoco.get(produi)>0. && stockChoco.get(produi) * partInitialementVoulue > 100.;
-			}
-		}
-		return false;
+		//On vérifie que 30% de notre stock est supérieur à 100T
+		return getQuantiteEnStock(produit, this.cryptogramme) * partInitialementVoulue > 100;
 
 	}
 
