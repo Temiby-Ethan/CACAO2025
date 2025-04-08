@@ -339,7 +339,7 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 	//Il faudra s'assurer que l'on ait du stock pour cette transaction spécifiquement
 	public boolean vend(IProduit produit) {
 		if (produit.getType() == "Chocolat"){
-			return stockChoco.get(produit)!=null;
+			return lesChocolats.contains(produit);
 		}
 		else if (produit.getType() == "ChocolatDeMarque"){
 			return ((ChocolatDeMarque)produit).getMarque() == "LimDt" && chocolatsLimDt.contains(produit);
@@ -367,14 +367,6 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 
 					stocksMarqueVar.get(produit).retirer(this, livre, this.cryptogramme);
 
-					//OBSOLETE
-					totalStocksChoco.retirer(this,  livre, cryptogramme);
-					totalStocksChocoMarque.retirer(this, livre, this.cryptogramme);
-					stockChocoMarque.put((ChocolatDeMarque)produit, stockChocoMarque.get((ChocolatDeMarque)produit)-livre);
-					double currStockChoco = stockChoco.get(((ChocolatDeMarque)produit).getChocolat());
-					stockChoco.put(((ChocolatDeMarque) produit).getChocolat(), currStockChoco-livre);
-
-
 				}
 				this.journalStock.ajouter("Retrait de " + livre + "T " + contrat.getProduit() + "(CC avec "+ contrat.getAcheteur() + ")");
 			
@@ -386,11 +378,6 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 
 					stocksChocoVar.get(produit).retirer(this, livre, this.cryptogramme);
 
-					//OBSOLETE
-					totalStocksChoco.retirer(this,  livre, cryptogramme);
-					totalStocksChocoNonMarquee.retirer(this, livre, this.cryptogramme);
-					double currStockChoco = stockChoco.get(produit);
-					stockChoco.put((Chocolat) produit, currStockChoco-livre);
 				}
 				this.journalStock.ajouter("Retrait de " + livre + "T " + contrat.getProduit() + "(CC avec "+ contrat.getAcheteur() + ")");
 			
