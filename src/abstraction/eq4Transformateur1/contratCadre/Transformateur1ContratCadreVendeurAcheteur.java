@@ -144,7 +144,7 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 			}
 		}
 		// Recherche d'acheteurs de chocolat de marque
-		for(IProduit produit : stockChocoMarque.keySet()){
+		for(IProduit produit : chocolatsLimDt){
 			journalCC.ajouter("Recherche d'un acheteur aupres de qui vendre " + produit);
 
 			List<IAcheteurContratCadre> acheteurs = supCCadre.getAcheteurs(produit);

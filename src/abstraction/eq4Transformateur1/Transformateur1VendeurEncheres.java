@@ -72,12 +72,7 @@ public class Transformateur1VendeurEncheres extends Transformateur1VendeurAppelD
 
 					this.stocksMarqueVar.get(getChocolatDeMarque()).retirer(this, retenue.getMiseAuxEncheres().getQuantiteT());
 					
-					//OBSOLETE
-					this.stockChocoMarque.put(getChocolatDeMarque(), this.stockChocoMarque.get(getChocolatDeMarque())-retenue.getMiseAuxEncheres().getQuantiteT());
-					this.stockChoco.put(choco, this.stockChoco.get(choco) - retenue.getMiseAuxEncheres().getQuantiteT());
-					this.totalStocksChocoMarque.setValeur(this, this.totalStocksChocoMarque.getValeur(this.cryptogramme)-retenue.getMiseAuxEncheres().getQuantiteT(), this.cryptogramme);
-					this.totalStocksChoco.setValeur(this, this.totalStocksChoco.getValeur(this.cryptogramme)-retenue.getMiseAuxEncheres().getQuantiteT(), this.cryptogramme);
-					
+
 					
 					journalTransactions.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN, "E: vente de "+retenue.getMiseAuxEncheres().getQuantiteT()+" T à "+retenue.getAcheteur().getNom());
 					this.journalTransactions.ajouter("\n");

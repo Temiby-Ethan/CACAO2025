@@ -74,7 +74,7 @@ public class Transformateur1VendeurAppelDoffre extends Transformateur1AcheteurBo
 		stocksMarqueVar.get(chocoMarqueAO).ajouter(this, propositionRetenue.getQuantiteT(), this.cryptogramme);
 
 
-		this.journalTransactions.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_GREEN, "AO: J'ai maintenant " + this.stockChocoMarque.get(propositionRetenue.getProduit()) + " tonnes de " + propositionRetenue.getProduit() + " en stock.");
+		this.journalTransactions.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_GREEN, "AO: J'ai maintenant " + this.getQuantiteEnStock(propositionRetenue.getProduit(), this.cryptogramme) + " tonnes de " + propositionRetenue.getProduit() + " en stock.");
 		this.journalTransactions.ajouter("\n");
 	}
 	

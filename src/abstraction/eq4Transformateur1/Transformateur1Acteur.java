@@ -30,10 +30,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 	protected List<Chocolat> lesChocolats;
 	protected List<ChocolatDeMarque> chocolatsLimDt; 
 
-	//OBSOLETE
-	protected HashMap<Feve, Double> stockFeves;
-	protected HashMap<Chocolat, Double> stockChoco;
-	protected HashMap<ChocolatDeMarque,Double> stockChocoMarque;
+
 
 	//Stock de fèves
 	protected Variable stock_F_BQ;
@@ -57,11 +54,6 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 	protected HashMap<ChocolatDeMarque, Variable> stocksMarqueVar;
 
 
-	//OBSOLETE
-	protected Variable totalStocksFeves;  // La quantite totale de stock de feves 
-	protected Variable totalStocksChoco;  // La quantite totale de stock de chocolat 
-	protected Variable totalStocksChocoMarque;  // La quantite totale de stock de chocolat de marque
-	protected Variable totalStocksChocoNonMarquee; // La quantie totale de stock de chocolat non marquee
 
 
 	/**
@@ -77,9 +69,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 		this.journalCC = new Journal("Journal CC " + this.getNom(), this);
 		this.journalTransactions = new Journal("Journal Transactions " + this.getNom(), this);
 
-		//OBSOLETE
-		this.stockFeves = new HashMap<Feve, Double>();
-		this.stockChoco = new HashMap<Chocolat, Double>();
+
 
 
 		//On fixe les types de fèves dont on aura besoin
@@ -99,17 +89,11 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 
 
 
-		//OBSOLETE 
-		this.totalStocksFeves = new VariablePrivee("Eq4TStockFeves", "<html>Quantite totale de feves en stock</html>",this, 0.0, 1000000.0, 20000.0);
-		this.totalStocksChoco = new VariablePrivee("Eq4TStockTotalChoco", "<html>Quantite totale de chocolat en stock</html>",this, 0.0, 1000000.0, 40000.0);
-		this.totalStocksChocoMarque = new VariablePrivee("Eq4TStockChocoMarque", "<html>Quantite totale de chocolat de marque en stock</html>",this, 0.0, 1000000.0, 20000.0);
-		this.totalStocksChocoNonMarquee = new VariablePrivee("Eq4TStockChocoNonMarquee", "<html>Quantite totale de chocolat non marquee en stock</html>",this, 0.0, 1000000.0, 20000.0);
-
 
 		//Constructions des variables de stocks 
 		/**
 		 * @author MURY Julien
-		 * @author ABBASSI Rayenne
+		 * @author ABBASSI Rayene
 		 */
 		this.stock_F_BQ =new Variable("F_BQ","<html>Quantite totale de F_BQ en stock</html>", this, 0., 1000000., 5000.);
 		this.stock_F_BQ_E = new Variable("F_BQ_E","<html>Quantite totale de F_BQ_E en stock</html>", this, 0., 1000000., 5000.);
@@ -142,19 +126,6 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 
 		this.stocksMarqueVar = new HashMap<ChocolatDeMarque, Variable>();
 
-		//OBSOLETE
-		for (Feve f : this.lesFeves) {
-			this.stockFeves.put(f, 20000.0);
-			this.totalStocksFeves.ajouter(this, 20000.0, this.cryptogramme);
-			this.journal.ajouter("ajout de 20000 de "+f+" au stock de feves --> total="+this.totalStocksFeves.getValeur(this.cryptogramme));
-		}
-		
-		//OBSOLETE
-		for (Chocolat c : lesChocolats) {
-			this.stockChoco.put(c, 0.0);
-			this.totalStocksChoco.ajouter(this, 0.0, this.cryptogramme);
-			this.journal.ajouter("Initialisation de 0 de "+c+" au stock de chocolat --> total="+this.totalStocksChoco.getValeur(this.cryptogramme));
-		}
 	
 	}
 
@@ -168,12 +139,6 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 			ChocolatDeMarque cm= new ChocolatDeMarque(c, "LimDt", pourcentageCacao);
 			this.chocolatsLimDt.add(cm);
 
-			//OBSOLETE
-			this.stockChocoMarque.put(cm, 40000.0);
-			this.totalStocksChocoMarque.ajouter(this,40000, this.cryptogramme);
-			this.totalStocksChoco.ajouter(this, 40000, this.cryptogramme);
-
-					
 		}
 
 
@@ -197,30 +162,10 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 					System.out.println("Le chocolat " + cm + " ne devrait pas être présent dans notre gammme");
 					break;
 			}
-			this.journalStock.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN," stock("+cm+")->"+this.stockChocoMarque.get(cm));
+			this.journalStock.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN," stock("+cm+")->"+this.stocksMarqueVar.get(cm).getValeur());
 			this.journalStock.ajouter("\n");
 		}
 
-
-
-
-		//OBSOLETE
-		this.stockFeves=new HashMap<Feve,Double>();
-		for (Feve f : this.lesFeves) {
-			this.stockFeves.put(f, 0.0);
-			this.totalStocksFeves.ajouter(this, 0.0, this.cryptogramme);
-			this.journalStock.ajouter("Initialisation de 0 de "+f+" au stock de fèves --> total="+this.totalStocksFeves.getValeur(this.cryptogramme));
-		}
-		this.journalStock.ajouter("\n");
-
-		//OBSOLETE
-		this.stockChoco=new HashMap<Chocolat,Double>();
-		for (Chocolat c : this.lesChocolats) {
-			this.stockChoco.put(c, 0.0);
-			this.totalStocksChoco.ajouter(this, 0.0, this.cryptogramme);
-			this.journalStock.ajouter("Initialisation de 0 de "+c+" au stock de chocolat --> total="+this.totalStocksChoco.getValeur(this.cryptogramme));
-		}
-        this.journalStock.ajouter("\n");
 	}
 
 
@@ -238,11 +183,12 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 
 	public void next() {
 		
-
+		/*
 		this.journalStock.ajouter("Stock de fèves : " + this.totalStocksFeves.getValeur(this.cryptogramme));
 		this.journalStock.ajouter("Stock de chocolat : " + this.totalStocksChoco.getValeur(this.cryptogramme));
 		this.journalStock.ajouter("Stock de chocolat de marque : " + this.totalStocksChocoMarque.getValeur(this.cryptogramme));
 		this.journalStock.ajouter("\n");
+		*/
 
 		this.journal.ajouter("Solde : " + this.getSolde());
 		this.journal.ajouter("\n");
