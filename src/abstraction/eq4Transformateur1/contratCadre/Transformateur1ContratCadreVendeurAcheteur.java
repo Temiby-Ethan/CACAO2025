@@ -2,6 +2,7 @@ package abstraction.eq4Transformateur1.contratCadre;
 
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.produits.IProduit;
+import abstraction.eqXRomu.bourseCacao.BourseCacao;
 import abstraction.eqXRomu.contratsCadres.*;
 import abstraction.eqXRomu.produits.Feve;
 
@@ -23,7 +24,7 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 
         this.qttInitialementVoulue = 0.5*STOCK_MAX_TOTAL_FEVES;//On cherche à acheter de quoi remplir ou vendre notre stock à hauteur de 50%
 
-        this.prixInitialementVoulu = 0.75*9500; //Une valeur arbitraire s'appuyant sur le prix moyen des fèves de cacao en 2024
+        this.prixInitialementVoulu = 0.75*9500; //Une valeur arbitraire s'appuyant sur le prix moyen du chocolat en 2024
 	}
 
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {
@@ -70,7 +71,7 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 
 	public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat) {
 		//Si le prix est aberrant, on refuse d'office la négociation
-        if (contrat.getPrix() > 20000){
+        if (contrat.getPrix() >20000){
 			return -1;
 		}
 		else{
@@ -96,6 +97,14 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 		super.initialiser();
 	}
 
+
+
+
+
+
+
+
+
 	public void next() {
 		super.next();
 
@@ -111,7 +120,7 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 		
 
 		// OU proposition d'un contrat a un des vendeurs choisi aleatoirement
-		for(IProduit produit : pourcentageTransfo.keySet()){
+		for(IProduit produit : this.lesFeves){
 			if(qttEntrantesFeve.get((Feve)produit)< 0.1*STOCK_MAX_TOTAL_FEVES){
 				journalCC.ajouter("Recherche d'un vendeur aupres de qui acheter " + produit);
 
@@ -129,19 +138,38 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 				}
 				if (vendeur!=null) {
 					journalCC.ajouter("Demande au superviseur de debuter les negociations pour un contrat cadre de "+produit+" avec le vendeur "+vendeur);
-					ExemplaireContratCadre cc = supCCadre.demandeAcheteur((IAcheteurContratCadre)this, vendeur, produit, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10, (SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER+10.0)/10), cryptogramme,false);
+					ExemplaireContratCadre cc = supCCadre.demandeAcheteur((IAcheteurContratCadre)this, vendeur, produit, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 30, STOCK_MAX_TOTAL_FEVES/30), cryptogramme,false);
 					journalCC.ajouter("-->aboutit au contrat "+cc);
 				}
 			}
 		}
-		// Proposition d'un contrat a un des achteur choisi aleatoirement
-		for(IProduit produit : stockChoco.keySet()){
+		// Recherche d'acheteurs de chocolat de marque
+		for(IProduit produit : stockChocoMarque.keySet()){
 			journalCC.ajouter("Recherche d'un acheteur aupres de qui vendre " + produit);
 
 			List<IAcheteurContratCadre> acheteurs = supCCadre.getAcheteurs(produit);
 			if (acheteurs.contains(this)) {
 				acheteurs.remove(this);
 			}
+			journalCC.ajouter("Voici les acheteurs potentiels : " + acheteurs);
+			for(IAcheteurContratCadre acheteur : acheteurs){
+				if (acheteur!=null) {
+					journalCC.ajouter("Demande au superviseur de debuter les negociations pour un contrat cadre de "+produit+" avec l'acheteur "+acheteur);
+					ExemplaireContratCadre cc = supCCadre.demandeVendeur(acheteur, (IVendeurContratCadre)this, produit, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 25, (0.3*this.getQuantiteEnStock(produit, this.cryptogramme)+10)/25), cryptogramme,false);
+					journalCC.ajouter("-->aboutit au contrat "+cc);
+				}
+			}
+		}
+
+		//Recherche d'acheteurs de chocolat non marqué
+		for(IProduit produit : lesChocolats){
+			journalCC.ajouter("Recherche d'un acheteur aupres de qui vendre " + produit);
+
+			List<IAcheteurContratCadre> acheteurs = supCCadre.getAcheteurs(produit);
+			if (acheteurs.contains(this)) {
+				acheteurs.remove(this);
+			}
+			journalCC.ajouter("Voici les acheteurs potentiels : " + acheteurs);
 			for(IAcheteurContratCadre acheteur : acheteurs){
 				if (acheteur!=null) {
 					journalCC.ajouter("Demande au superviseur de debuter les negociations pour un contrat cadre de "+produit+" avec l'acheteur "+acheteur);
@@ -152,21 +180,36 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 		}
 	}
 
+
+
+
+
+
 	public void receptionner(IProduit produit, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
-		totalStocksFeves.ajouter(this, quantiteEnTonnes, cryptogramme); 
-        double currStockFeves = stockFeves.get((Feve) produit);
-        stockFeves.put((Feve) produit, currStockFeves+quantiteEnTonnes);
+		stocksFevesVar.get(produit).ajouter(this, quantiteEnTonnes, this.cryptogramme); 
         journalStock.ajouter("Reception de " + quantiteEnTonnes +"feves " + ((Feve)produit).getGamme() + "(CC avec" + contrat.getVendeur() + ")");
 	}
 
+
+
+
+
+
+
 	public boolean achete(IProduit produit) {
 		//On n'achète que les fèves nous permettant de produire les chocolats que l'on veut produire
-		return pourcentageTransfo.keySet().contains(produit);
+		return lesFeves.contains(produit);
 	}
+
+
+
 
 	public String toString() {
 		return this.getNom();
 	}
+
+
+
 
 	public int fixerPourcentageRSE(IAcheteurContratCadre acheteur, IVendeurContratCadre vendeur, IProduit produit,
 			Echeancier echeancier, long cryptogramme, boolean tg) {
