@@ -27,6 +27,7 @@ public class Distributeur2Vendeur extends Distributeur2Acteur implements IDistri
     
     
     protected double capaciteDeVente;
+	
 	protected  HashMap<ChocolatDeMarque, Double> ListPrix;
 	protected String[] marques;
 	protected Journal journalVente;
@@ -85,8 +86,6 @@ public void setPrix(ChocolatDeMarque choco) {
 }
 
 
-
-
     public double prix(ChocolatDeMarque cm){
         if (ListPrix.containsKey(cm)) {
 			return ListPrix.get(cm);
@@ -122,6 +121,7 @@ public void setPrix(ChocolatDeMarque choco) {
 		return 0.0;
 	}
 
+	//@author ArmandCHANANE
 	public double quantiteEnVenteTotal(){
 		double qte = 0;
 
@@ -132,6 +132,7 @@ public void setPrix(ChocolatDeMarque choco) {
 	}
 
 
+	//@author ArmandCHANANE
 	public double quantiteEnVenteTG(ChocolatDeMarque choco, int crypto){
         if (crypto == this.cryptogramme) {
 			double capaciteDeVenteTG = this.quantiteEnVenteTotal() * ClientFinal.POURCENTAGE_MAX_EN_TG;
@@ -151,6 +152,7 @@ public void setPrix(ChocolatDeMarque choco) {
 		else {return 0.0;}
     }
 
+	//@author ArmandCHANANE
 	public double quantiteEnVenteTGTotal(){
 		double qte = 0;
 
@@ -165,12 +167,15 @@ public void setPrix(ChocolatDeMarque choco) {
     public void vendre(ClientFinal client, ChocolatDeMarque choco, double quantite, double montant, int crypto) {
 		int pos = (chocolats.indexOf(choco));
 		if (pos>=0) {
-			stock_Choco.put(choco, this.getQuantiteEnStock(choco,crypto) - quantite) ;
-			stockTotal.retirer(this, quantite, cryptogramme);
-			this.aVendu.replace(choco, 1);
+			double nouveauStock = this.getQuantiteEnStock(choco,crypto) - quantite;
+			if (nouveauStock >= 0) {
+				stock_Choco.put(choco, nouveauStock);
+				this.aVendu.replace(choco, 1);
+				journalVente.ajouter(client.getNom()+" a acheté "+quantite+"kg de "+choco+" pour "+montant+" d'euros ");
+			} else {
+				journalVente.ajouter("ERREUR : Tentative de vendre plus que le stock disponible pour "+choco);
+			}
 		}
-		journalVente.ajouter(client.getNom()+" a acheté "+quantite+"kg de "+choco+" pour "+montant+" d'euros ");
-
 	}
 
 
@@ -190,12 +195,14 @@ public void setPrix(ChocolatDeMarque choco) {
 
 	public void next() {
 		super.next();
+		
 		journalVente.ajouter("");
 		journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE,"==================== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
 		journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE,"QuantitéEnVenteTotal à l'Etape "+Filiere.LA_FILIERE.getEtape()+" : " +this.quantiteEnVenteTotal());
 		journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE,"QuantitéEnVenteTGTotal à l'Etape "+Filiere.LA_FILIERE.getEtape()+" : "+this.quantiteEnVenteTGTotal());
 		journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE,"=================================");
 		journalVente.ajouter("");
+		
 		for (ChocolatDeMarque choco : chocolats) {
 			journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE,"prix de vente pour le chocolats "+choco+" est de : "+this.prix(choco));
 		}
@@ -203,6 +210,14 @@ public void setPrix(ChocolatDeMarque choco) {
 		for (int i=0;i<this.ListPrix.size(); i++) {
 			this.setPrix(chocolats.get(i));
 		}
+		
+		if (capaciteDeVente > stockTotal.getValeur()) {
+			capaciteDeVente = stockTotal.getValeur();
+		}	
+		else {
+			capaciteDeVente = 120000;
+		}
+
 		
 		
 	}

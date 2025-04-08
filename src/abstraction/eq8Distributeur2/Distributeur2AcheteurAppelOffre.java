@@ -15,14 +15,14 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.IProduit;
-
+import abstraction.eqXRomu.produits.Chocolat;
 
 
 
 public class Distributeur2AcheteurAppelOffre extends Distributeur2AcheteurContratCadre implements IAcheteurAO {
     
     
-    private static final double PRIX_MAX_TONNE = 5000.0;
+    private static final double PRIX_MAX_TONNE = 50000.0;
     private HashMap<ChocolatDeMarque, List<Double>> prixRetenus;
 	private SuperviseurVentesAO supAO;
 	protected Journal journalAO;
@@ -79,11 +79,11 @@ public class Distributeur2AcheteurAppelOffre extends Distributeur2AcheteurContra
 				
                 OffreVente ov = supAO.acheterParAO(this,  cryptogramme, cm, quantite);
 				
-                journalAO.ajouter("   Je lance un appel d'offre de "+quantite+"T de "+cm);
+                journalAO.ajouter("Je lance un appel d'offre de "+quantite+"T de "+cm);
 				if (ov!=null) { 
-					journalAO.ajouter("   AO finalise : on ajoute "+quantite+"T de "+cm+" au stock");
+                    journalAO.ajouter("AO finalise : on ajoute "+quantite+"T de "+cm+" au stock");
 					stock_Choco.put(cm, stock_Choco.get(cm)+quantite);
-					stockTotal.ajouter(this, quantite, cryptogramme);
+					
 					prixRetenus.get(cm).add(ov.getPrixT());
 					
                     if (prixRetenus.get(cm).size()>10) {
@@ -93,6 +93,28 @@ public class Distributeur2AcheteurAppelOffre extends Distributeur2AcheteurContra
 				}
 			}
 		}
+        
+        // maj stock total
+        
+        double nouveauStockTotal = getQuantiteEnStockTotal();
+		stockTotal.setValeur(this, nouveauStockTotal, cryptogramme);
+		
+        
+        journal.ajouter("stock total : "+stockTotal.getValeur(cryptogramme));
+		journal.ajouter("");
+
+		// maj stock chocolat qualite
+		for (Chocolat choc : Chocolat.values()) {
+			double totalStock = 0;
+			for (ChocolatDeMarque cm : chocolats) {
+				if (cm.getChocolat().equals(choc)) {
+					totalStock += stock_Choco.get(cm);
+				}
+			}
+			stock_chocolat_qualite.get(choc).setValeur(this, totalStock, cryptogramme);
+			journal.ajouter("stock chocolat "+choc.toString()+" : "+stock_chocolat_qualite.get(choc).getValeur());
+		}
+		journal.ajouter("");
     }
 
     public List<Journal> getJournaux() {
