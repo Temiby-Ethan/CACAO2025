@@ -5,7 +5,7 @@ import java.util.HashMap;
 import abstraction.eqXRomu.general.Journal;
 
 public class Producteur1arbes extends plantation {
-    private Journal journal;
+    protected Journal journal;
     private plantation basse_qualite;
     private plantation moyenne_qualite;
     private plantation haute_qualite;
