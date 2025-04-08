@@ -15,7 +15,13 @@ public class Producteur1ContratCadre extends Producteur1arbes implements IVendeu
 
     public Producteur1ContratCadre() {
         super();
+        
+        // Initialisation du journal avant de l'utiliser
+        this.journal = new Journal(getNom() + " - Journal Contrat Cadre", this);
+
+        // Initialisation du stock avec le journal
         this.stock = new Stock(journal);
+
         this.contrats = new ArrayList<>();
 
         // Initialisation des stocks pour chaque type de fève
@@ -33,17 +39,16 @@ public class Producteur1ContratCadre extends Producteur1arbes implements IVendeu
     public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
         IProduit produit = contrat.getProduit();
         Echeancier echeancierPropose = contrat.getEcheancier();
-        
 
-        double stockDispo = stock.getStockTotal();
+        double stockDispo = stock.getStock((Feve) produit); // Vérifie le stock spécifique
         double quantiteMax = 0.25 * stockDispo;
 
         if (echeancierPropose.getQuantiteTotale() > quantiteMax) {
             Echeancier contreProp = new Echeancier(echeancierPropose.getStepDebut());
             for (int step = echeancierPropose.getStepDebut(); step <= echeancierPropose.getStepFin(); step++) {
                 double q = echeancierPropose.getQuantite(step);
-                if (Math.min(q, quantiteMax / echeancierPropose.getNbEcheances())<0) {
-                    System.out.println("Aie aie aie eq1 contreporposition vendeur cc");
+                if (q < 0) {
+                    journal.ajouter("Erreur : Quantité négative détectée dans la contre-proposition.");
                     return null;
                 }
                 contreProp.ajouter(Math.min(q, quantiteMax / echeancierPropose.getNbEcheances()));
@@ -57,7 +62,7 @@ public class Producteur1ContratCadre extends Producteur1arbes implements IVendeu
     public double propositionPrix(ExemplaireContratCadre contrat) {
         IProduit produit = contrat.getProduit();
 
-        if (produit.equals(Feve.F_BQ)) return 1.2; // à changer 
+        if (produit.equals(Feve.F_BQ)) return 1.2;
         if (produit.equals(Feve.F_MQ)) return 1.8;
         if (produit.equals(Feve.F_HQ_BE)) return 2.5;
 
@@ -70,17 +75,16 @@ public class Producteur1ContratCadre extends Producteur1arbes implements IVendeu
     }
 
     @Override
-public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
-    this.contrats.add(contrat);
-    journal.ajouter("Nouveau contrat cadre accepté : " + contrat);
-}
+    public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
+        this.contrats.add(contrat);
+        journal.ajouter("Nouveau contrat cadre accepté : " + contrat);
+    }
 
     @Override
     public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
-        double quantiteLivree = Math.min(quantite, stock.getStockTotal());
+        double quantiteLivree = Math.min(quantite, stock.getStock((Feve) produit));
         stock.retirer(produit, quantiteLivree);
         journal.ajouter("Livraison de " + quantiteLivree + " de " + produit + " pour le contrat " + contrat);
         return quantiteLivree;
     }
 }
-    

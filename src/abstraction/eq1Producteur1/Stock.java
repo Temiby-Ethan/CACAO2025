@@ -31,7 +31,7 @@ public class Stock  {
             Feve feve = (Feve) produit;
             double actuel = stocks.getOrDefault(feve, 0.0);
             stocks.put(feve, actuel + quantite);
-            journal.ajouter("Ajouté " + quantite + " au stock de " + feve + ". Nouveau stock : " + (actuel + quantite));
+            journal.ajouter("Ajout " + quantite + " au stock de " + feve + ". Nouveau stock : " + (actuel + quantite));
         }
     }
 
