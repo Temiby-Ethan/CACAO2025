@@ -10,6 +10,7 @@ import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
+import abstraction.eq1Producteur1.*;
 
 public class Producteur1Acteur implements IActeur {
 
@@ -17,6 +18,8 @@ public class Producteur1Acteur implements IActeur {
 
     protected Journal journal;
     protected Stock stock;
+    
+    // Indicateurs de stock
 
     private Variable stockTotal;
     private Variable stockFMQ;
@@ -25,7 +28,7 @@ public class Producteur1Acteur implements IActeur {
 
     public Producteur1Acteur() {
         this.journal = new Journal(getNom() + " Journal", this);
-        this.stock = new Stock(this.journal); // Passe le journal au stock
+        this.stock = new Stock(); // Passe le journal au stock
     
         // Initialisation des indicateurs
         this.stockTotal = new Variable("Stock Total", this, stock.getStockTotal());
@@ -97,13 +100,6 @@ public class Producteur1Acteur implements IActeur {
     }
 
     @Override
-    public List<Journal> getJournaux() {
-        List<Journal> res = new ArrayList<>();
-        res.add(journal);
-        return res;
-    }
-
-    @Override
     public void setCryptogramme(Integer crypto) {
         this.cryptogramme = crypto;
     }
@@ -139,4 +135,13 @@ public class Producteur1Acteur implements IActeur {
         }
         return 0.0;
     }
+
+    public List<Journal> getJournaux() {
+		List<Journal> res=new ArrayList<Journal>();
+		res.add(journal);
+		return res;
+
+    
+}
+
 }

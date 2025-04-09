@@ -12,15 +12,16 @@ public class Producteur1ContratCadre extends Producteur1arbes implements IVendeu
 
     private Producteur1 vendeur; // Référence au Producteur1 principal
     private List<ExemplaireContratCadre> contrats;
+    private Journal journal; // Journal pour enregistrer les opérations
 
     public Producteur1ContratCadre() {
         super();
         
         // Initialisation du journal avant de l'utiliser
-        this.journal = new Journal(getNom() + " - Journal Contrat Cadre", this);
+        this.journal = new Journal(getNom() + " - Journal Contrat Cadre",this);
 
         // Initialisation du stock avec le journal
-        this.stock = new Stock(journal);
+        this.stock = new Stock();
 
         this.contrats = new ArrayList<>();
 
@@ -86,5 +87,11 @@ public class Producteur1ContratCadre extends Producteur1arbes implements IVendeu
         stock.retirer(produit, quantiteLivree);
         journal.ajouter("Livraison de " + quantiteLivree + " de " + produit + " pour le contrat " + contrat);
         return quantiteLivree;
+    }
+
+    public List<Journal> getJournaux() {
+        List<Journal> res = super.getJournaux();
+        res.add(journal);
+        return res;
     }
 }

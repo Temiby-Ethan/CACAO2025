@@ -1,25 +1,31 @@
 package abstraction.eq1Producteur1;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class Stock  {
+public class Stock {
     private Map<Feve, Double> stocks; // Map pour gérer les stocks de fèves
-    private Journal journal; // Journal pour enregistrer les messages
+    private Journal journal; // Journal pour enregistrer les opérations
+    private Producteur1 Producteur1; // Référence au Producteur1
 
-    public Stock(Journal journal) {
+    public Stock() {
         this.stocks = new HashMap<>(); // Initialisation du Map
-        this.journal = journal; // Initialisation du journal
-
         // Initialisation des stocks pour chaque type de fève
-        this.stocks.put(Feve.F_BQ, 50000.0); // Stock initial pour fèves basse qualité
-        this.stocks.put(Feve.F_MQ, 30000.0); // Stock initial pour fèves moyenne qualité
-        this.stocks.put(Feve.F_HQ_E, 20000.0); // Stock initial pour fèves haute qualité
+        this.stocks.put(Feve.F_BQ, 2 * 50000.0); // Stock initial pour fèves basse qualité
+        this.stocks.put(Feve.F_MQ, 2 * 30000.0); // Stock initial pour fèves moyenne qualité
+        this.stocks.put(Feve.F_HQ_E, 2 * 20000.0); // Stock initial pour fèves haute qualité
+        this.journal = new Journal("Journal de Stock", Producteur1); // Initialisation du journal
     }
+
+    public Journal getJournal() {
+        return this.journal;
+    }
+
 
     // Ajouter une quantité pour une fève donnée
     public void ajouter(IProduit produit, double quantite) {
@@ -72,5 +78,8 @@ public class Stock  {
         // Somme des stocks de chaque type de fève 
         return stocks.values().stream().mapToDouble(Double::doubleValue).sum();
     }
+
+
+    
 }
 
