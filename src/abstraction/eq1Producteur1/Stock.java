@@ -8,7 +8,7 @@ import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class Stock {
+public class Stock  {
     private Map<Feve, Double> stocks; // Map pour gérer les stocks de fèves
     private Journal journal; // Journal pour enregistrer les opérations
     private Producteur1 Producteur1; // Référence au Producteur1
@@ -23,9 +23,8 @@ public class Stock {
     }
 
     public Journal getJournal() {
-        return this.journal;
+        return journal;
     }
-
 
     // Ajouter une quantité pour une fève donnée
     public void ajouter(IProduit produit, double quantite) {
@@ -78,6 +77,7 @@ public class Stock {
         // Somme des stocks de chaque type de fève 
         return stocks.values().stream().mapToDouble(Double::doubleValue).sum();
     }
+
 
 
     

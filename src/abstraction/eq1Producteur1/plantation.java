@@ -7,7 +7,7 @@ import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 
 // Amal Moncer
-public class plantation extends Producteur1Acteur {
+public class plantation extends Employes {
 
     protected int temps_avant_production; // en steps
     protected int duree_de_vie = 960; // en steps
@@ -75,6 +75,7 @@ public class plantation extends Producteur1Acteur {
             break;
             
         }
+
 
     }
 

@@ -17,7 +17,8 @@ public class Producteur1Acteur implements IActeur {
     protected int cryptogramme;
 
     protected Journal journal;
-    protected Stock stock;
+    protected Stock stock; 
+
     
     // Indicateurs de stock
 
@@ -27,8 +28,9 @@ public class Producteur1Acteur implements IActeur {
     private Variable stockFHQ;
 
     public Producteur1Acteur() {
-        this.journal = new Journal(getNom() + " Journal", this);
+        this.journal = new Journal(getNom() + " Journal", this); 
         this.stock = new Stock(); // Passe le journal au stock
+
     
         // Initialisation des indicateurs
         this.stockTotal = new Variable("Stock Total", this, stock.getStockTotal());
