@@ -104,8 +104,15 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 
 		this.journalStock.ajouter(Romu.COLOR_LLGRAY, Color.PINK, "Stock initial chocolat de marque : ");
 
-		this.journalCC.ajouter("Les achats seront en marron, les ventes LimDt en mauve, et les autres ventes en vert");
+		this.journalCC.ajouter(Color.orange, Color.BLACK, "Les achats seront en marron;");
+		this.journalCC.ajouter(Color.orange, Color.BLACK, "Les ventes LimDt en mauve;");
+		this.journalCC.ajouter(Color.orange, Color.BLACK, "Et les autres ventes en vert.");
 		this.journalCC.ajouter("\n");
+
+		this.journalTransactions.ajouter(Color.orange, Color.BLACK, "Les achats en bourse seront en magenta;");
+		this.journalTransactions.ajouter(Color.orange, Color.BLACK, "Les ventes aux enchères en gris foncé;");
+		this.journalTransactions.ajouter(Color.orange, Color.BLACK, "Et les ventes AO en rouge.");
+		this.journalTransactions.ajouter("\n");
 
 		//Initialisation des quantités de fève entrantes
 		this.qttEntrantesFeve.put(Feve.F_BQ, 0.);
