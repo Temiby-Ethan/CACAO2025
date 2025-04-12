@@ -104,6 +104,8 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 
 		this.journalStock.ajouter(Romu.COLOR_LLGRAY, Color.PINK, "Stock initial chocolat de marque : ");
 
+		this.journalCC.ajouter("Les achats seront en marron, les ventes LimDt en mauve, et les autres ventes en vert");
+		this.journalCC.ajouter("\n");
 
 		//Initialisation des quantités de fève entrantes
 		this.qttEntrantesFeve.put(Feve.F_BQ, 0.);
@@ -175,9 +177,9 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 						
 						//Notification dans le journal
 						this.journal.ajouter(Romu.COLOR_LLGRAY, Color.PINK, "Transfo de "+(transfo<10?" "+transfo:transfo)+" T de "+f+" en "+Journal.doubleSur(transfo*this.pourcentageTransfo.get(f).get(c),3,2)+" T de "+c);
-						this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN," stock("+f+")->"+this.getQuantiteEnStock(f, this.cryptogramme));
-						this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN," stock("+c+")->"+this.getQuantiteEnStock(c, this.cryptogramme));
-						this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN," stock("+cm+")->"+this.getQuantiteEnStock(cm, this.cryptogramme));
+						this.journal.ajouter(Romu.COLOR_LLGRAY, Color.BLACK," stock("+f+")->"+this.getQuantiteEnStock(f, this.cryptogramme));
+						this.journal.ajouter(Romu.COLOR_LLGRAY, Color.BLACK," stock("+c+")->"+this.getQuantiteEnStock(c, this.cryptogramme));
+						this.journal.ajouter(Romu.COLOR_LLGRAY, Color.BLACK," stock("+cm+")->"+this.getQuantiteEnStock(cm, this.cryptogramme));
 						this.journal.ajouter("\n");
 					}
 				}
@@ -306,10 +308,14 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 	public void next() {
 		super.next();
 
-		this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LBLUE, "N° Etape " + Filiere.LA_FILIERE.getEtape());
-		this.journalStock.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LBLUE, "N° Etape " + Filiere.LA_FILIERE.getEtape());
-		this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LBLUE, "N° Etape " + Filiere.LA_FILIERE.getEtape());
-		this.journalTransactions.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LBLUE, "N° Etape " + Filiere.LA_FILIERE.getEtape());
+		this.journal.ajouter(Color.yellow, Romu.COLOR_LBLUE, "N° Etape " + Filiere.LA_FILIERE.getEtape());
+
+		this.journalStock.ajouter("\n");
+		this.journalStock.ajouter(Color.yellow, Romu.COLOR_LBLUE, "N° Etape " + Filiere.LA_FILIERE.getEtape());
+
+		this.journalCC.ajouter(Color.yellow, Romu.COLOR_LBLUE, "N° Etape " + Filiere.LA_FILIERE.getEtape());
+
+		this.journalTransactions.ajouter(Color.yellow, Romu.COLOR_LBLUE, "N° Etape " + Filiere.LA_FILIERE.getEtape());
 
 		//OBSOLETE ou A MODIFIER
 		/*
@@ -321,17 +327,17 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 		//Affichage des stocks de chaque produit dans le journalStock à la période présente 
 		this.journal.ajouter("=== STOCKS === ");
 		for (Feve f : this.lesFeves) {
-			this.journalStock.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN,"Stock de "+Journal.texteSurUneLargeurDe(f+"", 15)+" = "+this.getQuantiteEnStock(f, this.cryptogramme));
+			this.journalStock.ajouter(Romu.COLOR_LLGRAY, Color.BLACK, "Stock de "+Journal.texteSurUneLargeurDe(f+"", 15)+" = "+this.getQuantiteEnStock(f, this.cryptogramme));
 		}
 		this.journalStock.ajouter("\n");
 
 		for (Chocolat c : this.lesChocolats) {
-			this.journalStock.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN,"Stock de "+Journal.texteSurUneLargeurDe(c+"", 15)+" = "+this.getQuantiteEnStock(c, this.cryptogramme));
+			this.journalStock.ajouter(Romu.COLOR_LLGRAY, Color.BLACK, "Stock de "+Journal.texteSurUneLargeurDe(c+"", 15)+" = "+this.getQuantiteEnStock(c, this.cryptogramme));
 		}
 		this.journalStock.ajouter("\n");
 
 		for (ChocolatDeMarque cm : this.chocolatsLimDt) {
-			this.journalStock.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN,"Stock de "+Journal.texteSurUneLargeurDe(cm+"", 15)+" = "+this.getQuantiteEnStock(cm, this.cryptogramme));
+			this.journalStock.ajouter(Romu.COLOR_LLGRAY, Color.BLACK, "Stock de "+Journal.texteSurUneLargeurDe(cm+"", 15)+" = "+this.getQuantiteEnStock(cm, this.cryptogramme));
 		}
 		this.journalStock.ajouter("\n");
 

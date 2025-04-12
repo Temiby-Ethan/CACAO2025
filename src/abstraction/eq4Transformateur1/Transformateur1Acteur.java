@@ -162,7 +162,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 					System.out.println("Le chocolat " + cm + " ne devrait pas être présent dans notre gammme");
 					break;
 			}
-			this.journalStock.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN," stock("+cm+")->"+this.stocksMarqueVar.get(cm).getValeur());
+			this.journalStock.ajouter(Romu.COLOR_LLGRAY, Color.BLACK," stock("+cm+")->"+this.stocksMarqueVar.get(cm).getValeur());
 			this.journalStock.ajouter("\n");
 		}
 
