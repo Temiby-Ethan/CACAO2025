@@ -48,7 +48,7 @@ public class Transformateur1AcheteurBourse extends Transformateur1ContratCadreVe
 
 	@Override
 	public void notificationBlackList(int dureeEnStep) {
-		this.journalTransactions.ajouter(Romu.COLOR_LLGRAY, Color.magenta, "B: Aie... je suis blackliste... j'aurais du verifier que j'avais assez d'argent avant de passer une trop grosse commande en bourse...");
+		this.journalTransactions.ajouter(Color.pink, Color.magenta, "B: Aie... je suis blackliste... j'aurais du verifier que j'avais assez d'argent avant de passer une trop grosse commande en bourse...");
 		this.journalTransactions.ajouter("\n");
 	}
 }

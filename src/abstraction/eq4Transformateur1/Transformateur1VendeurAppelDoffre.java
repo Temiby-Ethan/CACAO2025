@@ -84,7 +84,7 @@ public class Transformateur1VendeurAppelDoffre extends Transformateur1AcheteurBo
 	@Override
 	public void notifierPropositionNonRetenueAO(OffreVente propositionRefusee) {
 		//System.out.println("Votre proposition de vente n'a pas été retenue");
-		this.journalTransactions.ajouter(Romu.COLOR_LLGRAY, Color.RED, "AO: Vente non retenue.");
+		this.journalTransactions.ajouter(Color.pink, Color.RED, "AO: Vente non retenue.");
 		this.journalTransactions.ajouter("\n");
 		/*if (((ChocolatDeMarque) propositionRefusee.getProduit()).getChocolat() == Chocolat.C_BQ) {
 			prix_BQ = prix_BQ*0.95;
