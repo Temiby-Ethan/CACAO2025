@@ -1,5 +1,6 @@
 package abstraction.eq4Transformateur1;
 
+import java.awt.Color;
 import java.util.List;
 
 import abstraction.eqXRomu.acteurs.Romu;
@@ -45,7 +46,8 @@ public class Transformateur1VendeurEncheres extends Transformateur1VendeurAppelD
 		this.prixMin = prixTChocoBase.get(choco)*1.8;
 
 		this.superviseur = (SuperviseurVentesAuxEncheres)(Filiere.LA_FILIERE.getActeur("Sup.Encheres"));
-		journalTransactions.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN, "E: PrixMin== " + this.prixMin);
+		journalTransactions.ajouter(Romu.COLOR_LLGRAY, Color.darkGray,  "E: PrixMin== " + this.prixMin);
+		journalTransactions.ajouter("\n");
 	}
 
 
@@ -74,10 +76,10 @@ public class Transformateur1VendeurEncheres extends Transformateur1VendeurAppelD
 					
 
 					
-					journalTransactions.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN, "E: vente de "+retenue.getMiseAuxEncheres().getQuantiteT()+" T à "+retenue.getAcheteur().getNom());
+					journalTransactions.ajouter(Romu.COLOR_LLGRAY, Color.darkGray, "E: vente de "+retenue.getMiseAuxEncheres().getQuantiteT()+" T à "+retenue.getAcheteur().getNom());
 					this.journalTransactions.ajouter("\n");
 				} else {
-					journalTransactions.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN, "E: pas d'offre retenue");
+					journalTransactions.ajouter(Color.pink, Color.darkGray, "E: pas d'offre retenue");
 					this.journalTransactions.ajouter("\n");
 				}
 			}
@@ -86,17 +88,18 @@ public class Transformateur1VendeurEncheres extends Transformateur1VendeurAppelD
 
 	@Override
 	public Enchere choisir(List<Enchere> propositions) {
-		this.journalTransactions.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN, "E: encheres: "+propositions);
+		this.journalTransactions.ajouter(Romu.COLOR_LLGRAY, Color.darkGray, "E: encheres: "+propositions);
 		if (propositions == null) {
+			this.journalTransactions.ajouter(Color.pink, Color.darkGray, "E:  --> pas de propositions");
 			return null;
 		} else {
 			Enchere retenue = propositions.get(0);
 			if (retenue.getPrixTonne()>this.prixMin) {
-				this.journalTransactions.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN, "E:  --> je choisis "+retenue);
+				this.journalTransactions.ajouter(Romu.COLOR_LLGRAY, Color.darkGray, "E:  --> je choisis "+retenue);
 				this.journalTransactions.ajouter("\n");
 				return retenue;
 			} else {
-				this.journalTransactions.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN, "E:  --> je ne retiens rien");
+				this.journalTransactions.ajouter(Color.pink, Color.darkGray, "E:  --> je ne retiens rien");
 				this.journalTransactions.ajouter("\n");
 				return null;
 			}

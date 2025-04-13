@@ -8,6 +8,7 @@ import java.util.List;
 import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
+import abstraction.eqXRomu.acteurs.Romu;
 import abstraction.eqXRomu.contratsCadres.*;
 
 
@@ -294,15 +295,22 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
 		if(contrat.getAcheteur() == this){
 			this.mesContratEnTantQuAcheteur.add(contrat);
+
+			this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN, "Achat: Nouveau contrat cadre obtenu en tant qu'acheteur :");
+		    this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN, "Vendeur : " + contrat.getVendeur());
+		    this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN, "Produit :  " + contrat.getProduit());
+		    this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN, "Echeancier : " + contrat.getEcheancier());
+			this.journalCC.ajouter("\n");
 		}
 		else{
 			this.mesContratEnTantQueVendeur.add(contrat);
-		}
 
-		this.journalCC.ajouter("Nouveau contrat cadre obtenu \n");
-		this.journalCC.ajouter("Acheteur : " + contrat.getAcheteur() + " ; Vendeur : " + contrat.getVendeur() + "\n");
-		this.journalCC.ajouter("Produit :  " + contrat.getProduit() + "\n");
-		this.journalCC.ajouter("Echeancier : " + contrat.getEcheancier() + "\n");
+			this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_GREEN, "Vente: Nouveau contrat cadre obtenu en tant que vendeur :");
+		    this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_GREEN, "Acheteur : " + contrat.getAcheteur());
+		    this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_GREEN,"Produit :  " + contrat.getProduit());
+		    this.journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_GREEN, "Echeancier : " + contrat.getEcheancier());
+			this.journalCC.ajouter("\n");
+		}
 	}
 	
 
@@ -368,7 +376,9 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 					stocksMarqueVar.get(produit).retirer(this, livre, this.cryptogramme);
 
 				}
-				this.journalStock.ajouter("Retrait de " + livre + "T " + contrat.getProduit() + "(CC avec "+ contrat.getAcheteur() + ")");
+				this.journalStock.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE, "Vente CC LimDt :");
+				this.journalStock.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE, "Retrait de " + livre + "T " + contrat.getProduit() + "(CC avec "+ contrat.getAcheteur() + ")");
+				this.journalStock.ajouter("\n");
 			
 				return livre;
 			}
@@ -379,7 +389,9 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 					stocksChocoVar.get(produit).retirer(this, livre, this.cryptogramme);
 
 				}
-				this.journalStock.ajouter("Retrait de " + livre + "T " + contrat.getProduit() + "(CC avec "+ contrat.getAcheteur() + ")");
+				this.journalStock.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_GREEN, "Vente CC :");
+				this.journalStock.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_GREEN, "Retrait de " + livre + "T " + contrat.getProduit() + "(CC avec "+ contrat.getAcheteur() + ")");
+				this.journalStock.ajouter("\n");
 			
 				return livre;
 			}
