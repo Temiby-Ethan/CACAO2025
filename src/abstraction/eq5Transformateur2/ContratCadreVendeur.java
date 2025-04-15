@@ -5,6 +5,7 @@ package abstraction.eq5Transformateur2;
 import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 import abstraction.eqXRomu.contratsCadres.IVendeurContratCadre;
+import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.IProduit;
 
 
@@ -24,7 +25,19 @@ public class ContratCadreVendeur extends DecisionsActeur implements IVendeurCont
 	 */
 
 	public boolean vend(IProduit produit){
-            return false;
+            if (produit == Chocolat.C_HQ_BE){
+				return true;
+			}
+			if (produit == Chocolat.C_HQ_E){
+				return true;
+			}
+			if (produit == Chocolat.C_MQ){
+				return true;
+			}
+			if (produit == Chocolat.C_MQ_E){
+				return true;
+			}
+		return false;
         }
 
 	/**
@@ -54,7 +67,8 @@ return null;
 	 * @return La proposition initale du prix a la tonne.
 	 */
 	public double propositionPrix(ExemplaireContratCadre contrat){
-        return 2000.0;
+        Chocolat c = (Chocolat) contrat.getProduit();
+		return super.prixVente(c);
     }
 
 	/**
@@ -68,7 +82,13 @@ return null;
 	 * Sinon, retourne une contreproposition de prix.
 	 */
 	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat){
-        return contrat.getPrix();
+        Chocolat c = (Chocolat) contrat.getProduit();
+		double prixSouhaite = prixVente(c);
+		double prix = contrat.getPrix();
+		if (prix >= 0.99*prixSouhaite){
+			return prix;
+		}
+		return 0.99*prixSouhaite;
     }
 	
 	/**
@@ -81,6 +101,7 @@ return null;
 	 * @param contrat
 	 */
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat){
+		this.journal.ajouter("Nouveau contrat cadre de vente : "+contrat.toString());
     }
 
 	/**
