@@ -16,11 +16,11 @@ import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.IProduit;
 
+import abstraction.eqXRomu.acteurs.Romu;
+
+
 public class Distributeur2Acteur implements IActeur {
 	
-
-	//stockTotal et journal par Tidiane
-	private Journal journal_next = new Journal("journal next Eq8", this);
 	
 	// stocks
 	protected Variable stockTotal;
@@ -68,7 +68,7 @@ public class Distributeur2Acteur implements IActeur {
 		    nombreMarquesParType.put(typeChoco, nombreMarquesParType.getOrDefault(typeChoco, 0) + 1);
 	    }
 		
-		this.journal.ajouter("===== STOCK INITIALE =====");
+		this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LBLUE,"==================== STOCK INITIAL ====================");
 		for (ChocolatDeMarque cm : chocolats) {
 			double stock = 0;
 			
@@ -98,7 +98,9 @@ public class Distributeur2Acteur implements IActeur {
 		}
 		
 		this.journal.ajouter("");
+		
 	}
+
 
 
 	public String getNom() {// NE PAS MODIFIER
@@ -114,15 +116,10 @@ public class Distributeur2Acteur implements IActeur {
 	////////////////////////////////////////////////////////
 
 	public void next() {
-		//Journal par Tidiane
-		journal_next.ajouter("" + Filiere.LA_FILIERE.getEtape());
 		
 	}
 
-	public Journal getJournal(){
-		return this.journal_next;
-	}
-
+	
 	
 	
 	public Color getColor() {// NE PAS MODIFIER
@@ -154,7 +151,7 @@ public class Distributeur2Acteur implements IActeur {
 	// Renvoie les journaux
 	public List<Journal> getJournaux() {
 		List<Journal> res=new ArrayList<Journal>();
-		res.add(journal_next);
+		
 		res.add(journal);
 		return res;
 	}
