@@ -370,7 +370,7 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", (totalStocks*this.coutStockage));
 
 
-		System.out.println("Voici nos prix : " + prixTChocoBase);
+		//System.out.println("Voici nos prix : " + prixTChocoBase);
 	}
 
 
