@@ -1,3 +1,4 @@
+//BRUN Thomas
 package abstraction.eq2Producteur2;
 
 import abstraction.eqXRomu.bourseCacao.BourseCacao;
@@ -20,7 +21,7 @@ import java.util.LinkedList;
 import java.awt.Color;
 
 
-//BRUN Thomas
+
 public class Producteur2VenteCC extends Producteur2couts implements IVendeurBourse, IVendeurContratCadre{
 	
     private SuperviseurVentesContratCadre supCC;
@@ -56,7 +57,8 @@ public class Producteur2VenteCC extends Producteur2couts implements IVendeurBour
 			if (stockvar.get(f).getValeur()-restantDu(f)>1200) { // au moins 100 tonnes par step pendant 6 mois
 				this.JournalEQ2CC.ajouter("   "+f+" suffisamment en stock pour passer un CC");
 				double parStep = Math.max(100, (stockvar.get(f).getValeur()-restantDu(f))/24); // au moins 100, et pas plus que la moitie de nos possibilites divisees par 2
-				Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, ThreadLocalRandom.current().nextInt(12, 25), parStep); //CC d'une durée aléatoire entre 12 et 24 steps
+				// Amélioration possible mais il faut définir une variable aléatoire gobale pour bien identifier l'échéancier Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, ThreadLocalRandom.current().nextInt(12, 25), parStep); //CC d'une durée aléatoire entre 12 et 24 steps
+				Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, parStep); //CC d'une durée aléatoire de 12 steps
 				List<IAcheteurContratCadre> acheteurs = supCC.getAcheteurs(f);
 				if (acheteurs.size()>0) {
 					IAcheteurContratCadre acheteur = acheteurs.get(Filiere.random.nextInt(acheteurs.size()));
@@ -70,11 +72,13 @@ public class Producteur2VenteCC extends Producteur2couts implements IVendeurBour
 					}
 				} else {
 					JournalEQ2CC.ajouter("pas d'acheteur");
-				}
+				}}
+			else {
+				JournalEQ2CC.ajouter(Color.RED, Color.white,"   Pas assez de stock de " +f+ " pour passer un CC");
 			}
 		}
 		// On archive les contrats termines
-		
+		/*
 		for (ExemplaireContratCadre c : this.contratsEnCours) {
 			if (c.getQuantiteRestantALivrer()==0.0) {
 				this.contratsTermines.add(c);
@@ -91,6 +95,7 @@ public class Producteur2VenteCC extends Producteur2couts implements IVendeurBour
 			this.JournalEQ2CC.ajouter("Feve "+f+" en stock="+stockvar.get(f).getValeur()+" restant du="+restantDu(f));
 		}
 		this.JournalEQ2CC.ajouter("=================================");
+		*/
 	}
 
 
@@ -176,6 +181,7 @@ public class Producteur2VenteCC extends Producteur2couts implements IVendeurBour
 				JournalEQ2CC.ajouter(" On accepte l'echeancier");
 				return res;
 	}
+
 	public double propositionPrix(ExemplaireContratCadre contrat) {
 		if (!contrat.getProduit().getType().equals("Feve")) {
 			return 0; // ne peut pas etre le cas normalement 
@@ -193,6 +199,7 @@ public class Producteur2VenteCC extends Producteur2couts implements IVendeurBour
 	}
 
 	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
+		JournalEQ2CC.ajouter("      contreProposition a partir de : "+contrat.getPrix());
 		if (!contrat.getProduit().getType().equals("Feve")) {
 			return 0; // ne peut pas etre le cas normalement 
 		}
@@ -200,22 +207,22 @@ public class Producteur2VenteCC extends Producteur2couts implements IVendeurBour
 		if (prix.get(prix.size()-1)>=0.995*prix.get(0))// Vérifie si le dernier prix de la liste est supérieur ou égal à 99,5 % du premier prix
 															// Cela permet de s'assurer que la variation du prix reste faible (moins de 0,5 % de baisse) 
 															{
-			JournalEQ2CC.ajouter("      contrePropose le prix demande : "+contrat.getPrix());
+			JournalEQ2CC.ajouter("2      contrePropose le prix demande : "+contrat.getPrix());
 			return contrat.getPrix();
 		} else {
-			int percent = (int)(100* Math.pow((contrat.getPrix()/prix.get(0)), prix.size()));
+			int percent = (int)(1000* Math.pow((contrat.getPrix()/prix.get(0)), prix.size()));
 			int alea = Filiere.random.nextInt(100);
 			if (alea< percent) { // d'autant moins de chance d'accepter que le prix est loin de ce qu'on proposait
 				if (Filiere.random.nextInt(100)<5) { // 1 fois sur 20 on accepte
-					JournalEQ2CC.ajouter("      contrePropose le prix demande : "+contrat.getPrix());
+					JournalEQ2CC.ajouter("3      contrePropose le prix demande : "+contrat.getPrix());
 					return contrat.getPrix();
 				} else {
 					double res = (prix.get(prix.size()-2)+contrat.getPrix())/2.0; // la mmoyenne des deux derniers prix
-					JournalEQ2CC.ajouter("      contreproposition à ("+contrat.getPrix()+") contre "+res);
+					JournalEQ2CC.ajouter("4      contreproposition à ("+contrat.getPrix()+") contre "+res);
 					return res;
 				}
 			} else {
-				JournalEQ2CC.ajouter("      contreproposition("+contrat.getPrix()+") contre "+prix.get(0)*1.05);
+				JournalEQ2CC.ajouter("5      contreproposition("+contrat.getPrix()+") contre "+prix.get(0)*1.05);
 				return prix.get(0)*1.05;
 			}
 		}
