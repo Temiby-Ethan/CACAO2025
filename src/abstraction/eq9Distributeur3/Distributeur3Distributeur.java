@@ -55,7 +55,7 @@ public class Distributeur3Distributeur extends Distributeur3Acteur implements ID
 
 
     @Override
-    // Implémentée par Héloïse
+    // Implémentée par Célian
     public double prix(ChocolatDeMarque choco) {
         if(this.stockChocoMarque.containsKey(choco)) {
             return prix.get(choco);
@@ -93,7 +93,7 @@ public class Distributeur3Distributeur extends Distributeur3Acteur implements ID
     }
 
     @Override
-    // Implémentée par Héloïse
+    // Implémentée par Célian
     public void vendre(ClientFinal client, ChocolatDeMarque choco, double quantite, double montant, int crypto) {
         if(crypto==this.cryptogramme){
             stockChocoMarque.put(choco,Double.valueOf(this.stockChocoMarque.get(choco)-quantite));

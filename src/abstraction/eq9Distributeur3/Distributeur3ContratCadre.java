@@ -13,7 +13,7 @@ import java.util.List;
 public class Distributeur3ContratCadre extends Distributeur3Distributeur implements IAcheteurContratCadre{
 
     @Override
-    // Implémentée par Héloise
+    // Implémentée par tout le monde
     public void next() {
 
         super.next();
