@@ -125,6 +125,7 @@ public class Distributeur3Distributeur extends Distributeur3Acteur implements ID
         this.stockBQ_E.setValeur(this,BQ_E,this.cryptogramme);
     }
 
+    // Modifiée par Jeanne
     public List<Variable> getIndicateurs() {
         List<Variable> res = super.getIndicateurs();
         res.add(this.stockBQ);
