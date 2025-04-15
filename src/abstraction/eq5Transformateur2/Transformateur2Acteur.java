@@ -42,7 +42,7 @@ public class Transformateur2Acteur implements IActeur {
     }
 
     public String getDescription() {
-        return "Bla bla bla";
+        return "Un transformateur ethique qui transforme de simples fèves de cacao en produits de qualité supérieure.";
     }
 
     public List<Variable> getIndicateurs() {
