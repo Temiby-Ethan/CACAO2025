@@ -1,7 +1,9 @@
 package abstraction.eq4Transformateur1;
 
+import java.awt.Color;
 import java.util.List;
 
+import abstraction.eqXRomu.acteurs.Romu;
 import abstraction.eqXRomu.encheres.Enchere;
 import abstraction.eqXRomu.encheres.IVendeurAuxEncheres;
 import abstraction.eqXRomu.encheres.SuperviseurVentesAuxEncheres;
@@ -22,40 +24,63 @@ public class Transformateur1VendeurEncheres extends Transformateur1VendeurAppelD
 	protected String marque;
 	protected double prixMin;
 
+
+
+
     public Transformateur1VendeurEncheres() {	
 		NB_INSTANCES++;
 		this.numero=NB_INSTANCES;
 		this.choco = Chocolat.C_BQ;
 		this.marque = "LimDt";
-		this.prixMin = 2400.0;
+		
 	}
+
+
+
+
 
 	public void initialiser() {
 
 		super.initialiser();
 
+		this.prixMin = prixTChocoBase.get(choco)*1.8;
+
 		this.superviseur = (SuperviseurVentesAuxEncheres)(Filiere.LA_FILIERE.getActeur("Sup.Encheres"));
-		journalTransactions.ajouter("PrixMin== " + this.prixMin);
+		journalTransactions.ajouter(Romu.COLOR_LLGRAY, Color.darkGray,  "E: PrixMin== " + this.prixMin);
+		journalTransactions.ajouter("\n");
 	}
+
+
+
+
 
 	protected ChocolatDeMarque getChocolatDeMarque() {
 		return new ChocolatDeMarque(choco,marque,  (int)(Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+choco.getGamme()).getValeur()));
 	}
 
+
+
+
+
 	public void next() {
 
 		super.next();
 
-		journalTransactions.ajouter("Etape="+Filiere.LA_FILIERE.getEtape());
 		if (Filiere.LA_FILIERE.getEtape()>=1) {
-			if (this.stockChoco.get(choco)>200) {
-				Enchere retenue = superviseur.vendreAuxEncheres(this, cryptogramme, getChocolatDeMarque(), 200.0);
+			if (this.getQuantiteEnStock(getChocolatDeMarque(), this.cryptogramme)>200) {
+				//On veut vendre 10% de notre stock de ce chocolat de marque
+				Enchere retenue = superviseur.vendreAuxEncheres(this, cryptogramme, getChocolatDeMarque(), this.getQuantiteEnStock(getChocolatDeMarque(), this.cryptogramme)*0.1);
 				if (retenue!=null) {
-					this.stockChocoMarque.put(getChocolatDeMarque(), this.stockChocoMarque.get(getChocolatDeMarque())-retenue.getMiseAuxEncheres().getQuantiteT());
-					this.stockChoco.put(choco, this.stockChoco.get(choco) - retenue.getMiseAuxEncheres().getQuantiteT());
-					journalTransactions.ajouter("vente de "+retenue.getMiseAuxEncheres().getQuantiteT()+" T a "+retenue.getAcheteur().getNom());
+
+					this.stocksMarqueVar.get(getChocolatDeMarque()).retirer(this, retenue.getMiseAuxEncheres().getQuantiteT());
+					
+
+					
+					journalTransactions.ajouter(Romu.COLOR_LLGRAY, Color.darkGray, "E: vente de "+retenue.getMiseAuxEncheres().getQuantiteT()+" T à "+retenue.getAcheteur().getNom());
+					this.journalTransactions.ajouter("\n");
 				} else {
-					journalTransactions.ajouter("pas d'offre retenue");
+					journalTransactions.ajouter(Color.pink, Color.darkGray, "E: pas d'offre retenue");
+					this.journalTransactions.ajouter("\n");
 				}
 			}
 		}
@@ -63,16 +88,19 @@ public class Transformateur1VendeurEncheres extends Transformateur1VendeurAppelD
 
 	@Override
 	public Enchere choisir(List<Enchere> propositions) {
-		this.journalTransactions.ajouter("encheres : "+propositions);
+		this.journalTransactions.ajouter(Romu.COLOR_LLGRAY, Color.darkGray, "E: encheres: "+propositions);
 		if (propositions == null) {
+			this.journalTransactions.ajouter(Color.pink, Color.darkGray, "E:  --> pas de propositions");
 			return null;
 		} else {
 			Enchere retenue = propositions.get(0);
 			if (retenue.getPrixTonne()>this.prixMin) {
-				this.journal.ajouter("  --> je choisis "+retenue);
+				this.journalTransactions.ajouter(Romu.COLOR_LLGRAY, Color.darkGray, "E:  --> je choisis "+retenue);
+				this.journalTransactions.ajouter("\n");
 				return retenue;
 			} else {
-				this.journal.ajouter("  --> je ne retiens rien");
+				this.journalTransactions.ajouter(Color.pink, Color.darkGray, "E:  --> je ne retiens rien");
+				this.journalTransactions.ajouter("\n");
 				return null;
 			}
 		}		

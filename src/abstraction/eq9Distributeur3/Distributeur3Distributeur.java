@@ -12,14 +12,13 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Distributeur3Distributeur extends Distributeur3Acteur implements IDistributeurChocolatDeMarque {
-    // Implémentée par Héloïse
     // protected HashMap<ChocolatDeMarque, Double> stocks;
     protected HashMap<ChocolatDeMarque, Float> prix;
-    private VariablePrivee stockTotal;
+    protected VariablePrivee stockTotal;
     private VariablePrivee stockBQ;
     private VariablePrivee stockBQ_E;
 
-
+    // Implémentée par Héloïse
     public Distributeur3Distributeur() {
         super();
         this.stockChocoMarque = new HashMap<>();
@@ -31,6 +30,7 @@ public class Distributeur3Distributeur extends Distributeur3Acteur implements ID
     }
 
     @Override
+    // Implémentée par Héloïse
     public void initialiser() {
         super.initialiser();
         List<ChocolatDeMarque> produits = Filiere.LA_FILIERE.getChocolatsProduits();
@@ -55,6 +55,7 @@ public class Distributeur3Distributeur extends Distributeur3Acteur implements ID
 
 
     @Override
+    // Implémentée par Héloïse
     public double prix(ChocolatDeMarque choco) {
         if(this.stockChocoMarque.containsKey(choco)) {
             return prix.get(choco);
@@ -65,7 +66,9 @@ public class Distributeur3Distributeur extends Distributeur3Acteur implements ID
 
 
     @Override
+    // Implémentée par Héloïse
     public double quantiteEnVente(ChocolatDeMarque choco, int crypto) {
+
         if (this.cryptogramme==crypto && this.stockChocoMarque.containsKey(choco)) {
             if(this.stockChocoMarque.get(choco)>=100) {
                 this.journalActeur.ajouter("Mise en rayon de 100 tonnes de "+choco.getNom());
@@ -83,11 +86,14 @@ public class Distributeur3Distributeur extends Distributeur3Acteur implements ID
     }
 
     @Override
+    // Implémentée par Héloïse
     public double quantiteEnVenteTG(ChocolatDeMarque choco, int crypto) {
+        //System.out.println(choco.getNom()+"en tête de gondole");
         return this.quantiteEnVente(choco,crypto)*ClientFinal.POURCENTAGE_MAX_EN_TG;
     }
 
     @Override
+    // Implémentée par Héloïse
     public void vendre(ClientFinal client, ChocolatDeMarque choco, double quantite, double montant, int crypto) {
         if(crypto==this.cryptogramme){
             stockChocoMarque.put(choco,Double.valueOf(this.stockChocoMarque.get(choco)-quantite));
@@ -97,6 +103,7 @@ public class Distributeur3Distributeur extends Distributeur3Acteur implements ID
     }
 
     // A éventuellement supprimer
+    // Implémentée par Héloïse
     public void MAJStocks(){
         double total = 0.0;
         double BQ = 0.0;
@@ -127,7 +134,16 @@ public class Distributeur3Distributeur extends Distributeur3Acteur implements ID
     }
 
     @Override
+    // Implémentée par Jeanne
     public void notificationRayonVide(ChocolatDeMarque choco, int crypto) {
         this.journalActeur.ajouter("Le rayon de "+choco.toString()+" est vide ");
+    }
+
+    @Override
+    // Implémentée par Célian
+    public void next() {
+        this.journalStocks.ajouter("Stock Total avant  : "+this.stockTotal.getValeur(this.cryptogramme));
+        super.next();
+        this.journalStocks.ajouter("Stock Total après : "+this.stockTotal.getValeur(this.cryptogramme));
     }
 }
