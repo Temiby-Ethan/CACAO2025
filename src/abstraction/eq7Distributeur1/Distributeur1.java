@@ -80,7 +80,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 			return 8880.0;
 		} else {
 			//return prix.get(pos);
-			double price = 1.30*this.priceProduct.get(pos) ;
+			double price = 5*this.priceProduct.get(pos) ;
 			return price;
 		}
 	}
@@ -99,7 +99,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 			//IAcheteurContratCadre acheteurContratCadre = new Distributeur1AcheteurContratCadre();
 			this.next_cc();
 			for (int i = 0 ; i<chocolats.size() ; i++){
-				requiredQuantities.set(i, requiredQuantities.get(i)/19);
+				requiredQuantities.set(i, Math.min(requiredQuantities.get(i)/19,5));
 			}}
 		
 		//IAcheteurAO acheteurAppelOffre = new Distributeur1AcheteurAppelOffre();

@@ -54,11 +54,11 @@ public class Distributeur1Stock extends Distributeur1Acteur{
 		ancient_value_mid = Filiere.LA_FILIERE.getVentes(choco, etape-24) ;
 		}
 		val_demand = 1.05*ancient_value_mid - getQuantiteEnStock(choco, crypto);
-		if (val_demand > 5.0){
+		if (val_demand > 100.0){
 			return val_demand;
 		}
 		else{
-			return 5.0;
+			return 100.0;
 		}
 	}
 
