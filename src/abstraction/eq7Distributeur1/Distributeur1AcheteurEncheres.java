@@ -72,6 +72,7 @@ public class Distributeur1AcheteurEncheres extends Distributeur1AcheteurContratC
 		if (product instanceof ChocolatDeMarque){
 			ChocolatDeMarque chocolat = (ChocolatDeMarque) product;
 		this.successedSell.set(cdmToInt(chocolat),this.successedSell.get(cdmToInt(chocolat))+1);
+		this.getStock(chocolat).ajouter(this, enchereRetenue.getQuantiteT());
 		}
 	}
 

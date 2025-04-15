@@ -78,7 +78,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 	public boolean achete(IProduit produit){
 		if (produit instanceof ChocolatDeMarque){
 			ChocolatDeMarque chocolat = (ChocolatDeMarque) produit;
-			return(requiredQuantities.get(cdmToInt(chocolat))>0); 
+			return(requiredQuantities.get(cdmToInt(chocolat))>100); 
 		}
 		return(false);
 	}
@@ -100,11 +100,16 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 		for (int step = echeancierActuel.getStepDebut(); step<=echeancierActuel.getStepFin() ; step++){
 			double quantiteDemandee = echeancierActuel.getQuantite(step);
 			double quantiteVoulue = requiredQuantities.get(cdmToInt(chocolat))/predictionsVentesPourcentage.get(echeancierActuel.getStepDebut()%24)*predictionsVentesPourcentage.get(step%24);
-			if (quantiteDemandee > quantiteVoulue*(1+0.01*tour)){
-				echeancierActuel.set(step, quantiteVoulue*(1+0.01*tour));
+			if (quantiteDemandee > quantiteVoulue*(1+0.1*tour)){
+				echeancierActuel.set(step, Math.max(100,quantiteVoulue*(1+0.1*tour)));
 			}
-			if (quantiteDemandee < quantiteVoulue*(1-0.01*tour)){
-				echeancierActuel.set(step, quantiteVoulue*(1-0.01*tour));
+			if (quantiteDemandee < quantiteVoulue*(1-0.1*tour)){
+				echeancierActuel.set(step, Math.max(100,quantiteVoulue*(1-0.1*tour)));
+			
+			}
+			if (quantiteDemandee < 100){
+				System.out.println(quantiteDemandee);
+				System.exit(0);
 			}
 		}
 		return(echeancierActuel);
@@ -157,7 +162,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 		SuperviseurVentesContratCadre superviseur = (SuperviseurVentesContratCadre)(Filiere.LA_FILIERE.getActeur("Sup.CCadre"));
 		for (int i=0; i<chocolats.size(); i++) {
 			List<IVendeurContratCadre> vendeurList = superviseur.getVendeurs(chocolats.get(i));
-			if (!vendeurList.isEmpty()){
+			if (!vendeurList.isEmpty() && requiredQuantities.get(i)>superviseur.QUANTITE_MIN_ECHEANCIER){
 				superviseur.demandeAcheteur(this, vendeurList.get(0), chocolats.get(i), new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 8, requiredQuantities.get(i)), this.cryptogramme, false);
 			}
 		}
@@ -225,6 +230,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 
 	@Override
 	public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat){
-
+		this.getStock((ChocolatDeMarque) p).ajouter(this, quantiteEnTonnes);
+		//System.out.println("APAGNAN QUOICOUBEH EXIT 0" + quantiteEnTonnes);
 	}
 }

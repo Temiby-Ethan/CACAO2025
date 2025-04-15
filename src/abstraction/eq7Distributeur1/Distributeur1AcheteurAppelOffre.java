@@ -66,6 +66,7 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurEncher
 		if (indice == -1){
 			return(null);
 		}
+		this.getStock((ChocolatDeMarque) propositions.get(indice).getProduit()).ajouter(this, propositions.get(indice).getQuantiteT());
 		return(propositions.get(indice));
 		}
 	
@@ -84,7 +85,9 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurEncher
 		SuperviseurVentesAO superviseur = (SuperviseurVentesAO)(Filiere.LA_FILIERE.getActeur("Sup.AO"));
 
 		for (int i=0; i<chocolats.size(); i++){
+			if (requiredQuantities.get(i)>5){
 			superviseur.acheterParAO(this,this.cryptogramme, chocolats.get(i) , this.requiredQuantities.get(i));
+			}
 		}
 	}
 	@Override

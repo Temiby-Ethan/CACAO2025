@@ -99,7 +99,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 			//IAcheteurContratCadre acheteurContratCadre = new Distributeur1AcheteurContratCadre();
 			this.next_cc();
 			for (int i = 0 ; i<chocolats.size() ; i++){
-				requiredQuantities.set(i, Math.min(requiredQuantities.get(i)/19,5));
+				requiredQuantities.set(i, Math.max(requiredQuantities.get(i)/19,5));
 			}}
 		
 		//IAcheteurAO acheteurAppelOffre = new Distributeur1AcheteurAppelOffre();
@@ -129,6 +129,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 		for (int i=0; i<this.chocolats.size(); i++) {
 			this.capaciteDeVente.set(i, stocksChocolats.get(chocolats.get(i)).getValeur()/2);
 		}
+
 	}
 
 	public List<String> getMarquesChocolat() { // par Alexiho
