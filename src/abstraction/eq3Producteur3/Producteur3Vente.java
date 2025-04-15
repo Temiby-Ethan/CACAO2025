@@ -209,7 +209,7 @@ public class Producteur3Vente extends Producteur3GestionDesCoûts implements IVe
     public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
         Feve f = (Feve)produit;
         double stockActuel = calculTotalStockParticulier(f);
-        double livrable = Math.min(0,Math.min(stockActuel, quantite));
+        double livrable = Math.max(0,Math.min(stockActuel, quantite));
         if(f.getGamme().equals(Gamme.BQ)){
             if(f.isEquitable()){
                 retirerStockBQ_E(f,livrable);
