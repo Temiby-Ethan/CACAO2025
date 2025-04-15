@@ -117,6 +117,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 
         //journal.ajouter("Étape " + etape + " : Ajout de " + quantiteAjoutee + " t de " + produit + " en rayon.");
 		
+		//par Ethan
 		String str_journal_stock = "";
 		String str_journal_E = "";
 		String str_journal_CC = "";
@@ -124,9 +125,9 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 
 		for (int i = 0 ; i<chocolats.size() ; i++){
 			str_journal_stock += this.stocksChocolats.get(chocolats.get(i)).getNom() + " = " + this.stocksChocolats.get(chocolats.get(i)).getValeur() + " ; ";
-			str_journal_E += "a";
+			str_journal_E += this.successedSell.get(i) + " ; ";
 			str_journal_CC += "b";
-			str_journal_AO += "c";
+			str_journal_AO += " ; ";
 		}
 
 		journal.ajouter(str_journal_stock);
