@@ -1,7 +1,9 @@
 package abstraction.eq1Producteur1;
 
 import abstraction.eqXRomu.contratsCadres.IVendeurContratCadre;
+import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
+import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 
@@ -12,10 +14,13 @@ import abstraction.eqXRomu.contratsCadres.Echeancier;
 public class Producteur1 extends Producteur1Bourse {
 
     private Producteur1ContratCadre contratCadre;
+    protected Feve typeFeve; // Type de fève géré par ce producteur
+   // protected Stock stock; // Instance de Stock pour gérer les stocks
 
     public Producteur1() {
         super();
         this.contratCadre = new Producteur1ContratCadre(); // Initialisation de l'instance
+   //     this.stock = new Stock(); // Initialisation de Stock avec une référence à Producteur1
     }
 
     @Override
@@ -56,4 +61,6 @@ public class Producteur1 extends Producteur1Bourse {
         super.next(); // mise à jour stock / journal
         //  livraison automatique des contrats cadres
     }
+
+
 }

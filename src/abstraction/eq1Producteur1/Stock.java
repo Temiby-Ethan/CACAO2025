@@ -4,39 +4,45 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
+import abstraction.eqXRomu.filiere.IActeur;
 
 public class Stock  {
     private Map<Feve, Double> stocks; // Map pour gérer les stocks de fèves
-    private Journal journal; // Journal pour enregistrer les opérations
-    private Producteur1 Producteur1; // Référence au Producteur1
+    private Journal journalStock; // Journal pour enregistrer les opérations
+    private Producteur1ContratCadre producteur1;// Référence au Producteur1
 
-    public Stock() {
+    public Stock(IActeur a) {
         this.stocks = new HashMap<>(); // Initialisation du Map
+        System.out.println("classe : "+a.getClass());
+        //System.exit(0);
+        this.producteur1=(Producteur1ContratCadre)a;
         // Initialisation des stocks pour chaque type de fève
         this.stocks.put(Feve.F_BQ, 2 * 50000.0); // Stock initial pour fèves basse qualité
         this.stocks.put(Feve.F_MQ, 2 * 30000.0); // Stock initial pour fèves moyenne qualité
         this.stocks.put(Feve.F_HQ_E, 2 * 20000.0); // Stock initial pour fèves haute qualité
-        this.journal = new Journal("Journal de Stock", Producteur1); // Initialisation du journal
+        
+        this.journalStock = new Journal("Journal de Stock", producteur1); // Initialisation du journal
     }
 
     public Journal getJournal() {
-        return journal;
+        return journalStock;
     }
 
     // Ajouter une quantité pour une fève donnée
     public void ajouter(IProduit produit, double quantite) {
         if (produit instanceof Feve) {
             if (quantite < 0) {
-                journal.ajouter("Erreur : Tentative d'ajouter une quantité négative pour " + produit);
+                journalStock.ajouter("Erreur : Tentative d'ajouter une quantité négative pour " + produit);
                 return;
             }
             Feve feve = (Feve) produit;
             double actuel = stocks.getOrDefault(feve, 0.0);
             stocks.put(feve, actuel + quantite);
-            journal.ajouter("Ajout " + quantite + " au stock de " + feve + ". Nouveau stock : " + (actuel + quantite));
+            journalStock.ajouter("Ajout " + quantite + " au stock de " + feve + ". Nouveau stock : " + (actuel + quantite));
         }
     }
 
@@ -46,14 +52,18 @@ public class Stock  {
             Feve feve = (Feve) produit;
             double actuel = stocks.getOrDefault(feve, 0.0);
             if (quantite < 0) {
-                journal.ajouter("Erreur : Tentative de retirer une quantité négative pour " + produit + ". Retrait annulé.");
+                journalStock.ajouter("Erreur : Tentative de retirer une quantité négative pour " + produit + ". Retrait annulé.");
                 return false;
             } else if (actuel < quantite) {
-                journal.ajouter("Erreur : Tentative de retirer plus que le stock disponible pour " + produit + ". Retrait annulé.");
+                journalStock.ajouter("Erreur : Tentative de retirer plus que le stock disponible pour " + produit + ". Retrait annulé.");
                 return false;
             } else {
                 stocks.put(feve, actuel - quantite);
-                journal.ajouter("Retiré " + quantite + " du stock de " + feve + ". Nouveau stock : " + (actuel - quantite));
+                journalStock.ajouter("Retiré " + quantite + " du stock de " + feve + ". Nouveau stock : " + (actuel - quantite));
+
+            
+                
+
                 return true;
             }
         }

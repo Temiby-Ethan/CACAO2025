@@ -3,19 +3,21 @@ package abstraction.eq1Producteur1;
 
 import abstraction.eqXRomu.general.Journal;
 
-public class Employes extends Producteur1Acteur { 
-    private int employesBQ; // Nombre d'employés pour la basse qualité
-    private int employesMQ; // Nombre d'employés pour la moyenne qualité
-    private int employesHQ; // Nombre d'employés pour la haute qualité
-    private int employesPermanents; // Nombre d'employés permanents
+public class Employes  { 
+    protected int employesBQ; // Nombre d'employés pour la basse qualité 
+    protected int employesMQ; // Nombre d'employés pour la moyenne qualité
+    protected int employesHQ; // Nombre d'employés pour la haute qualité
+    protected int employesPermanents; // Nombre d'employés permanents
 
-    private int enfants; // Nombre d'enfants employés
-    private int adultesNonFormes; // Nombre d'adultes non formés employés
-    private int adultesFormes; // Nombre d'adultes formés employés
 
-    private final double coutEnfant = 2.0; // Coût d'entretien par step pour un enfant
-    private final double coutAdulteNonForme = 5.0; // Coût d'entretien par step pour un adulte non formé
-    private final double coutAdulteForme = 12.5; // Coût d'entretien par step pour un adulte formé
+    protected int enfants; // Nombre d'enfants employés
+    protected int adultesNonFormes; // Nombre d'adultes non formés employés
+    protected int adultesFormes; // Nombre d'adultes formés employés
+
+
+    protected final double coutEnfant = 2.0; // Coût d'entretien par step pour un enfant
+    protected final double coutAdulteNonForme = 5.0; // Coût d'entretien par step pour un adulte non formé
+    protected final double coutAdulteForme = 12.5; // Coût d'entretien par step pour un adulte formé
 
     private Journal journal; // Journal pour enregistrer les opérations
     private Producteur1 Producteur1; // Référence au Producteur1

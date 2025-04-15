@@ -8,28 +8,23 @@ import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class Producteur1ContratCadre extends Producteur1arbes implements IVendeurContratCadre {
+public class Producteur1ContratCadre extends Producteur1Acteur implements IVendeurContratCadre {
 
     private Producteur1 vendeur; // Référence au Producteur1 principal
     private List<ExemplaireContratCadre> contrats;
     private Journal journal; // Journal pour enregistrer les opérations
 
     public Producteur1ContratCadre() {
-        super();
         
         // Initialisation du journal avant de l'utiliser
         this.journal = new Journal(getNom() + " - Journal Contrat Cadre",this);
 
         // Initialisation du stock avec le journal
-        this.stock = new Stock();
+        //this.stock = new Stock(this);
 
         this.contrats = new ArrayList<>();
-
-        // Initialisation des stocks pour chaque type de fève
-        stock.ajouter(Feve.F_BQ, 100000);
-        stock.ajouter(Feve.F_MQ, 100000);
-        stock.ajouter(Feve.F_HQ_BE, 100000);
     }
+
 
     @Override
     public boolean vend(IProduit produit) {
@@ -56,7 +51,7 @@ public class Producteur1ContratCadre extends Producteur1arbes implements IVendeu
             }
             return contreProp;
         }
-        return echeancierPropose;
+        return null;// echeancierPropose;
     }
 
     @Override

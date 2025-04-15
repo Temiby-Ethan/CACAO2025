@@ -29,7 +29,7 @@ public class Producteur1Acteur implements IActeur {
 
     public Producteur1Acteur() {
         this.journal = new Journal(getNom() + " Journal", this); 
-        this.stock = new Stock(); // Passe le journal au stock
+        this.stock = new Stock(this); // Passe le journal au stock
 
     
         // Initialisation des indicateurs
@@ -58,8 +58,7 @@ public class Producteur1Acteur implements IActeur {
         int etape = Filiere.LA_FILIERE.getEtape();
         journal.ajouter("Étape " + etape);
 
-        // Ajout de production fictive chaque étape
-        stock.ajouter(Feve.F_BQ, 10); // Production de fèves basse qualité
+        stock.ajouter(Feve.F_BQ, 10); // Production de fèves basse qualité -> ce qu'on doit faire c'est la quantité mettre ce qu'on a pu vendre
         stock.ajouter(Feve.F_MQ, 10); // Production de fèves moyenne qualité
         stock.ajouter(Feve.F_HQ_E, 10); // Production de fèves haute qualité
 
