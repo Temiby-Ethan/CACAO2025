@@ -240,7 +240,7 @@ public void setPrix(ChocolatDeMarque choco) {
 					prixActuel *= 1.05; // +5%
 					prixModifie = true;
 					raisonModification = "stock faible";
-				} else if (stockActuel > 20000) {
+				} else if (stockActuel > 10000) {
 					// Si stock élevé, baisser les prix
 					prixActuel *= 0.98; // -2%
 					prixModifie = true;
