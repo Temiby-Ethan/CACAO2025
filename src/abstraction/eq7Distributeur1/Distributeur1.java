@@ -48,7 +48,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
         this.journal = new Journal("Journal stock de EQ7", this); // Initialisation du journal
 		this.journalE = new Journal("Journal d'enchères de EQ7", this); // Initialisation du journal
 		this.journalCC = new Journal("Journal contrat cadre de EQ7", this);
-		this.journalAO = new Journal("Journal contrat cadre de EQ7", this);
+		this.journalAO = new Journal("Journal appel d'offre de EQ7", this);
 
 		
 		predictionsVentesPourcentage = Arrays.asList(3.6 , 3.6 , 5.0 , 3.6 , 3.6 , 3.6 , 3.6 , 7.0 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 13.0);
