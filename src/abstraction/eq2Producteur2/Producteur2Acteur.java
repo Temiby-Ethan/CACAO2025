@@ -1,3 +1,4 @@
+//Equipe
 package abstraction.eq2Producteur2;
 
 import java.awt.Color;

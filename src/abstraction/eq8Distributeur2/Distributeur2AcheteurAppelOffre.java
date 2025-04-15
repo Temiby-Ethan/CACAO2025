@@ -93,17 +93,14 @@ public class Distributeur2AcheteurAppelOffre extends Distributeur2AcheteurContra
 				}
 			}
 		}
-        
-        // maj stock total
-        
-        double nouveauStockTotal = getQuantiteEnStockTotal();
-		stockTotal.setValeur(this, nouveauStockTotal, cryptogramme);
-		
-        
-        journal.ajouter("stock total : "+stockTotal.getValeur(cryptogramme));
-		journal.ajouter("");
 
-		// maj stock chocolat qualite
+		
+        // maj stock total
+         double nouveauStockTotal = getQuantiteEnStockTotal();
+         stockTotal.setValeur(this, nouveauStockTotal, cryptogramme);
+         this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LBLUE,"==================== STOCK TOTAL étape: "+Filiere.LA_FILIERE.getEtape()+" = "+nouveauStockTotal+" ====================");
+            
+        // maj stock chocolat qualite
 		for (Chocolat choc : Chocolat.values()) {
 			double totalStock = 0;
 			for (ChocolatDeMarque cm : chocolats) {
@@ -114,7 +111,9 @@ public class Distributeur2AcheteurAppelOffre extends Distributeur2AcheteurContra
 			stock_chocolat_qualite.get(choc).setValeur(this, totalStock, cryptogramme);
 			journal.ajouter("stock chocolat "+choc.toString()+" : "+stock_chocolat_qualite.get(choc).getValeur());
 		}
-		journal.ajouter("");
+		this.journal.ajouter("");
+
+        
     }
 
     public List<Journal> getJournaux() {

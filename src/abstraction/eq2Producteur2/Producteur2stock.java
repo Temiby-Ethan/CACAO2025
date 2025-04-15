@@ -1,4 +1,4 @@
-//Jérôme
+//Jérôme Roth
 
 package abstraction.eq2Producteur2;
 
