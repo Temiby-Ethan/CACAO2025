@@ -309,4 +309,160 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
 		}
 	}
+
+
+
+/**
+ * @author MURY Julien
+ * Cette méthode permet l'ajout en stock d'une certaine quantité d'un certain produit
+ * @param produit : le produit à ajouter
+ * @param quantite : la quantité de produit à ajouter 
+ */
+	public void ajouterAuStock(IProduit produit, double quantite, int cryptogramme){
+		//On vérifie que l'acteur voulant accéder aux stocks est bien le bon 
+		if (this.cryptogramme == cryptogramme){
+
+			String type = produit.getType();
+
+			if (type.equals("Feve")){
+				switch ((Feve)produit){
+					case F_BQ : 
+						this.stocksFevesVar.get(Feve.F_BQ).ajouter(this, quantite, cryptogramme);
+						break;
+					case F_BQ_E : 
+						this.stocksFevesVar.get(Feve.F_BQ_E).ajouter(this, quantite, cryptogramme);
+						break;
+					case F_MQ_E : 
+						this.stocksFevesVar.get(Feve.F_MQ_E).ajouter(this, quantite, cryptogramme);
+						break;
+					case F_HQ_BE : 
+						this.stocksFevesVar.get(Feve.F_HQ_BE).ajouter(this, quantite, cryptogramme);
+						break;
+					default : 
+						System.out.println("EQ4T : Ce type de fève n'est pas censée entrer dans nos stocks: " + produit);
+				}
+				
+			}
+			else if (type.equals("Chocolat")){
+				switch ((Chocolat)produit){
+					case C_BQ : 
+						this.stocksChocoVar.get(Chocolat.C_BQ).ajouter(this, quantite, cryptogramme);
+						break;
+					case C_BQ_E : 
+						this.stocksChocoVar.get(Chocolat.C_BQ_E).ajouter(this, quantite, cryptogramme);
+						break;
+					case C_MQ_E : 
+						this.stocksChocoVar.get(Chocolat.C_MQ_E).ajouter(this, quantite, cryptogramme);
+						break;
+					case C_HQ_BE : 
+						this.stocksChocoVar.get(Chocolat.C_HQ_BE).ajouter(this, quantite, cryptogramme);
+						break;
+					default : 
+						System.out.println("EQ4T : Ce type de chocolat n'est pas censée entrer dans nos stocks: " + produit);
+				}
+
+			}
+			else if (type.equals("ChocolatDeMarque")){
+				switch (((ChocolatDeMarque)produit).getChocolat()){
+					case C_BQ : 
+						this.stocksMarqueVar.get(produit).ajouter(this, quantite, cryptogramme);
+						break;
+					case C_BQ_E : 
+						this.stocksMarqueVar.get(produit).ajouter(this, quantite, cryptogramme);
+						break;
+					case C_MQ_E : 
+						this.stocksMarqueVar.get(produit).ajouter(this, quantite, cryptogramme);
+						break;
+					case C_HQ_BE : 
+						this.stocksMarqueVar.get(produit).ajouter(this, quantite, cryptogramme);
+						break;
+					default : 
+						System.out.println("EQ4T : Ce type de chocolat n'est pas censée entrer dans nos stocks: " + produit);
+				}
+			}
+			else {
+				System.out.println("Ce produit (" + produit + ") n'a pas un type connu ("+ type + ")");
+			}
+		}
+	}
+
+
+
+
+
+
+	
+
+	/**
+ * @author MURY Julien
+ * Cette méthode permet le retrait du stock d'une certaine quantité d'un certain produit
+ * @param produit : le produit à ajouter
+ * @param quantite : la quantité de produit à ajouter 
+ */
+public void retirerDuStock(IProduit produit, double quantite, int cryptogramme){
+	//On vérifie que l'acteur voulant accéder aux stocks est bien le bon 
+	if (this.cryptogramme == cryptogramme){
+		String type = produit.getType();
+		if (type.equals("Feve")){
+			switch ((Feve)produit){
+				case F_BQ : 
+					this.stocksFevesVar.get(Feve.F_BQ).retirer(this, quantite, cryptogramme);
+					break;
+				case F_BQ_E : 
+					this.stocksFevesVar.get(Feve.F_BQ_E).retirer(this, quantite, cryptogramme);
+					break;
+				case F_MQ_E : 
+					this.stocksFevesVar.get(Feve.F_MQ_E).retirer(this, quantite, cryptogramme);
+					break;
+				case F_HQ_BE : 
+					this.stocksFevesVar.get(Feve.F_HQ_BE).retirer(this, quantite, cryptogramme);
+					break;
+				default : 
+					System.out.println("EQ4T : Ce type de fève n'est pas censée entrer dans nos stocks: " + produit);
+			}
+			
+		}
+		else if (type.equals("Chocolat")){
+			switch ((Chocolat)produit){
+				case C_BQ : 
+					this.stocksChocoVar.get(Chocolat.C_BQ).retirer(this, quantite, cryptogramme);
+					break;
+				case C_BQ_E : 
+					this.stocksChocoVar.get(Chocolat.C_BQ_E).retirer(this, quantite, cryptogramme);
+					break;
+				case C_MQ_E : 
+					this.stocksChocoVar.get(Chocolat.C_MQ_E).retirer(this, quantite, cryptogramme);
+					break;
+				case C_HQ_BE : 
+					this.stocksChocoVar.get(Chocolat.C_HQ_BE).retirer(this, quantite, cryptogramme);
+					break;
+				default : 
+					System.out.println("EQ4T : Ce type de chocolat n'est pas censée entrer dans nos stocks: " + produit);
+			}
+
+		}
+		else if (type.equals("ChocolatDeMarque")){
+			switch (((ChocolatDeMarque)produit).getChocolat()){
+				case C_BQ : 
+					this.stocksMarqueVar.get(produit).retirer(this, quantite, cryptogramme);
+					break;
+				case C_BQ_E : 
+					this.stocksMarqueVar.get(produit).retirer(this, quantite, cryptogramme);
+					break;
+				case C_MQ_E : 
+					this.stocksMarqueVar.get(produit).retirer(this, quantite, cryptogramme);
+					break;
+				case C_HQ_BE : 
+					this.stocksMarqueVar.get(produit).retirer(this, quantite, cryptogramme);
+					break;
+				default : 
+					System.out.println("EQ4T : Ce type de chocolat n'est pas censée entrer dans nos stocks: " + produit);
+			}
+		}
+		else {
+			System.out.println("Ce produit (" + produit + ") n'a pas un type connu ("+ type + ")");
+		}
+	}
+}
+
 }

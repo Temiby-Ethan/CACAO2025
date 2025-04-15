@@ -45,7 +45,7 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 	//La stratégie de négociation doit être différenciée selon le produit mais pour la quantité, cela est probablement peu pertinent
 	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
 
-		double qttVoulue = contrat.getEcheancier().getQuantiteTotale();
+		double qttVoulue = 0.3*this.getQuantiteEnStock(contrat.getProduit(), this.cryptogramme);
 
 		//A MODIFIER	
 		//On vérifie que l'échéancier renvoyé respecte les règles et que la quantité en stock de produit est au moins le quart de la quantité totale
@@ -67,9 +67,12 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 				}
 				//On modifie l'échéancier uniformément pour se rapporcher de nos exigeances
 				else{
-					for(int s = e.getStepDebut() ; s<e.getStepFin() ; s++){
+					for(int s = e.getStepDebut() ; s<=e.getStepFin() ; s++){
 						double qttActuelle = e.getQuantite(s);
-						e.set(s, qttVoulue +  (qttActuelle - qttVoulue)/16);
+						if (qttVoulue +  (qttActuelle - qttVoulue)/16 > contrat.getEcheancier().getQuantiteTotale()/(contrat.getEcheancier().getNbEcheances()*10)){
+							e.set(s, qttVoulue +  (qttActuelle - qttVoulue)/16);
+						}
+						
 					}
 
 					//On vérifie que notre contrat respecte bien les règles des contrats cadres par rapport aux quantité minimale par step
@@ -373,7 +376,8 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 				double livre = Math.min(getQuantiteEnStock(produit, this.cryptogramme), quantite);
 				if (livre > 0.){
 
-					stocksMarqueVar.get(produit).retirer(this, livre, this.cryptogramme);
+					//Retrait du produit concerné par le contrat
+					this.retirerDuStock(produit, quantite, this.cryptogramme);
 
 				}
 				this.journalStock.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE, "Vente CC LimDt :");
@@ -385,8 +389,10 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 			else{
 				double livre = Math.min(getQuantiteEnStock(produit, this.cryptogramme), quantite);
 				if (livre>0.0) {
-
-					stocksChocoVar.get(produit).retirer(this, livre, this.cryptogramme);
+					//AFFICHAGE EN CONSOLE
+					System.out.println("Le chocolat " + produit + " n'est pas censé sortir du stock, il est de type " + produit.getType());
+					
+					this.retirerDuStock(produit, quantite, this.cryptogramme);
 
 				}
 				this.journalStock.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_GREEN, "Vente CC :");

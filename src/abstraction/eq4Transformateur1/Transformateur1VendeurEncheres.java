@@ -72,7 +72,7 @@ public class Transformateur1VendeurEncheres extends Transformateur1VendeurAppelD
 				Enchere retenue = superviseur.vendreAuxEncheres(this, cryptogramme, getChocolatDeMarque(), this.getQuantiteEnStock(getChocolatDeMarque(), this.cryptogramme)*0.1);
 				if (retenue!=null) {
 
-					this.stocksMarqueVar.get(getChocolatDeMarque()).retirer(this, retenue.getMiseAuxEncheres().getQuantiteT());
+					this.retirerDuStock(retenue.getProduit(),  retenue.getMiseAuxEncheres().getQuantiteT(), this.cryptogramme);
 					
 
 					

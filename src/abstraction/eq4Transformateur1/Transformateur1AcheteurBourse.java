@@ -39,7 +39,7 @@ public class Transformateur1AcheteurBourse extends Transformateur1ContratCadreVe
 		this.journalTransactions.ajouter("\n");
 		
 		//Ajoute des fèves achetées dans notre stock
-		this.stocksFevesVar.get(f).ajouter(this, quantiteEnT, this.cryptogramme);
+		this.ajouterAuStock(f, quantiteEnT, this.cryptogramme);
 
 		this.journalTransactions.ajouter(Romu.COLOR_LLGRAY, Color.magenta, "B: J'ai maintenant " + this.getQuantiteEnStock(f, this.cryptogramme) + " tonnes de " + f + " en stock.");
 

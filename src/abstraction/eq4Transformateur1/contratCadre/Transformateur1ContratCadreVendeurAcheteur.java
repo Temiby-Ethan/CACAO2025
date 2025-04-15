@@ -234,7 +234,7 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 
 
 	public void receptionner(IProduit produit, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
-		stocksFevesVar.get(produit).ajouter(this, quantiteEnTonnes, this.cryptogramme); 
+		ajouterAuStock(produit, quantiteEnTonnes, this.cryptogramme);
 		
         journalStock.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN, "Achat CC :");
 		journalStock.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN, "Reception de " + quantiteEnTonnes +"feves " + ((Feve)produit).getGamme() + "(CC avec" + contrat.getVendeur() + ")");
