@@ -52,7 +52,7 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurEncher
 		if (product instanceof ChocolatDeMarque) {
         	ChocolatDeMarque chocolat = (ChocolatDeMarque) product;
 			int idProduct = cdmToInt(chocolat);
-			double price = 1.03*this.priceProduct.get(idProduct) ;
+			double price = 1.5*this.priceProduct.get(idProduct) ;
 			for (int i=0; i<propositions.size(); i++){
 				double priceProposed = propositions.get(i).getPrixT();
 				if (priceProposed<price){
