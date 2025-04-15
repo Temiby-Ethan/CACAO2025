@@ -1,3 +1,4 @@
+//Simon
 package abstraction.eq5Transformateur2;
 
 import abstraction.eqXRomu.bourseCacao.IAcheteurBourse;
