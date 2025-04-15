@@ -10,6 +10,8 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 
+// ADAM SEBIANE
+
 public class Producteur1Bourse extends Producteur1ContratCadre implements IVendeurBourse {
 
     private Journal journalBourse;

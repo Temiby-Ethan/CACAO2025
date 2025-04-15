@@ -11,6 +11,8 @@ import java.util.List;
 
 import abstraction.eqXRomu.contratsCadres.Echeancier;
 
+// ADRIEN BUCHER
+
 public class Producteur1 extends Producteur1Bourse {
 
     private Producteur1ContratCadre contratCadre;

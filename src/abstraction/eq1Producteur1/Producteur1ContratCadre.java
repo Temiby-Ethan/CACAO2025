@@ -8,6 +8,8 @@ import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
+// ADAM SEBIANE
+
 public class Producteur1ContratCadre extends Producteur1Acteur implements IVendeurContratCadre {
 
     private Producteur1 vendeur; // Référence au Producteur1 principal
@@ -34,24 +36,47 @@ public class Producteur1ContratCadre extends Producteur1Acteur implements IVende
     @Override
     public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
         IProduit produit = contrat.getProduit();
-        Echeancier echeancierPropose = contrat.getEcheancier();
 
-        double stockDispo = stock.getStock((Feve) produit); // Vérifie le stock spécifique
+        // Vérification du type de produit
+        if (!(produit instanceof Feve)) {
+            journal.ajouter("Erreur : Produit non reconnu pour la contre-proposition.");
+            return null;
+        }
+        Feve feve = (Feve) produit;
+
+        // Vérification du stock disponible
+        double stockDispo = stock.getStock(feve);
         double quantiteMax = 0.25 * stockDispo;
 
+        Echeancier echeancierPropose = contrat.getEcheancier();
+
+        // Si l'échéancier proposé dépasse la quantité maximale
         if (echeancierPropose.getQuantiteTotale() > quantiteMax) {
             Echeancier contreProp = new Echeancier(echeancierPropose.getStepDebut());
+            double quantiteRestante = quantiteMax;
+
             for (int step = echeancierPropose.getStepDebut(); step <= echeancierPropose.getStepFin(); step++) {
                 double q = echeancierPropose.getQuantite(step);
+
+                // Vérification des quantités négatives
                 if (q < 0) {
                     journal.ajouter("Erreur : Quantité négative détectée dans la contre-proposition.");
                     return null;
                 }
-                contreProp.ajouter(Math.min(q, quantiteMax / echeancierPropose.getNbEcheances()));
+
+                // Répartition de la quantité maximale
+                double quantitePourEtape = Math.min(q, quantiteRestante);
+                contreProp.ajouter(quantitePourEtape);
+                quantiteRestante -= quantitePourEtape;
             }
+
+            journal.ajouter("Contre-proposition envoyée : " + contreProp);
             return contreProp;
         }
-        return null;// echeancierPropose;
+
+        // Si l'échéancier proposé est acceptable
+        journal.ajouter("Échéancier proposé accepté : " + echeancierPropose);
+        return echeancierPropose;
     }
 
     @Override

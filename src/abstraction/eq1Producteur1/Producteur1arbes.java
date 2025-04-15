@@ -8,6 +8,8 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 
+// AMAL MONCER
+
 public class Producteur1arbes extends Producteur1 {
 
 

@@ -3,6 +3,8 @@ package abstraction.eq1Producteur1;
 
 import abstraction.eqXRomu.general.Journal;
 
+// AMAL MONCER
+
 public class Employes  { 
     protected int employesBQ; // Nombre d'employés pour la basse qualité 
     protected int employesMQ; // Nombre d'employés pour la moyenne qualité
