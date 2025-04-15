@@ -19,10 +19,8 @@ import abstraction.eqXRomu.clients.ClientFinal;
 
 import abstraction.eqXRomu.general.Journal;
 
-
-
-
-
+// Classe représentant un vendeur de chocolat de marque, avec des capacités de gestion des prix, des stocks et des ventes.
+// Elle implémente l'interface IDistributeurChocolatDeMarque pour fournir des fonctionnalités spécifiques aux distributeurs.
 public class Distributeur2Vendeur extends Distributeur2Acteur implements IDistributeurChocolatDeMarque {
     
     
@@ -51,6 +49,7 @@ public class Distributeur2Vendeur extends Distributeur2Acteur implements IDistri
 		this.aVendu = new HashMap<ChocolatDeMarque,Integer>();
 	}
 
+	// Méthode pour initialiser les paramètres du vendeur, comme les prix et les équipes partenaires.
 	public void initialiser () {
 		super.initialiser();
 		for (ChocolatDeMarque choco : chocolats) {
@@ -68,24 +67,24 @@ public class Distributeur2Vendeur extends Distributeur2Acteur implements IDistri
 		}
 	}
 
+	// Méthode pour définir les prix des chocolats en fonction de leur type.
+	public void setPrix(ChocolatDeMarque choco) {
 
-public void setPrix(ChocolatDeMarque choco) {
-
-	if (choco.getChocolat() == Chocolat.C_MQ_E) {
-		ListPrix.put(choco, (double) 10000);
-	}
+		if (choco.getChocolat() == Chocolat.C_MQ_E) {
+			ListPrix.put(choco, (double) 10000);
+		}
 	
 
-	if (choco.getChocolat() == Chocolat.C_HQ_E) {
-		ListPrix.put(choco, (double) 22000);
+		if (choco.getChocolat() == Chocolat.C_HQ_E) {
+			ListPrix.put(choco, (double) 22000);
+		}
+		if (choco.getChocolat() == Chocolat.C_HQ_BE) {
+			ListPrix.put(choco, (double) 30000);
+		}
+
 	}
-	if (choco.getChocolat() == Chocolat.C_HQ_BE) {
-		ListPrix.put(choco, (double) 30000);
-	}
 
-}
-
-
+	// Méthode pour obtenir le prix d'un chocolat de marque spécifique.
     public double prix(ChocolatDeMarque cm){
         if (ListPrix.containsKey(cm)) {
 			return ListPrix.get(cm);
@@ -95,7 +94,7 @@ public void setPrix(ChocolatDeMarque choco) {
 		}
     }
 
-    
+	// Méthode pour calculer la quantité de chocolat en vente en fonction de la capacité de vente et du stock disponible.
     public double quantiteEnVente(ChocolatDeMarque choco, int crypto){
         if (crypto!=this.cryptogramme || !chocolats.contains(choco)) {
 			journalVente.ajouter("Quelqu'un essaye de me pirater !");
@@ -224,7 +223,7 @@ public void setPrix(ChocolatDeMarque choco) {
 		
 	}
 
-	
+	// Méthode pour ajuster les prix des chocolats en fonction du stock et des limites définies.
 	public void ajusterPrix() {
 		for (ChocolatDeMarque cm : chocolats) {
 			if (cm.getChocolat() == Chocolat.C_HQ_E || cm.getChocolat() == Chocolat.C_HQ_BE || cm.getChocolat() == Chocolat.C_MQ_E){
