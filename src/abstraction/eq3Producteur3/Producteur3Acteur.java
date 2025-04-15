@@ -15,6 +15,8 @@ import abstraction.eqXRomu.general.VariablePrivee;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
+//Paul, Alice, Zoé
+
 public class Producteur3Acteur implements IActeur {
 	
 	protected int cryptogramme;
