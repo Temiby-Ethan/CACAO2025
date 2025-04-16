@@ -154,7 +154,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 
 					for (int i=1; i<12; i++){
 						Key key = new Key(i, cm);
-						stocksMarqueVarLimDt.put(key, null);
+						stocksMarqueVarLimDt.put(key, new Variable("random"+ i + cm, this, 0., 1000000., 0.));
 					}
 					break;
 				case C_BQ_E : 
@@ -165,7 +165,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 
 					for (int i=1; i<12; i++){
 						Key key = new Key(i, cm);
-						stocksMarqueVarLimDt.put(key, null);
+						stocksMarqueVarLimDt.put(key, new Variable("random"+ i + cm, this, 0., 1000000., 0.));
 					}
 					break;
 				case C_MQ_E : 
@@ -176,7 +176,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 
 					for (int i=1; i<12; i++){
 						Key key = new Key(i, cm);
-						stocksMarqueVarLimDt.put(key, null);
+						stocksMarqueVarLimDt.put(key, new Variable("random"+ i + cm, this, 0., 1000000., 0.));
 					}					
 					break;
 				case C_HQ_BE : 
@@ -187,7 +187,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 
 					for (int i=1; i<12; i++){
 						Key key = new Key(i, cm);
-						stocksMarqueVarLimDt.put(key, null);
+						stocksMarqueVarLimDt.put(key, new Variable("random"+ i + cm, this, 0., 1000000., 0.));
 					}
 					break;
 

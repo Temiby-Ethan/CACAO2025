@@ -181,18 +181,17 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 						this.ajouterAuStock(cm, nouveauStock * pourcentageMarque, this.cryptogramme);
 
 						Key key_last = new Key(11, cm);
-						if (key_last != null) {
-                            this.stocksMarqueVar.get(cm).retirer(this, stocksMarqueVarLimDt.get(key_last).getValeur(), this.cryptogramme);
-						}
+                        this.stocksMarqueVar.get(cm).retirer(this, stocksMarqueVarLimDt.get(key_last).getValeur(), this.cryptogramme);
 
 						for (int i=11; i>=1; i--) {
 							Key keyA = new Key(i, cm);
 							Key keyB = new Key(i-1, cm);
 							this.stocksMarqueVarLimDt.put(keyA, this.stocksMarqueVarLimDt.get(keyB));
+							this.journal.ajouter("voici"+this.stocksMarqueVar.get(cm).getValeur());
 						}
 
 						Key key_first = new Key(0, cm);
-						this.stocksMarqueVarLimDt.put(key_first, null);
+						this.stocksMarqueVarLimDt.put(key_first, new Variable("random" + 0+ cm, this, 0., 1000000., 0.));
                         this.stocksMarqueVarLimDt.get(key_first).ajouter(this, transfo * pourcentageMarque, this.cryptogramme);
 
 						
