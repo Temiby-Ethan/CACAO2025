@@ -53,7 +53,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 	protected Variable stock_C_HQ_BE_Limdt;
 	protected HashMap<ChocolatDeMarque, Variable> stocksMarqueVar;
 
-
+	protected HashMap<Key, Variable> stocksMarqueVarLimDt;
 
 
 	/**
@@ -126,6 +126,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 
 		this.stocksMarqueVar = new HashMap<ChocolatDeMarque, Variable>();
 
+        this.stocksMarqueVarLimDt = new HashMap<Key, Variable>();
 	
 	}
 
@@ -147,15 +148,47 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 			switch (cm.getChocolat()){
 				case C_BQ : 
 					stocksMarqueVar.put(cm, stock_C_BQ_Limdt);
+
+					Key key_A = new Key(0, cm);
+					stocksMarqueVarLimDt.put(key_A, stock_C_BQ_Limdt);
+
+					for (int i=1; i<12; i++){
+						Key key = new Key(i, cm);
+						stocksMarqueVarLimDt.put(key, null);
+					}
 					break;
 				case C_BQ_E : 
 					stocksMarqueVar.put(cm, stock_C_BQ_E_Limdt);
+
+					Key key_B = new Key(0, cm);
+					stocksMarqueVarLimDt.put(key_B, stock_C_BQ_E_Limdt);
+
+					for (int i=1; i<12; i++){
+						Key key = new Key(i, cm);
+						stocksMarqueVarLimDt.put(key, null);
+					}
 					break;
 				case C_MQ_E : 
 					stocksMarqueVar.put(cm, stock_C_MQ_E_Limdt);
+
+					Key key_C = new Key(0, cm);
+					stocksMarqueVarLimDt.put(key_C, stock_C_MQ_E_Limdt);
+
+					for (int i=1; i<12; i++){
+						Key key = new Key(i, cm);
+						stocksMarqueVarLimDt.put(key, null);
+					}					
 					break;
 				case C_HQ_BE : 
 					stocksMarqueVar.put(cm, stock_C_HQ_BE_Limdt);
+
+					Key key_D = new Key(0, cm);
+					stocksMarqueVarLimDt.put(key_D, stock_C_HQ_BE_Limdt);
+
+					for (int i=1; i<12; i++){
+						Key key = new Key(i, cm);
+						stocksMarqueVarLimDt.put(key, null);
+					}
 					break;
 
 				default : 

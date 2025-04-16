@@ -5,7 +5,7 @@ import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.acteurs.Romu;
 import abstraction.eqXRomu.bourseCacao.BourseCacao;
 import abstraction.eqXRomu.contratsCadres.*;
-import abstraction.eqXRomu.produits.Feve;
+import abstraction.eqXRomu.produits.Feve; 
 
 import java.util.List;
 import java.awt.Color;

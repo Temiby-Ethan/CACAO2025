@@ -73,7 +73,18 @@ public class Transformateur1VendeurAppelDoffre extends Transformateur1AcheteurBo
 		//Mettre à jour les autres variables
 		ChocolatDeMarque chocoMarqueAO = (ChocolatDeMarque) propositionRetenue.getProduit();
 
-		stocksMarqueVar.get(chocoMarqueAO).ajouter(this, propositionRetenue.getQuantiteT(), this.cryptogramme);
+		stocksMarqueVar.get(chocoMarqueAO).retirer(this, propositionRetenue.getQuantiteT(), this.cryptogramme);
+		
+        for (int i=0; i<12; i++) {
+			Key key = new Key(i, chocoMarqueAO);
+			if (stocksMarqueVarLimDt.get(key) == null) {
+				Key keyLimDt = new Key(i-1, chocoMarqueAO);
+				stocksMarqueVarLimDt.get(keyLimDt).retirer(this, propositionRetenue.getQuantiteT(), this.cryptogramme);
+                break;
+			    } else if (i==12) {
+			    	stocksMarqueVarLimDt.get(key).retirer(this, propositionRetenue.getQuantiteT(), this.cryptogramme);
+			    }
+			}
 
 
 		this.journalTransactions.ajouter(Romu.COLOR_LLGRAY, Color.RED, "AO: J'ai maintenant " + this.getQuantiteEnStock(propositionRetenue.getProduit(), this.cryptogramme) + " tonnes de " + propositionRetenue.getProduit() + " en stock.");

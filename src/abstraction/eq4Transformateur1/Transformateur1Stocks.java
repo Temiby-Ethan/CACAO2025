@@ -146,15 +146,15 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 
 				double transfo;
 				if (this.stocksFevesVar.get(f) != null && this.pourcentageTransfo.get(f).get(c) != null){
-					//On transforme une partie de nos fèves
-					transfo = 0.9 * this.stocksFevesVar.get(f).getValeur();
+					//On transforme toutes nos fèves
+					transfo = this.stocksFevesVar.get(f).getValeur();
 
 					//On s'assure que l'on produit quelque chose pour faire nos opérations
 					if (transfo<=this.getQuantiteEnStock(f, this.cryptogramme) && transfo >0) {
 
 
 
-						double pourcentageMarque = 0.8;  //Modifiable
+						double pourcentageMarque = 1.0;  //Modifiable
 						// La Pourcentage ainsi definie sera stockee sous forme de marquee, la quantité restante sera alors stockee comme non marquee
 
 	
@@ -179,7 +179,20 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 						this.stocksChocoVar.get(c).ajouter(this, transfo * (1-pourcentageMarque), this.cryptogramme);
 						this.stocksMarqueVar.get(cm).ajouter(this, transfo * pourcentageMarque, this.cryptogramme);
 
+						Key key_last = new Key(11, cm);
+						if (key_last != null) {
+                            this.stocksMarqueVar.get(cm).retirer(this, stocksMarqueVarLimDt.get(key_last).getValeur(), this.cryptogramme);
+						}
 
+						for (int i=11; i>=1; i--) {
+							Key keyA = new Key(i, cm);
+							Key keyB = new Key(i-1, cm);
+							this.stocksMarqueVarLimDt.put(keyA, this.stocksMarqueVarLimDt.get(keyB));
+						}
+
+						Key key_first = new Key(0, cm);
+						this.stocksMarqueVarLimDt.put(key_first, null);
+                        this.stocksMarqueVarLimDt.get(key_first).ajouter(this, transfo * pourcentageMarque, this.cryptogramme);
 
 						
 						//Notification dans le journal
