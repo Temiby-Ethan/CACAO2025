@@ -73,7 +73,8 @@ public class Transformateur1VendeurAppelDoffre extends Transformateur1AcheteurBo
 		//Mettre à jour les autres variables
 		ChocolatDeMarque chocoMarqueAO = (ChocolatDeMarque) propositionRetenue.getProduit();
 
-		stocksMarqueVar.get(chocoMarqueAO).retirer(this, propositionRetenue.getQuantiteT(), this.cryptogramme);
+
+		this.ajouterAuStock(chocoMarqueAO, propositionRetenue.getQuantiteT(), this.cryptogramme);
 		
         for (int i=0; i<12; i++) {
 			Key key = new Key(i, chocoMarqueAO);

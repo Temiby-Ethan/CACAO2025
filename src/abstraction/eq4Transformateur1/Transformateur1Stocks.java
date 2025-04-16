@@ -175,9 +175,10 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 						}
 
 						//Ajout des chocolats produits au stock
-						this.stocksFevesVar.get(f).retirer(this, transfo, this.cryptogramme);
-						this.stocksChocoVar.get(c).ajouter(this, transfo * (1-pourcentageMarque), this.cryptogramme);
-						this.stocksMarqueVar.get(cm).ajouter(this, transfo * pourcentageMarque, this.cryptogramme);
+						this.retirerDuStock(f, transfo, this.cryptogramme);
+
+						//this.ajouterAuStock(c, nouveauStock * (1.0-pourcentageMarque), this.cryptogramme);
+						this.ajouterAuStock(cm, nouveauStock * pourcentageMarque, this.cryptogramme);
 
 						Key key_last = new Key(11, cm);
 						if (key_last != null) {
@@ -360,7 +361,6 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 			this.journalStock.ajouter(Romu.COLOR_LLGRAY, Color.BLACK, "Stock de "+Journal.texteSurUneLargeurDe(cm+"", 15)+" = "+this.getQuantiteEnStock(cm, this.cryptogramme));
 		}
 		this.journalStock.ajouter("\n");
-
 
 
 		this.determinerPrixTFevesStockees();

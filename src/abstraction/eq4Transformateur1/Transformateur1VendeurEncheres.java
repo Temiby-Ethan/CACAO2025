@@ -72,7 +72,8 @@ public class Transformateur1VendeurEncheres extends Transformateur1VendeurAppelD
 				Enchere retenue = superviseur.vendreAuxEncheres(this, cryptogramme, getChocolatDeMarque(), this.getQuantiteEnStock(getChocolatDeMarque(), this.cryptogramme)*0.1);
 				if (retenue!=null) {
 
-					this.stocksMarqueVar.get(getChocolatDeMarque()).retirer(this, retenue.getMiseAuxEncheres().getQuantiteT());
+
+					this.retirerDuStock(retenue.getProduit(),  retenue.getMiseAuxEncheres().getQuantiteT(), this.cryptogramme);
 					for (int i=0; i<12; i++) {
 						Key key = new Key(i, getChocolatDeMarque());
 						if (stocksMarqueVarLimDt.get(key) == null) {
@@ -83,6 +84,7 @@ public class Transformateur1VendeurEncheres extends Transformateur1VendeurAppelD
 								stocksMarqueVarLimDt.get(key).retirer(this, retenue.getMiseAuxEncheres().getQuantiteT(), this.cryptogramme);
 							}
 						}
+					
 
 					
 					journalTransactions.ajouter(Romu.COLOR_LLGRAY, Color.darkGray, "E: vente de "+retenue.getMiseAuxEncheres().getQuantiteT()+" T à "+retenue.getAcheteur().getNom());
