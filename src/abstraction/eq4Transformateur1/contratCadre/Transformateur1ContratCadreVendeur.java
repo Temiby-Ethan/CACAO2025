@@ -1,6 +1,7 @@
 package abstraction.eq4Transformateur1.contratCadre;
 
 
+import java.awt.Color;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -9,7 +10,7 @@ import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.acteurs.Romu;
-import abstraction.eqXRomu.contratsCadres.*;
+import abstraction.eqXRomu.contratsCadres.*; 
 
 
 /*
@@ -379,6 +380,7 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 					//Retrait du produit concerné par le contrat
 					this.retirerDuStock(produit, quantite, this.cryptogramme);
 
+
 				}
 				this.journalStock.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE, "Vente CC LimDt :");
 				this.journalStock.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE, "Retrait de " + livre + "T " + contrat.getProduit() + "(CC avec "+ contrat.getAcheteur() + ")");
@@ -390,7 +392,7 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 				double livre = Math.min(getQuantiteEnStock(produit, this.cryptogramme), quantite);
 				if (livre>0.0) {
 					//AFFICHAGE EN CONSOLE
-					System.out.println("Le chocolat " + produit + " n'est pas censé sortir du stock, il est de type " + produit.getType());
+					journalStock.ajouter(Color.pink, Romu.COLOR_PURPLE, "Le chocolat " + produit + " n'est pas censé sortir du stock, il est de type " + produit.getType());
 					
 					this.retirerDuStock(produit, quantite, this.cryptogramme);
 

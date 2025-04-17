@@ -5,7 +5,7 @@ import java.awt.Color;
 import abstraction.eq4Transformateur1.contratCadre.Transformateur1ContratCadreVendeurAcheteur;
 import abstraction.eqXRomu.acteurs.Romu;
 import abstraction.eqXRomu.bourseCacao.IAcheteurBourse;
-import abstraction.eqXRomu.produits.Feve;
+import abstraction.eqXRomu.produits.Feve; 
 
 /**
  * @author YAOU Reda

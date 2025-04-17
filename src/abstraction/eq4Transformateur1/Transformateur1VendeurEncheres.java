@@ -9,7 +9,7 @@ import abstraction.eqXRomu.encheres.IVendeurAuxEncheres;
 import abstraction.eqXRomu.encheres.SuperviseurVentesAuxEncheres;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.produits.Chocolat;
-import abstraction.eqXRomu.produits.ChocolatDeMarque;
+import abstraction.eqXRomu.produits.ChocolatDeMarque; 
 
 /**
  * @author YAOU Reda
@@ -72,10 +72,9 @@ public class Transformateur1VendeurEncheres extends Transformateur1VendeurAppelD
 				Enchere retenue = superviseur.vendreAuxEncheres(this, cryptogramme, getChocolatDeMarque(), this.getQuantiteEnStock(getChocolatDeMarque(), this.cryptogramme)*0.1);
 				if (retenue!=null) {
 
-					this.retirerDuStock(retenue.getProduit(),  retenue.getMiseAuxEncheres().getQuantiteT(), this.cryptogramme);
-					
 
-					
+					this.retirerDuStock(retenue.getProduit(),  retenue.getMiseAuxEncheres().getQuantiteT(), this.cryptogramme);
+						
 					journalTransactions.ajouter(Romu.COLOR_LLGRAY, Color.darkGray, "E: vente de "+retenue.getMiseAuxEncheres().getQuantiteT()+" T à "+retenue.getAcheteur().getNom());
 					this.journalTransactions.ajouter("\n");
 				} else {
