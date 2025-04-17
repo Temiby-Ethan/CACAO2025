@@ -9,7 +9,7 @@ import abstraction.eqXRomu.encheres.IVendeurAuxEncheres;
 import abstraction.eqXRomu.encheres.SuperviseurVentesAuxEncheres;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.produits.Chocolat;
-import abstraction.eqXRomu.produits.ChocolatDeMarque;
+import abstraction.eqXRomu.produits.ChocolatDeMarque; 
 
 /**
  * @author YAOU Reda
@@ -74,19 +74,7 @@ public class Transformateur1VendeurEncheres extends Transformateur1VendeurAppelD
 
 
 					this.retirerDuStock(retenue.getProduit(),  retenue.getMiseAuxEncheres().getQuantiteT(), this.cryptogramme);
-					for (int i=0; i<12; i++) {
-						Key key = new Key(i, getChocolatDeMarque());
-						if (stocksMarqueVarLimDt.get(key) == null) {
-							Key keyLimDt = new Key(i-1, getChocolatDeMarque());
-							stocksMarqueVarLimDt.get(keyLimDt).retirer(this, retenue.getMiseAuxEncheres().getQuantiteT(), this.cryptogramme);
-							break;
-							} else if (i==12) {
-								stocksMarqueVarLimDt.get(key).retirer(this, retenue.getMiseAuxEncheres().getQuantiteT(), this.cryptogramme);
-							}
-						}
-					
-
-					
+						
 					journalTransactions.ajouter(Romu.COLOR_LLGRAY, Color.darkGray, "E: vente de "+retenue.getMiseAuxEncheres().getQuantiteT()+" T à "+retenue.getAcheteur().getNom());
 					this.journalTransactions.ajouter("\n");
 				} else {

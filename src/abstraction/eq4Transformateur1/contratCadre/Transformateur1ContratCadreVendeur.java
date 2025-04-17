@@ -8,9 +8,8 @@ import java.util.List;
 import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
-import abstraction.eq4Transformateur1.Key;
 import abstraction.eqXRomu.acteurs.Romu;
-import abstraction.eqXRomu.contratsCadres.*;
+import abstraction.eqXRomu.contratsCadres.*; 
 
 
 /*
@@ -379,17 +378,6 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 
 					//Retrait du produit concerné par le contrat
 					this.retirerDuStock(produit, quantite, this.cryptogramme);
-
-					for (int i=0; i<12; i++) {
-						Key key = new Key(i, (ChocolatDeMarque) produit);
-						if (stocksMarqueVarLimDt.get(key) == null) {
-							Key keyLimDt = new Key(i-1, (ChocolatDeMarque) produit);
-							stocksMarqueVarLimDt.get(keyLimDt).retirer(this, livre, this.cryptogramme);
-							break;
-							} else if (i==12) {
-								stocksMarqueVarLimDt.get(key).retirer(this, livre, this.cryptogramme);
-							}
-						}
 
 
 				}

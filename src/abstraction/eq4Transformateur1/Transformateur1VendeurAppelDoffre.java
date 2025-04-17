@@ -7,7 +7,7 @@ import abstraction.eqXRomu.appelDOffre.AppelDOffre;
 import abstraction.eqXRomu.appelDOffre.IVendeurAO;
 import abstraction.eqXRomu.appelDOffre.OffreVente;
 import abstraction.eqXRomu.produits.Chocolat;
-import abstraction.eqXRomu.produits.ChocolatDeMarque;
+import abstraction.eqXRomu.produits.ChocolatDeMarque; 
 
 
 /**
@@ -74,18 +74,7 @@ public class Transformateur1VendeurAppelDoffre extends Transformateur1AcheteurBo
 		ChocolatDeMarque chocoMarqueAO = (ChocolatDeMarque) propositionRetenue.getProduit();
 
 
-		this.ajouterAuStock(chocoMarqueAO, propositionRetenue.getQuantiteT(), this.cryptogramme);
-		
-        for (int i=0; i<12; i++) {
-			Key key = new Key(i, chocoMarqueAO);
-			if (stocksMarqueVarLimDt.get(key) == null) {
-				Key keyLimDt = new Key(i-1, chocoMarqueAO);
-				stocksMarqueVarLimDt.get(keyLimDt).retirer(this, propositionRetenue.getQuantiteT(), this.cryptogramme);
-                break;
-			    } else if (i==12) {
-			    	stocksMarqueVarLimDt.get(key).retirer(this, propositionRetenue.getQuantiteT(), this.cryptogramme);
-			    }
-			}
+		this.retirerDuStock(chocoMarqueAO, propositionRetenue.getQuantiteT(), this.cryptogramme);
 
 
 		this.journalTransactions.ajouter(Romu.COLOR_LLGRAY, Color.RED, "AO: J'ai maintenant " + this.getQuantiteEnStock(propositionRetenue.getProduit(), this.cryptogramme) + " tonnes de " + propositionRetenue.getProduit() + " en stock.");
