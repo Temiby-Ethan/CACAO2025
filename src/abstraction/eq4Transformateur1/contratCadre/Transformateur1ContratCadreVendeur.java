@@ -296,7 +296,6 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 
 
 
-
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
 		if(contrat.getAcheteur() == this){
 			this.mesContratEnTantQuAcheteur.add(contrat);
@@ -337,6 +336,9 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 			}
 		}
 		this.mesContratEnTantQueVendeur.removeAll(contratsObsoletes);
+
+
+		
 	}
 
 
