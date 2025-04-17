@@ -1,6 +1,7 @@
 package abstraction.eq4Transformateur1.contratCadre;
 
 
+import java.awt.Color;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -9,7 +10,7 @@ import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.acteurs.Romu;
-import abstraction.eqXRomu.contratsCadres.*;
+import abstraction.eqXRomu.contratsCadres.*; 
 
 
 /*
@@ -45,16 +46,17 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 	//La stratégie de négociation doit être différenciée selon le produit mais pour la quantité, cela est probablement peu pertinent
 	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
 
-		double qttVoulue = contrat.getEcheancier().getQuantiteTotale();
+		double qttVoulue = 0.3*this.getQuantiteEnStock(contrat.getProduit(), this.cryptogramme);
 
 		//A MODIFIER	
 		//On vérifie que l'échéancier renvoyé respecte les règles et que la quantité en stock de produit est au moins le quart de la quantité totale
 		//Il faudrait dans l'idéal modifier cette condition pour prendre en compte la quantité de chocolat sortante et la quantité produite par step
-		if (qttVoulue>= SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER && getQuantiteEnStock(contrat.getProduit(), this.cryptogramme)> 0.25 * contrat.getQuantiteTotale()){
+		if (qttVoulue>= SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER && getQuantiteEnStock(contrat.getProduit(), this.cryptogramme)>= 0.10 * contrat.getQuantiteTotale()){
 			IProduit produit;
+			
 			//On vend des chocolat de marque
 			if (contrat.getProduit().getType() == "ChocolatDeMarque"){
-				produit = ((ChocolatDeMarque)contrat.getProduit()).getChocolat();
+				produit = ((ChocolatDeMarque)contrat.getProduit());
 
 				if (!this.peutVendre(produit)) return null; //On ne vend pas de ce produit
 
@@ -67,9 +69,12 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 				}
 				//On modifie l'échéancier uniformément pour se rapporcher de nos exigeances
 				else{
-					for(int s = e.getStepDebut() ; s<e.getStepFin() ; s++){
+					for(int s = e.getStepDebut() ; s<=e.getStepFin() ; s++){
 						double qttActuelle = e.getQuantite(s);
-						e.set(s, qttVoulue +  (qttActuelle - qttVoulue)/16);
+						if (qttVoulue +  (qttActuelle - qttVoulue)/16 > contrat.getEcheancier().getQuantiteTotale()/(contrat.getEcheancier().getNbEcheances()*10)){
+							e.set(s, qttVoulue +  (qttActuelle - qttVoulue)/16);
+						}
+						
 					}
 
 					//On vérifie que notre contrat respecte bien les règles des contrats cadres par rapport aux quantité minimale par step
@@ -291,7 +296,6 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 
 
 
-
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
 		if(contrat.getAcheteur() == this){
 			this.mesContratEnTantQuAcheteur.add(contrat);
@@ -332,6 +336,9 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 			}
 		}
 		this.mesContratEnTantQueVendeur.removeAll(contratsObsoletes);
+
+
+		
 	}
 
 
@@ -373,7 +380,9 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 				double livre = Math.min(getQuantiteEnStock(produit, this.cryptogramme), quantite);
 				if (livre > 0.){
 
-					stocksMarqueVar.get(produit).retirer(this, livre, this.cryptogramme);
+					//Retrait du produit concerné par le contrat
+					this.retirerDuStock(produit, quantite, this.cryptogramme);
+
 
 				}
 				this.journalStock.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE, "Vente CC LimDt :");
@@ -385,8 +394,10 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 			else{
 				double livre = Math.min(getQuantiteEnStock(produit, this.cryptogramme), quantite);
 				if (livre>0.0) {
-
-					stocksChocoVar.get(produit).retirer(this, livre, this.cryptogramme);
+					//AFFICHAGE EN CONSOLE
+					journalStock.ajouter(Color.pink, Romu.COLOR_PURPLE, "Le chocolat " + produit + " n'est pas censé sortir du stock, il est de type " + produit.getType());
+					
+					this.retirerDuStock(produit, quantite, this.cryptogramme);
 
 				}
 				this.journalStock.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_GREEN, "Vente CC :");
@@ -408,7 +419,7 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 	
 	public boolean peutVendre(IProduit produit) {
 		//On vérifie que 30% de notre stock est supérieur à 100T
-		return getQuantiteEnStock(produit, this.cryptogramme) * partInitialementVoulue > 100;
+		return this.getQuantiteEnStock(produit, this.cryptogramme) * partInitialementVoulue > 100;
 
 	}
 
