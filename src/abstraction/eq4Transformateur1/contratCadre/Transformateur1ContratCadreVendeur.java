@@ -51,11 +51,12 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 		//A MODIFIER	
 		//On vérifie que l'échéancier renvoyé respecte les règles et que la quantité en stock de produit est au moins le quart de la quantité totale
 		//Il faudrait dans l'idéal modifier cette condition pour prendre en compte la quantité de chocolat sortante et la quantité produite par step
-		if (qttVoulue>= SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER && getQuantiteEnStock(contrat.getProduit(), this.cryptogramme)> 0.25 * contrat.getQuantiteTotale()){
+		if (qttVoulue>= SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER && getQuantiteEnStock(contrat.getProduit(), this.cryptogramme)>= 0.10 * contrat.getQuantiteTotale()){
 			IProduit produit;
+			
 			//On vend des chocolat de marque
 			if (contrat.getProduit().getType() == "ChocolatDeMarque"){
-				produit = ((ChocolatDeMarque)contrat.getProduit()).getChocolat();
+				produit = ((ChocolatDeMarque)contrat.getProduit());
 
 				if (!this.peutVendre(produit)) return null; //On ne vend pas de ce produit
 
@@ -416,7 +417,7 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 	
 	public boolean peutVendre(IProduit produit) {
 		//On vérifie que 30% de notre stock est supérieur à 100T
-		return getQuantiteEnStock(produit, this.cryptogramme) * partInitialementVoulue > 100;
+		return this.getQuantiteEnStock(produit, this.cryptogramme) * partInitialementVoulue > 100;
 
 	}
 

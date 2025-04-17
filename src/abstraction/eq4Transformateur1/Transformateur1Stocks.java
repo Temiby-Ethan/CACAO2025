@@ -281,18 +281,18 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 			for (ExemplaireContratCadre cc : mesContratEnTantQuAcheteur){
 				if (cc.getProduit() == f){
 
-					//On calcule le prix moyen de ce qui entre en pondérant par la part que représente ce contrat dans la qtt totale entrante
-					prix += cc.getPrix() * (cc.getQuantiteALivrerAuStep()/qttEntrantesFeve.get(f));
+					//On calcule le prix moyen de ce qui entre en pondérant par la part que représente ce contrat dans la qtt totale entrante (si tant est que le nombre de fèves qui entrent est non nul)
+					if (qttEntrantesFeve.get(f) != 0.) prix += cc.getPrix() * (cc.getQuantiteALivrerAuStep()/qttEntrantesFeve.get(f));
 
 				}
 			}
 			//On calcule le prix pour les ajouts par bourse
 			if (f == Feve.F_BQ){
 				BourseCacao bourse = (BourseCacao) Filiere.LA_FILIERE.getActeur("BourseCacao");	
-				prix += bourse.getCours(f).getValeur() * (80. / qttEntrantesFeve.get(f));
+				if (qttEntrantesFeve.get(f) != 0.) prix += bourse.getCours(f).getValeur() * (80. / qttEntrantesFeve.get(f));
 			}
 
-			double ancienPrixPondere =prixTFeveStockee.keySet().contains(f)? prixTFeveStockee.get(f)*(getQuantiteEnStock(f, this.cryptogramme)/(getQuantiteEnStock(f, this.cryptogramme)+ qttEntrantesFeve.get(f))) : 0.;
+			double ancienPrixPondere =lesFeves.contains(f) && (getQuantiteEnStock(f, this.cryptogramme)+ qttEntrantesFeve.get(f)) != 0. ? prixTFeveStockee.get(f)*(getQuantiteEnStock(f, this.cryptogramme)/(getQuantiteEnStock(f, this.cryptogramme)+ qttEntrantesFeve.get(f))) : 0.;
 			prixTFeveStockee.put(f, ancienPrixPondere + prix*(qttEntrantesFeve.get(f)/(qttEntrantesFeve.get(f)+getQuantiteEnStock(f, this.cryptogramme))));
 		}
 	}
