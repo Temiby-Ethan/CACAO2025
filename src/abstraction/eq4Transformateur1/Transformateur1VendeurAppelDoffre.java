@@ -40,52 +40,53 @@ public class Transformateur1VendeurAppelDoffre extends Transformateur1AcheteurBo
 	public OffreVente proposerVente(AppelDOffre offre) {
 		//System.err.println(offre.toString());
 		double prixT = 0;
-		if (chocolatsLimDt.contains(offre.getProduit()) && offre.getQuantiteT() <= 0.4*this.getQuantiteEnStock(offre.getProduit(), this.cryptogramme)) {
+		if (chocolatsLimDt.contains(offre.getProduit())) {
+			if (offre.getQuantiteT() <= 0.4*this.getQuantiteEnStock(offre.getProduit(), this.cryptogramme)) {
+				if (((ChocolatDeMarque) offre.getProduit()).getChocolat() == Chocolat.C_BQ) {
+					prixT = prixTChocoBase.get(Chocolat.C_BQ);
+				} else if (((ChocolatDeMarque) offre.getProduit()).getChocolat() == Chocolat.C_BQ_E) {
+					prixT = prixTChocoBase.get(Chocolat.C_BQ_E);
+				} else if (((ChocolatDeMarque) offre.getProduit()).getChocolat() == Chocolat.C_MQ_E) {
+					prixT = prixTChocoBase.get(Chocolat.C_MQ_E);
+				} else if (((ChocolatDeMarque) offre.getProduit()).getChocolat() == Chocolat.C_HQ_BE) {
+					prixT = prixTChocoBase.get(Chocolat.C_HQ_BE);
+				}
+	
+				if (prixT == 0) {
+					return null;
+				}
+				
+				this.journalTransactions.ajouter(Color.white, Color.RED, "AO: Je propose " + offre.getQuantiteT() + " tonnes de " + offre.getProduit() + " au cours de " + prixT + " euros par tonne.");
+				return new OffreVente(offre, this, offre.getProduit(), prixT);
 			
-			//A MODIFIER
-			//Utiliser des switch case plutot que des if else
-            if (((ChocolatDeMarque) offre.getProduit()).getChocolat() == Chocolat.C_BQ) {
-				prixT = prixTChocoBase.get(Chocolat.C_BQ);
-			} else if (((ChocolatDeMarque) offre.getProduit()).getChocolat() == Chocolat.C_BQ_E) {
-				prixT = prixTChocoBase.get(Chocolat.C_BQ_E);
-			} else if (((ChocolatDeMarque) offre.getProduit()).getChocolat() == Chocolat.C_MQ_E) {
-				prixT = prixTChocoBase.get(Chocolat.C_MQ_E);
-			} else if (((ChocolatDeMarque) offre.getProduit()).getChocolat() == Chocolat.C_HQ_BE) {
-				prixT = prixTChocoBase.get(Chocolat.C_HQ_BE);
+		    } else {
+			    journalTransactions.ajouter(Color.pink, Color.RED, "--> AO "+ offre.getProduit() +" : Je ne peux pas proposer " + offre.getQuantiteT() + " tonnes de au cours de " + prixT + " euros par tonne.");
+				journalTransactions.ajouter("\n");
+			    return null;
 			}
-
-			if (prixT == 0) {
-				return null;
-			}
-			
-			this.journalTransactions.ajouter(Romu.COLOR_LLGRAY, Color.RED, "AO: Je propose " + offre.getQuantiteT() + " tonnes de " + offre.getProduit() + " au cours de " + prixT + " euros par tonne.");
-			return new OffreVente(offre, this, offre.getProduit(), prixT);
 		} else {
-			return null;	
+			return null;
 		}
 	}
 
 	@Override
 	public void notifierVenteAO(OffreVente propositionRetenue) {
 		//System.out.println("Votre proposition de vente a été retenue");
-		this.journalTransactions.ajouter(Romu.COLOR_LLGRAY, Color.RED, "AO: J'ai vendu " + propositionRetenue.getQuantiteT() + " tonnes de " + propositionRetenue.getProduit() + " au prix par T de " + propositionRetenue.getPrixT() + " euros par tonne.");
+		this.journalTransactions.ajouter(Romu.COLOR_LLGRAY, Color.RED, "-->AO "+ propositionRetenue.getProduit() +" : J'ai vendu " +propositionRetenue.getQuantiteT()+ " tonnes au prix de " + propositionRetenue.getPrixT() + " euros par tonne.");
+		this.journalTransactions.ajouter("\n");
 	 
 		//Mettre à jour les autres variables
 		ChocolatDeMarque chocoMarqueAO = (ChocolatDeMarque) propositionRetenue.getProduit();
 
 
 		this.retirerDuStock(chocoMarqueAO, propositionRetenue.getQuantiteT(), this.cryptogramme);
-
-
-		this.journalTransactions.ajouter(Romu.COLOR_LLGRAY, Color.RED, "AO: J'ai maintenant " + this.getQuantiteEnStock(propositionRetenue.getProduit(), this.cryptogramme) + " tonnes de " + propositionRetenue.getProduit() + " en stock.");
-		this.journalTransactions.ajouter("\n");
 	}
 	
 
 	@Override
 	public void notifierPropositionNonRetenueAO(OffreVente propositionRefusee) {
 		//System.out.println("Votre proposition de vente n'a pas été retenue");
-		this.journalTransactions.ajouter(Color.pink, Color.RED, "AO: Vente non retenue.");
+		this.journalTransactions.ajouter(Color.pink, Color.RED, "--> AO "+propositionRefusee.getProduit()+" : Vente non retenue.");
 		this.journalTransactions.ajouter("\n");
 		/*if (((ChocolatDeMarque) propositionRefusee.getProduit()).getChocolat() == Chocolat.C_BQ) {
 			prix_BQ = prix_BQ*0.95;
