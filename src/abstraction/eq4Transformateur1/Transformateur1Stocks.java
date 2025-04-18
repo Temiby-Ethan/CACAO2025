@@ -37,6 +37,11 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 	protected HashMap<Chocolat, Double> qttSortantesChoco;
 	protected HashMap<Chocolat, Double> marges;
 
+	protected Variable prix_Limdt_BQ;
+	protected Variable prix_Limdt_BQ_E; 
+	protected Variable prix_Limdt_MQ_E;
+	protected Variable prix_Limdt_HQ_BE;
+
 
 	public Transformateur1Stocks() {
 		super();
@@ -48,6 +53,12 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 		this.qttEntrantesFeve = new HashMap<Feve, Double>();
 		this.prixTFeveStockee = new HashMap<Feve, Double>();
 		this.prixTChocoBase = new HashMap<Chocolat, Double>();
+
+		this.prix_Limdt_BQ = new Variable("Prix LimDt BQ", "<html>Prix de vente du chocolat de marque BQ</html>", this, 0., 1000000., 0.);
+		this.prix_Limdt_BQ_E = new Variable("Prix LimDt BQ_E", "<html>Prix de vente du chocolat de marque BQ_E</html>", this, 0., 1000000., 0.);
+		this.prix_Limdt_MQ_E = new Variable("Prix LimDt MQ_E", "<html>Prix de vente du chocolat de marque MQ_E</html>", this, 0., 1000000., 0.);
+		this.prix_Limdt_HQ_BE = new Variable("Prix LimDt HQ_BE", "<html>Prix de vente du chocolat de marque HQ_BE</html>", this, 0., 1000000., 0.);
+
 		this.qttSortantesChoco = new HashMap<Chocolat, Double>();
 
 		this.marges = new HashMap<Chocolat, Double>();
@@ -73,9 +84,16 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 
 		//Initialisation des prix de base des chocolats que l'on veut produire
 		this.prixTChocoBase.put(Chocolat.C_BQ, 2000.);
+		this.prix_Limdt_BQ.setValeur(this, 2000.);
+
 		this.prixTChocoBase.put(Chocolat.C_BQ_E, 2000.);
-		this.prixTChocoBase.put(Chocolat.C_HQ_BE, 2000.);
+		this.prix_Limdt_BQ_E.setValeur(this, 2000.);
+
 		this.prixTChocoBase.put(Chocolat.C_MQ_E, 2000.);
+		this.prix_Limdt_MQ_E.setValeur(this, 2000.);
+
+		this.prixTChocoBase.put(Chocolat.C_HQ_BE, 2000.);
+		this.prix_Limdt_HQ_BE.setValeur(this, 2000.);
 		
 
 		//Initialisation des marges que l'on va faire sur les différents produits
@@ -172,6 +190,15 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 							double nouveauPrix = ancienPrix * ((getQuantiteEnStock(c, this.cryptogramme) + getQuantiteEnStock(cm, this.cryptogramme))/ (nouveauStock+getQuantiteEnStock(c, this.cryptogramme) + getQuantiteEnStock(cm, this.cryptogramme))) + (prixTFeveStockee.get(f) + coutProd + coutStockage) * (pourcentageTransfo.get(f).get(c) * transfo / (nouveauStock+ getQuantiteEnStock(c, this.cryptogramme) + getQuantiteEnStock(cm, this.cryptogramme)));
 
 							prixTChocoBase.put(c, nouveauPrix);
+							if (c == Chocolat.C_BQ) {
+								this.prix_Limdt_BQ.setValeur(this, nouveauPrix);
+							} else if (c == Chocolat.C_BQ_E) {
+								this.prix_Limdt_BQ_E.setValeur(this, nouveauPrix);
+							} else if (c == Chocolat.C_MQ_E) {
+								this.prix_Limdt_MQ_E.setValeur(this, nouveauPrix);
+							} else if (c == Chocolat.C_HQ_BE) {
+								this.prix_Limdt_HQ_BE.setValeur(this, nouveauPrix);
+							}
 						}
 
 						//Ajout des chocolats produits au stock
@@ -471,7 +498,10 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 		res.add(this.stock_C_BQ_E_Limdt);
 		res.add(this.stock_C_MQ_E_Limdt);
 		res.add(this.stock_C_HQ_BE_Limdt);
-
+        res.add(this.prix_Limdt_BQ);
+		res.add(this.prix_Limdt_BQ_E);
+		res.add(this.prix_Limdt_MQ_E);
+		res.add(this.prix_Limdt_HQ_BE);
 
 		return res;
 	}
