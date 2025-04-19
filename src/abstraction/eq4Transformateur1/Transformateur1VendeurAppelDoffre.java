@@ -51,7 +51,7 @@ public class Transformateur1VendeurAppelDoffre extends Transformateur1AcheteurBo
 				return new OffreVente(offre, this, offre.getProduit(), prixT);
 			
 		    } else {
-			    journalTransactions.ajouter(Color.pink, Color.RED, "--> AO "+ offre.getProduit() +" : Je ne peux pas proposer " + offre.getQuantiteT() + " tonnes de au cours de " + prixT + " euros par tonne.");
+			    journalTransactions.ajouter(Color.pink, Color.RED, "--> AO "+ offre.getProduit() +" : Je ne peux pas proposer " + offre.getQuantiteT() + " tonnes.");
 				journalTransactions.ajouter("\n");
 			    return null;
 			}
