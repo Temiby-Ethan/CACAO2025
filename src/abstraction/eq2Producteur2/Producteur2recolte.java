@@ -111,11 +111,25 @@ public class Producteur2recolte extends Producteur2Acteur {
         JournalBanque.ajouter(Filiere.LA_FILIERE.getEtape()+" : Cout total lié aux plantations : "+cout);
     }
 
+    public boolean seuil_replante(Feve f) {
+        double stock_f = stockvar.get(f).getValeur();
+        double prod_f = fevesSeches.get(f);
+
+        if (stock_f <= 2 * prod_f) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public void action_replante() {
         for (Plantation p : plantations) {
-            if (p.estMorte()) {
+            if (p.estMorte() && seuil_replante(p.getTypeFeve())) {
                 p.Replante();
                 Journalterrains.ajouter(Filiere.LA_FILIERE.getEtape()+" : Replantation de "+p.getParcelles()+" parcelles de "+p.getTypeFeve());
+            }
+            else if (p.estMorte() && !seuil_replante(p.getTypeFeve())) {
+                //Journalterrains.ajouter(Filiere.LA_FILIERE.getEtape()+" : Pas de replantation de "+p.getTypeFeve()+" car le stock est trop important");
             }
             else{}
         }
