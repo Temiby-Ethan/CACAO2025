@@ -10,31 +10,28 @@ import abstraction.eqXRomu.produits.Feve;
 
 public class Producteur2sechage extends Producteur2recolte {
     
-    protected HashMap<Feve,Double> fevesSeches;
+    //protected HashMap<Feve,Double> fevesSeches;
     private HashMap<Feve, List<Double>> fileSechage;
     private HashMap<Feve, List<Integer>> fileSechageSteps;
-    private HashMap<Feve, List<Double>> filecout;
-    protected HashMap<Feve, Double> cout_unit; 
-    protected HashMap<Feve, Double> cout_unit_t;
+    //private HashMap<Feve, List<Double>> filecout;
+    //protected HashMap<Feve, Double> cout_unit;
     private Journal journalSechage;
 
     public Producteur2sechage() {
         super();
-        this.fevesSeches = new HashMap<Feve, Double>();
+        //this.fevesSeches = new HashMap<Feve, Double>();
         this.fileSechage = new HashMap<Feve, List<Double>>();
         this.fileSechageSteps = new HashMap<Feve, List<Integer>>();
-        this.filecout = new HashMap<Feve, List<Double>>();
-        this.cout_unit = new HashMap<Feve, Double>();
+        //this.filecout = new HashMap<Feve, List<Double>>();
+        //this.cout_unit = new HashMap<Feve, Double>();
         this.journalSechage = new Journal("Journal Sechage Eq2",this);
-        this.cout_unit_t = new HashMap<Feve, Double>();
 
         for (Feve f : Feve.values()) {
-            this.fevesSeches.put(f, 0.0);
+            fevesSeches.put(f, 0.0);
             this.fileSechage.put(f, new ArrayList<>());
             this.fileSechageSteps.put(f, new ArrayList<>());
-            this.filecout.put(f, new ArrayList<>());
-            this.cout_unit.put(f, 0.0);
-            this.cout_unit_t.put(f, 0.0);
+            //this.filecout.put(f, new ArrayList<>());
+            //this.cout_unit.put(f, 0.0);
         }
         
     }
@@ -47,115 +44,88 @@ public class Producteur2sechage extends Producteur2recolte {
 
         for (Feve f : Feve.values()) {
             double quantite = feve_recolte.get(f);
-            double cout = cout_recolte.get(f);
+            //double cout = cout_recolte.get(f);
             if (quantite > 0) {
                 int stepFinSechage = stepActuel + (f == Feve.F_BQ || f == Feve.F_BQ_E ? 2 : 1);
                 fileSechage.get(f).add(quantite);
                 fileSechageSteps.get(f).add(stepFinSechage);
-                filecout.get(f).add(cout);
+                //filecout.get(f).add(cout);
                 journalSechage.ajouter("Step " + stepActuel + " : Ajout au séchage de " + quantite + " fèves " + f + " (fin prévue au step " + stepFinSechage + ")");
             }
         }
     }
 
-    public void calcul_cout_unit_t() {
-        for (Feve f : Feve.values()) {
-            double cout = cout_recolte.get(f);
-            switch (f) {
-                case F_BQ:
-                    double quantite_T_BQ = feve_recolte.get(f) * 0.000000753;
-                    cout_unit_t.put(f, cout / quantite_T_BQ);
-                    break;
-                case F_BQ_E:
-                    double quantite_T_BQ_E = feve_recolte.get(f) * 0.000000753;
-                    cout_unit_t.put(f, cout / quantite_T_BQ_E);
-                    break;
-                case F_MQ:
-                    double quantite_T_MQ = feve_recolte.get(f) * 0.00000075;
-                    cout_unit_t.put(f, cout / quantite_T_MQ);
-                    break;
-                case F_MQ_E:
-                    double quantite_T_MQ_E = feve_recolte.get(f) * 0.00000075;
-                    cout_unit_t.put(f, cout / quantite_T_MQ_E);
-                    break;
-                case F_HQ_E:
-                    double quantite_T_HQ_E = feve_recolte.get(f) * 0.000000765;
-                    cout_unit_t.put(f, cout / quantite_T_HQ_E);
-                    break;
-                case F_HQ_BE:
-                    double quantite_T_HQ_BE = feve_recolte.get(f) * 0.000000765;
-                    cout_unit_t.put(f, cout / quantite_T_HQ_BE);
-                    break;
-            }
-            
-        }
-    }
+    
     /**
      * Met à jour le séchage des fèves, libère celles qui ont atteint leur step de fin.
      */
     public void mettreAJourSechage() {
         int stepActuel = Filiere.LA_FILIERE.getEtape();
         HashMap<Feve, Double> sechageFini = new HashMap<>();
-        HashMap<Feve, Double> cout_int = new HashMap<>();
+        //HashMap<Feve, Double> cout_int = new HashMap<>();
 
         for (Feve f : Feve.values()) {
             sechageFini.put(f, 0.0);
-            cout_int.put(f, 0.0);
+            //cout_int.put(f, 0.0);
 
             List<Double> lots = fileSechage.get(f);
             List<Integer> stepsFin = fileSechageSteps.get(f);
-            List<Double> couts = filecout.get(f);
+            //List<Double> couts = filecout.get(f);
             List<Double> nouveauxLots = new ArrayList<>();
             List<Integer> nouveauxSteps = new ArrayList<>();
-            List<Double> nouveauxCouts = new ArrayList<>();
+            //List<Double> nouveauxCouts = new ArrayList<>();
 
             for (int i = 0; i < lots.size(); i++) {
                 if (stepsFin.get(i) <= stepActuel) {
                     sechageFini.put(f, sechageFini.get(f) + lots.get(i));
-                    cout_int.put(f, cout_int.get(f) + couts.get(i));
+                    //cout_int.put(f, cout_int.get(f) + couts.get(i));
                 } else {
                     nouveauxLots.add(lots.get(i));
                     nouveauxSteps.add(stepsFin.get(i));
-                    nouveauxCouts.add(couts.get(i));
+                    //nouveauxCouts.add(couts.get(i));
                 }
             }
 
             // Mise à jour des listes après suppression des lots séchés
             fileSechage.put(f, nouveauxLots);
             fileSechageSteps.put(f, nouveauxSteps);
-            filecout.put(f, nouveauxCouts);
+            //filecout.put(f, nouveauxCouts);
 
             // Mise à jour des fèves sèches et passage en tonnes
             switch (f) {
                 case F_BQ:
                     fevesSeches.put(f, sechageFini.get(f) * 0.000000753);
-                    cout_unit.put(f, cout_int.get(f) / sechageFini.get(f));
+                    //cout_unit.put(f, cout_int.get(f) / sechageFini.get(f));
                     break;
                 case F_BQ_E:
                     fevesSeches.put(f, sechageFini.get(f) * 0.000000753);
-                    cout_unit.put(f, cout_int.get(f) / sechageFini.get(f));
+                    //cout_unit.put(f, cout_int.get(f) / sechageFini.get(f));
                     break;
                 case F_MQ:
                     fevesSeches.put(f, sechageFini.get(f) * 0.00000075);
-                    cout_unit.put(f, cout_int.get(f) / sechageFini.get(f));
+                    //cout_unit.put(f, cout_int.get(f) / sechageFini.get(f));
                     break;
                 case F_MQ_E:
                     fevesSeches.put(f, sechageFini.get(f) * 0.00000075);
-                    cout_unit.put(f, cout_int.get(f) / sechageFini.get(f));
+                    //cout_unit.put(f, cout_int.get(f) / sechageFini.get(f));
                     break;
                 case F_HQ_E:
                     fevesSeches.put(f, sechageFini.get(f) * 0.000000765);
-                    cout_unit.put(f, cout_int.get(f) / sechageFini.get(f));
+                    //cout_unit.put(f, cout_int.get(f) / sechageFini.get(f));
                     break;
                 case F_HQ_BE:
                     fevesSeches.put(f, sechageFini.get(f) * 0.000000765);
-                    cout_unit.put(f, cout_int.get(f) / sechageFini.get(f));
+                    //cout_unit.put(f, cout_int.get(f) / sechageFini.get(f));
                     break;
             }
         }
 
         journalSechage.ajouter("Step " + stepActuel + " : Nouvelles tonnes de fèves sèches : " + fevesSeches);
 
+    }
+
+    public double getFevesSeches(Feve f) {
+        return fevesSeches.get(f);
     }
 
     public void next() {

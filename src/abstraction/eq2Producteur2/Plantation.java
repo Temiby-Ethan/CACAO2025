@@ -6,7 +6,7 @@ import abstraction.eqXRomu.produits.Feve;
 
 
 
-public class Plantation extends Producteur2recolte {
+public class Plantation {
     
     private Feve typeFeve;          // Type de fèves cultivées
     private int parcelles;          // Nombre de parcelles de 100 ha
@@ -17,7 +17,8 @@ public class Plantation extends Producteur2recolte {
     private double prix_achat; // Prix d'achat de la plantation
     private double prix_vente; // Prix de vente de la plantation
     private double prix_replantation; // Prix de replantation de la plantation
-    private double salaire_employe; // Prix que coûtente les employés par step par parcelle
+    private double salaire_employe; // Prix que coûtent les employés par step par parcelle
+    private boolean replante = false;
 
     
     public Plantation(Feve typeFeve, int parcelles, int age) {
@@ -32,55 +33,55 @@ public class Plantation extends Producteur2recolte {
                 this.dureeDeVie = 960;  // 40 ans
                 this.tempsAvantProduction = 72;  // 3 ans
                 this.productionParParcelle = 126666; // 126666 cabosses par parcelle a chaque next
-                this.prix_achat = 2250000;
-                this.prix_vente = 1450000;
-                this.prix_replantation = 800000;
-                this.salaire_employe = 6600;
+                this.prix_achat = 225000;
+                this.prix_vente = 145000;
+                this.prix_replantation = 80000;
+                this.salaire_employe = 3400;
                 break;
             case F_BQ_E:
                 this.dureeDeVie = 960;  // 40 ans
                 this.tempsAvantProduction = 72;  // 3 ans
                 this.productionParParcelle = 126666; // 126666 cabosses par parcelle a chaque next
-                this.prix_achat = 2250000;
-                this.prix_vente = 1450000;
-                this.prix_replantation = 800000;
-                this.salaire_employe = 30000;
+                this.prix_achat = 225000;
+                this.prix_vente = 145000;
+                this.prix_replantation = 80000;
+                this.salaire_employe = 10000;
                 break;
             case F_MQ:
                 this.dureeDeVie = 960;
                 this.tempsAvantProduction = 96; // 4 ans
                 this.productionParParcelle = 93750;
-                this.prix_achat = 4250000;
-                this.prix_vente = 2850000;
-                this.prix_replantation = 1400000;
-                this.salaire_employe = 5400;
+                this.prix_achat = 425000;
+                this.prix_vente = 285000;
+                this.prix_replantation = 140000;
+                this.salaire_employe = 3000;
                 break;
             case F_MQ_E:
                 this.dureeDeVie = 960;
                 this.tempsAvantProduction = 96; // 4 ans
                 this.productionParParcelle = 93750;
-                this.prix_achat = 4250000;
-                this.prix_vente = 2850000;
-                this.prix_replantation = 1400000;
-                this.salaire_employe = 22500;
+                this.prix_achat = 425000;
+                this.prix_vente = 285000;
+                this.prix_replantation = 140000;
+                this.salaire_employe = 8750;
                 break;
             case F_HQ_E:
                 this.dureeDeVie = 960;
                 this.tempsAvantProduction = 120; // 5 ans
                 this.productionParParcelle = 41666;
-                this.prix_achat = 7000000;
-                this.prix_vente = 4650000;
-                this.prix_replantation = 2350000;
-                this.salaire_employe = 15000;
+                this.prix_achat = 700000;
+                this.prix_vente = 465000;
+                this.prix_replantation = 235000;
+                this.salaire_employe = 6250;
                 break;
             case F_HQ_BE:
                 this.dureeDeVie = 960;
                 this.tempsAvantProduction = 120; // 5 ans
                 this.productionParParcelle = 29166;
-                this.prix_achat = 7000000;
-                this.prix_vente = 4650000;
-                this.prix_replantation = 2350000;
-                this.salaire_employe = 15000;
+                this.prix_achat = 700000;
+                this.prix_vente = 465000;
+                this.prix_replantation = 235000;
+                this.salaire_employe = 6250;
                 break;
             default:
                 throw new IllegalArgumentException("Type de fève non reconnu !");
@@ -91,7 +92,11 @@ public class Plantation extends Producteur2recolte {
      * Avance l'âge de la plantation d'un step et renvoie la quantité de fèves produites.
      */
     public double prodPlantation() {
-        if (age < tempsAvantProduction) {
+        if (age == 0) {
+            return 0; // Plantation récente, pas encore en production
+        }
+        else if (age < tempsAvantProduction) {
+            replante = false;
             return 0; // La plantation n'est pas encore en production
         }
         if (age >= dureeDeVie) {
@@ -99,7 +104,7 @@ public class Plantation extends Producteur2recolte {
         }
 
         // Calcul de la production en fèves sèches
-        double fevesTotales = this.productionParParcelle * getFevesParCabosse();
+        double fevesTotales = parcelles * productionParParcelle * getFevesParCabosse();
 
         return fevesTotales;
     }
@@ -151,15 +156,52 @@ public class Plantation extends Producteur2recolte {
         return age >= dureeDeVie;
     }
 
+    public void Replante() {
+        age = 0;
+        replante = true;
+    }
+
+    public boolean getReplante() {
+        return replante;
+    }
+
+    public double getprix_achat() {
+        return prix_achat;
+    }
+    public double getprix_replantation() {
+        return prix_replantation;
+    }
+
     public double getcout() {
-        if (age == 0){
-            return prix_achat;
+        if ((age == 0) && (replante == false)) {
+            return parcelles*prix_achat;
+        }
+        else if ((age == 0) && (replante == true)) {
+            return parcelles*prix_replantation;
         }
         else if (age <= dureeDeVie){
-            return salaire_employe;
+            return parcelles*salaire_employe;
         }
         else {
             return 0;
         }
+    }
+
+    public double getcout_amorti() {
+        if ((age == 0) && (replante == false)) {
+            return parcelles*prix_achat / 960;
+        }
+        else if ((age == 0) && (replante == true)) {
+            return parcelles*prix_replantation / 960;
+        }
+        else if ((age <= dureeDeVie) && (replante == false)){
+            return parcelles*salaire_employe + (parcelles*prix_achat / 960);
+        }
+        else {
+            return parcelles*prix_vente + (parcelles*prix_replantation / 960);
+        }
+    }
+    public double get_prix_vente() {
+        return prix_vente;
     }
 }
