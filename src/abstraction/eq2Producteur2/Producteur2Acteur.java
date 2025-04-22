@@ -1,3 +1,4 @@
+//Equipe
 package abstraction.eq2Producteur2;
 
 import java.awt.Color;
@@ -17,13 +18,19 @@ public class Producteur2Acteur implements IActeur {
 	
 	protected HashMap<Feve,Double> prodParStep;
 	protected HashMap<Feve,Variable> stock;
+	protected HashMap<Feve,Variable> stockvar;
+	protected HashMap<Feve,Double> fevesSeches;
 	protected int cryptogramme;
 	protected Variable stockTotal;
 	private int numero = 0;
 	protected Journal num = new Journal("Journal Eq2", this);
+	protected Journal JournalBanque;
 
 	public Producteur2Acteur() {
-		// A REMPLIR
+
+		this.JournalBanque = new Journal("Journal Banque Eq2", this);
+		this.stockvar = new HashMap<Feve,Variable>();
+		this.fevesSeches = new HashMap<Feve, Double>();
     }
 	
 	public void initialiser() {
@@ -87,7 +94,7 @@ public class Producteur2Acteur implements IActeur {
 	// votre cryptogramme personnel, indispensable pour les
 	// transactions.
 	public void setCryptogramme(Integer crypto) {
-		this.cryptogramme = crypto;System.out.println(cryptogramme);
+		this.cryptogramme = crypto;
 	}
 
 	// Appelee lorsqu'un acteur fait faillite (potentiellement vous)

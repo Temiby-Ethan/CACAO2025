@@ -1,3 +1,4 @@
+//Nils
 package abstraction.eq5Transformateur2;
 
 import abstraction.eqXRomu.filiere.Filiere;
@@ -7,9 +8,9 @@ import abstraction.eqXRomu.produits.Feve;
 
 public class ProcessChoco extends FraisAditionnel {
 
-    private double proportionFeve;
-    private double coutIngredientSecondaire;
-    private double coutAditionnelParTablette;
+    protected double proportionFeve;
+    protected double coutIngredientSecondaire;
+    protected double coutAditionnelParTablette;
 
 
     public ProcessChoco(){
@@ -19,13 +20,18 @@ public class ProcessChoco extends FraisAditionnel {
         this.coutAditionnelParTablette=0.30; // euro par tablette produite
 
     }
+
+    protected double getcoutAditionnelParTablette(){
+        return this.coutAditionnelParTablette;
+    }
     
-    public void fabriquerChocolat(Chocolat chocolat,Feve feve, double quantite) { //quantite de chocolat en tonne voulu
-        this.ajouterStock(this, chocolat, quantite*10000, super.cryptogramme);    // *10000 pour passer de tonne à unité de tablette de chocolat
-        this.retirerStock(this, feve, quantite, super.cryptogramme);
-        Filiere.LA_FILIERE.getBanque().payerCout(this, super.cryptogramme,"Achat d'ingrédient secondaire",quantite*this.coutIngredientSecondaire);
-        Filiere.LA_FILIERE.getBanque().payerCout(this, super.cryptogramme,"Frais de production",quantite*10000*this.coutAditionnelParTablette);
-        
+    public void fabriquerChocolat(Chocolat chocolat,Feve feve, double quantite) {
+        if (quantite >0) { 
+            this.ajouterStock(this, chocolat, quantite*10000, super.cryptogramme);    // *10000 pour passer de tonne à unité de tablette de chocolat
+            this.retirerStock(this, feve, quantite, super.cryptogramme);
+            Filiere.LA_FILIERE.getBanque().payerCout(this, super.cryptogramme,"Achat d'ingrédient secondaire",quantite*this.coutIngredientSecondaire);
+            Filiere.LA_FILIERE.getBanque().payerCout(this, super.cryptogramme,"Frais de production",quantite*10000*this.coutAditionnelParTablette);
+        }
     }
 
     

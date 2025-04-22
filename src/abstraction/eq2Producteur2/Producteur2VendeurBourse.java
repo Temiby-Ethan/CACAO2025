@@ -1,10 +1,14 @@
+//Roth Jérôme
+ 
 package abstraction.eq2Producteur2;
 
 import java.awt.Color;
+import java.net.http.HttpResponse.BodySubscribers;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import abstraction.eqXRomu.bourseCacao.BourseCacao;
 import abstraction.eqXRomu.bourseCacao.IVendeurBourse;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
@@ -17,7 +21,8 @@ import abstraction.eqXRomu.produits.IProduit;
 
 
 
-public class Producteur2VendeurBourse extends Producteur2stock implements IVendeurBourse{
+
+public class Producteur2VendeurBourse extends Producteur2VenteCC implements IVendeurBourse{
 
 	private Journal journalBourse;
 	
@@ -25,23 +30,37 @@ public class Producteur2VendeurBourse extends Producteur2stock implements IVende
 
 		super();
 		this.journalBourse = new Journal(" journal Bourse Eq2", this);
+		
 
 	}
 
 	
 	public double offre(Feve f, double cours) {
-		if (f.getGamme()==Gamme.MQ) {
-			double offre = 120.0;
-			journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente "+offre+" T de "+f);
+			SetStockMin(0.1);
+
+			BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
+			double coursf = bourse.getCours(f).getValeur();
+			double offre = 0 ;
+			double stock_a = stockvar.get(f).getValeur();
+			double a_garder = restantDu(f);
+
+			journalBourse.ajouter("Valeur du cours : "+coursf+"\nValeur du prix : "+cout_unit_t.get(f) * 1.2);
+
+			if((stock_a - a_garder > seuil_stock.get(f))&&(cout_unit_t.get(f) * 1.2 < coursf)){
+				offre = stock_a - a_garder - seuil_stock.get(f);
+				journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" Je mets en vente "+offre+" T de "+f);
+				
+			}
+
 			return offre;
-		}else { 
-			journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : je met en vente 0.0 T de "+f);
-			return 0.0;
+
+
+				
 		}
-	}
 
 	public double notificationVente(Feve f, double quantiteEnT, double coursEnEuroParT) {
 		double retire = Math.min(this.stockvar.get(f).getValeur(), quantiteEnT);
+		JournalStock.ajouter("Vente en bourse :");
 		journalBourse.ajouter(Filiere.LA_FILIERE.getEtape()+" : j'ai vendu "+quantiteEnT+" T de "+f);
 		DeleteStock(f,retire);
 

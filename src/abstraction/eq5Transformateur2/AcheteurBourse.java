@@ -1,25 +1,41 @@
+//Simon
 package abstraction.eq5Transformateur2;
 
 import abstraction.eqXRomu.bourseCacao.IAcheteurBourse;
+import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.produits.Feve;
 
 public class AcheteurBourse extends ContratCadreAcheteur implements IAcheteurBourse {
 
     public AcheteurBourse(){
-        super();
+                super();
 }
 
    
     public double demande(Feve f, double cours) {
-        if (f==Feve.F_MQ){
-            super.journal.ajouter("demande de 80 tonnes de " +f+ "en bourse" );
-            return 80;
+        if (f == Feve.F_HQ_BE || f == Feve.F_HQ_E || f == Feve.F_MQ_E || f == Feve.F_MQ){
+            double enStock = super.getQuantiteStock(f);
+            double quantiteVoulueProduction= super.getProductionTotale()*super.getProportion(f);
+            double difference= quantiteVoulueProduction-enStock;
+
+            double solde = Filiere.LA_FILIERE.getBanque().getSolde(this, super.cryptogramme);
+        double montantMax = solde / cours;
+
+        if (difference > 0 && difference <= montantMax) {
+        return difference;
+        } else if (difference > 0) {
+        return montantMax;
+        }
+            
+
+        
+        
         }
         return 0.0;
     }
 
     
-    private int cryptogramme;
+    protected int cryptogramme;
 
     public void notificationAchat(Feve f, double quantiteEnT, double coursEnEuroParT) {
         super.journal.ajouter("achat effectues");
@@ -34,6 +50,11 @@ public class AcheteurBourse extends ContratCadreAcheteur implements IAcheteurBou
     public void notificationBlackList(int dureeEnStep) {
         super.journal.ajouter("Blacklist de la bourse pour " + dureeEnStep + " steps");
     }
+
+
+public int getCryptogramme() {
+    return this.cryptogramme;
+}
 }
     
 

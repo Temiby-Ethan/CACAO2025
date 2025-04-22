@@ -1,91 +1,86 @@
 package abstraction.eq1Producteur1;
 
-import abstraction.eqXRomu.contratsCadres.Echeancier;
-import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
-import abstraction.eqXRomu.contratsCadres.IVendeurContratCadre;
+import java.util.*;
+
+import abstraction.eqXRomu.contratsCadres.*;
+import abstraction.eqXRomu.filiere.Filiere;
+import abstraction.eqXRomu.general.Journal;
+import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
-import abstraction.eq1Producteur1.Stock;
 
+public class Producteur1ContratCadre extends Producteur1Acteur implements IVendeurContratCadre {
 
-// ADAM Sebiane
-public class Producteur1ContratCadre extends Producteur1Acteur implements IVendeurContratCadre{
+    private Producteur1 vendeur; // Référence au Producteur1 principal
+    private List<ExemplaireContratCadre> contrats;
+
+    public Producteur1ContratCadre() {
+        super();
+        this.stock = new Stock();
+        this.contrats = new ArrayList<>();
+
+        // Initialisation des stocks pour chaque type de fève
+        stock.ajouter(Feve.F_BQ, 100000);
+        stock.ajouter(Feve.F_MQ, 100000);
+        stock.ajouter(Feve.F_HQ_BE, 100000);
+    }
 
     @Override
     public boolean vend(IProduit produit) {
-       return true;
+        return produit instanceof Feve;
     }
 
     @Override
     public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
-        // Récupère l'échéancier proposé par l'acheteur
+        IProduit produit = contrat.getProduit();
         Echeancier echeancierPropose = contrat.getEcheancier();
-
-        // Récupère  le stock total pour le produit concerné
         
-        double stockTotal = stock.getStockTotal();
 
-        // Calcule 25% du stock total
-        double quantiteMaximale = 0.25 * stockTotal;
+        double stockDispo = stock.getStockTotal();
+        double quantiteMax = 0.25 * stockDispo;
 
-        // Si la quantité demandée dépasse la quantité maximale, proposer un nouvel échéancier
-        if (echeancierPropose.getQuantiteTotale() > quantiteMaximale) {
-            Echeancier echeancierContrePropose = new Echeancier(echeancierPropose.getStepDebut());
-            for (int step = echeancierPropose.getStepDebut(); step <= echeancierPropose.getStepFin(); step++) { 
-                double quantiteStep = echeancierPropose.getQuantite(step);
-                if (quantiteStep > quantiteMaximale) {
-                    echeancierContrePropose.ajouter(quantiteMaximale);
-                } else {
-                    echeancierContrePropose.ajouter(quantiteStep);
+        if (echeancierPropose.getQuantiteTotale() > quantiteMax) {
+            Echeancier contreProp = new Echeancier(echeancierPropose.getStepDebut());
+            for (int step = echeancierPropose.getStepDebut(); step <= echeancierPropose.getStepFin(); step++) {
+                double q = echeancierPropose.getQuantite(step);
+                if (Math.min(q, quantiteMax / echeancierPropose.getNbEcheances())<0) {
+                    System.out.println("Aie aie aie eq1 contreporposition vendeur cc");
+                    return null;
                 }
+                contreProp.ajouter(Math.min(q, quantiteMax / echeancierPropose.getNbEcheances()));
             }
-            return echeancierContrePropose;
+            return contreProp;
         }
-
-        // Si la quantité demandée est acceptable, accepter l'échéancier proposé
         return echeancierPropose;
     }
 
     @Override
-    
     public double propositionPrix(ExemplaireContratCadre contrat) {
-        // Amal Moncer
-        return contrat.getPrix();
+        IProduit produit = contrat.getProduit();
+
+        if (produit.equals(Feve.F_BQ)) return 1.2;
+        if (produit.equals(Feve.F_MQ)) return 1.8;
+        if (produit.equals(Feve.F_HQ_BE)) return 2.5;
+
+        return 1.0;
     }
 
     @Override
-
     public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
-        // Amal Moncer
-        if (contrePropositionDuVendeur(contrat)==null){
-            return 0.0;
-        }
-        else{
-            return contrat.getPrix();
-        }
-    }
-        
-
-    @Override
-    
-    public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
-        // Amal Moncer
-        journal.ajouter("Nouveau contrat cadre : "+contrat);
+        return propositionPrix(contrat);
     }
 
     @Override
-
-    public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
-        // Amal Moncer
-        if (quantite > getQuantiteEnStock(produit, cryptogramme)) {
-            journal.ajouter("Le vendeur n'a pas pu livrer la quantite demandee");
-            return getQuantiteEnStock(produit, cryptogramme);
-        }
-        else {
-            journal.ajouter("Le vendeur a livre la quantite demandee");
-            double quantiteEnStock = getQuantiteEnStock(produit, cryptogramme);
-            quantiteEnStock -= quantite;
-            return quantiteEnStock;
-        }
-    } 
-
+public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
+    this.contrats.add(contrat);
+    journal.ajouter("Nouveau contrat cadre accepté : " + contrat);
 }
+
+    @Override
+    public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
+        double quantiteLivree = Math.min(quantite, stock.getStockTotal());
+        stock.retirer(produit, quantiteLivree);
+        journal.ajouter("Livraison de " + quantiteLivree + " de " + produit + " pour le contrat " + contrat);
+        return quantiteLivree;
+    }
+}
+    

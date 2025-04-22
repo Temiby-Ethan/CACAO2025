@@ -1,4 +1,4 @@
-//Jérôme
+//Jérôme Roth
 
 package abstraction.eq2Producteur2;
 
@@ -20,26 +20,33 @@ public class Producteur2stock extends Producteur2sechage {
 
     protected HashMap<Feve,Double> prodParStep;
 	protected HashMap<Feve,Queue<Stock>> stock;
-    protected HashMap<Feve,Variable> stockvar;
+    //protected HashMap<Feve,Variable> stockvar;
+    protected HashMap<Feve,Double> seuil_stock;
 	protected Variable stockTotal;
-    private Journal JournalStock;
-    private Journal JournalBanque;
+    protected Journal JournalStock;
+    protected HashMap<Feve,Double> stock_initial;
+
     double cout_stockage = 7.5;
 
 
 	public Producteur2stock() {
 
         super();
+        this.seuil_stock = new HashMap<Feve,Double>();
         this.stock = new HashMap<Feve, Queue<Stock>>();
-        this.stockvar = new HashMap<Feve,Variable>();
+        //this.stockvar = new HashMap<Feve,Variable>();
 		this.prodParStep = new HashMap<Feve, Double>();
         this.JournalStock = new Journal("Journal Stock Eq2",this);
-        this.JournalBanque = new Journal("Journal Banque Eq2", this);
+        this.stock_initial = new HashMap<Feve,Double>();
+
+        this.stock_initial.put(Feve.F_BQ,22900.0*2);
+        this.stock_initial.put(Feve.F_BQ_E,2100.0*2);
+        this.stock_initial.put(Feve.F_MQ,6500.0*2);
+        this.stock_initial.put(Feve.F_MQ_E,1600.0*2);
+        this.stock_initial.put(Feve.F_HQ_E,0.0*2);
+        this.stock_initial.put(Feve.F_HQ_BE,560.0*2);
 
         double totalInitialStock = 0.0;
-
-
-
 
         for(Feve f : Feve.values()){ // On initialise la prod de chaque fève à 0 car on a rien de séché au step 1
             SetProdParStep(f,0); 
@@ -48,10 +55,10 @@ public class Producteur2stock extends Producteur2sechage {
         
         this.stockTotal = new Variable("Stock total", "Quantité totale de fèves en stock", this, totalInitialStock);
         		
-       for (Feve f : Feve.values()) {
+        for (Feve f : Feve.values()) {
 
-            double initialStock = 12000; //On commence avec 12000T de chaque fèves
-            this.stockvar.put(f, new VariableReadOnly(this+"Stock"+f.toString().substring(2), "<html>Stock de feves "+f+"</html>",this, 0.0, prodParStep.get(f)*24, initialStock));
+            double initialStock = this.stock_initial.get(f); //On commence avec 12000T de chaque fèves
+            stockvar.put(f, new VariableReadOnly(this+"Stock"+f.toString().substring(2), "<html>Stock de feves "+f+"</html>",this, 0.0, prodParStep.get(f)*24, initialStock));
             
             Queue<Stock> initStock = new LinkedList<>();
             Stock stock_f = new Stock(0, initialStock);
@@ -61,7 +68,6 @@ public class Producteur2stock extends Producteur2sechage {
         }
         SetTotalStock();
 
-
     }
 
 
@@ -69,7 +75,6 @@ public class Producteur2stock extends Producteur2sechage {
 
     public void initialiser(){
         super.initialiser();
-
     }
 
 	
@@ -77,7 +82,9 @@ public class Producteur2stock extends Producteur2sechage {
     public void next(){
         
         super.next();
+        
         UpdateProd();
+        SetStockMin(0.1);
         ProdParStep();
         Check();
         TaxeStockage();
@@ -136,6 +143,7 @@ public class Producteur2stock extends Producteur2sechage {
     public void SetProdParStep(Feve f, double prod){  //Permet de modifier la production par next d'une fève en particulier
 
         this.prodParStep.put(f, prod);
+       
 
     }
 
@@ -146,13 +154,14 @@ public class Producteur2stock extends Producteur2sechage {
 
             double feve_seche = fevesSeches.get(f);
             this.prodParStep.put(f,feve_seche);
+            
 
         }
     }
  
 	public void AddStock(Feve f, double prod){ //On ajouter un stock d'une fève en particulier
 
-        this.stockvar.get(f).ajouter(this, prod, cryptogramme);
+        stockvar.get(f).ajouter(this, prod, cryptogramme);
 
         Stock stock = new Stock(Filiere.LA_FILIERE.getEtape(),prod);
 
@@ -164,7 +173,7 @@ public class Producteur2stock extends Producteur2sechage {
 
     public void DeleteStock(Feve f, double prod){ //On enlève le stock d'une fève en particulier
 
-        this.stockvar.get(f).retirer(this, prod, cryptogramme);
+        stockvar.get(f).retirer(this, prod, cryptogramme);
         this.stockTotal.retirer(this,prod,cryptogramme);
         JournalStock.ajouter(Filiere.LA_FILIERE.getEtape()+" : On enlève "+ prod+" T de "+f+" au stock");
 
@@ -193,7 +202,7 @@ public class Producteur2stock extends Producteur2sechage {
 
     }
 
-    public void Check(){
+    public void Check(){ //Supprime les fèves dont la date de stockage est dépassée
 
         for (Feve f : Feve.values()){
 
@@ -205,7 +214,7 @@ public class Producteur2stock extends Producteur2sechage {
             if(Filiere.LA_FILIERE.getEtape() - next_a > 8 ){
                 fileStock.poll();
                 JournalStock.ajouter("Suppresion de "+tonnes+"T de "+f+" car date de stockage dépassées");
-                this.stockvar.get(f).retirer(this, tonnes,cryptogramme);
+                stockvar.get(f).retirer(this, tonnes,cryptogramme);
                 this.stockTotal.retirer(this,tonnes,cryptogramme);
             }
 
@@ -221,6 +230,19 @@ public class Producteur2stock extends Producteur2sechage {
         for(Feve f : Feve.values()){ 
             AddStock(f,this.prodParStep.get(f));
         }
+
+    }
+
+    public void SetStockMin(double pourcentage){
+
+        for(Feve f : Feve.values()){
+
+            double prod = stockvar.get(f).getValeur();
+            this.seuil_stock.put(f, pourcentage*prod);
+
+
+        }
+
 
     }
 
@@ -240,7 +262,7 @@ public class Producteur2stock extends Producteur2sechage {
     public List<Variable> getIndicateurs() { //Modifie correctement les affichages
 		List<Variable> res = super.getIndicateurs();
 
-        res.addAll(this.stockvar.values());
+        res.addAll(stockvar.values());
 		res.add(this.stockTotal);
 		return res;
 	}
@@ -249,7 +271,6 @@ public class Producteur2stock extends Producteur2sechage {
 	public List<Journal> getJournaux() { //Mets à jour les journaux
 		List<Journal> res = super.getJournaux();
 		res.add(JournalStock);
-        res.add(JournalBanque);
 		return res;
 	}
 
