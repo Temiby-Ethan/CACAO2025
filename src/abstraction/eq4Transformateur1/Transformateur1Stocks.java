@@ -241,6 +241,9 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 	 * @return None
 	 */
 	public void determinerQttEntrantFeves(){
+		for (Feve f : pourcentageTransfo.keySet()){
+			this.qttEntrantesFeve.put(f, 0.);
+		}
 
 		//Quantité entrante de fèves f par contrat cadre
 		for (Feve f : pourcentageTransfo.keySet()){
@@ -275,6 +278,9 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
  * @author MURY Julien
  */
 	public void determinerQttSortantChoco(){
+		for (Chocolat c : lesChocolats){
+			this.qttSortantesChoco.put(c, 0.);
+		}
 		//Qtt sortante par contrat cadre
 		for (Chocolat c : lesChocolats){
 			for (ExemplaireContratCadre cc : mesContratEnTantQueVendeur){
@@ -289,10 +295,15 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 			}
 		}
 
-		//Quantité sortante par enchère
-		
-
-		//Quantité sortante par appel d'offre
+		for (Chocolat c : lesChocolats){
+			if (this.qttSortantesChoco.containsKey(c)){
+				this.qttSortantesChoco.put(c, this.qttSortantesTransactions.get(c) +this.qttSortantesChoco.get(c));
+			}
+			else {
+				this.qttSortantesChoco.put(c, this.qttSortantesTransactions.get(c));
+			}
+			
+		}
 	}
 
 
@@ -351,6 +362,10 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 
 	public void next() {
 		super.next();
+
+		for (Chocolat c : lesChocolats) {
+			this.qttSortantesTransactions.put(c, 0.);
+		}
 
 		this.journal.ajouter(Color.yellow, Romu.COLOR_LBLUE, "N° Etape " + Filiere.LA_FILIERE.getEtape());
 
