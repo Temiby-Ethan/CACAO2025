@@ -124,10 +124,14 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 		String str_journal_AO = "";
 
 		for (int i = 0 ; i<chocolats.size() ; i++){
-			str_journal_stock += this.stocksChocolats.get(chocolats.get(i)).getNom() + " = " + this.stocksChocolats.get(chocolats.get(i)).getValeur() + " ; ";
-			str_journal_E += this.successedSell.get(i) + " ; ";
-			str_journal_CC += "b";
-			str_journal_AO += " ; ";
+			str_journal_stock = this.stocksChocolats.get(chocolats.get(i)).getNom() + " = " + this.stocksChocolats.get(chocolats.get(i)).getValeur() + ";";
+			journal.ajouter(str_journal_stock);
+			str_journal_E = this.successedSell.get(i) + " ; " + System.lineSeparator() ;
+			journal.ajouter(str_journal_E);
+			str_journal_CC = "b";
+			journal.ajouter(str_journal_CC);
+			str_journal_AO = " ; ";
+			journal.ajouter(str_journal_AO);
 		}
 
 		journal.ajouter(str_journal_stock);
