@@ -20,7 +20,7 @@ public class Transformateur1AcheteurBourse extends Transformateur1ContratCadreVe
 		super();
 		this.feve = Feve.F_BQ;
 		this.T = 10000.0;
-	}
+	} 
 
 	@Override
 	public double demande(Feve f, double cours) {

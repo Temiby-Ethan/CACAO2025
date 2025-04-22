@@ -78,8 +78,24 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 	//A MODIFIER 
 	/*Il faudrait s'appuyer sur le cours de la bourse pour négocier les prix avec les producteurs */
 	public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat) {
+
+		//On détermine des tolérances par rapport au cours de la bourse pour chacune des gammes de fèves
+		double tolerance = 1.;
+		switch(((Feve)contrat.getProduit()).getGamme()){
+			case BQ : 
+				tolerance = 1.5;
+			case MQ :
+				tolerance = 2.;
+			case HQ : 
+				tolerance = 3.; 
+		}
+
+		// Récupération du cours de la bourse du cacao de basse qualité
+		BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
+		double cours = bourse.getCours(Feve.F_BQ).getValeur();
+
 		//Si le prix est aberrant, on refuse d'office la négociation
-        if (contrat.getPrix() >10000){
+        if (contrat.getPrix() > 2* tolerance * cours){
 			return -1;
 		}
 		else{
