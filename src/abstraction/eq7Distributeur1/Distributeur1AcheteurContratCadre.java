@@ -42,12 +42,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 
 		this.priceProduct = new ArrayList<Double>();
 		this.requiredQuantities = new ArrayList<Double>();
-		/*
-		for (int i=0; i<this.chocolats.size(); i++) {
-			this.priceProduct.add(1000.0);
-			this.requiredQuantities.add(1000.0);
-		}
-			*/
+	
 	}
 
 	    public int getInt(ChocolatDeMarque product){
@@ -88,7 +83,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 		List<Echeancier> listeEcheancier = contrat.getEcheanciers();
 		int tour = 0;
 		ChocolatDeMarque chocolat = (ChocolatDeMarque) contrat.getProduit();
-		Echeancier echeancierActuel = null;
+		Echeancier echeancierActuel;
 		if (listeEcheancier.isEmpty()){
 			tour = 0;
 			echeancierActuel = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, requiredQuantities.get(cdmToInt(chocolat)));
@@ -119,8 +114,8 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 	public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat){
 		List<Double> listePrix = contrat.getListePrix();
 		ChocolatDeMarque chocolat = (ChocolatDeMarque) contrat.getProduit();
-		int tour = 0;
-		Double dernierPrix = 0.0;
+		int tour;
+		Double dernierPrix;
 		if (listePrix.isEmpty()){
 			tour = 0;
 			dernierPrix = 2 * priceProduct.get(cdmToInt(chocolat));
@@ -170,7 +165,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 
 	@Override
 	public List<Variable> getIndicateurs(){
-		List<Variable> indicateurs = new ArrayList<Variable>();
+		List<Variable> indicateurs = super.getIndicateurs();
 		return(indicateurs);
 	}
 
