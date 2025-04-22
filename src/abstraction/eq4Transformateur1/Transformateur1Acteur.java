@@ -14,7 +14,7 @@ import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.general.VariablePrivee;
 import abstraction.eqXRomu.produits.Chocolat;
-import abstraction.eqXRomu.produits.ChocolatDeMarque;
+import abstraction.eqXRomu.produits.ChocolatDeMarque; 
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit; 
 
@@ -127,7 +127,6 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 		this.stocksChocoVar.put(Chocolat.C_BQ_E, stock_C_BQ_E);
 		this.stocksChocoVar.put(Chocolat.C_MQ_E, stock_C_MQ_E);
 		this.stocksChocoVar.put(Chocolat.C_HQ_BE, stock_C_HQ_BE);
-
 
 		this.stocksMarqueVar = new HashMap<ChocolatDeMarque, Variable>();
 
