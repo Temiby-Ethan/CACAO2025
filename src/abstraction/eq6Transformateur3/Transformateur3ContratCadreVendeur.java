@@ -29,19 +29,18 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
         SuperviseurVentesContratCadre supCCadre = (SuperviseurVentesContratCadre) Filiere.LA_FILIERE.getActeur("Sup.CCadre");
         //on parcourt tous les types de chocolat
         for(IProduit choco : super.lesChocolats){
-            //on met en vente dès que on a plus de 1000 unités de ce chocolat
-            if(stockChoco.getQuantityOf(choco)>1000){
                 //on parcourt les acteurs de la filière
                 for (IActeur acteur : Filiere.LA_FILIERE.getActeurs()) {
                     //si l'acteur n'est pas nous et si l'acteur achète des contrats cadres et s'il achète
                     //du chocolat par contrat cadre
 			        if (acteur!=this && acteur instanceof IAcheteurContratCadre && ((IAcheteurContratCadre)acteur).achete(choco)) {
                         //on propose un contrat cadre à l'acteur en question qui démarre à l'étape
-                        //suivante de la filière, qui dure 10 step avec une quantité livrée de 100 unités
+                        //suivante de la filière, qui dure 10 step avec une quantité livrée de notre 
+                        //capacité de production restante
                         //par step et avec ou non tête de gondole ici en fonction du chocolat
                         // pour hypocritolat on le demande pas 
                         if (choco==hypo){
-                            double capa = capacite_vente.get(hypo);
+                            double capa = capacite_vente_max.get(hypo);
                             supCCadre.demandeVendeur((IAcheteurContratCadre)acteur, (IVendeurContratCadre)this,(IProduit) choco, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10, capa), cryptogramme, false);
                         }
                         //pour tous les autres chocolats on les demande en tête de gondole 
@@ -49,7 +48,7 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
                         //car on nous le refusera dans 90% des cas et donc il faut aussi le demander 
                         //sans tête de gondole
                         else {
-                            double capa = capacite_vente.get(choco);
+                            double capa = capacite_vente_max.get(choco);
                             supCCadre.demandeVendeur((IAcheteurContratCadre)acteur, (IVendeurContratCadre)this,(IProduit) choco, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10, capa), cryptogramme, true);
                             supCCadre.demandeVendeur((IAcheteurContratCadre)acteur, (IVendeurContratCadre)this,(IProduit) choco, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10, capa), cryptogramme, false);
                         } 
@@ -61,28 +60,17 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
 
     @Override //@author Eric Schiltz
     public boolean vend(IProduit produit) {
-        //quand un acheteur parcours les transformateurs à la recherche de quelqu'un qui vend en 
-        //contrat cadre tel type de chocolat. C'est la méthode de réponse à cette demande.
-        //On considère que l'on est disponible pour un contrat cadre quand notre notre stock du produit en
-        //question est supérieur à 100. Problème : si notre stock est au dessus de 100 on passe donc tous
-        //les contrats cadres qui nous sont demandé. Cette condition ne reflète pas correctement ce que
-        //l'on veut
-        //On va chercher à savoir combien de ce produit on doit livrer pour le step d'après 
-        //Pour cela on parcourt les contrats cadres déja passés et on regarde si ils correspondent au
-        // produit demandé, et combien il demande chaque step et si il faut on l'ajoute à un compteur
-        // et in fine on regarde si ce notre stock - ça est supérieur à 100. 
-        double a = 0;
+        //On dit oui dès que l'on vend bien de ce produit 
+        if(super.lesChocolats.contains(p)){
+            return true;
+        }
+        //sert à compter les quantités de contrat cadre pour le tour suivant pour chaque produit  
+        '''double a = 0;
         for (ExemplaireContratCadre contrat : ContratsVendeur){
             if (contrat.getProduit()==produit){
                 a += contrat.getQuantiteALivrerAuStep();
             }
-        }
-        if(super.lesChocolats.contains(produit)){
-            if(stockChoco.getQuantityOf(produit)-a>100){
-                return true;
-            }
-        }
-        return false;
+        }'''
     }
 
     @Override //@author Eric Schiltz
@@ -99,7 +87,7 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
         if(super.lesChocolats.contains(p)){
             // si oui on calcule de la quantite par step de chocolat que l'on veut livrer
             //on regarde quelle est notre capacité de vente du produit 
-            double capa = capacite_vente.get(p);
+            double capa = capacite_vente_max.get(p);
             //on récupère l'échéancier
             Echeancier e = contrat.getEcheancier();
             //on récupère le premier step
@@ -109,6 +97,8 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
             // si la quantité à livrer proposé est dans nos capacités on accepte
             if(QuantiteStep < capa){
                 return contrat.getEcheancier();
+                //et on met à jour nos capacités de vente max
+                capacite_vente_max.get(p) = capacite_vente_max.get(p)- QuantiteStep ; 
             }
             //sinon
             else{
@@ -120,6 +110,8 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
                 if(capa >100 && capa<1000){
                     int nb = e.getNbEcheances();
                     return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, nb, capa);
+                    //et on met à jour nos capacités de vente max
+                    capacite_vente_max.get(p) = capacite_vente_max.get(p)- QuantiteStep ;
                 }
             }
         }
@@ -157,9 +149,9 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
         ContratsVendeur.add(contrat);
         IProduit produit = contrat.getProduit();
         double QuantiteAuStep = contrat.getQuantiteALivrerAuStep();
-        double c_v = capacite_vente.get(produit);
+        double c_v = capacite_vente_max.get(produit);
         c_v -= QuantiteAuStep;
-        capacite_vente.replace(produit, c_v);
+        capacite_vente_max.replace(produit, c_v);
     }
 
     @Override //@author Henri Roth
