@@ -53,7 +53,7 @@ public class Distributeur1Acteur implements IActeur {
 	////////////////////////////////////////////////////////
 	@Override
 	public void next() {
-		
+		//par Ethan
 		for (int i = 0; i < this.chocolats.size(); i++) {
 			if (stocksChocolats.get(chocolats.get(i)).getNom().contains("BQ_E")) {
 				this.stock_C_BQ_E.ajouter(this, stocksChocolats.get(chocolats.get(i)).getValeur(), cryptogramme);
