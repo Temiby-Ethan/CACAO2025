@@ -5,12 +5,17 @@ import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.acteurs.Romu;
 import abstraction.eqXRomu.bourseCacao.BourseCacao;
 import abstraction.eqXRomu.contratsCadres.*;
-import abstraction.eqXRomu.produits.Feve;
+import abstraction.eqXRomu.produits.ChocolatDeMarque;
+import abstraction.eqXRomu.produits.Feve; 
+import abstraction.eqXRomu.produits.Chocolat;
 
 import java.util.List;
 import java.awt.Color;
 import java.util.LinkedList;
 
+/**
+ * @author MURY Julien
+ */
 public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1ContratCadreVendeur implements IAcheteurContratCadre {
     
     
@@ -70,10 +75,11 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 		}
 	}
 	
-
+	//A MODIFIER 
+	/*Il faudrait s'appuyer sur le cours de la bourse pour négocier les prix avec les producteurs */
 	public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat) {
 		//Si le prix est aberrant, on refuse d'office la négociation
-        if (contrat.getPrix() >20000){
+        if (contrat.getPrix() >10000){
 			return -1;
 		}
 		else{
@@ -153,6 +159,7 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 					if (cc!=null) {
 					    journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN, "-->aboutit au contrat "+cc);
 					    journalCC.ajouter("\n");
+						this.mesContratEnTantQuAcheteur.add(cc);
 					}
 					else {
 					    journalCC.ajouter(Color.pink, Romu.COLOR_BROWN, "-->Le contrat n'a pas pu aboutir");
@@ -162,7 +169,7 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 			}
 		}
 		// Recherche d'acheteurs de chocolat de marque
-		for(IProduit produit : chocolatsLimDt){
+		for(ChocolatDeMarque produit : chocolatsLimDt){
 			journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE, "Recherche d'un acheteur aupres de qui vendre LimDt " + produit);
 
 			List<IAcheteurContratCadre> acheteurs = supCCadre.getAcheteurs(produit);
@@ -185,6 +192,7 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 					if (cc!=null) {
 					    journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE, "-->aboutit au contrat "+cc);
 					    journalCC.ajouter("\n");
+						this.mesContratEnTantQueVendeur.add(cc);
 					}
 					else {
 					    journalCC.ajouter(Color.pink, Romu.COLOR_PURPLE, "-->Le contrat n'a pas pu aboutir");
@@ -195,7 +203,7 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 		}
 
 		//Recherche d'acheteurs de chocolat non marqué
-		for(IProduit produit : lesChocolats){
+		for(Chocolat produit : lesChocolats){
 			journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_GREEN, "Recherche d'un acheteur aupres de qui vendre " + produit);
 
 			List<IAcheteurContratCadre> acheteurs = supCCadre.getAcheteurs(produit);
@@ -210,6 +218,7 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 			       journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_GREEN, "Voici les acheteurs potentiels : " + acheteurs);
 			       journalCC.ajouter("\n");
 			}
+
 
 			for(IAcheteurContratCadre acheteur : acheteurs){
 				if (acheteur!=null) {
@@ -226,6 +235,33 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 				}
 			}
 		}
+
+
+
+		//Affichage dans les journaux des contrats cadres actifs
+		journalCC.ajouter("Voici nos contrats actifs en tant qu'acheteur : ");
+		journalCC.ajouter("");
+		for (ExemplaireContratCadre cc : mesContratEnTantQuAcheteur){
+			journalCC.ajouter("Acheteur : " + cc.getAcheteur() );
+			journalCC.ajouter("Vendeur : " + cc.getVendeur() );
+			journalCC.ajouter("Produit : " + cc.getProduit() );
+			journalCC.ajouter("Prix : " + cc.getPrix() + "\n");
+			journalCC.ajouter("Echeancier : " + cc.getEcheancier() );
+			journalCC.ajouter("");
+		}
+
+		//Affichage des contrats vendeurs 
+		journalCC.ajouter("Voici nos contrats actifs en tant que vendeur : ");
+		journalCC.ajouter("");
+		for (ExemplaireContratCadre cc : this.mesContratEnTantQueVendeur){
+			journalCC.ajouter("Acheteur : " + cc.getAcheteur() );
+			journalCC.ajouter("Vendeur : " + cc.getVendeur() );
+			journalCC.ajouter("Produit : " + cc.getProduit() );
+			journalCC.ajouter("Prix : " + cc.getPrix() );
+			journalCC.ajouter("Echeancier : " + cc.getEcheancier() );
+			journalCC.ajouter("");
+
+		}
 	}
 
 
@@ -234,7 +270,7 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 
 
 	public void receptionner(IProduit produit, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
-		stocksFevesVar.get(produit).ajouter(this, quantiteEnTonnes, this.cryptogramme); 
+		ajouterAuStock(produit, quantiteEnTonnes, this.cryptogramme);
 		
         journalStock.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN, "Achat CC :");
 		journalStock.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN, "Reception de " + quantiteEnTonnes +"feves " + ((Feve)produit).getGamme() + "(CC avec" + contrat.getVendeur() + ")");
