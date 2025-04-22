@@ -31,10 +31,12 @@ public class Transformateur2Acteur implements IActeur {
         return this.getNom();
     }
 
+    /*
+     * Cette methode est appelee a chaque etape de la simulation. Elle permet de mettre à jour le numéro de l'étape.
+     */
     public void next() {
         int etape = Filiere.LA_FILIERE.getEtape();
         this.journal.ajouter("Etape numéro : " + etape);
-        
     }
 
     public Color getColor() {
@@ -42,7 +44,7 @@ public class Transformateur2Acteur implements IActeur {
     }
 
     public String getDescription() {
-        return "Bla bla bla";
+        return "Un transformateur ethique qui transforme de simples fèves de cacao en produits de qualité supérieure.";
     }
 
     public List<Variable> getIndicateurs() {
