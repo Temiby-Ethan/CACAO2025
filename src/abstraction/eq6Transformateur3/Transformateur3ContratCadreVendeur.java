@@ -44,11 +44,15 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
                             double capa = capacite_vente.get(hypo);
                             supCCadre.demandeVendeur((IAcheteurContratCadre)acteur, (IVendeurContratCadre)this,(IProduit) choco, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10, capa), cryptogramme, false);
                         }
-                        //pour tous les autres chocolats on le demande
+                        //pour tous les autres chocolats on les demande en tête de gondole 
+                        //et il faut aussi demander pour les mêmes chocolats en non tête de gondole 
+                        //car on nous le refusera dans 90% des cas et donc il faut aussi le demander 
+                        //sans tête de gondole
                         else {
                             double capa = capacite_vente.get(choco);
                             supCCadre.demandeVendeur((IAcheteurContratCadre)acteur, (IVendeurContratCadre)this,(IProduit) choco, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10, capa), cryptogramme, true);
-                        }
+                            supCCadre.demandeVendeur((IAcheteurContratCadre)acteur, (IVendeurContratCadre)this,(IProduit) choco, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10, capa), cryptogramme, false);
+                        } 
                     }
                 }
             }
@@ -83,6 +87,12 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
 
     @Override //@author Eric Schiltz
     public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
+        //quand le vendeur propose une tête de gondole on dit toujours oui. On ne le tient 
+        //pas en compte. On pourrait les refuser une fois sur 10 par ex mais en fait : 
+        //On ne fais pas la différene entre les propositions du vendeur et ses contrepropositions
+        //à nos propositions. 
+        //Sinon on aurait des problèmes, on risquerait de refuser des contrats 
+        //que nous avons nous même émis sans tête de gondole. 
         //on regarde quel produit est concerné par le contrat
         IProduit p = contrat.getProduit();
         //on regarde si on vend/produit bien de ce chocolat
