@@ -27,7 +27,6 @@ public class Distributeur1Acteur implements IActeur {
 	protected Variable stock_C_MQ_E;
 	protected Variable stock_C_HQ_E;
 	protected Variable stock_C_HQ_BE;
-	protected HashMap<Chocolat, Variable> stocksChocoVar;
 
 	public Distributeur1Acteur() {
 		this.stock_C_BQ=new VariablePrivee("EQ7-D1 Stock C_BQ", "<html>Quantite totale de C_BQ en stock</html>",this, 0.0, 1000000.0, 0.0);
@@ -52,8 +51,23 @@ public class Distributeur1Acteur implements IActeur {
 	////////////////////////////////////////////////////////
 	//         En lien avec l'interface graphique         //
 	////////////////////////////////////////////////////////
-
+	@Override
 	public void next() {
+		
+		for (int i = 0; i < this.chocolats.size(); i++) {
+			if (stocksChocolats.get(chocolats.get(i)).getNom().contains("BQ_E")) {
+				this.stock_C_BQ_E.ajouter(this, stocksChocolats.get(chocolats.get(i)).getValeur(), cryptogramme);
+			}
+			if (stocksChocolats.get(chocolats.get(i)).getNom().contains("MQ_E")) {
+				this.stock_C_MQ_E.ajouter(this, stocksChocolats.get(chocolats.get(i)).getValeur(), cryptogramme);
+			}
+			if (stocksChocolats.get(chocolats.get(i)).getNom().contains("HQ_E")) {
+				this.stock_C_HQ_E.ajouter(this, stocksChocolats.get(chocolats.get(i)).getValeur(), cryptogramme);
+			}
+			if (stocksChocolats.get(chocolats.get(i)).getNom().contains("HQ_BE")) {
+				this.stock_C_HQ_BE.ajouter(this, stocksChocolats.get(chocolats.get(i)).getValeur(), cryptogramme);
+			}
+		}
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
