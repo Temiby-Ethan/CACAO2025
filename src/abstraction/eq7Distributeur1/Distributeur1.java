@@ -114,8 +114,14 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 			if (stocksChocolats.get(chocolats.get(i)).getNom().contains("BQ_E")) {
 				this.stock_C_BQ_E.ajouter(this, stocksChocolats.get(chocolats.get(i)).getValeur(), cryptogramme);
 			}
+			if (stocksChocolats.get(chocolats.get(i)).getNom().contains("BQ") && (!stocksChocolats.get(chocolats.get(i)).getNom().contains("BQ_E"))) {
+				this.stock_C_BQ.ajouter(this, stocksChocolats.get(chocolats.get(i)).getValeur(), cryptogramme);
+			}
 			if (stocksChocolats.get(chocolats.get(i)).getNom().contains("MQ_E")) {
 				this.stock_C_MQ_E.ajouter(this, stocksChocolats.get(chocolats.get(i)).getValeur(), cryptogramme);
+			}
+			if (stocksChocolats.get(chocolats.get(i)).getNom().contains("MQ") && (!stocksChocolats.get(chocolats.get(i)).getNom().contains("MQ_E"))) {
+				this.stock_C_MQ.ajouter(this, stocksChocolats.get(chocolats.get(i)).getValeur(), cryptogramme);
 			}
 			if (stocksChocolats.get(chocolats.get(i)).getNom().contains("HQ_E")) {
 				this.stock_C_HQ_E.ajouter(this, stocksChocolats.get(chocolats.get(i)).getValeur(), cryptogramme);
