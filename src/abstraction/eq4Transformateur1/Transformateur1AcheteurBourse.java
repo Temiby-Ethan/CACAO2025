@@ -19,7 +19,7 @@ public class Transformateur1AcheteurBourse extends Transformateur1ContratCadreVe
 	public Transformateur1AcheteurBourse() {
 		super();
 		this.feve = Feve.F_BQ;
-		this.T = 10000.0;
+		this.T = qtt_feves_achetees_bourse;
 	}
 
 	@Override
