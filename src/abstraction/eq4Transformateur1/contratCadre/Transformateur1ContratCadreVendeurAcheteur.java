@@ -31,7 +31,8 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 
         this.qttInitialementVoulue = 0.5*STOCK_MAX_TOTAL_FEVES;//On cherche à acheter de quoi remplir ou vendre notre stock à hauteur de 50%
 
-        this.prixInitialementVoulu = 0.75*9500; //Une valeur arbitraire s'appuyant sur le prix moyen du chocolat en 2024
+        this.prixInitialementVoulu = 2000.;
+
 	}
 
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {
@@ -45,28 +46,56 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 			//Sinon on négocie par dichotomie particulière
 			else{
 
-				double qttContrat = contrat.getEcheancier().getQuantiteTotale();
-				double qttVoulue = 0.25*qttContrat + 0.75 * this.qttInitialementVoulue;
+				//Si Le nombre de contrat cadre est suffisant, on négocie la quantité des autres contrats via la quantité entrante et sortante à chaque step
+				if(this.mesContratEnTantQuAcheteur.size() + this.mesContratEnTantQueVendeur.size() >=2){
+					double qttSortant = 0.;
+					Echeancier e = contrat.getEcheancier();
+					for (int step = contrat.getEcheancier().getStepDebut() ; step < contrat.getEcheancier().getStepFin() ; step++){
+						Feve prod = (Feve)contrat.getProduit();
+						switch (prod.getGamme()){
+							case MQ : 
+								if (prod.isEquitable()) qttSortant = determinerQttSortantChocoAuStep(step, Chocolat.C_MQ_E) - determinerQttEntrantFevesAuStep(step, prod);
+								else qttSortant = determinerQttSortantChocoAuStep(step, Chocolat.C_MQ) - determinerQttEntrantFevesAuStep(step, prod);
 
-				//Si on calcule une quantité voulue inférieure à celle du contrat, on accepte la dernière offre
-				if (qttVoulue<SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER) return contrat.getEcheancier();
+							case BQ : 
+								qttSortant = determinerQttSortantChocoAuStep(step, Chocolat.C_BQ_E) - determinerQttEntrantFevesAuStep(step, prod);
 
-				//Mise à jour de l'échéancier pour prendre en compte ces modifications
-				Echeancier e = contrat.getEcheancier();
+							case HQ : 
+								qttSortant = determinerQttSortantChocoAuStep(step, Chocolat.C_HQ_BE) - determinerQttEntrantFevesAuStep(step, prod);
+						}
+						
+						//Si on recoit trop de fèves, on annule la signature du contrat
+						if(qttSortant <=0){
+							return null;
+						}
+						//Si notre qttSortante est supérieure au minimum des qtt par step du contrat, on met la qtt sortante sur le step
+						if (qttSortant >= e.getQuantite(step) && qttSortant > e.getQuantiteTotale()/(e.getNbEcheances()*10)){
+							e.set(step, qttSortant*1.2);
+						}
+						//Si la qtt sortante est inférieure à la quantité livrée au step, alors on accepte la quantité, mieux vaut trop que pas assez, dans la limite de 150% de la 
+						else if (qttSortant >= e.getQuantiteTotale()/(e.getNbEcheances()*10) && qttSortant < contrat.getEcheancier().getQuantite(step)){
+							if (e.getQuantite(step) > 1.5 * qttSortant){
+								e.set(step, 1.5*qttSortant);
+							}
+						}
 
-				//Redistribution uniforme de la hausse ou de la baisse des qtt vendues 
-				for(int i = e.getStepDebut() ; i< e.getStepFin() ; i++){
-					double qtti = e.getQuantite(i)*(qttVoulue/qttContrat);
+						
 
-					//Si la quantité par step ne respecte pas les exigeances des règles du contrat, on met la part minimale
-					//Mais si cette condition est vérifiée, il risque d'y avoir une augmentation de la qtt totale et donc que le problème se reporte sur d'autres step
-					if (qtti<qttVoulue/(10*e.getNbEcheances())){
+					}
 
-						e.set(i, qttVoulue/(10*e.getNbEcheances()));
+					//Si les modifications que l'on a apporté sont acceptables du point de vue du superviseur, on renvoie notre négociation
+					if (e.getQuantiteTotale() > SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER){
+						return e;
+					}
+					//Sinon c'est que l'on a trop de fèves qui entrent 
+					else {
+						return null;
 					}
 				}
-				if (e.getQuantiteTotale()<SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER) return contrat.getEcheancier();
-				else return e;
+				//Si on n'a pas suffisamment de contrats actifs, on accepte le contrat proposé
+				else {
+					return contrat.getEcheancier();
+				}
 
 			}
 		}
@@ -95,8 +124,8 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 		double cours = bourse.getCours(Feve.F_BQ).getValeur();
 
 		//Si le prix est aberrant, on refuse d'office la négociation
-        if (contrat.getPrix() > 2* tolerance * cours){
-			return -1;
+        if (contrat.getPrix() > tolerance * cours){
+			return tolerance*cours;
 		}
 		else{
 			//On procède par dichotomie sur le prix proposé et notre prix voulu.
@@ -111,14 +140,18 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 			}
 			//Sinon on contre-porpose un prix intermédiaire par rapport au prix proposé
 			else{
-				this.prixInitialementVoulu = this.prixInitialementVoulu + (contrat.getPrix()-prixInitialementVoulu)*0.2;
-				return this.prixInitialementVoulu;
+				if (contrat.getPrix() <= 2* tolerance*cours) return (tolerance*cours + contrat.getPrix()) / 2;
+				return -1;
 			}
 		}
 	}
 
 	public void initialiser(){
 		super.initialiser();
+
+		//Initialisation du prix initialement voulu au cours actuel du cacao de basse qualité
+		this.prixInitialementVoulu = ((BourseCacao)Filiere.LA_FILIERE.getActeur("BourseCacao")).getCours(Feve.F_BQ).getValeur(); //On s'appuie sur le cours actuel de la fève F_BQ pour déterminer le prix à négocier
+	
 	}
 
 
@@ -131,6 +164,10 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 
 	public void next() {
 		super.next();
+
+		//On actualise le prix que l'on veut 
+		this.prixInitialementVoulu = ((BourseCacao)Filiere.LA_FILIERE.getActeur("BourseCacao")).getCours(Feve.F_BQ).getValeur(); //On s'appuie sur le cours actuel de la fève F_BQ pour déterminer le prix à négocier
+	
 
 		// On enleve les contrats obsolete (nous pourrions vouloir les conserver pour "archive"...)
 		List<ExemplaireContratCadre> contratsObsoletes=new LinkedList<ExemplaireContratCadre>();

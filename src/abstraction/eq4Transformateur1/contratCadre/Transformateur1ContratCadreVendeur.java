@@ -10,6 +10,7 @@ import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.acteurs.Romu;
+import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.contratsCadres.*; 
 
 
@@ -46,7 +47,10 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 	//La stratégie de négociation doit être différenciée selon le produit mais pour la quantité, cela est probablement peu pertinent
 	public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
 
-		double qttVoulue = 0.3*this.getQuantiteEnStock(contrat.getProduit(), this.cryptogramme);
+		//A MODIFIER 
+		//On cherche à vendre une partie de la quantité de chocolat correspondant à la qtt de fèves entrantes
+		double qttVoulue = 0.5 * qttEntrantesFeve.get((Feve)(contrat.getProduit()));
+		double qttEntrant = 0.;
 
 		//A MODIFIER	
 		//On vérifie que l'échéancier renvoyé respecte les règles et que la quantité en stock de produit est au moins le quart de la quantité totale
@@ -64,15 +68,41 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 
 
 				//Cas d'acceptation : la quantité totale est légale et proche de la quantité que l'on souhaite vendre à 10% près
-				if(e.getNbEcheances()> 20 && e.getQuantiteTotale()> 1000. && Math.abs(e.getQuantiteTotale()-qttVoulue)/qttVoulue < 0.1){
+				if(e.getNbEcheances()> 20 && e.getQuantiteTotale()> 100. && Math.abs(e.getQuantiteTotale()-qttVoulue)/qttVoulue < 0.1){
 					return e;
 				}
-				//On modifie l'échéancier uniformément pour se rapporcher de nos exigeances
+				//On modifie l'échéancier pour se rapporcher de nos exigeances
 				else{
+					
 					for(int s = e.getStepDebut() ; s<=e.getStepFin() ; s++){
 						double qttActuelle = e.getQuantite(s);
-						if (qttVoulue +  (qttActuelle - qttVoulue)/16 > contrat.getEcheancier().getQuantiteTotale()/(contrat.getEcheancier().getNbEcheances()*10)){
-							e.set(s, qttVoulue +  (qttActuelle - qttVoulue)/16);
+						ChocolatDeMarque prod = (ChocolatDeMarque)contrat.getProduit();
+
+						//Détermination de la quantité entrante de chocolat que l'on ne va pas vendre au step s
+						switch(prod.getChocolat()){
+							case C_BQ_E : 
+								qttEntrant = determinerQttEntrantFevesAuStep(s, Feve.F_BQ_E) * this.pourcentageTransfo.get(Feve.F_BQ_E).get(Chocolat.C_BQ_E) - determinerQttSortantChocoAuStep(s, prod.getChocolat());
+							case C_MQ_E : 
+								qttEntrant = determinerQttEntrantFevesAuStep(s, Feve.F_MQ_E) * this.pourcentageTransfo.get(Feve.F_BQ_E).get(Chocolat.C_MQ_E) - determinerQttSortantChocoAuStep(s, prod.getChocolat());
+							case C_MQ : 
+								qttEntrant = determinerQttEntrantFevesAuStep(s, Feve.F_MQ) * this.pourcentageTransfo.get(Feve.F_MQ).get(Chocolat.C_MQ) - determinerQttSortantChocoAuStep(s, prod.getChocolat());
+							case C_HQ_BE : 
+								qttEntrant = determinerQttEntrantFevesAuStep(s, Feve.F_HQ_BE) * this.pourcentageTransfo.get(Feve.F_HQ_BE).get(Chocolat.C_HQ_BE) - determinerQttSortantChocoAuStep(s, prod.getChocolat());
+							default : 
+								System.out.println("Ce chocolat n'est pas censé être vendu : " + prod.getChocolat());
+							}
+						
+						//On vend la moitié de ce qu'on n'a pas encore réussi à vendre
+						if (qttEntrant > 0){
+							e.set(s, qttEntrant*0.5);
+						}
+						//On a probablement pas de contrat cadre à la période s pour nous réapprovisionner, mais on va en signer donc on se met au minimum dans le doute
+						if (Math.abs(qttEntrant)<0.1){
+							e.set(s,e.getQuantiteTotale()/(10*e.getNbEcheances()));
+						}
+						//Si on arrive là, c'est que l'on n'a pas assez de fève qui entrent à cette étape, on annule le contrat
+						else {
+							return null;
 						}
 						
 					}
