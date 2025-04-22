@@ -63,11 +63,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 		this.chocolats= Filiere.LA_FILIERE.getChocolatsProduits();
 
 		for (int i=0; i<this.chocolats.size(); i++) {
-<<<<<<< HEAD
-			this.stocksChocolats.put(chocolats.get(i), new Variable("Stock"+chocolats.get(i).getNom(), this, 0.0));
-=======
 			this.stocksChocolats.put(chocolats.get(i), new Variable("Stock"+chocolats.get(i).getNom(), this, 100000.0));
->>>>>>> 8bf5566f2d2fa9ccd4d21a022702f2fc7b3d4c36
 			successedSell.add(0);
 			priceProduct.add(1000.0);
 			requiredQuantities.add(0.0);
