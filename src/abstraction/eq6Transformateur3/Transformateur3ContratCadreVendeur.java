@@ -61,16 +61,15 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
     @Override //@author Eric Schiltz
     public boolean vend(IProduit produit) {
         //On dit oui dès que l'on vend bien de ce produit 
-        if(super.lesChocolats.contains(p)){
+        if(super.lesChocolats.contains(produit)){
             return true;
         }
         //sert à compter les quantités de contrat cadre pour le tour suivant pour chaque produit  
-        '''double a = 0;
-        for (ExemplaireContratCadre contrat : ContratsVendeur){
-            if (contrat.getProduit()==produit){
-                a += contrat.getQuantiteALivrerAuStep();
-            }
-        }'''
+        //double a = 0;
+        //for (ExemplaireContratCadre contrat : ContratsVendeur){
+        //    if (contrat.getProduit()==produit){
+        //        a += contrat.getQuantiteALivrerAuStep();
+        //    }
     }
 
     @Override //@author Eric Schiltz
