@@ -3,7 +3,7 @@ package abstraction.eq4Transformateur1;
 import java.awt.Color;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
+import java.util.List; 
 
 import abstraction.eqXRomu.acteurs.Romu;
 import abstraction.eqXRomu.bourseCacao.BourseCacao;
@@ -146,15 +146,15 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 
 				double transfo;
 				if (this.stocksFevesVar.get(f) != null && this.pourcentageTransfo.get(f).get(c) != null){
-					//On transforme une partie de nos fèves
-					transfo = 0.9 * this.stocksFevesVar.get(f).getValeur();
+					//On transforme toutes nos fèves
+					transfo = this.stocksFevesVar.get(f).getValeur();
 
 					//On s'assure que l'on produit quelque chose pour faire nos opérations
 					if (transfo<=this.getQuantiteEnStock(f, this.cryptogramme) && transfo >0) {
 
 
 
-						double pourcentageMarque = 0.8;  //Modifiable
+						double pourcentageMarque = 1.0;  //Modifiable
 						// La Pourcentage ainsi definie sera stockee sous forme de marquee, la quantité restante sera alors stockee comme non marquee
 
 	
@@ -175,11 +175,10 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 						}
 
 						//Ajout des chocolats produits au stock
-						this.stocksFevesVar.get(f).retirer(this, transfo, this.cryptogramme);
-						this.stocksChocoVar.get(c).ajouter(this, transfo * (1-pourcentageMarque), this.cryptogramme);
-						this.stocksMarqueVar.get(cm).ajouter(this, transfo * pourcentageMarque, this.cryptogramme);
+						this.retirerDuStock(f, transfo, this.cryptogramme);
 
-
+						//this.ajouterAuStock(c, nouveauStock * (1.0-pourcentageMarque), this.cryptogramme);
+						this.ajouterAuStock(cm, nouveauStock * pourcentageMarque, this.cryptogramme);
 
 						
 						//Notification dans le journal
@@ -278,23 +277,25 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 		for (Feve f : lesFeves){
 
 			//On calcule le prix pour les fèves issues des contrats cadres
-			double prix = 0;
+			double prix = 0.;
 			for (ExemplaireContratCadre cc : mesContratEnTantQuAcheteur){
 				if (cc.getProduit() == f){
 
-					//On calcule le prix moyen de ce qui entre en pondérant par la part que représente ce contrat dans la qtt totale entrante
-					prix += cc.getPrix() * (cc.getQuantiteALivrerAuStep()/qttEntrantesFeve.get(f));
+					//On calcule le prix moyen de ce qui entre en pondérant par la part que représente ce contrat dans la qtt totale entrante (si tant est que le nombre de fèves qui entrent est non nul)
+					if (qttEntrantesFeve.get(f) != 0.) prix += cc.getPrix() * (cc.getQuantiteALivrerAuStep()/qttEntrantesFeve.get(f));
 
 				}
 			}
 			//On calcule le prix pour les ajouts par bourse
 			if (f == Feve.F_BQ){
 				BourseCacao bourse = (BourseCacao) Filiere.LA_FILIERE.getActeur("BourseCacao");	
-				prix += bourse.getCours(f).getValeur() * (80. / qttEntrantesFeve.get(f));
+				if (qttEntrantesFeve.get(f) != 0.) prix += bourse.getCours(f).getValeur() * (80. / qttEntrantesFeve.get(f));
 			}
-
-			double ancienPrixPondere =prixTFeveStockee.keySet().contains(f)? prixTFeveStockee.get(f)*(getQuantiteEnStock(f, this.cryptogramme)/(getQuantiteEnStock(f, this.cryptogramme)+ qttEntrantesFeve.get(f))) : 0.;
-			prixTFeveStockee.put(f, ancienPrixPondere + prix*(qttEntrantesFeve.get(f)/(qttEntrantesFeve.get(f)+getQuantiteEnStock(f, this.cryptogramme))));
+			if ((getQuantiteEnStock(f, this.cryptogramme)+ qttEntrantesFeve.get(f)) != 0.){
+				double ancienPrixPondere =lesFeves.contains(f)? prixTFeveStockee.get(f)*(getQuantiteEnStock(f, this.cryptogramme)/(getQuantiteEnStock(f, this.cryptogramme)+ qttEntrantesFeve.get(f))) : 0.;
+				prixTFeveStockee.put(f, ancienPrixPondere + prix*(qttEntrantesFeve.get(f)/(qttEntrantesFeve.get(f)+getQuantiteEnStock(f, this.cryptogramme))));
+			}
+			
 		}
 	}
 
@@ -324,6 +325,9 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 
 		this.journalTransactions.ajouter(Color.yellow, Romu.COLOR_LBLUE, "N° Etape " + Filiere.LA_FILIERE.getEtape());
 
+		this.journalPeremption.ajouter("\n");
+		this.journalPeremption.ajouter(Color.yellow, Romu.COLOR_LBLUE, "N° Etape " + Filiere.LA_FILIERE.getEtape());
+
 		//OBSOLETE ou A MODIFIER
 		/*
 		this.journalStock.ajouter("Stock de fèves : " + this.totalStocksFeves.getValeur(this.cryptogramme));
@@ -348,12 +352,86 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 		}
 		this.journalStock.ajouter("\n");
 
+		this.journalPeremption.ajouter(Romu.COLOR_LLGRAY, Color.BLACK, "Péremption C_BQ_Limdt : ");
+		for (int i=0; i<12; i++) {
+			this.journalPeremption.ajouter(Romu.COLOR_LLGRAY, Color.BLACK, i+" : "+this.péremption_C_BQ_Limdt[i]);
+		}
+		this.journalPeremption.ajouter("\n");
 
+		this.journalPeremption.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_GREEN, "Péremption C_BQ_E_Limdt : ");
+        for (int i=0; i<12; i++) {
+			this.journalPeremption.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_GREEN, i+" : "+this.péremption_C_BQ_E_Limdt[i]);
+		}
+		this.journalPeremption.ajouter("\n");
+
+		this.journalPeremption.ajouter(Romu.COLOR_LLGRAY, Color.BLUE, "Péremption C_MQ_E_Limdt : ");
+		for (int i=0; i<12; i++) {
+			this.journalPeremption.ajouter(Romu.COLOR_LLGRAY, Color.BLUE, i+" : "+this.péremption_C_MQ_E_Limdt[i]);
+		}
+		this.journalPeremption.ajouter("\n");
+
+		this.journalPeremption.ajouter(Romu.COLOR_LLGRAY, Color.RED, "Péremption C_HQ_BE_Limdt : ");
+		for (int i=0; i<12; i++) {
+			this.journalPeremption.ajouter(Romu.COLOR_LLGRAY, Color.RED, i+" : "+this.péremption_C_HQ_BE_Limdt[i]);
+		}
+		this.journalPeremption.ajouter("\n");
 
 		this.determinerPrixTFevesStockees();
 		this.transformation();
 
+		// Respect de la règle de péremption après 6 mois soit 12 nexts
+		for (ChocolatDeMarque cm : chocolatsLimDt){
+			switch (cm.getChocolat()){
+				case C_BQ : 
+				    if (péremption_C_BQ_Limdt[11] > 0) {
+                        stocksMarqueVar.get(cm).retirer(this, péremption_C_BQ_Limdt[11], this.cryptogramme);
+						this.journalPeremption.ajouter(Color.pink, Color.BLACK, "Péremption: On retire "+this.péremption_C_BQ_Limdt[11]+ " tonnes de "+cm+" de notre stock");
+					}
 
+					for (int i=11; i>=1; i--) {
+						péremption_C_BQ_Limdt[i] = péremption_C_BQ_Limdt[i-1];
+					}
+					this.péremption_C_BQ_Limdt[0] = 0;
+					break;
+				case C_BQ_E : 
+				    if (péremption_C_BQ_E_Limdt[11] > 0) {
+						stocksMarqueVar.get(cm).retirer(this, péremption_C_BQ_E_Limdt[11], this.cryptogramme);
+					    this.journalPeremption.ajouter(Color.pink, Romu.COLOR_GREEN, "Péremption: On retire "+this.péremption_C_BQ_E_Limdt[11]+ " tonnes de "+cm+" de notre stock");
+					}
+
+					for (int i=11; i>=1; i--) {
+						péremption_C_BQ_E_Limdt[i] = péremption_C_BQ_E_Limdt[i-1];
+					}
+					this.péremption_C_BQ_E_Limdt[0] = 0;
+					break;
+				case C_MQ_E : 
+				    if (péremption_C_MQ_E_Limdt[11] > 0) {
+						stocksMarqueVar.get(cm).retirer(this, péremption_C_MQ_E_Limdt[11], this.cryptogramme);
+					    this.journalPeremption.ajouter(Color.pink, Color.BLUE, "Péremption: On retire "+this.péremption_C_MQ_E_Limdt[11]+ " tonnes de "+cm+" de notre stock");
+					}
+
+					for (int i=11; i>=1; i--) {
+						péremption_C_MQ_E_Limdt[i] = péremption_C_MQ_E_Limdt[i-1];
+					}
+					this.péremption_C_MQ_E_Limdt[0] = 0;
+					break;
+				case C_HQ_BE :
+				    if (péremption_C_HQ_BE_Limdt[11] > 0) {
+						stocksMarqueVar.get(cm).retirer(this, péremption_C_HQ_BE_Limdt[11], this.cryptogramme);
+					    this.journalPeremption.ajouter(Color.pink, Color.RED, "Péremption: On retire "+this.péremption_C_HQ_BE_Limdt[11]+ " tonnes de "+cm+" de notre stock");
+					} 
+
+					for (int i=11; i>=1; i--) {
+						péremption_C_HQ_BE_Limdt[i] = péremption_C_HQ_BE_Limdt[i-1];
+					}
+					this.péremption_C_HQ_BE_Limdt[0] = 0;
+					break;
+
+				default : 
+					this.journalStock.ajouter(Color.pink, Color.BLACK, "Le chocolat " + cm + " ne devrait pas être présent dans notre gammme");
+					break;
+			}
+		}
 		//Calcul des stocks globaux pour payer le cout du stockage
 		double totalStocks = 0;
 		for (Feve f : this.lesFeves){
@@ -369,8 +447,7 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", (totalStocks*this.coutStockage));
 
-
-		System.out.println("Voici nos prix : " + prixTChocoBase);
+		//System.out.println("Voici nos prix : " + prixTChocoBase);
 	}
 
 
