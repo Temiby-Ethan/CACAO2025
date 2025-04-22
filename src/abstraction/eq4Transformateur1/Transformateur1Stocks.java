@@ -39,7 +39,7 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 	protected Variable qttFevesAcheteesBourse;
 	protected HashMap<Chocolat, Double> qttSortantesTransactions;
 
-	protected Variable prix_Limdt_BQ;
+	protected Variable prix_Limdt_MQ;
 	protected Variable prix_Limdt_BQ_E; 
 	protected Variable prix_Limdt_MQ_E;
 	protected Variable prix_Limdt_HQ_BE;
@@ -57,7 +57,7 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 		this.prixTChocoBase = new HashMap<Chocolat, Double>();
 		this.qttFevesAcheteesBourse = new Variable("Qtt Feves Achetees Bourse", "<html>Quantité de fèves achetées en bourse</html>", this, 0., 1000000., 1000.);
 
-		this.prix_Limdt_BQ = new Variable("Prix LimDt BQ", "<html>Prix de vente du chocolat de marque BQ</html>", this, 0., 1000000., 0.);
+		this.prix_Limdt_MQ = new Variable("Prix LimDt MQ", "<html>Prix de vente du chocolat de marque MQ</html>", this, 0., 1000000., 0.);
 		this.prix_Limdt_BQ_E = new Variable("Prix LimDt BQ_E", "<html>Prix de vente du chocolat de marque BQ_E</html>", this, 0., 1000000., 0.);
 		this.prix_Limdt_MQ_E = new Variable("Prix LimDt MQ_E", "<html>Prix de vente du chocolat de marque MQ_E</html>", this, 0., 1000000., 0.);
 		this.prix_Limdt_HQ_BE = new Variable("Prix LimDt HQ_BE", "<html>Prix de vente du chocolat de marque HQ_BE</html>", this, 0., 1000000., 0.);
@@ -78,7 +78,7 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 		super.initialiser();
 
 		//Initialisation des prix de nos stocks de fève
-		this.prixTFeveStockee.put(Feve.F_BQ, 2000.);
+		this.prixTFeveStockee.put(Feve.F_MQ, 2000.);
 		this.prixTFeveStockee.put(Feve.F_BQ_E, 2000.);
 		this.prixTFeveStockee.put(Feve.F_MQ_E, 2000.);
 		this.prixTFeveStockee.put(Feve.F_HQ_BE, 2000.);
@@ -87,8 +87,8 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 		this.coutProd = 4000; //A MODIFIER il s'agit du cout de la production d'une tonne de chocolat, valeur arbitraire censée contenir salaires, ingrédients secondaires, et autres couts fixes
 
 		//Initialisation des prix de base des chocolats que l'on veut produire
-		this.prixTChocoBase.put(Chocolat.C_BQ, 2000.);
-		this.prix_Limdt_BQ.setValeur(this, 2000.);
+		this.prixTChocoBase.put(Chocolat.C_MQ, 2000.);
+		this.prix_Limdt_MQ.setValeur(this, 2000.);
 
 		this.prixTChocoBase.put(Chocolat.C_BQ_E, 2000.);
 		this.prix_Limdt_BQ_E.setValeur(this, 2000.);
@@ -101,7 +101,7 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 		
 
 		//Initialisation des marges que l'on va faire sur les différents produits
-		this.marges.put(Chocolat.C_BQ, 1.5);
+		this.marges.put(Chocolat.C_MQ, 1.5);
 		this.marges.put(Chocolat.C_BQ_E, 1.16);
 		this.marges.put(Chocolat.C_MQ_E, 1.16);
 		this.marges.put(Chocolat.C_HQ_BE, 1.3);
@@ -116,9 +116,9 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 		conversion = 1.0 + (100.0 - Filiere.LA_FILIERE.getParametre("pourcentage min cacao MQ").getValeur())/100.0;
 		this.pourcentageTransfo.get(Feve.F_MQ_E).put(Chocolat.C_MQ_E, conversion);
 
-		this.pourcentageTransfo.put(Feve.F_BQ, new HashMap<Chocolat, Double>());
-		conversion = 1.0 + (100.0 - Filiere.LA_FILIERE.getParametre("pourcentage min cacao BQ").getValeur())/100.0;
-		this.pourcentageTransfo.get(Feve.F_BQ).put(Chocolat.C_BQ, conversion);
+		this.pourcentageTransfo.put(Feve.F_MQ, new HashMap<Chocolat, Double>());
+		conversion = 1.0 + (100.0 - Filiere.LA_FILIERE.getParametre("pourcentage min cacao MQ").getValeur())/100.0;
+		this.pourcentageTransfo.get(Feve.F_MQ).put(Chocolat.C_MQ, conversion);
 
 		this.pourcentageTransfo.put(Feve.F_BQ_E, new HashMap<Chocolat, Double>());
 		this.pourcentageTransfo.get(Feve.F_BQ_E).put(Chocolat.C_BQ_E, conversion);
@@ -137,7 +137,7 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 		this.journalTransactions.ajouter("\n");
 
 		//Initialisation des quantités de fève entrantes
-		this.qttEntrantesFeve.put(Feve.F_BQ, 0.);
+		this.qttEntrantesFeve.put(Feve.F_MQ, 0.);
 		this.qttEntrantesFeve.put(Feve.F_BQ_E, 0.);
 		this.qttEntrantesFeve.put(Feve.F_HQ_BE, 0.);
 		this.qttEntrantesFeve.put(Feve.F_MQ_E, 0.);
@@ -194,8 +194,8 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 							double nouveauPrix = ancienPrix * ((getQuantiteEnStock(c, this.cryptogramme) + getQuantiteEnStock(cm, this.cryptogramme))/ (nouveauStock+getQuantiteEnStock(c, this.cryptogramme) + getQuantiteEnStock(cm, this.cryptogramme))) + (prixTFeveStockee.get(f) + coutProd + coutStockage) * (pourcentageTransfo.get(f).get(c) * transfo / (nouveauStock+ getQuantiteEnStock(c, this.cryptogramme) + getQuantiteEnStock(cm, this.cryptogramme)));
 
 							prixTChocoBase.put(c, nouveauPrix);
-							if (c == Chocolat.C_BQ) {
-								this.prix_Limdt_BQ.setValeur(this, nouveauPrix);
+							if (c == Chocolat.C_MQ) {
+								this.prix_Limdt_MQ.setValeur(this, nouveauPrix);
 							} else if (c == Chocolat.C_BQ_E) {
 								this.prix_Limdt_BQ_E.setValeur(this, nouveauPrix);
 							} else if (c == Chocolat.C_MQ_E) {
@@ -260,11 +260,11 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 		}
 
 		//Quantité entrante de fèves par achat en bourse
-		if (qttEntrantesFeve.containsKey(Feve.F_BQ)){
-			double ancienneValeur = this.qttEntrantesFeve.get(Feve.F_BQ);
-			this.qttEntrantesFeve.put(Feve.F_BQ, ancienneValeur + qttFevesAcheteesBourse.getValeur());
+		if (qttEntrantesFeve.containsKey(Feve.F_MQ)){
+			double ancienneValeur = this.qttEntrantesFeve.get(Feve.F_MQ);
+			this.qttEntrantesFeve.put(Feve.F_MQ, ancienneValeur + qttFevesAcheteesBourse.getValeur());
 		} else {
-			this.qttEntrantesFeve.put(Feve.F_BQ, qttFevesAcheteesBourse.getValeur());
+			this.qttEntrantesFeve.put(Feve.F_MQ, qttFevesAcheteesBourse.getValeur());
 		}
 
 
@@ -334,7 +334,7 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 				}
 			}
 			//On calcule le prix pour les ajouts par bourse
-			if (f == Feve.F_BQ){
+			if (f == Feve.F_MQ){
 				BourseCacao bourse = (BourseCacao) Filiere.LA_FILIERE.getActeur("BourseCacao");	
 				if (qttEntrantesFeve.get(f) != 0.) prix += bourse.getCours(f).getValeur() * (80. / qttEntrantesFeve.get(f));
 			}
@@ -366,10 +366,10 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 		if (Filiere.LA_FILIERE.getEtape() >= 1) {
 			determinerQttEntrantFeves();
 			determinerQttSortantChoco();
-			if (qttEntrantesFeve.get(Feve.F_BQ)*pourcentageTransfo.get(Feve.F_BQ).get(Chocolat.C_BQ) > qttSortantesChoco.get(Chocolat.C_BQ)) {
+			if (qttEntrantesFeve.get(Feve.F_MQ)*pourcentageTransfo.get(Feve.F_MQ).get(Chocolat.C_MQ) > qttSortantesChoco.get(Chocolat.C_MQ)) {
 				this.qttFevesAcheteesBourse.setValeur(this, 0.9 * this.qttFevesAcheteesBourse.getValeur());
 			}
-			if (qttEntrantesFeve.get(Feve.F_BQ)*pourcentageTransfo.get(Feve.F_BQ).get(Chocolat.C_BQ) < qttSortantesChoco.get(Chocolat.C_BQ)) {
+			if (qttEntrantesFeve.get(Feve.F_MQ)*pourcentageTransfo.get(Feve.F_MQ).get(Chocolat.C_MQ) < qttSortantesChoco.get(Chocolat.C_MQ)) {
 				this.qttFevesAcheteesBourse.setValeur(this, 1.1 * this.qttFevesAcheteesBourse.getValeur());
 			}
 		}
@@ -414,9 +414,9 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 		}
 		this.journalStock.ajouter("\n");
 
-		this.journalPeremption.ajouter(Romu.COLOR_LLGRAY, Color.BLACK, "Péremption C_BQ_Limdt : ");
+		this.journalPeremption.ajouter(Romu.COLOR_LLGRAY, Color.BLACK, "Péremption C_MQ_Limdt : ");
 		for (int i=0; i<12; i++) {
-			this.journalPeremption.ajouter(Romu.COLOR_LLGRAY, Color.BLACK, i+" : "+this.péremption_C_BQ_Limdt[i]);
+			this.journalPeremption.ajouter(Romu.COLOR_LLGRAY, Color.BLACK, i+" : "+this.péremption_C_MQ_Limdt[i]);
 		}
 		this.journalPeremption.ajouter("\n");
 
@@ -444,16 +444,16 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 		// Respect de la règle de péremption après 6 mois soit 12 nexts
 		for (ChocolatDeMarque cm : chocolatsLimDt){
 			switch (cm.getChocolat()){
-				case C_BQ : 
-				    if (péremption_C_BQ_Limdt[11] > 0) {
-                        stocksMarqueVar.get(cm).retirer(this, péremption_C_BQ_Limdt[11], this.cryptogramme);
-						this.journalPeremption.ajouter(Color.pink, Color.BLACK, "Péremption: On retire "+this.péremption_C_BQ_Limdt[11]+ " tonnes de "+cm+" de notre stock");
+				case C_MQ : 
+				    if (péremption_C_MQ_Limdt[11] > 0) {
+                        stocksMarqueVar.get(cm).retirer(this, péremption_C_MQ_Limdt[11], this.cryptogramme);
+						this.journalPeremption.ajouter(Color.pink, Color.BLACK, "Péremption: On retire "+this.péremption_C_MQ_Limdt[11]+ " tonnes de "+cm+" de notre stock");
 					}
 
 					for (int i=11; i>=1; i--) {
-						péremption_C_BQ_Limdt[i] = péremption_C_BQ_Limdt[i-1];
+						péremption_C_MQ_Limdt[i] = péremption_C_MQ_Limdt[i-1];
 					}
-					this.péremption_C_BQ_Limdt[0] = 0;
+					this.péremption_C_MQ_Limdt[0] = 0;
 					break;
 				case C_BQ_E : 
 				    if (péremption_C_BQ_E_Limdt[11] > 0) {
@@ -521,19 +521,19 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 	public List<Variable> getIndicateurs(){
 		List<Variable> res = super.getIndicateurs();
 
-		res.add(this.stock_F_BQ);
+		res.add(this.stock_F_MQ);
 		res.add(this.stock_F_BQ_E);
 		res.add(this.stock_F_MQ_E);
 		res.add(this.stock_F_HQ_BE);
-		res.add(this.stock_C_BQ);
+		res.add(this.stock_C_MQ);
 		res.add(this.stock_C_BQ_E);
 		res.add(this.stock_C_MQ_E);
 		res.add(this.stock_C_HQ_BE);
-		res.add(this.stock_C_BQ_Limdt);
+		res.add(this.stock_C_MQ_Limdt);
 		res.add(this.stock_C_BQ_E_Limdt);
 		res.add(this.stock_C_MQ_E_Limdt);
 		res.add(this.stock_C_HQ_BE_Limdt);
-        res.add(this.prix_Limdt_BQ);
+        res.add(this.prix_Limdt_MQ);
 		res.add(this.prix_Limdt_BQ_E);
 		res.add(this.prix_Limdt_MQ_E);
 		res.add(this.prix_Limdt_HQ_BE);

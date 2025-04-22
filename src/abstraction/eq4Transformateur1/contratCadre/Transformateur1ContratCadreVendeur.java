@@ -171,18 +171,18 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
 		IProduit produit = contrat.getProduit();
 
-		//Si le produit vendu est un chocolat BQ, on négocie de manière à avoir de très grandes marges
-		if (produit.equals(Chocolat.C_BQ) || (produit.getType()=="ChocolatDeMarque" && ((ChocolatDeMarque)produit).getChocolat().equals(Chocolat.C_BQ))){
+		//Si le produit vendu est un chocolat MQ, on négocie de manière à avoir de très grandes marges
+		if (produit.equals(Chocolat.C_MQ) || (produit.getType()=="ChocolatDeMarque" && ((ChocolatDeMarque)produit).getChocolat().equals(Chocolat.C_MQ))){
 			//Si le prix proposé est plus élevé que celui que l'on a calculé, on accepte le contrat
-			if (contrat.getPrix() > prixTChocoBase.get(Chocolat.C_BQ) * marges.get(Chocolat.C_BQ)){
+			if (contrat.getPrix() > prixTChocoBase.get(Chocolat.C_MQ) * marges.get(Chocolat.C_MQ)){
 				return contrat.getPrix();
 			}
 			//Si le prix est trop faible, on reste sur le prix minimum auquel on veut vendre
-			if (contrat.getPrix()< prixTChocoBase.get(Chocolat.C_BQ)*marges.get(Chocolat.C_BQ)*0.75){
-				return prixTChocoBase.get(Chocolat.C_BQ)*marges.get(Chocolat.C_BQ)*0.75;
+			if (contrat.getPrix()< prixTChocoBase.get(Chocolat.C_MQ)*marges.get(Chocolat.C_MQ)*0.75){
+				return prixTChocoBase.get(Chocolat.C_MQ)*marges.get(Chocolat.C_MQ)*0.75;
 			}
 			//Si le prix du contrat est à un epsilon près de notre prix, on accepte
-			double notrePrix = prixTChocoBase.get(Chocolat.C_BQ)*marges.get(Chocolat.C_BQ);
+			double notrePrix = prixTChocoBase.get(Chocolat.C_MQ)*marges.get(Chocolat.C_MQ);
 			double diffRelative = Math.abs(contrat.getPrix()- notrePrix)/notrePrix;
 			if (diffRelative<epsilon){
 				return contrat.getPrix();
@@ -190,8 +190,8 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 			//Sinon on cherche à négocier le prix, vers le bas par dichotomie en notre faveur à 90%
 			else{
 				double nouveauPrix = contrat.getPrix() * 0.1 + notrePrix * 0.9;
-				if (nouveauPrix < prixTChocoBase.get(Chocolat.C_BQ)*marges.get(Chocolat.C_BQ)*0.75){
-					return prixTChocoBase.get(Chocolat.C_BQ)*marges.get(Chocolat.C_BQ)*0.75;
+				if (nouveauPrix < prixTChocoBase.get(Chocolat.C_MQ)*marges.get(Chocolat.C_MQ)*0.75){
+					return prixTChocoBase.get(Chocolat.C_MQ)*marges.get(Chocolat.C_MQ)*0.75;
 				}
 				else{
 					notrePrix = nouveauPrix;

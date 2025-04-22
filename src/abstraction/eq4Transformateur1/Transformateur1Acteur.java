@@ -34,27 +34,27 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 
 
 	//Stock de fèves
-	protected Variable stock_F_BQ;
+	protected Variable stock_F_MQ;
 	protected Variable stock_F_BQ_E;
 	protected Variable stock_F_MQ_E;
 	protected Variable stock_F_HQ_BE;
 	protected HashMap<Feve, Variable> stocksFevesVar;
 
 	//Stock de chocolat NON MARQUE
-	protected Variable stock_C_BQ;
+	protected Variable stock_C_MQ;
 	protected Variable stock_C_BQ_E;
 	protected Variable stock_C_MQ_E;
 	protected Variable stock_C_HQ_BE;
 	protected HashMap<Chocolat, Variable> stocksChocoVar;
 
 	//Stock de chocolat de marque
-	protected Variable stock_C_BQ_Limdt;
+	protected Variable stock_C_MQ_Limdt;
 	protected Variable stock_C_BQ_E_Limdt;
 	protected Variable stock_C_MQ_E_Limdt;
 	protected Variable stock_C_HQ_BE_Limdt;
 	protected HashMap<ChocolatDeMarque, Variable> stocksMarqueVar;
 
-	protected double[] péremption_C_BQ_Limdt = new double[12];
+	protected double[] péremption_C_MQ_Limdt = new double[12];
 	protected double[] péremption_C_BQ_E_Limdt = new double[12];
 	protected double[] péremption_C_MQ_E_Limdt = new double[12];
 	protected double[] péremption_C_HQ_BE_Limdt = new double[12];
@@ -82,12 +82,12 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 		this.lesFeves.add(Feve.F_HQ_BE);
 		this.lesFeves.add(Feve.F_MQ_E);
 		this.lesFeves.add(Feve.F_BQ_E);
-		this.lesFeves.add(Feve.F_BQ);
+		this.lesFeves.add(Feve.F_MQ);
 
 
 		//On fixe les type de chocolat que l'on va produire
 		this.lesChocolats = new LinkedList<Chocolat>();
-		this.lesChocolats.add(Chocolat.C_BQ);
+		this.lesChocolats.add(Chocolat.C_MQ);
 		this.lesChocolats.add(Chocolat.C_BQ_E);
 		this.lesChocolats.add(Chocolat.C_MQ_E);
 		this.lesChocolats.add(Chocolat.C_HQ_BE);
@@ -100,37 +100,37 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 		 * @author MURY Julien
 		 * @author ABBASSI Rayene
 		 */
-		this.stock_F_BQ =new Variable("F_BQ","<html>Quantite totale de F_BQ en stock</html>", this, 0., 1000000., 5000.);
+		this.stock_F_MQ =new Variable("F_MQ","<html>Quantite totale de F_MQ en stock</html>", this, 0., 1000000., 5000.);
 		this.stock_F_BQ_E = new Variable("F_BQ_E","<html>Quantite totale de F_BQ_E en stock</html>", this, 0., 1000000., 5000.);
 		this.stock_F_MQ_E = new Variable("F_MQ_E", "<html>Quantite totale de F_MQ_E en stock</html>", this, 0., 1000000., 5000.);
 		this.stock_F_HQ_BE = new Variable("F_HQ_BE", "<html>Quantite totale de F_HQ_BE en stock</html>", this, 0., 1000000., 5000.);
 
-		this.stock_C_BQ=new Variable("EQ4T Stock C_BQ", "<html>Quantite totale de C_BQ en stock</html>",this, 0.0, 1000000.0, 0.0);
+		this.stock_C_MQ=new Variable("EQ4T Stock C_MQ", "<html>Quantite totale de C_MQ en stock</html>",this, 0.0, 1000000.0, 0.0);
 		this.stock_C_BQ_E=new Variable("EQ4T Stock C_BQ_E", "<html>Quantite totale de C_BQ_E en stock</html>",this, 0.0, 1000000.0, 0.0);
 		this.stock_C_MQ_E=new Variable("EQ4T Stock C_MQ_E", "<html>Quantite totale de C_MQ_E en stock</html>",this, 0.0, 1000000.0, 0.0);
 		this.stock_C_HQ_BE=new Variable("EQ4T Stock C_HQ_BE", "<html>Quantite totale de C_HQ_BE en stock</html>",this, 0.0, 1000000.0, 0.0);
 		
-		this.stock_C_BQ_Limdt=new Variable("EQ4T Stock C_BQ_Limdt", "<html>Quantite totale de C_BQ_Limdt en stock</html>",this, 0.0, 1000000.0, 40000.0);
+		this.stock_C_MQ_Limdt=new Variable("EQ4T Stock C_MQ_Limdt", "<html>Quantite totale de C_MQ_Limdt en stock</html>",this, 0.0, 1000000.0, 40000.0);
 		this.stock_C_BQ_E_Limdt=new Variable("EQ4T Stock C_BQ_E_Limdt", "<html>Quantite totale de C_BQ_E_Limdt en stock</html>",this, 0.0, 1000000.0, 40000.0);
 		this.stock_C_MQ_E_Limdt=new Variable("EQ4T Stock C_MQ_E_Limdt", "<html>Quantite totale de C_MQ_E_Limdt en stock</html>",this, 0.0, 1000000.0, 40000.0);
 		this.stock_C_HQ_BE_Limdt=new Variable("EQ4T Stock C_HQ_BE_Limdt", "<html>Quantite totale de C_HQ_BE_Limdt en stock</html>",this, 0.0, 1000000.0, 40000.0);
 	
 
 		this.stocksFevesVar = new HashMap<Feve, Variable>();
-		this.stocksFevesVar.put(Feve.F_BQ, stock_F_BQ);
+		this.stocksFevesVar.put(Feve.F_MQ, stock_F_MQ);
 		this.stocksFevesVar.put(Feve.F_BQ_E, stock_F_BQ_E);
 		this.stocksFevesVar.put(Feve.F_MQ_E, stock_F_MQ_E);
 		this.stocksFevesVar.put(Feve.F_HQ_BE, stock_F_HQ_BE);
 
 		this.stocksChocoVar= new HashMap<Chocolat, Variable>();
-		this.stocksChocoVar.put(Chocolat.C_BQ, stock_C_BQ);
+		this.stocksChocoVar.put(Chocolat.C_MQ, stock_C_MQ);
 		this.stocksChocoVar.put(Chocolat.C_BQ_E, stock_C_BQ_E);
 		this.stocksChocoVar.put(Chocolat.C_MQ_E, stock_C_MQ_E);
 		this.stocksChocoVar.put(Chocolat.C_HQ_BE, stock_C_HQ_BE);
 
 		this.stocksMarqueVar = new HashMap<ChocolatDeMarque, Variable>();
 
-        this.péremption_C_BQ_Limdt = new double[12];
+        this.péremption_C_MQ_Limdt = new double[12];
 		this.péremption_C_BQ_E_Limdt = new double[12];
 		this.péremption_C_MQ_E_Limdt = new double[12];
 		this.péremption_C_HQ_BE_Limdt = new double[12];
@@ -153,13 +153,13 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 		//Initialisation des stocks de chocolat de marque
 		for (ChocolatDeMarque cm : chocolatsLimDt){
 			switch (cm.getChocolat()){
-				case C_BQ : 
-					stocksMarqueVar.put(cm, stock_C_BQ_Limdt);
+				case C_MQ : 
+					stocksMarqueVar.put(cm, stock_C_MQ_Limdt);
 
-					this.péremption_C_BQ_Limdt[0] = stock_C_BQ_Limdt.getValeur();
+					this.péremption_C_MQ_Limdt[0] = stock_C_MQ_Limdt.getValeur();
 
 					for (int i=1; i<12; i++){
-						this.péremption_C_BQ_Limdt [i] = 0.0;
+						this.péremption_C_MQ_Limdt [i] = 0.0;
 					}
 					break;
 				case C_BQ_E : 
@@ -362,8 +362,8 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 
 			if (type.equals("Feve")){
 				switch ((Feve)produit){
-					case F_BQ : 
-						this.stocksFevesVar.get(Feve.F_BQ).ajouter(this, quantite, cryptogramme);
+					case F_MQ : 
+						this.stocksFevesVar.get(Feve.F_MQ).ajouter(this, quantite, cryptogramme);
 						break;
 					case F_BQ_E : 
 						this.stocksFevesVar.get(Feve.F_BQ_E).ajouter(this, quantite, cryptogramme);
@@ -381,8 +381,8 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 			}
 			else if (type.equals("Chocolat")){
 				switch ((Chocolat)produit){
-					case C_BQ : 
-						this.stocksChocoVar.get(Chocolat.C_BQ).ajouter(this, quantite, cryptogramme);
+					case C_MQ : 
+						this.stocksChocoVar.get(Chocolat.C_MQ).ajouter(this, quantite, cryptogramme);
 						break;
 					case C_BQ_E : 
 						this.stocksChocoVar.get(Chocolat.C_BQ_E).ajouter(this, quantite, cryptogramme);
@@ -400,9 +400,9 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 			}
 			else if (type.equals("ChocolatDeMarque")){
 				switch (((ChocolatDeMarque)produit).getChocolat()){
-					case C_BQ : 
+					case C_MQ : 
 						this.stocksMarqueVar.get(produit).ajouter(this, quantite, cryptogramme);
-						this.péremption_C_BQ_Limdt[0] += quantite;
+						this.péremption_C_MQ_Limdt[0] += quantite;
 						break;
 					case C_BQ_E : 
 						this.stocksMarqueVar.get(produit).ajouter(this, quantite, cryptogramme);
@@ -445,8 +445,8 @@ public void retirerDuStock(IProduit produit, double quantite, int cryptogramme){
 		String type = produit.getType();
 		if (type.equals("Feve")){
 			switch ((Feve)produit){
-				case F_BQ : 
-					this.stocksFevesVar.get(Feve.F_BQ).retirer(this, quantite, cryptogramme);
+				case F_MQ : 
+					this.stocksFevesVar.get(Feve.F_MQ).retirer(this, quantite, cryptogramme);
 					break;
 				case F_BQ_E : 
 					this.stocksFevesVar.get(Feve.F_BQ_E).retirer(this, quantite, cryptogramme);
@@ -464,8 +464,8 @@ public void retirerDuStock(IProduit produit, double quantite, int cryptogramme){
 		}
 		else if (type.equals("Chocolat")){
 			switch ((Chocolat)produit){
-				case C_BQ : 
-					this.stocksChocoVar.get(Chocolat.C_BQ).retirer(this, quantite, cryptogramme);
+				case C_MQ : 
+					this.stocksChocoVar.get(Chocolat.C_MQ).retirer(this, quantite, cryptogramme);
 					break;
 				case C_BQ_E : 
 					this.stocksChocoVar.get(Chocolat.C_BQ_E).retirer(this, quantite, cryptogramme);
@@ -483,16 +483,16 @@ public void retirerDuStock(IProduit produit, double quantite, int cryptogramme){
 		}
 		else if (type.equals("ChocolatDeMarque")){
 			switch (((ChocolatDeMarque)produit).getChocolat()){
-				case C_BQ : 
+				case C_MQ : 
 					this.stocksMarqueVar.get(produit).retirer(this, quantite, cryptogramme);
 					for (int i=11; i>=0; i--){
-						if (this.péremption_C_BQ_Limdt[i] > 0 && this.péremption_C_BQ_Limdt[i] - quantite >= 0){
-							this.péremption_C_BQ_Limdt[i] -= quantite;
+						if (this.péremption_C_MQ_Limdt[i] > 0 && this.péremption_C_MQ_Limdt[i] - quantite >= 0){
+							this.péremption_C_MQ_Limdt[i] -= quantite;
 							break;
 						}
-						else if (this.péremption_C_BQ_Limdt[i] > 0 && this.péremption_C_BQ_Limdt[i] - quantite < 0){
-							quantite -= this.péremption_C_BQ_Limdt[i];
-							this.péremption_C_BQ_Limdt[i] = 0;
+						else if (this.péremption_C_MQ_Limdt[i] > 0 && this.péremption_C_MQ_Limdt[i] - quantite < 0){
+							quantite -= this.péremption_C_MQ_Limdt[i];
+							this.péremption_C_MQ_Limdt[i] = 0;
 						}
 					}
 					break;
