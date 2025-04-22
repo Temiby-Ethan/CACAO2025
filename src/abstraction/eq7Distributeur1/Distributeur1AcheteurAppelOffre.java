@@ -92,21 +92,25 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurEncher
 	}
 	@Override
 	public List<Variable> getIndicateurs(){
+                @SuppressWarnings("Convert2Diamond")
 		List<Variable> indicateurs = new ArrayList<Variable>();
 		return(indicateurs);
 	}
 	@Override
 	public List<Variable> getParametres(){
+                @SuppressWarnings("Convert2Diamond")
 		List<Variable> parametres = new ArrayList<Variable>();
 		return(parametres);
 	}
 	@Override
 	public List<Journal> getJournaux(){
+                @SuppressWarnings("Convert2Diamond")
 		List<Journal> journaux = new ArrayList<Journal>();
 		return(journaux);
 	}
 	@Override
 	public List<String> getNomsFilieresProposees(){
+                @SuppressWarnings("Convert2Diamond")
 		List<String> noms = new ArrayList<String>();
 		return(noms);
 	}

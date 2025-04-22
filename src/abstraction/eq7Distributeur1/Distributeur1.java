@@ -63,7 +63,11 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 		this.chocolats= Filiere.LA_FILIERE.getChocolatsProduits();
 
 		for (int i=0; i<this.chocolats.size(); i++) {
+<<<<<<< HEAD
 			this.stocksChocolats.put(chocolats.get(i), new Variable("Stock"+chocolats.get(i).getNom(), this, 0.0));
+=======
+			this.stocksChocolats.put(chocolats.get(i), new Variable("Stock"+chocolats.get(i).getNom(), this, 100000.0));
+>>>>>>> 8bf5566f2d2fa9ccd4d21a022702f2fc7b3d4c36
 			successedSell.add(0);
 			priceProduct.add(1000.0);
 			requiredQuantities.add(0.0);
@@ -124,10 +128,14 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 		String str_journal_AO = "";
 
 		for (int i = 0 ; i<chocolats.size() ; i++){
-			str_journal_stock += this.stocksChocolats.get(chocolats.get(i)).getNom() + " = " + this.stocksChocolats.get(chocolats.get(i)).getValeur() + " ; ";
-			str_journal_E += this.successedSell.get(i) + " ; ";
-			str_journal_CC += "b";
-			str_journal_AO += " ; ";
+			str_journal_stock = this.stocksChocolats.get(chocolats.get(i)).getNom() + " = " + this.stocksChocolats.get(chocolats.get(i)).getValeur() + ";";
+			journal.ajouter(str_journal_stock);
+			str_journal_E ="Achat en enchère de " + this.stocksChocolats.get(chocolats.get(i)).getNom()+ " = " + this.successedSell.get(i) + " tonne(s); ";
+			journalE.ajouter(str_journal_E);
+			str_journal_CC = "Achat en contrat cadre de " + this.stocksChocolats.get(chocolats.get(i)).getNom()+ " = " + "0" + "tonne(s);" ;
+			journalCC.ajouter(str_journal_CC);
+			str_journal_AO = "Achat en appel d'offre de " + this.stocksChocolats.get(chocolats.get(i)).getNom()+ " = " + "0" + "tonne(s);";
+			journalAO.ajouter(str_journal_AO);
 		}
 
 		journal.ajouter(str_journal_stock);
@@ -144,6 +152,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 	}
 
 	public List<String> getMarquesChocolat() { // par Alexiho
+                @SuppressWarnings("Convert2Diamond")
 		List<String> marques = new ArrayList<String>();
 		marques.add("Hexafridge");
 		return marques;
@@ -225,6 +234,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 	@Override
 	// Renvoie les journaux
 	public List<Journal> getJournaux() { // par Alexiho
+                @SuppressWarnings("Convert2Diamond")
 		List<Journal> res=new ArrayList<Journal>();
 		res.add(journal);
 		res.add(journalE);
