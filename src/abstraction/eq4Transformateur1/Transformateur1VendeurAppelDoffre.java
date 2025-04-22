@@ -71,6 +71,7 @@ public class Transformateur1VendeurAppelDoffre extends Transformateur1AcheteurBo
 
 
 		this.retirerDuStock(chocoMarqueAO, propositionRetenue.getQuantiteT(), this.cryptogramme);
+		this.qttSortantesTransactions.put(chocoMarqueAO.getChocolat(), this.qttSortantesTransactions.get(chocoMarqueAO.getChocolat()) + propositionRetenue.getQuantiteT());
 	}
 	
 

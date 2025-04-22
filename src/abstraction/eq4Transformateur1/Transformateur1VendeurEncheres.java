@@ -67,6 +67,7 @@ public class Transformateur1VendeurEncheres extends Transformateur1VendeurAppelD
 	
 	
 						this.retirerDuStock(retenue.getProduit(),  retenue.getMiseAuxEncheres().getQuantiteT(), this.cryptogramme);
+						this.qttSortantesTransactions.put(choco, this.qttSortantesTransactions.get(choco)+retenue.getMiseAuxEncheres().getQuantiteT());
 							
 						journalTransactions.ajouter(Romu.COLOR_LLGRAY, Color.darkGray, "--> E "+choco+" : vente de "+retenue.getMiseAuxEncheres().getQuantiteT()+" T de à "+retenue.getAcheteur().getNom());
 						this.journalTransactions.ajouter("\n");
