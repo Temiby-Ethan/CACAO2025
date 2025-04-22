@@ -367,8 +367,6 @@ public class Producteur1arbes extends Producteur1 {
         return res;
     }
 
-
-
 }
 
 

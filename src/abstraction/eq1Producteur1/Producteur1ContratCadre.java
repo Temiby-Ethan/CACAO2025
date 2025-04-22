@@ -9,6 +9,8 @@ import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
 // ADAM SEBIANE
+//
+
 
 public class Producteur1ContratCadre extends Producteur1Acteur implements IVendeurContratCadre {
 
@@ -24,7 +26,7 @@ public class Producteur1ContratCadre extends Producteur1Acteur implements IVende
         //this.stock = new Stock(this);
 
         this.contrats = new ArrayList<>();
-    }
+    } 
 
 
     @Override
@@ -108,6 +110,7 @@ public class Producteur1ContratCadre extends Producteur1Acteur implements IVende
     }
 
     @Override
+<<<<<<< HEAD
     /**
 	 * Methode appelee par le SuperviseurVentesContratCadre apres une contreproposition
 	 * de prix different de la part de l'acheteur, afin de connaitre la contreproposition
@@ -125,6 +128,13 @@ public class Producteur1ContratCadre extends Producteur1Acteur implements IVende
     if (!(produit instanceof Feve)) {
         journal.ajouter("Erreur : Produit non reconnu pour la contre-proposition de prix.");
         return 0.0; // Met fin aux négociations si le produit n'est pas une fève
+=======
+    public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
+        double prixPropose = contrat.getPrix();
+        double contreProposition = prixPropose * 1.10; // 10% de plus que la proposition de l'acheteur
+        journal.ajouter("Contre-proposition de prix : " + contreProposition + " au lieu de " + prixPropose);
+        return contreProposition;
+>>>>>>> c4e34404128b8b51534d51a5c7f1b279ff89ee4a
     }
 
     // Vérification des conditions de l'échéancier

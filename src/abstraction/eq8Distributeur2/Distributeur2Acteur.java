@@ -16,22 +16,26 @@ import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.IProduit;
 
+import abstraction.eqXRomu.acteurs.Romu;
+
+
 public class Distributeur2Acteur implements IActeur {
 	
-
-	//stockTotal et journal par Tidiane
-	private Journal journal_next = new Journal("journal next Eq8", this);
 	
-
+	// stocks
 	protected Variable stockTotal;
+	protected HashMap<ChocolatDeMarque, Double> stock_Choco;
+	protected HashMap<Chocolat, Variable> stock_chocolat_qualite;
+
+	
 	protected Journal journal;
 	protected int cryptogramme;
 	
 	protected IProduit produit;
 	protected List<ChocolatDeMarque> chocolats;
-	protected HashMap<ChocolatDeMarque, Double> stock_Choco;
+	
 	protected HashMap<Chocolat,Integer> nombreMarquesParType;
-	protected HashMap<Chocolat, Variable> variables;
+	
 	
 
 	public Distributeur2Acteur() {
@@ -40,9 +44,9 @@ public class Distributeur2Acteur implements IActeur {
 		this.chocolats = new LinkedList<ChocolatDeMarque>();
 		
 		this.stockTotal = new VariablePrivee("Eq8DStockChocoMarque","Quantite totale de chocolat de marque en stock",this,0);
-		this.variables= new HashMap<Chocolat, Variable>();
+		this.stock_chocolat_qualite= new HashMap<Chocolat, Variable>();
 		for (Chocolat c : Chocolat.values()) {
-			this.variables.put(c,new Variable ("EQ8 stock de : "+c,this,0));}
+			this.stock_chocolat_qualite.put(c,new Variable ("EQ8 stock de : "+c,this,0));}
 	}
 	
 	
@@ -64,7 +68,7 @@ public class Distributeur2Acteur implements IActeur {
 		    nombreMarquesParType.put(typeChoco, nombreMarquesParType.getOrDefault(typeChoco, 0) + 1);
 	    }
 		
-		this.journal.ajouter("===== STOCK INITIALE =====");
+		this.journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LBLUE,"==================== STOCK INITIAL ====================");
 		for (ChocolatDeMarque cm : chocolats) {
 			double stock = 0;
 			
@@ -90,11 +94,13 @@ public class Distributeur2Acteur implements IActeur {
 					totalStock += stock_Choco.get(cm);
 				}
 			}
-			this.variables.get(choc).setValeur(this, totalStock);
+			this.stock_chocolat_qualite.get(choc).setValeur(this, totalStock, cryptogramme);
 		}
 		
 		this.journal.ajouter("");
+		
 	}
+
 
 
 	public String getNom() {// NE PAS MODIFIER
@@ -110,25 +116,10 @@ public class Distributeur2Acteur implements IActeur {
 	////////////////////////////////////////////////////////
 
 	public void next() {
-		//Journal par Tidiane
-		journal_next.ajouter("" + Filiere.LA_FILIERE.getEtape());
 		
-		
-		for (Chocolat choc : Chocolat.values() ) {
-			double x = 0;
-			for (ChocolatDeMarque c : chocolats) {
-				if (c.getChocolat().equals(choc)) {
-					x = x + this.stock_Choco.get(c);
-				}
-			}
-			this.variables.get(choc).setValeur(this, x);
-		}
 	}
 
-	public Journal getJournal(){
-		return this.journal_next;
-	}
-
+	
 	
 	
 	public Color getColor() {// NE PAS MODIFIER
@@ -142,9 +133,9 @@ public class Distributeur2Acteur implements IActeur {
 	// Renvoie les indicateurs
 	public List<Variable> getIndicateurs() {
 		List<Variable> res = new ArrayList<Variable>();
-		res.add(getStockTotal());
+		res.add(this.stockTotal);
 		for (Chocolat choc : Chocolat.values()) {
-			res.add(this.variables.get(choc));
+			res.add(this.stock_chocolat_qualite.get(choc));
 		}
 		return res;
 	}
@@ -160,7 +151,7 @@ public class Distributeur2Acteur implements IActeur {
 	// Renvoie les journaux
 	public List<Journal> getJournaux() {
 		List<Journal> res=new ArrayList<Journal>();
-		res.add(journal_next);
+		
 		res.add(journal);
 		return res;
 	}
@@ -215,7 +206,14 @@ public class Distributeur2Acteur implements IActeur {
 		
 		System.out.println("Cet acteur n'est pas assermenté");
 		return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
-		
+	}
+
+	public double getQuantiteEnStockTotal() {
+		double stock = 0;
+		for (ChocolatDeMarque cm : chocolats) {
+			stock += stock_Choco.get(cm);
+		}
+		return stock;
 	}
 	
 }

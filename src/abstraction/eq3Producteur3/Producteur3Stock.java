@@ -19,7 +19,7 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
     protected HashMap<Integer,VariablePrivee> stockFeveMQ_E = new HashMap<Integer,VariablePrivee>();
     protected HashMap<Integer,VariablePrivee> stockFeveHQ = new HashMap<Integer,VariablePrivee>();
     protected HashMap<Integer,VariablePrivee> stockFeveHQ_B = new HashMap<Integer,VariablePrivee>();
-    protected VariablePrivee totalStock;
+    public VariablePrivee totalStock;
     protected VariablePrivee totalStockBQ;
     protected VariablePrivee totalStockBQ_E;
     protected VariablePrivee totalStockMQ;
@@ -28,6 +28,7 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
     protected VariablePrivee totalStockHQ_B;
     protected VariablePrivee coutStock;
 
+    
 
 
     public Producteur3Stock(){
@@ -39,21 +40,31 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
     //Zoé
     public void initStock(){
         for(int i = 0; i < 8; i++){
-            stockFeveBQ.put(i, new VariablePrivee(getNom()+"Stock BQ de "+i,this));
-            stockFeveBQ_E.put(i, new VariablePrivee(getNom()+"Stock BQ Eq de "+i,this));
-            stockFeveMQ.put(i, new VariablePrivee(getNom()+"Stock MQ de "+i,this));
-            stockFeveMQ_E.put(i, new VariablePrivee(getNom()+"Stock MQ_E de "+i,this));
-            stockFeveHQ.put(i, new VariablePrivee(getNom()+"Stock HQ de "+i,this));
-            stockFeveHQ_B.put(i, new VariablePrivee(getNom()+"Stock HQ_B de "+i,this));
+            if (i==0){
+                stockFeveBQ.put(i, new VariablePrivee(getNom()+"Stock BQ de "+i,this,15000));
+                stockFeveBQ_E.put(i, new VariablePrivee(getNom()+"Stock BQ Eq de "+i,this,0));
+                stockFeveMQ.put(i, new VariablePrivee(getNom()+"Stock MQ de "+i,this,0));
+                stockFeveMQ_E.put(i, new VariablePrivee(getNom()+"Stock MQ_E de "+i,this,41000));
+                stockFeveHQ.put(i, new VariablePrivee(getNom()+"Stock HQ de "+i,this,0));
+                stockFeveHQ_B.put(i, new VariablePrivee(getNom()+"Stock HQ_B de "+i,this,5200));
+            }
+            else{
+                stockFeveBQ.put(i, new VariablePrivee(getNom()+"Stock BQ de "+i,this,0));
+                stockFeveBQ_E.put(i, new VariablePrivee(getNom()+"Stock BQ Eq de "+i,this,0));
+                stockFeveMQ.put(i, new VariablePrivee(getNom()+"Stock MQ de "+i,this,0));
+                stockFeveMQ_E.put(i, new VariablePrivee(getNom()+"Stock MQ_E de "+i,this,0));
+                stockFeveHQ.put(i, new VariablePrivee(getNom()+"Stock HQ de "+i,this,0));
+                stockFeveHQ_B.put(i, new VariablePrivee(getNom()+"Stock HQ_B de "+i,this,0));
+            }
         }
-        totalStock = new VariablePrivee(this.getNom()+"Stock Total", this, 0.0, 100000000000000.0, 0);
-        totalStockBQ = new VariablePrivee(this.getNom()+"Stock Total BQ", this);
-        totalStockBQ_E = new VariablePrivee(this.getNom()+"Stock Total BQ_E", this);
-        totalStockMQ = new VariablePrivee(this.getNom()+"Stock Total MQ", this);
-        totalStockMQ_E = new VariablePrivee(this.getNom()+"Stock Total MQ_E", this);
-        totalStockHQ = new VariablePrivee(this.getNom()+"Stock Total HQ", this);
-        totalStockHQ_B = new VariablePrivee(this.getNom()+"Stock Total HQ_B", this);
-        coutStock = new VariablePrivee(this.getNom() + "Cout Stockage", this, 0.0, 1000000000.0, 0);
+        totalStock = new VariablePrivee(this.getNom()+"Stock Total", this, 61200);
+        totalStockBQ = new VariablePrivee(this.getNom()+"Stock Total BQ", this,15000);
+        totalStockBQ_E = new VariablePrivee(this.getNom()+"Stock Total BQ_E", this,0);
+        totalStockMQ = new VariablePrivee(this.getNom()+"Stock Total MQ", this,0);
+        totalStockMQ_E = new VariablePrivee(this.getNom()+"Stock Total MQ_E", this,41000);
+        totalStockHQ = new VariablePrivee(this.getNom()+"Stock Total HQ", this,0);
+        totalStockHQ_B = new VariablePrivee(this.getNom()+"Stock Total HQ_B", this,5200);
+        coutStock = new VariablePrivee(this.getNom() + "Cout Stockage", this,0);
         getIndicateurs().add(totalStock);
         getIndicateurs().add(coutStock);
         getIndicateurs().add(totalStockBQ);
@@ -63,8 +74,6 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
         getIndicateurs().add(totalStockHQ);
         getIndicateurs().add(totalStockHQ_B);
     }
-  
-    
 
 
     
@@ -166,15 +175,47 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
         }
     }
 
+    double getNouveauStockParticulier(Feve feve){
+        if(feve.getGamme().equals(Gamme.BQ)){
+            if(feve.isEquitable()){
+                return stockFeveBQ_E.get(0).getValeur(cryptogramme);
+            }else{
+                return stockFeveBQ.get(0).getValeur(cryptogramme);
+            }
+        }
+        else if(feve.getGamme().equals(Gamme.MQ)){
+            if(feve.isEquitable()){
+                return stockFeveMQ_E.get(0).getValeur(cryptogramme);
+            }else{
+                return stockFeveMQ.get(0).getValeur(cryptogramme);
+            }
+        }else{
+            if (feve.isBio()){
+                return stockFeveHQ_B.get(0).getValeur(cryptogramme);
+            }else{
+                return stockFeveHQ.get(0).getValeur(cryptogramme);
+            }
+        }
 
+    }
+    
+    double getNouveauStockTotal(){
+        double total = stockFeveBQ.get(0).getValeur(cryptogramme);
+        total += stockFeveBQ_E.get(0).getValeur(cryptogramme);
+        total += stockFeveMQ.get(0).getValeur(cryptogramme);
+        total += stockFeveMQ_E.get(0).getValeur(cryptogramme);
+        total += stockFeveHQ.get(0).getValeur(cryptogramme);
+        total += stockFeveHQ_B.get(0).getValeur(cryptogramme);
+        return total;
+    }
     void vieillirStock(){
-        for(int i = 7; i > 0; i--){
-            stockFeveBQ.get(i).setValeur(this, stockFeveBQ.get(i-1).getValeur(cryptogramme), cryptogramme);
-            stockFeveBQ_E.get(i).setValeur(this, stockFeveBQ_E.get(i-1).getValeur(cryptogramme), cryptogramme);
-            stockFeveMQ.get(i).setValeur(this, stockFeveMQ.get(i-1).getValeur(cryptogramme), cryptogramme);
-            stockFeveMQ_E.get(i).setValeur(this, stockFeveMQ_E.get(i-1).getValeur(cryptogramme), cryptogramme);
-            stockFeveHQ.get(i).setValeur(this, stockFeveHQ.get(i-1).getValeur(cryptogramme), cryptogramme);
-            stockFeveHQ_B.get(i).setValeur(this, stockFeveHQ.get(i-1).getValeur(cryptogramme), cryptogramme);
+        for (int i = 6; i >= 0; i--) { 
+            stockFeveBQ.get(i+1).setValeur(this, stockFeveBQ.get(i).getValeur(cryptogramme), cryptogramme);
+            stockFeveBQ_E.get(i+1).setValeur(this, stockFeveBQ_E.get(i).getValeur(cryptogramme), cryptogramme);
+            stockFeveMQ.get(i+1).setValeur(this, stockFeveMQ.get(i).getValeur(cryptogramme), cryptogramme);
+            stockFeveMQ_E.get(i+1).setValeur(this, stockFeveMQ_E.get(i).getValeur(cryptogramme), cryptogramme);
+            stockFeveHQ.get(i+1).setValeur(this, stockFeveHQ.get(i).getValeur(cryptogramme), cryptogramme);
+            stockFeveHQ_B.get(i+1).setValeur(this, stockFeveHQ_B.get(i).getValeur(cryptogramme), cryptogramme);
         }
         stockFeveBQ.get(0).setValeur(this, sechageBQ[0], cryptogramme);
         stockFeveBQ_E.get(0).setValeur(this, sechageBQ_E[0], cryptogramme);
@@ -326,7 +367,8 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
     }
 
     public double calculCoutStock() {
-        return  7.5 * calculTotalStock(); 
+        coutStock.setValeur(this, 7.5 * calculTotalStock(), cryptogramme);
+        return  coutStock.getValeur(cryptogramme); 
         
     }
 

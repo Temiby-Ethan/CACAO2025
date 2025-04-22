@@ -368,11 +368,12 @@ public class Banque implements IActeur, IAssermente {
 			erreur(" Appel de payerCout de Banque avec null pour acteur");
 		} else if (!comptes.containsKey(acteurADebiter)) {
 			erreur(" Appel de payerCout de Banque avec un acteur qui n'a pas de compte bancaire");
-		} else if (montant<=0) {
-			erreur(" Appel de payerCout de Banque avec un montant egal a "+montant+" au lieu d'un montant strictement positif");
 		} else if (this.cryptogramme.get(acteurADebiter)!=cryptogrammeActeurADebiter) {
 			erreur(" Appel de payerCout de Banque avec un cryptogramme qui n'est pas celui du compte a debiter");
-		} else if (getSolde(acteurADebiter,cryptogrammeActeurADebiter)-montant<this.getSeuilOperationsRefusees()) {
+		} else if (montant<=0) {
+			System.err.println(" Appel de payerCout de Banque avec un montant egal a "+montant+" au lieu d'un montant strictement positif --> mise en faillite");
+			faireFaillite(acteurADebiter, this, crypto);
+		}  else if (getSolde(acteurADebiter,cryptogrammeActeurADebiter)-montant<this.getSeuilOperationsRefusees()) {
 			this.journalBanque.ajouter(Color.RED, Color.WHITE," Virement d'un montant "+Journal.doubleSur(montant, 15,3)+" impossible car cela amenerait le solde du compte de "+Journal.texteColore(acteurADebiter.getColor(), Color.BLACK, acteurADebiter.getNom())+Journal.texteColore(Color.red, Color.white, " en dessous du decouvert autorise"));
 		} else{
 			if (!(acteurADebiter  instanceof IAssermente)) { // Les comptes bancaires des acteurs assermentes (bourse, superviseurs, clients fnaux, ...) ne sont pas impactes
