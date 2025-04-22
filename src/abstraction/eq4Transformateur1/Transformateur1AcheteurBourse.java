@@ -14,19 +14,18 @@ import abstraction.eqXRomu.produits.Feve;
 public class Transformateur1AcheteurBourse extends Transformateur1ContratCadreVendeurAcheteur implements IAcheteurBourse{
 	
 	private Feve feve;
-	private double T;
  
 	public Transformateur1AcheteurBourse() {
 		super();
 		this.feve = Feve.F_BQ;
-		this.T = qtt_feves_achetees_bourse;
 	}
+
 
 	@Override
 	public double demande(Feve f, double cours) {
 		if (this.feve.equals(f)) {
-			this.journalTransactions.ajouter(Color.white, Color.magenta,"B: Je demande " + T + " tonnes de " + f + " au cours de " + cours + " euros par tonne.");
-			return T;
+			this.journalTransactions.ajouter(Color.white, Color.magenta,"B: Je demande " + qttFevesAcheteesBourse.getValeur() + " tonnes de " + f + " au cours de " + cours + " euros par tonne.");
+			return qttFevesAcheteesBourse.getValeur();
 		} else {
 			return 0.0;
 		}
