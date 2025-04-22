@@ -3,6 +3,7 @@ package abstraction.eq9Distributeur3;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 
+// Auteur : Héloïse
 public class Distributeur3Charges extends Distributeur3ContratCadre {
     Distributeur3Charges(){
         super();
@@ -16,7 +17,9 @@ public class Distributeur3Charges extends Distributeur3ContratCadre {
         int salaireEmployes = 700;
         //System.out.println("paiement des frais de stockage : "+this.stockTotal.getValeur(Filiere.LA_FILIERE.getEtape(),this.cryptogramme)+" tonnes ");
         this.journalCharges.ajouter("--------- ETAPE "+Filiere.LA_FILIERE.getEtape()+" ---------");
-        Filiere.LA_FILIERE.getBanque().payerCout(this,this.cryptogramme,"Stockage",Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*16*this.stockTotal.getValeur(this.cryptogramme));
+        if(Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*16*this.stockTotal.getValeur(this.cryptogramme)>0) {
+            Filiere.LA_FILIERE.getBanque().payerCout(this, this.cryptogramme, "Stockage", Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur() * 16 * this.stockTotal.getValeur(this.cryptogramme));
+        }
         this.journalCharges.ajouter("paiment stock : "+Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*16*this.stockTotal.getValeur(this.cryptogramme));
         double totalEnRayon = 0.0;
 
