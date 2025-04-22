@@ -13,7 +13,7 @@ import abstraction.eqXRomu.produits.Feve;
 /**
 	 * @author ABBASSI Rayene
 	 */
-public class Transformateur1AcheteurAppelDOffre extends Transformateur1VendeurAppelDoffre implements IAcheteurAO {
+public class Transformateur1AcheteurAppelDOffre extends Transformateur1VendeurEncheres implements IAcheteurAO {
     private SuperviseurVentesAO supAO;
 
     public Transformateur1AcheteurAppelDOffre() {
@@ -46,11 +46,16 @@ public class Transformateur1AcheteurAppelDOffre extends Transformateur1VendeurAp
 
 	public OffreVente choisirOV(List<OffreVente> propositions) {
 		// TODO Auto-generated method stub
-		BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
-		double cours = ( bourse.getCours((Feve)propositions.get(0).getProduit())).getValeur();
+		double cours = prixTFeveStockee.get((Feve) (propositions.get(0).getProduit()));
+		if (propositions.size() == 0) {
+			journalTransactions.ajouter("Je ne choisis pas l'offre car il n'y a pas d'offre");
+			return null;
+		}
+		journalTransactions.ajouter("props: "+propositions);
 		if (propositions.get(0).getPrixT()<=cours) {
 			return propositions.get(0);
 		} else {
+			journalTransactions.ajouter("Je ne choisis pas l'offre car le prix est trop eleve");
 			return null;
 		}
 	}
