@@ -109,14 +109,27 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 		//IAcheteurAO acheteurAppelOffre = new Distributeur1AcheteurAppelOffre();
 		this.next_ao();
 		
-
-		//ChocolatDeMarque produit = new ChocolatDeMarque(Chocolat.C_MQ, "Villors", 50); // Produit choisi
-        //double quantiteAjoutee = 100.0; // 100 tonnes
-
-		//capaciteDeVente.set(3, 100.0);
-
-        //journal.ajouter("Étape " + etape + " : Ajout de " + quantiteAjoutee + " t de " + produit + " en rayon.");
-		
+		//Ethan - Indicateurs de stocks
+		for (int i = 0; i < this.chocolats.size(); i++) {
+			if (stocksChocolats.get(chocolats.get(i)).getNom().contains("BQ_E")) {
+				this.stock_C_BQ_E.ajouter(this, stocksChocolats.get(chocolats.get(i)).getValeur(), cryptogramme);
+			}
+			if (stocksChocolats.get(chocolats.get(i)).getNom().contains("BQ") && (!stocksChocolats.get(chocolats.get(i)).getNom().contains("BQ_E"))) {
+				this.stock_C_BQ.ajouter(this, stocksChocolats.get(chocolats.get(i)).getValeur(), cryptogramme);
+			}
+			if (stocksChocolats.get(chocolats.get(i)).getNom().contains("MQ_E")) {
+				this.stock_C_MQ_E.ajouter(this, stocksChocolats.get(chocolats.get(i)).getValeur(), cryptogramme);
+			}
+			if (stocksChocolats.get(chocolats.get(i)).getNom().contains("MQ") && (!stocksChocolats.get(chocolats.get(i)).getNom().contains("MQ_E"))) {
+				this.stock_C_MQ.ajouter(this, stocksChocolats.get(chocolats.get(i)).getValeur(), cryptogramme);
+			}
+			if (stocksChocolats.get(chocolats.get(i)).getNom().contains("HQ_E")) {
+				this.stock_C_HQ_E.ajouter(this, stocksChocolats.get(chocolats.get(i)).getValeur(), cryptogramme);
+			}
+			if (stocksChocolats.get(chocolats.get(i)).getNom().contains("HQ_BE")) {
+				this.stock_C_HQ_BE.ajouter(this, stocksChocolats.get(chocolats.get(i)).getValeur(), cryptogramme);
+			}
+		}
 		//par Ethan
 		String str_journal_stock = "";
 		String str_journal_E = "";

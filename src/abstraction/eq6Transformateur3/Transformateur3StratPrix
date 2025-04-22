@@ -1,0 +1,30 @@
+// @author  Florian Malveau
+
+package abstraction.eq6Transformateur3;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import abstraction.eqXRomu.produits.ChocolatDeMarque;
+import abstraction.eqXRomu.produits.Feve;
+import abstraction.eqXRomu.produits.Gamme;
+import abstraction.eqXRomu.produits.IProduit;
+import abstraction.eqXRomu.produits.Chocolat;
+import abstraction.eqXRomu.filiere.IFabricantChocolatDeMarque;
+import abstraction.eqXRomu.general.Variable;
+
+public class Transformateur3StratPrix extends Transformateur3AO {
+
+    public Transformateur3StratPrix(){
+
+    }
+
+    //Estimation prix fèves
+
+    //Estimation production
+
+    //Estimation stock
+
+}
+   
