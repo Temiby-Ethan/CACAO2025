@@ -13,6 +13,7 @@ import abstraction.eqXRomu.general.VariablePrivee;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.IProduit;
 
+// Auteur : Héloïse
 public class Distributeur3Acteur implements IActeur {
 	
 	protected int cryptogramme;
@@ -95,10 +96,8 @@ public class Distributeur3Acteur implements IActeur {
 	// votre cryptogramme personnel, indispensable pour les
 	// transactions.
 	public void setCryptogramme(Integer crypto) {
-
 		this.cryptogramme = crypto;
 		//System.out.println("set crypto : "+this.cryptogramme);
-
 	}
 
 	// Appelee lorsqu'un acteur fait faillite (potentiellement vous)
