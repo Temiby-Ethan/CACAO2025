@@ -32,7 +32,7 @@ public class Distributeur1Acteur implements IActeur {
 	public Distributeur1Acteur() {
 		this.stock_C_BQ=new VariablePrivee("EQ7-D1 Stock C_BQ", "<html>Quantite totale de C_BQ en stock</html>",this, 0.0, 1000000.0, 0.0);
 		this.stock_C_BQ_E=new VariablePrivee("EQ7-D1 Stock C_BQ_E", "<html>Quantite totale de C_BQ_E en stock</html>",this, 0.0, 1000000.0, 0.0);
-		this.stock_C_MQ=new VariablePrivee("EQ7-D1 Stock C_BQ", "<html>Quantite totale de C_MQ en stock</html>",this, 0.0, 1000000.0, 0.0);
+		this.stock_C_MQ=new VariablePrivee("EQ7-D1 Stock C_MQ", "<html>Quantite totale de C_MQ en stock</html>",this, 0.0, 1000000.0, 0.0);
 		this.stock_C_MQ_E=new VariablePrivee("EQ7-D1 Stock C_MQ_E", "<html>Quantite totale de C_MQ_E en stock</html>",this, 0.0, 1000000.0, 0.0);
 		this.stock_C_HQ_E=new VariablePrivee("EQ7-D1 Stock C_HQ_E", "<html>Quantite totale de C_HQ_E en stock</html>",this, 0.0, 1000000.0, 0.0);
 		this.stock_C_HQ_BE=new VariablePrivee("EQ7-D1 Stock C_HQ_BE", "<html>Quantite totale de C_HQ_BE en stock</html>",this, 0.0, 1000000.0, 0.0);

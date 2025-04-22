@@ -220,7 +220,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 	}
 	@Override
 	public List<Variable> getIndicateurs() {
-		List<Variable> res = new ArrayList<Variable>();
+		List<Variable> res = super.getIndicateurs();
 		for (int i=0; i<this.chocolats.size(); i++) {
 			res.add(this.stocksChocolats.get(chocolats.get(i)));
 		}
