@@ -49,7 +49,22 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 
 		//A MODIFIER 
 		//On cherche à vendre une partie de la quantité de chocolat correspondant à la qtt de fèves entrantes
-		double qttVoulue = 0.5 * qttEntrantesFeve.get((Feve)(contrat.getProduit()));
+		double qttVoulue = 0.;
+
+		switch(((ChocolatDeMarque)contrat.getProduit()).getChocolat()){
+			case C_BQ_E :
+				qttVoulue = 0.5 * qttEntrantesFeve.get(Feve.F_BQ_E) * contrat.getEcheancier().getNbEcheances();
+			case C_MQ : 
+				qttVoulue = 0.5 * qttEntrantesFeve.get(Feve.F_MQ) * contrat.getEcheancier().getNbEcheances();
+			case C_MQ_E : 
+				qttVoulue = 0.5 * qttEntrantesFeve.get(Feve.F_MQ_E) * contrat.getEcheancier().getNbEcheances();
+			case C_HQ_BE:
+				qttVoulue = 0.5 * qttEntrantesFeve.get(Feve.F_HQ_BE) * contrat.getEcheancier().getNbEcheances();
+
+			default : 
+				System.out.println("Ce chocolat n'est pas sensé être vendu : " + contrat.getProduit());
+		}
+		
 		double qttEntrant = 0.;
 
 		//A MODIFIER	
