@@ -117,10 +117,10 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 		this.pourcentageTransfo.get(Feve.F_MQ_E).put(Chocolat.C_MQ_E, conversion);
 
 		this.pourcentageTransfo.put(Feve.F_MQ, new HashMap<Chocolat, Double>());
-		conversion = 1.0 + (100.0 - Filiere.LA_FILIERE.getParametre("pourcentage min cacao MQ").getValeur())/100.0;
 		this.pourcentageTransfo.get(Feve.F_MQ).put(Chocolat.C_MQ, conversion);
 
 		this.pourcentageTransfo.put(Feve.F_BQ_E, new HashMap<Chocolat, Double>());
+		conversion = 1.0 + (100.0 - Filiere.LA_FILIERE.getParametre("pourcentage min cacao BQ").getValeur())/100.0;
 		this.pourcentageTransfo.get(Feve.F_BQ_E).put(Chocolat.C_BQ_E, conversion);
 
 

@@ -241,16 +241,19 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 			for(IAcheteurContratCadre acheteur : acheteurs){
 				if (acheteur!=null) {
 					journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE, "Demande au superviseur de debuter les negociations pour un contrat cadre de "+produit+" avec l'acheteur "+acheteur);
-					ExemplaireContratCadre cc = supCCadre.demandeVendeur(acheteur, (IVendeurContratCadre)this, produit, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 25, (0.3*this.getQuantiteEnStock(produit, this.cryptogramme)+10)/25), cryptogramme,false);
-					if (cc!=null) {
-					    journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE, "-->aboutit au contrat "+cc);
-					    journalCC.ajouter("\n");
-						this.mesContratEnTantQueVendeur.add(cc);
+					if (0.3*this.getQuantiteEnStock(produit, this.cryptogramme) > 100.){
+						ExemplaireContratCadre cc = supCCadre.demandeVendeur(acheteur, (IVendeurContratCadre)this, produit, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 25, (0.3*this.getQuantiteEnStock(produit, this.cryptogramme)+10)/25), cryptogramme,false);
+						if (cc!=null) {
+							journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE, "-->aboutit au contrat "+cc);
+							journalCC.ajouter("\n");
+							this.mesContratEnTantQueVendeur.add(cc);
+						}
+						else {
+							journalCC.ajouter(Color.pink, Romu.COLOR_PURPLE, "-->Le contrat n'a pas pu aboutir");
+							journalCC.ajouter("\n");
+						}
 					}
-					else {
-					    journalCC.ajouter(Color.pink, Romu.COLOR_PURPLE, "-->Le contrat n'a pas pu aboutir");
-					    journalCC.ajouter("\n");
-					}
+					
 				}
 			}
 		}
