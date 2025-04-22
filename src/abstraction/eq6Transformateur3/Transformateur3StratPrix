@@ -14,9 +14,17 @@ import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.filiere.IFabricantChocolatDeMarque;
 import abstraction.eqXRomu.general.Variable;
 
-public class Transformateur3StratPrix extends Transformateur3Fabriquant {
+public class Transformateur3StratPrix extends Transformateur3AO {
 
-    //Estimation 
+    public Transformateur3StratPrix(){
+
+    }
+
+    //Estimation prix fèves
+
+    //Estimation production
+
+    //Estimation stock
 
 }
    
