@@ -36,7 +36,7 @@ public class Transformateur3Fabriquant extends Transformateur3Marques implements
     private double quantiteTotaleProduite = 0;
 
     //Production maximale : 128 000 T x2 = 256 000 T
-    private double productionMax = nbMachine*capacite_machine*2;
+    protected double productionMax = nbMachine*capacite_machine*2;
 
     //Demande de production
     protected HashMap<IProduit, Double> DemandeProdChoco; //Demande pour chaque choco en tonnes
