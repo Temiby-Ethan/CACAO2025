@@ -242,14 +242,5 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 		return res;
 	}
 	
-
-	// Renvoie les indicateurs
-	public List<Variable> getIndicateurs() {
-		List<Variable> res = new ArrayList<Variable>();
-		for (int i=0; i<chocolats.size(); i++) {
-			res.add(this.stocksChocolats.get(chocolats.get(i)));
-		}
-		return res;
-	}
 }
 
