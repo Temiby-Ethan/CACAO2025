@@ -1,5 +1,6 @@
 package abstraction.eq6Transformateur3;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 
 import abstraction.eqXRomu.contratsCadres.Echeancier;
@@ -26,6 +27,7 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
         //on récupère le next de tous les pères
         super.next();
         //on remet capacité_vente_max à 0 
+        capacite_vente_max = new HashMap<IProduit, Double>();
         capacite_vente_max.replace(fraud,productionMax/3);
         capacite_vente_max.replace(hypo,productionMax/6);
         capacite_vente_max.replace(arna,productionMax/6);

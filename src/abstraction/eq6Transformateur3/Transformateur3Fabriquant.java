@@ -82,8 +82,6 @@ public class Transformateur3Fabriquant extends Transformateur3Marques implements
         this.DemandeProdChoco.put(hypo,productionMax/6);
         this.DemandeProdChoco.put(arna,productionMax/6);
         this.DemandeProdChoco.put(bollo,productionMax/3);
-        this.capacite_vente_max = DemandeProdChoco;
-
     }
 
     public void initialiser(){
