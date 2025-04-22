@@ -148,6 +148,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 	}
 
 	public List<String> getMarquesChocolat() { // par Alexiho
+                @SuppressWarnings("Convert2Diamond")
 		List<String> marques = new ArrayList<String>();
 		marques.add("Hexafridge");
 		return marques;
@@ -229,6 +230,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 	@Override
 	// Renvoie les journaux
 	public List<Journal> getJournaux() { // par Alexiho
+                @SuppressWarnings("Convert2Diamond")
 		List<Journal> res=new ArrayList<Journal>();
 		res.add(journal);
 		res.add(journalE);
