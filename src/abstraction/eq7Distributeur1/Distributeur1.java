@@ -134,11 +134,6 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 			journalAO.ajouter(str_journal_AO);
 		}
 
-		journal.ajouter(str_journal_stock);
-		journalE.ajouter(str_journal_E);
-		journalCC.ajouter(str_journal_CC);
-		journalAO.ajouter(str_journal_AO);
-
 		// définition des capacités de ventes
 
 		for (int i=0; i<this.chocolats.size(); i++) {
@@ -239,4 +234,14 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 		return res;
 	}
 	
+
+	// Renvoie les indicateurs
+	public List<Variable> getIndicateurs() {
+		List<Variable> res = new ArrayList<Variable>();
+		for (int i=0; i<chocolats.size(); i++) {
+			res.add(this.stocksChocolats.get(chocolats.get(i)));
+		}
+		return res;
+	}
 }
+
