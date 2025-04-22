@@ -9,6 +9,8 @@ import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
 // ADAM SEBIANE
+//
+
 
 public class Producteur1ContratCadre extends Producteur1Acteur implements IVendeurContratCadre {
 
@@ -25,7 +27,7 @@ public class Producteur1ContratCadre extends Producteur1Acteur implements IVende
         //this.stock = new Stock(this);
 
         this.contrats = new ArrayList<>();
-    }
+    } 
 
 
     @Override
@@ -92,7 +94,10 @@ public class Producteur1ContratCadre extends Producteur1Acteur implements IVende
 
     @Override
     public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
-        return propositionPrix(contrat);
+        double prixPropose = contrat.getPrix();
+        double contreProposition = prixPropose * 1.10; // 10% de plus que la proposition de l'acheteur
+        journal.ajouter("Contre-proposition de prix : " + contreProposition + " au lieu de " + prixPropose);
+        return contreProposition;
     }
 
     @Override
