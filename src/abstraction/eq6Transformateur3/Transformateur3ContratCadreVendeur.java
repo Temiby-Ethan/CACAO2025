@@ -56,13 +56,15 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
                 }
             }
         }
-    }
 
     @Override //@author Eric Schiltz
     public boolean vend(IProduit produit) {
         //On dit oui dès que l'on vend bien de ce produit 
         if(super.lesChocolats.contains(produit)){
             return true;
+        }
+        else{
+            return false;
         }
         //sert à compter les quantités de contrat cadre pour le tour suivant pour chaque produit  
         //double a = 0;
@@ -95,9 +97,9 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
             double QuantiteStep = e.getQuantite(stepdebut);
             // si la quantité à livrer proposé est dans nos capacités on accepte
             if(QuantiteStep < capa){
-                return contrat.getEcheancier();
                 //et on met à jour nos capacités de vente max
-                capacite_vente_max.get(p) = capacite_vente_max.get(p)- QuantiteStep ; 
+                capacite_vente_max.put(p,capacite_vente_max.get(p)- QuantiteStep);
+                return contrat.getEcheancier();
             }
             //sinon
             else{
@@ -107,10 +109,10 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
                 }
                 //sinon on refait l'échéancier avec ce que l'on a; 
                 if(capa >100 && capa<1000){
+                    //et on met à jour nos capacités de vente max
+                    capacite_vente_max.put(p,capacite_vente_max.get(p)- QuantiteStep);
                     int nb = e.getNbEcheances();
                     return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, nb, capa);
-                    //et on met à jour nos capacités de vente max
-                    capacite_vente_max.get(p) = capacite_vente_max.get(p)- QuantiteStep ;
                 }
             }
         }
