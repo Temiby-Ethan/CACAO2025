@@ -93,7 +93,7 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurEncher
 	@Override
 	public List<Variable> getIndicateurs(){
                 @SuppressWarnings("Convert2Diamond")
-		List<Variable> indicateurs = new ArrayList<Variable>();
+		List<Variable> indicateurs = super.getIndicateurs();
 		return(indicateurs);
 	}
 	@Override

@@ -72,7 +72,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 
 		for (int i = 0; i < this.chocolats.size(); i++) {
 			this.stocksChocolats.put(chocolats.get(i), new Variable(this.getNom()+"Stock"+chocolats.get(i).getNom(), this, 0.0));
-			this.capaciteDeVente.set(i, stocksChocolats.get(chocolats.get(i)).getValeur()/1.5);
+			this.capaciteDeVente.set(i, stocksChocolats.get(chocolats.get(i)).getValeur()/1.1);
 		}
 	}
 
@@ -128,16 +128,16 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 			journal.ajouter(str_journal_stock);
 			str_journal_E ="Achat en enchère de " + this.stocksChocolats.get(chocolats.get(i)).getNom()+ " = " + this.successedSell.get(i) + " tonne(s); ";
 			journalE.ajouter(str_journal_E);
-			str_journal_CC = "Achat en contrat cadre de " + this.stocksChocolats.get(chocolats.get(i)).getNom()+ " = " + "0" + "tonne(s);" ;
+			str_journal_CC = "Achat en contrat cadre de " + this.stocksChocolats.get(chocolats.get(i)).getNom()+ " = " + "0" + " tonne(s);" ;
 			journalCC.ajouter(str_journal_CC);
-			str_journal_AO = "Achat en appel d'offre de " + this.stocksChocolats.get(chocolats.get(i)).getNom()+ " = " + "0" + "tonne(s);";
+			str_journal_AO = "Achat en appel d'offre de " + this.stocksChocolats.get(chocolats.get(i)).getNom()+ " = " + "0" + " tonne(s);";
 			journalAO.ajouter(str_journal_AO);
 		}
 
 		// définition des capacités de ventes
 
 		for (int i=0; i<this.chocolats.size(); i++) {
-			this.capaciteDeVente.set(i, stocksChocolats.get(chocolats.get(i)).getValeur()/2);
+			this.capaciteDeVente.set(i, stocksChocolats.get(chocolats.get(i)).getValeur()/1.1);
 		}
 
 	}
@@ -212,6 +212,14 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 		} else {
 			return 0;
 		}
+	}
+	@Override
+	public List<Variable> getIndicateurs() {
+		List<Variable> res = super.getIndicateurs();
+		for (int i=0; i<this.chocolats.size(); i++) {
+			res.add(this.stocksChocolats.get(chocolats.get(i)));
+		}
+		return res;
 	}
 
 	public void notificationRayonVide(ChocolatDeMarque choco) {

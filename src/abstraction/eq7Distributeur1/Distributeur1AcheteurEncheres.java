@@ -105,7 +105,7 @@ public class Distributeur1AcheteurEncheres extends Distributeur1AcheteurContratC
 
 	@Override
 	public List<Variable> getIndicateurs(){
-		List<Variable> indicateurs = new ArrayList<Variable>();
+		List<Variable> indicateurs = super.getIndicateurs();
 		return(indicateurs);
 	}
 
