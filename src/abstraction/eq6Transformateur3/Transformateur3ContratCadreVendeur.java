@@ -1,5 +1,6 @@
 package abstraction.eq6Transformateur3;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 
 import abstraction.eqXRomu.contratsCadres.Echeancier;
@@ -25,6 +26,28 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
     public void next(){
         //on récupère le next de tous les pères
         super.next();
+        //on remet capacité_vente_max à 0 
+        capacite_vente_max = new HashMap<IProduit, Double>();
+        capacite_vente_max.replace(fraud,productionMax/3);
+        capacite_vente_max.replace(hypo,productionMax/6);
+        capacite_vente_max.replace(arna,productionMax/6);
+        capacite_vente_max.replace(bollo,productionMax/3);
+        //on lui enlève tous les contrats cadres en cours  
+        //on parcourt tous les chocolats
+        for(IProduit choco : super.lesChocolats){
+            //somme pour ce chocolat de ce que l'on doit pour l'instant livrer au step suivant
+            double a = 0;
+            //on parcourt tous les contrats cadres
+            for (ExemplaireContratCadre contrat : ContratsVendeur){
+                //pour chaque contrat on regarde si il concerne ce produit 
+                if (contrat.getProduit()==choco){
+                    //si oui on additionne ce que l'on doit pour l'instant livrer au step suivant 
+                    a += contrat.getQuantiteALivrerAuStep();
+                }
+            }
+            //on remet alors à jour capacite_vente_max
+            capacite_vente_max.replace(choco,capacite_vente_max.get(choco)-a);
+        }
         //on crée un contrat cadre
         SuperviseurVentesContratCadre supCCadre = (SuperviseurVentesContratCadre) Filiere.LA_FILIERE.getActeur("Sup.CCadre");
         //on parcourt tous les types de chocolat
@@ -98,7 +121,6 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
             // si la quantité à livrer proposé est dans nos capacités on accepte
             if(QuantiteStep < capa){
                 //et on met à jour nos capacités de vente max
-                capacite_vente_max.put(p,capacite_vente_max.get(p)- QuantiteStep);
                 return contrat.getEcheancier();
             }
             //sinon
@@ -110,7 +132,6 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
                 //sinon on refait l'échéancier avec ce que l'on a; 
                 if(capa >100 && capa<1000){
                     //et on met à jour nos capacités de vente max
-                    capacite_vente_max.put(p,capacite_vente_max.get(p)- QuantiteStep);
                     int nb = e.getNbEcheances();
                     return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, nb, capa);
                 }

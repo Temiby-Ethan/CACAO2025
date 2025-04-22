@@ -96,7 +96,7 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratC
 	}
 	//@author Henri Roth
 	public void receptionner(IProduit produit, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
-		journalCC.ajouter("Reception de "+quantiteEnTonnes+" de T de chococal en provenance du contrat "+contrat.getNumero());
+		journalCC.ajouter("Reception de "+quantiteEnTonnes+" de T de " + produit + " en provenance du contrat "+contrat.getNumero());
 		super.stockFeves.addToStock(produit, quantiteEnTonnes);
 	}
 	//@author Henri Roth
