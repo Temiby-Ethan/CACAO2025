@@ -11,8 +11,10 @@ import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.Feve;
  
 /**
-	 * @author ABBASSI Rayene
-	 */
+* @author ABBASSI Rayene
+* Non utile pour le moment car aucun producteur ne vend par AO
+* Code à revoir
+*/
 public class Transformateur1AcheteurAppelDOffre extends Transformateur1VendeurEncheres implements IAcheteurAO {
     private SuperviseurVentesAO supAO;
 

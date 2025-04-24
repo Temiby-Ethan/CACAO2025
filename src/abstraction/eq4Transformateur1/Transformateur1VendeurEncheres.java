@@ -31,10 +31,6 @@ public class Transformateur1VendeurEncheres extends Transformateur1VendeurAppelD
 		this.marque = "LimDt";
 	}
 
-
-
-
-
 	public void initialiser() {
 
 		super.initialiser();
@@ -65,7 +61,7 @@ public class Transformateur1VendeurEncheres extends Transformateur1VendeurAppelD
 					Enchere retenue = superviseur.vendreAuxEncheres(this, cryptogramme, getChocolatDeMarque(choco), this.getQuantiteEnStock(getChocolatDeMarque(choco), this.cryptogramme)*0.1);
 					if (retenue!=null) {
 	
-	
+	                    // On met à jour le stock et la qtt sortante par transaction
 						this.retirerDuStock(retenue.getProduit(),  retenue.getMiseAuxEncheres().getQuantiteT(), this.cryptogramme);
 						this.qttSortantesTransactions.put(choco, this.qttSortantesTransactions.get(choco)+retenue.getMiseAuxEncheres().getQuantiteT());
 							

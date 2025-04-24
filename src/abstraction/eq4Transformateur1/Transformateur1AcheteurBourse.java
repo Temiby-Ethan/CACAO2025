@@ -17,7 +17,6 @@ public class Transformateur1AcheteurBourse extends Transformateur1ContratCadreVe
  
 	public Transformateur1AcheteurBourse() {
 		super();
-
 		this.feve = Feve.F_MQ;
 	}
 
