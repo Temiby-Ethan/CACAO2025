@@ -13,8 +13,9 @@ import java.util.List;
 public class Distributeur3ContratCadre extends Distributeur3Distributeur implements IAcheteurContratCadre{
 
     @Override
-    // Implémentée par Héloise
+    // Implémentée par Héloise et Jeanne
     public void next() {
+
 
         super.next();
        SuperviseurVentesContratCadre superviseur = (SuperviseurVentesContratCadre) Filiere.LA_FILIERE.getActeur("Sup.CCadre");
@@ -28,8 +29,7 @@ public class Distributeur3ContratCadre extends Distributeur3Distributeur impleme
                listeChcocolatPertinents.add(choco);
            }
        }
-
-
+       
        for (IActeur a : transfo){
            if(a instanceof IVendeurContratCadre && Filiere.LA_FILIERE.getActeursSolvables().contains(a)){
                for(ChocolatDeMarque choco : listeChcocolatPertinents) {
@@ -40,7 +40,6 @@ public class Distributeur3ContratCadre extends Distributeur3Distributeur impleme
                }
            }
        }
-
     }
 
     @Override
@@ -67,19 +66,31 @@ public class Distributeur3ContratCadre extends Distributeur3Distributeur impleme
 
     @Override
     // Implémentée par Héloïse
-    public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat) {
+    public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat){
         journalContrats.ajouter("negocie le contrat");
+
+        int prixMoyen=0;
+        if(Filiere.LA_FILIERE.getEtape()==0) {
+            prixMoyen = 1500;
+        }else{
+            prixMoyen = (int) Filiere.LA_FILIERE.prixMoyen((ChocolatDeMarque) contrat.getProduit(), Filiere.LA_FILIERE.getEtape()-1);
+        }
+
+
+
         //double fourchetteLimiteNegociation  = 1500;
 
         // a enlever, on laisse juste ça pour pouvoir négocier avec les autres
-        double fourchetteLimiteNegociation  = 2100;
-        double fourchetteLimiteAchat = 1000;
+        double fourchetteLimiteNegociation  = prixMoyen;
+        double fourchetteLimiteAchat = prixMoyen*0.9;
         double baisseNego = 0.5; // Correspond a 50% du prix proposé soit une baisse de 50%
+
+
         if(contrat.getPrix()<fourchetteLimiteNegociation){
             if(contrat.getPrix()<fourchetteLimiteAchat){
                 return contrat.getPrix();
             }else{
-                return contrat.getPrix()*baisseNego;
+                return prixMoyen*0.85;
             }
         }else{
             return -1;
@@ -96,8 +107,10 @@ public class Distributeur3ContratCadre extends Distributeur3Distributeur impleme
 
     @Override
     public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
+        System.out.println("quantité du chocolat après recepetion : "+p.toString()+" "+this.stockChocoMarque.get(p));
         stockChocoMarque.put((ChocolatDeMarque) p,this.stockChocoMarque.get(p)+quantiteEnTonnes);
         journalActeur.ajouter("reception de "+quantiteEnTonnes+" tonnes de "+p.toString()+" du contrat "+ contrat.toString());
         this.MAJStocks();
+        System.out.println("quantité du chocolat après recepetion : "+p.toString()+" "+this.stockChocoMarque.get(p));
     }
 }
