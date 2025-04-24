@@ -21,10 +21,14 @@ public class Transformateur1AcheteurAppelDOffre extends Transformateur1VendeurEn
     public Transformateur1AcheteurAppelDOffre() {
 		super();
 	}
+
+
 	public void initialiser() {
 		super.initialiser();
 		this.supAO = (SuperviseurVentesAO)(Filiere.LA_FILIERE.getActeur("Sup.AO"));
 	}
+
+	
 
     //A modifier les conditions et la quantité
 	public void next() {

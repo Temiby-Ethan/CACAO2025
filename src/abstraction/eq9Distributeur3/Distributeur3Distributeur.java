@@ -98,6 +98,7 @@ public class Distributeur3Distributeur extends Distributeur3Acteur implements ID
         if(crypto==this.cryptogramme){
             stockChocoMarque.put(choco,Double.valueOf(this.stockChocoMarque.get(choco)-quantite));
             this.MAJStocks();
+            System.out.println("quantité du chocolat vendu : "+choco.toString()+" "+this.stockChocoMarque.get(choco));
             journalDeVente.ajouter("Vente de "+quantite+" tonnes de "+choco.toString()+" à "+client.getNom()+" pour "+montant+" euros");
         }
     }
