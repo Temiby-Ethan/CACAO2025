@@ -187,7 +187,7 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 				
 			}
 
-			return null; //On n'a pas implémenté le cas ou le chocolat n'est pas marqué
+			else return null; //On n'a pas implémenté le cas ou le chocolat n'est pas marqué
 
 
 			//Vente d'un chocolat non marqué
@@ -221,7 +221,7 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 				}
 			}*/
 		}
-		return null ; //On annule les négociations si le nouveau contrat a une quantité illégale
+		else return null ; //On annule les négociations si le nouveau contrat a une quantité illégale
 	}
 	
 
