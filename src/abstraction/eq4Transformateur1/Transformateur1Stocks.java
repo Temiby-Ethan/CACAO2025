@@ -17,10 +17,9 @@ import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.general.Variable;
 
 // Cette classe gère les stocks et controle les prix de vente
-public class Transformateur1Stocks extends Transformateur1Acteur implements IFabricantChocolatDeMarque {
+public class Transformateur1Stocks extends Transformateur1Usine implements IFabricantChocolatDeMarque {
 
 	//Des variables qui ne seront au final que des constantes lors de la simulation
-	private double coutStockage; 
 	private double coutProd;
 	protected double STOCK_MAX_TOTAL_FEVES = 1000000;
 
@@ -33,8 +32,6 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 
 	public void initialiser() {
 		super.initialiser();
-		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*4;
-		this.coutProd = 4000; //A MODIFIER il s'agit du cout de la production d'une tonne de chocolat, valeur arbitraire censée contenir salaires, ingrédients secondaires, et autres couts fixes
 	}
 
 	////////////////////////////////////////////////////////
@@ -50,6 +47,8 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 	 */
 	protected void transformation(){
 
+		this.coutProd = totalCoutsUsineStep/prodMax.getValeur(); //il s'agit du cout de la production d'une tonne de chocolat, valeur arbitraire censée contenir salaires, ingrédients secondaires, et autres couts fixes
+		
 		for (Feve f : lesFeves) {
 			for (Chocolat c : lesChocolats) {
 
@@ -286,23 +285,6 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 			this.qttSortantesTransactions.put(c, 0.);
 		}
 
-		this.journal.ajouter("##########");
-		this.journal.ajouter(Color.yellow, Romu.COLOR_LBLUE, "N° Etape " + Filiere.LA_FILIERE.getEtape());
-
-		this.journalStock.ajouter("\n");
-		this.journalStock.ajouter("##########");
-		this.journalStock.ajouter(Color.yellow, Romu.COLOR_LBLUE, "N° Etape " + Filiere.LA_FILIERE.getEtape());
-
-		this.journalCC.ajouter("##########");
-		this.journalCC.ajouter(Color.yellow, Romu.COLOR_LBLUE, "N° Etape " + Filiere.LA_FILIERE.getEtape());
-
-		this.journalTransactions.ajouter("##########");
-		this.journalTransactions.ajouter(Color.yellow, Romu.COLOR_LBLUE, "N° Etape " + Filiere.LA_FILIERE.getEtape());
-
-		this.journalPeremption.ajouter("\n");
-		this.journalPeremption.ajouter("##########");
-		this.journalPeremption.ajouter(Color.yellow, Romu.COLOR_LBLUE, "N° Etape " + Filiere.LA_FILIERE.getEtape());
-
 		//Affichage des stocks de chaque produit dans le journalStock à la période présente 
 		this.journal.ajouter("=== STOCKS === ");
 		for (Feve f : this.lesFeves) {
@@ -440,6 +422,9 @@ public class Transformateur1Stocks extends Transformateur1Acteur implements IFab
 		res.add(this.prix_Limdt_MQ_E);
 		res.add(this.prix_Limdt_HQ_BE);
 		res.add(this.qttFevesAcheteesBourse);
+		res.add(this.nbMachines);
+		res.add(this.nbOuvriers);
+		res.add(this.prodMax);
 
 		return res;
 	}

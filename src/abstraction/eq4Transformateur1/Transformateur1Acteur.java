@@ -8,6 +8,7 @@ import java.util.List;
 
 import abstraction.eqXRomu.acteurs.Romu;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
+import abstraction.eqXRomu.filiere.Banque;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.filiere.IMarqueChocolat;
@@ -26,6 +27,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 	protected Journal journalCC;
 	protected Journal journalTransactions;
 	protected Journal journalPeremption;
+	protected Journal journalCouts;
 
 	protected int cryptogramme; // Notre cryptogramme, qui nous est attribué par la banque
 
@@ -96,6 +98,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 		this.journalCC = new Journal("Journal CC " + this.getNom(), this);
 		this.journalTransactions = new Journal("Journal Transactions " + this.getNom(), this);
 		this.journalPeremption = new Journal("Journal Péremption " + this.getNom(), this);
+		this.journalCouts = new Journal("Journal Coûts " + this.getNom(), this);
 
 		//On fixe les types de fèves dont on aura besoin
 		this.lesFeves = new LinkedList<Feve>();
@@ -315,6 +318,26 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 	public void next() {
 		this.journal.ajouter("Solde : " + this.getSolde());
 		this.journal.ajouter("\n");
+
+		this.journal.ajouter("##########");
+		this.journal.ajouter(Color.yellow, Romu.COLOR_LBLUE, "N° Etape " + Filiere.LA_FILIERE.getEtape());
+
+		this.journalStock.ajouter("\n");
+		this.journalStock.ajouter("##########");
+		this.journalStock.ajouter(Color.yellow, Romu.COLOR_LBLUE, "N° Etape " + Filiere.LA_FILIERE.getEtape());
+
+		this.journalCC.ajouter("##########");
+		this.journalCC.ajouter(Color.yellow, Romu.COLOR_LBLUE, "N° Etape " + Filiere.LA_FILIERE.getEtape());
+
+		this.journalTransactions.ajouter("##########");
+		this.journalTransactions.ajouter(Color.yellow, Romu.COLOR_LBLUE, "N° Etape " + Filiere.LA_FILIERE.getEtape());
+
+		this.journalPeremption.ajouter("\n");
+		this.journalPeremption.ajouter("##########");
+		this.journalPeremption.ajouter(Color.yellow, Romu.COLOR_LBLUE, "N° Etape " + Filiere.LA_FILIERE.getEtape());
+
+		this.journalCouts.ajouter("##########");
+		this.journalCouts.ajouter(Color.yellow, Romu.COLOR_LBLUE, "N° Etape " + Filiere.LA_FILIERE.getEtape());
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
@@ -345,6 +368,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 		res.add(this.journalTransactions);
 		res.add(this.journalCC);
 		res.add(this.journalPeremption);
+		res.add(this.journalCouts);
 		return res;
 	}
 
