@@ -43,11 +43,11 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 
 				return contrat.getEcheancier();
 			}
-			//Sinon on négocie par dichotomie particulière
+			//Sinon on négocie
 			else{
 
 				//Si Le nombre de contrat cadre est suffisant, on négocie la quantité des autres contrats via la quantité entrante et sortante à chaque step
-				if(this.mesContratEnTantQuAcheteur.size() + this.mesContratEnTantQueVendeur.size() >=2){
+				if(this.mesContratEnTantQuAcheteur.size() + this.mesContratEnTantQueVendeur.size() >=8){
 					double qttSortant = 0.;
 					Echeancier e = contrat.getEcheancier();
 					for (int step = contrat.getEcheancier().getStepDebut() ; step < contrat.getEcheancier().getStepFin() ; step++){
@@ -65,17 +65,17 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 						}
 						
 						//Si on recoit trop de fèves, on annule la signature du contrat
-						if(qttSortant <=0){
+						if(qttSortant <= -1000.){
 							return null;
 						}
 						//Si notre qttSortante est supérieure au minimum des qtt par step du contrat, on met la qtt sortante sur le step
 						if (qttSortant >= e.getQuantite(step) && qttSortant > e.getQuantiteTotale()/(e.getNbEcheances()*10)){
-							e.set(step, qttSortant*1.2);
+							e.set(step, qttSortant*10.);
 						}
-						//Si la qtt sortante est inférieure à la quantité livrée au step, alors on accepte la quantité, mieux vaut trop que pas assez, dans la limite de 150% de la 
-						else if (qttSortant >= e.getQuantiteTotale()/(e.getNbEcheances()*10) && qttSortant < contrat.getEcheancier().getQuantite(step)){
-							if (e.getQuantite(step) > 1.5 * qttSortant){
-								e.set(step, 1.5*qttSortant);
+						//Si la qtt sortante est inférieure à la quantité livrée au step, alors on accepte la quantité, mieux vaut trop que pas assez
+						else if (qttSortant >= 100./(e.getNbEcheances()*10) && qttSortant < contrat.getEcheancier().getQuantite(step)){
+							if (e.getQuantite(step) > 10. * qttSortant){
+								e.set(step, 10.*qttSortant);
 							}
 						}
 
@@ -92,6 +92,8 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 						return null;
 					}
 				}
+
+
 				//Si on n'a pas suffisamment de contrats actifs, on accepte le contrat proposé
 				else {
 					return contrat.getEcheancier();
@@ -180,7 +182,7 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 
 		
 
-		// OU proposition d'un contrat a un des vendeurs choisi aleatoirement
+		//On essaie pour chacune des fèves dont on a besoin de négocier un contrat cadre avec tout les vendeurs de cette fève
 		for(IProduit produit : this.lesFeves){
 			if(qttEntrantesFeve.get((Feve)produit)< 0.1*STOCK_MAX_TOTAL_FEVES){
 				journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN, "Recherche d'un vendeur aupres de qui acheter " + produit);
@@ -198,25 +200,19 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 				    journalCC.ajouter("\n");
 				}
 
-				IVendeurContratCadre vendeur = null;
-				if (vendeurs.size()==1) {
-					vendeur=vendeurs.get(0);
-				} else if (vendeurs.size()>1) {
-					//A MODIFIER
-					//Recherche aléatoire d'un vendeur
-					vendeur = vendeurs.get((int)( Filiere.random.nextDouble()*vendeurs.size()));
-				}
-				if (vendeur!=null) {
-					journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN, "Demande au superviseur de debuter les negociations pour un contrat cadre de "+produit+" avec le vendeur "+vendeur);
-					ExemplaireContratCadre cc = supCCadre.demandeAcheteur((IAcheteurContratCadre)this, vendeur, produit, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 30, STOCK_MAX_TOTAL_FEVES/30), cryptogramme,false);
-					if (cc!=null) {
-					    journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN, "-->aboutit au contrat "+cc);
-					    journalCC.ajouter("\n");
-						this.mesContratEnTantQuAcheteur.add(cc);
-					}
-					else {
-					    journalCC.ajouter(Color.pink, Romu.COLOR_BROWN, "-->Le contrat n'a pas pu aboutir");
-					    journalCC.ajouter("\n");
+				for (IVendeurContratCadre vendeur : vendeurs){
+					if (vendeur!=null) {
+						journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN, "Demande au superviseur de debuter les negociations pour un contrat cadre de "+produit+" avec le vendeur "+vendeur);
+						ExemplaireContratCadre cc = supCCadre.demandeAcheteur((IAcheteurContratCadre)this, vendeur, produit, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 30, STOCK_MAX_TOTAL_FEVES/30), cryptogramme,false);
+						if (cc!=null) {
+							journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN, "-->aboutit au contrat "+cc);
+							journalCC.ajouter("\n");
+							this.mesContratEnTantQuAcheteur.add(cc);
+						}
+						else {
+							journalCC.ajouter(Color.pink, Romu.COLOR_BROWN, "-->Le contrat n'a pas pu aboutir");
+							journalCC.ajouter("\n");
+						}
 					}
 				}
 			}
