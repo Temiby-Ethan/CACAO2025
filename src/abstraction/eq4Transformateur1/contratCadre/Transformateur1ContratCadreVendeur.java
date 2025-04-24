@@ -55,16 +55,16 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 		Chocolat chocoVendu = ((ChocolatDeMarque)contrat.getProduit()).getChocolat();
 
 		if(chocoVendu.getGamme().equals(Gamme.BQ) && chocoVendu.isEquitable())
-				qttVoulue = 0.5 * qttEntrantesFeve.get(Feve.F_BQ_E) * contrat.getEcheancier().getNbEcheances();
+				qttVoulue = 0.3 * qttEntrantesFeve.get(Feve.F_BQ_E) * contrat.getEcheancier().getNbEcheances();
 			
 		else if(chocoVendu.getGamme().equals(Gamme.MQ) && !chocoVendu.isEquitable())
-				qttVoulue = 0.5 * qttEntrantesFeve.get(Feve.F_MQ) * contrat.getEcheancier().getNbEcheances();
+				qttVoulue = 0.3 * qttEntrantesFeve.get(Feve.F_MQ) * contrat.getEcheancier().getNbEcheances();
 		
 		else if(chocoVendu.getGamme().equals(Gamme.MQ) && chocoVendu.isEquitable()) 
-				qttVoulue = 0.5 * qttEntrantesFeve.get(Feve.F_MQ_E) * contrat.getEcheancier().getNbEcheances();
+				qttVoulue = 0.3 * qttEntrantesFeve.get(Feve.F_MQ_E) * contrat.getEcheancier().getNbEcheances();
 		
 		else if(chocoVendu.getGamme().equals(Gamme.HQ) && chocoVendu.isEquitable() && chocoVendu.isBio())
-				qttVoulue = 0.5 * qttEntrantesFeve.get(Feve.F_HQ_BE) * contrat.getEcheancier().getNbEcheances();
+				qttVoulue = 0.3 * qttEntrantesFeve.get(Feve.F_HQ_BE) * contrat.getEcheancier().getNbEcheances();
 
 		else
 				System.out.println("Ce chocolat n'est pas sensé être vendu : " + contrat.getProduit());
@@ -74,7 +74,7 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 		//A MODIFIER	
 		//On vérifie que l'échéancier renvoyé respecte les règles et que la quantité en stock de produit est au moins le quart de la quantité totale
 		//Il faudrait dans l'idéal modifier cette condition pour prendre en compte la quantité de chocolat sortante et la quantité produite par step
-		if (qttVoulue>= SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER && getQuantiteEnStock(contrat.getProduit(), this.cryptogramme) >= contrat.getQuantiteTotale()/contrat.getEcheancier().getNbEcheances()){
+		if (qttVoulue>= SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER && getQuantiteEnStock(contrat.getProduit(), this.cryptogramme) >= contrat.getEcheancier().getQuantiteTotale()/contrat.getEcheancier().getNbEcheances()){
 			IProduit produit;
 			
 			//On vend des chocolat de marque
@@ -86,10 +86,12 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 				Echeancier e = contrat.getEcheancier(); //Récupération de l'échéancier actuel
 
 
-				//Cas d'acceptation : la quantité totale est légale et proche de la quantité que l'on souhaite vendre à 10% près
-				if(e.getNbEcheances()> 20 && e.getQuantiteTotale()> 100. && Math.abs(e.getQuantiteTotale()-qttVoulue)/qttVoulue < 0.5){
+				//Cas d'acceptation : la quantité totale est légale et proche de la quantité que l'on souhaite vendre à 30% près
+				if(e.getNbEcheances()> 20 && e.getQuantiteTotale()> 100. && Math.abs(e.getQuantiteTotale()-qttVoulue)/qttVoulue < 0.3){
 					return e;
 				}
+
+
 				//On modifie l'échéancier pour se rapporcher de nos exigeances
 				else{
 					
@@ -110,38 +112,86 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 								System.out.println("Ce chocolat n'est pas censé être vendu : " + prod);
 							
 						
-						//On vend la moitié de ce qu'on n'a pas encore réussi à vendre
-						if (qttEntrant < -1000.){
+						//Selon la valeur de qttEntrant, on va agir différemment sur le contrat		
+						//si qtt entrant est très négatif, c'est que l'on vend plus de chocolat que l'on ne recoit de fèves, on annule donc le contrat
+						if (qttEntrant < -10000.){
 							return null;
 						}
-						//On a probablement pas de contrat cadre à la période s pour nous réapprovisionner, mais on va en signer donc on se met au minimum dans le doute
-						else if (Math.abs(qttEntrant)< 1000. || qttEntrant < e.getQuantiteTotale()/(10*e.getNbEcheances())){
-							e.set(s,qttEntrant-2 + e.getQuantite(s)/2);
+						//Sinon, si on a suffisamment de fève qui entrent en stock à chaque step et que la proposition est proche de ce que l'on souhaite, on met la qtt entrante à condition qu'elle soit positive
+						else if (Math.abs(qttEntrant - e.getQuantite(s))/qttEntrant < 0.2 && qttEntrant>0. ){
+							e.set(s, 0.3*qttEntrant*0.75 + 0.25*e.getQuantite(s));
 						}
-						//Si on arrive là, c'est que l'on n'a pas assez de fève qui entrent à cette étape, on annule le contrat
+						//si la qtt entrante est faible, on vérifie quand meme que celle ci respecte les spécifications sur les CC
+						else if (Math.abs(qttEntrant)< 10000. && 0.3*qttEntrant > e.getQuantiteTotale()/(10*e.getNbEcheances())){
+							e.set(s,0.3*qttEntrant);
+						}
+						//Sinon, on met le double du minimum pour le step
 						else {
-							e.set(s, qttEntrant);
+							e.set(s, e.getQuantiteTotale()/(5*e.getNbEcheances()));
 						}
 						
 					}
 
-					//On vérifie que notre contrat respecte bien les règles des contrats cadres par rapport aux quantité minimale par step
-					for(int s = e.getStepDebut() ; s<=e.getStepFin() ; s++){
-						if (e.getQuantite(s) < e.getQuantite(s)/(10*e.getNbEcheances()) || e.getQuantiteTotale() < 100.){
-							e.set(s, (e.getQuantiteTotale()+  150.)/(10*e.getNbEcheances()));
+
+					/*Vérification de la conformité de l'échéancier  */
+
+
+					//Recherche du step correspondant au maximum de l'échancier
+					double qttMax = 0.;
+					double qttMin = e.getQuantite(e.getStepDebut()+1);
+					for (int s =e.getStepDebut() ; s<= e.getStepFin() ; s++){
+						if (e.getQuantite(s) >= qttMax){
+							qttMax = e.getQuantite(s);
+						}
+						if (e.getQuantite(s) <= qttMin){
+							qttMin = e.getQuantite(s);
 						}
 					}
 
-					e.set(e.getStepFin(), e.getQuantiteTotale()/(10*e.getNbEcheances()));
+					//On vérifie que notre contrat respecte bien les règles des contrats cadres par rapport aux quantité minimale par step
+					//Si l'une des échéances est trop faible, on modifie tout l'échéancier
+					boolean modifNecessaires = false;
+					for (int s = e.getStepDebut() ; s <= e.getStepFin() ; s++){
+						if (e.getQuantite(s)< e.getQuantiteTotale()/(10*e.getNbEcheances())) modifNecessaires = true;
+					}
 
+					if (modifNecessaires){
+						for (int s = e.getStepDebut() ; s <= e.getStepFin() ; s++){
+							e.set(s, (qttMin + qttMax)/2);
+						}
+					}
+
+
+					//Si la quantité totale est trop faible, on va se mettre au minimum sur tout le contrat 
+					if (e.getQuantiteTotale() < 100.){
+						for (int s = e.getStepDebut() ; s <= e.getStepFin() ; s++){
+							e.set(s, 110./e.getNbEcheances());
+						}
+					}
+
+					
+
+					/*Renvoie de l'échéancier modifié */
+					qttMin = e.getQuantite(e.getStepDebut()+1);
+					for (int s =e.getStepDebut() ; s<= e.getStepFin() ; s++){
+						if (e.getQuantite(s) >= qttMax){
+							qttMax = e.getQuantite(s);
+						}
+						if (e.getQuantite(s) <= qttMin){
+							qttMin = e.getQuantite(s);
+						}
+					}
 					return e;
 				}
 
 				
 			}
 
+			return null; //On n'a pas implémenté le cas ou le chocolat n'est pas marqué
+
+
 			//Vente d'un chocolat non marqué
-			else {
+			/*else {
 				produit = contrat.getProduit();
 
 				if (!this.peutVendre(produit)) return null; //On ne vend pas de ce produit
@@ -169,7 +219,7 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 
 					return e;
 				}
-			}
+			}*/
 		}
 		return null ; //On annule les négociations si le nouveau contrat a une quantité illégale
 	}
@@ -427,7 +477,7 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 		
 
 			if (produit.getType() == "ChocolatDeMarque"){
-				double livre = Math.min(getQuantiteEnStock(produit, this.cryptogramme), quantite);
+				double livre = Math.min(Math.max(getQuantiteEnStock(produit, this.cryptogramme), 0.), quantite);
 				if (livre > 0.){
 
 					//Retrait du produit concerné par le contrat
