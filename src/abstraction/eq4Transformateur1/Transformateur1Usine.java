@@ -1,21 +1,10 @@
 package abstraction.eq4Transformateur1;
 
 import java.awt.Color;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 
-import abstraction.eqXRomu.acteurs.Romu;
-import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
+
 import abstraction.eqXRomu.filiere.Filiere;
-import abstraction.eqXRomu.filiere.IActeur;
-import abstraction.eqXRomu.filiere.IMarqueChocolat;
-import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
-import abstraction.eqXRomu.produits.Chocolat;
-import abstraction.eqXRomu.produits.ChocolatDeMarque; 
-import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit; 
 
 /*
