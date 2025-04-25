@@ -16,11 +16,12 @@ import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.general.Variable;
 
-// Cette classe gère les stocks et controle les prix de vente
+// Cette classe gère les stocks et controle les prix de vente et les couts de stockage
 public class Transformateur1Stocks extends Transformateur1Usine implements IFabricantChocolatDeMarque {
 
 	//Des variables qui ne seront au final que des constantes lors de la simulation
 	private double coutProd;
+	protected double coutStockage;
 	protected double STOCK_MAX_TOTAL_FEVES = 1000000;
 
 	private List<ChocolatDeMarque> chocosProduits; // la liste de toutes les sortes de ChocolatDeMarque que l'acteur produit et peut vendre
@@ -32,6 +33,7 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 
 	public void initialiser() {
 		super.initialiser();
+		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*4;
 	}
 
 	////////////////////////////////////////////////////////
@@ -47,7 +49,7 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 	 */
 	protected void transformation(){
 
-		this.coutProd = totalCoutsUsineStep/prodMax.getValeur(); //il s'agit du cout de la production d'une tonne de chocolat, valeur arbitraire censée contenir salaires, ingrédients secondaires, et autres couts fixes
+		this.coutProd = totalCoutsUsineStep/(prodMax.getValeur()*1e-4); //il s'agit du cout de la production d'une tonne de chocolat, valeur arbitraire censée contenir salaires, ingrédients secondaires, et autres couts fixes
 		
 		for (Feve f : lesFeves) {
 			for (Chocolat c : lesChocolats) {
@@ -399,6 +401,8 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 
         //On paye le cout de stockage
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", (totalStocks*this.coutStockage));
+		this.journalCouts.ajouter(Color.white, Color.black, "Coûts de stockage : " + (totalStocks*this.coutStockage) + " euros.");
+		this.journalCouts.ajouter("\n");
 	}
 
 

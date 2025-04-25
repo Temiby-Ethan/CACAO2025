@@ -1,21 +1,19 @@
 package abstraction.eq4Transformateur1;
-
 import java.awt.Color;
-
-
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.IProduit; 
 
 /*
  * @author YAOU Reda
+ * Cette classe gère les machines et les ouvriers de l'usine, ainsi que les coûts associés.
  */
 public class Transformateur1Usine extends Transformateur1Acteur {
 
 	// Paramètres variables Usine
 	protected Variable nbOuvriers;
 	protected Variable nbMachines;
-	protected Variable prodMax;
+	protected Variable prodMax; // nombre de tablettes (100g) max que l'usine peut produire à chaque step
 	protected double totalCoutsUsineStep;
 
 	// Paramètres fixes Usine
@@ -24,12 +22,10 @@ public class Transformateur1Usine extends Transformateur1Acteur {
 	protected double salaireOuvrier = 860; // À modifier selon les règles transformateurs
 	protected double coutLicenciement = 10000;
 	protected double prixAchatMachine = 10000; // À modifier selon les règles transformateurs
-	protected double coutStockage = 30; // cout de stockage par tonne et par step = 30 euros selon les règles transformateurs
     protected double coutAdditionnelFixe = 2e8; // cout additionnel fixe de l'usine selon les règles transformateurs
 	protected double coutAddditonnelUnitaire= 0.30*1e4; // 0.3€ pour 100g et on le considère par tonne
-	/**
-	 * Cette classe gère les machines et les ouvriers de l'usine de transformation
-	 */
+
+
 	public Transformateur1Usine() {
 		super();
 		this.nbOuvriers = new Variable("Nombre d'ouvriers", this, 0, 1e7, 85333);
@@ -64,24 +60,17 @@ public class Transformateur1Usine extends Transformateur1Acteur {
 		this.totalCoutsUsineStep += this.nbOuvriers.getValeur() * salaireOuvrier;
 
 		// On ajoute le coût de stockage des fèves et chocolats limdt en stock
-		double totalCoutStockage = 0;
-		double quantitéTablette = 0;
-		for (IProduit p : lesFeves) {
-			totalCoutStockage += this.getQuantiteEnStock(p, this.cryptogramme) * coutStockage;
-		}
+		double quantitéTabletteTonne = 0;
 		for (IProduit p : chocolatsLimDt) {
-			totalCoutStockage += this.getQuantiteEnStock(p, this.cryptogramme) * coutStockage;
-			quantitéTablette += this.getQuantiteEnStock(p, this.cryptogramme);
+			quantitéTabletteTonne += this.getQuantiteEnStock(p, this.cryptogramme);
 		}
 
-		this.totalCoutsUsineStep += totalCoutStockage;
 		this.totalCoutsUsineStep += coutAdditionnelFixe; 
-		this.totalCoutsUsineStep += coutAddditonnelUnitaire * quantitéTablette;
+		this.totalCoutsUsineStep += coutAddditonnelUnitaire * quantitéTabletteTonne;
 
 		//On paie le coût de l'usine
 		Filiere.LA_FILIERE.getBanque().payerCout(this, super.cryptogramme, "Coûts Usine", totalCoutsUsineStep);
 		this.journalCouts.ajouter(Color.white, Color.black, "Coûts de l'usine : " + totalCoutsUsineStep + " euros.");
-		this.journalCouts.ajouter("\n");
 	}
 
 	public void achatMachine(int quantite) {
