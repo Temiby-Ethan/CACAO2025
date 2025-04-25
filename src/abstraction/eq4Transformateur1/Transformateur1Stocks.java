@@ -49,7 +49,7 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 	 */
 	protected void transformation(){
 
-		this.coutProd = totalCoutsUsineStep/(prodMax.getValeur()*1e-4); 
+		this.coutProd = totalCoutsUsineStep/prodMax.getValeur(); 
 		
 		for (Feve f : lesFeves) {
 			for (Chocolat c : lesChocolats) {

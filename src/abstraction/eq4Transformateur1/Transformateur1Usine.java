@@ -13,7 +13,7 @@ public class Transformateur1Usine extends Transformateur1Acteur {
 	// Paramètres variables Usine
 	protected Variable nbOuvriers;
 	protected Variable nbMachines;
-	protected Variable prodMax; // nombre de tablettes (100g) max que l'usine peut produire à chaque step
+	protected Variable prodMax; // nombre de tonne de chocolat qu'on peut produire à chaque step
 	protected double totalCoutsUsineStep;
 
 	// Paramètres fixes Usine
@@ -35,8 +35,8 @@ public class Transformateur1Usine extends Transformateur1Acteur {
 	}
 
 	public double getProdMax() {
-		double prodMaxMachine = this.nbMachines.getValeur() * prodMachine;
-		double prodMaxOuvrier = this.nbOuvriers.getValeur() * prodOuvrier;
+		double prodMaxMachine = this.nbMachines.getValeur() * prodMachine * 1e-4;
+		double prodMaxOuvrier = this.nbOuvriers.getValeur() * prodOuvrier * 1e-4;
 		if (prodMaxMachine < prodMaxOuvrier) {
 			return prodMaxMachine;
 		} else {
