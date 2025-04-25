@@ -20,8 +20,8 @@ import abstraction.eqXRomu.general.Variable;
 public class Transformateur1Stocks extends Transformateur1Usine implements IFabricantChocolatDeMarque {
 
 	//Des variables qui ne seront au final que des constantes lors de la simulation
-	private double coutProd;
-	protected double coutStockage;
+	private double coutProd; // cout de la production d'une tonne de chocolat, valeur arbitraire censée contenir salaires, ingrédients secondaires, et autres couts fixes
+	protected double coutStockage; // cout de stockage par tonne et par step
 	protected double STOCK_MAX_TOTAL_FEVES = 1000000;
 
 	private List<ChocolatDeMarque> chocosProduits; // la liste de toutes les sortes de ChocolatDeMarque que l'acteur produit et peut vendre
@@ -49,7 +49,7 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 	 */
 	protected void transformation(){
 
-		this.coutProd = totalCoutsUsineStep/(prodMax.getValeur()*1e-4); //il s'agit du cout de la production d'une tonne de chocolat, valeur arbitraire censée contenir salaires, ingrédients secondaires, et autres couts fixes
+		this.coutProd = totalCoutsUsineStep/(prodMax.getValeur()*1e-4); 
 		
 		for (Feve f : lesFeves) {
 			for (Chocolat c : lesChocolats) {
@@ -266,7 +266,7 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 	/**
 	 * @author MURY Julien
 	 * @author ABASSI Rayene
-	 * @author YAOU Reda : Gestion des journaux
+	 * @author YAOU Reda : Gestion des journaux et de la péremption
 	 * Cette méthode est appelée à chaque étape de la simulation. Elle permet de faire avancer le temps et de mettre à jour les stocks et les prix.
 	 */
 	public void next() {
