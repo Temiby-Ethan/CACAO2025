@@ -79,4 +79,10 @@ public class Distributeur1Stock extends Distributeur1Acteur{
 			return 0;
 		}
 	}
+
+	@Override
+	public List<Variable> getIndicateurs(){
+		List<Variable> indicateurs = super.getIndicateurs();
+		return(indicateurs);
+	}
 }
