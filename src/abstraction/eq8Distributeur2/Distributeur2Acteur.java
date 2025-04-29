@@ -19,6 +19,7 @@ import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.acteurs.Romu;
 
 // Classe de base pour les acteurs distributeurs, gérant les stocks, les journaux et les interactions avec la filière.
+//@author tidzzz
 public class Distributeur2Acteur implements IActeur {
 	
 	
