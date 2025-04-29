@@ -106,15 +106,15 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 						}
 
 						else if(chocoVendu.getGamme().equals(Gamme.MQ) && chocoVendu.isEquitable()) {
-							qttEntrant = Math.min(determinerQttEntrantFevesAuStep(s, Feve.F_MQ_E) * this.pourcentageTransfo.get(Feve.F_MQ_E).get(Chocolat.C_MQ_E), this.prodMax.getValeur() * this.repartitionTransfo.get(Chocolat.C_MQ_E).getValeur())
+							qttEntrant = Math.min(determinerQttEntrantFevesAuStep(s, Feve.F_MQ_E) * this.pourcentageTransfo.get(Feve.F_MQ_E).get(Chocolat.C_MQ_E), this.prodMax.getValeur() * this.repartitionTransfo.get(Chocolat.C_MQ_E).getValeur());
 							qttEntrant += - determinerQttSortantChocoAuStep(s, prod.getChocolat()) - péremption_C_MQ_E_Limdt[11] - péremption_C_MQ_E_Limdt[10];
 						}
 						else if(chocoVendu.getGamme().equals(Gamme.MQ) && !chocoVendu.isEquitable()){
-							qttEntrant = Math.min(determinerQttEntrantFevesAuStep(s, Feve.F_MQ_E) * this.pourcentageTransfo.get(Feve.F_MQ).get(Chocolat.C_MQ), this.prodMax.getValeur() * this.repartitionTransfo.get(Chocolat.C_MQ).getValeur())
+							qttEntrant = Math.min(determinerQttEntrantFevesAuStep(s, Feve.F_MQ_E) * this.pourcentageTransfo.get(Feve.F_MQ).get(Chocolat.C_MQ), this.prodMax.getValeur() * this.repartitionTransfo.get(Chocolat.C_MQ).getValeur());
 							qttEntrant += - determinerQttSortantChocoAuStep(s, prod.getChocolat()) - péremption_C_MQ_Limdt[11] - péremption_C_MQ_Limdt[10];
 						}
 						else if(chocoVendu.getGamme().equals(Gamme.HQ) && chocoVendu.isEquitable() && chocoVendu.isBio()){
-							qttEntrant = Math.min(determinerQttEntrantFevesAuStep(s, Feve.F_HQ_BE) * this.pourcentageTransfo.get(Feve.F_HQ_BE).get(Chocolat.C_HQ_BE), this.prodMax.getValeur() * this.repartitionTransfo.get(Chocolat.C_HQ_BE).getValeur())
+							qttEntrant = Math.min(determinerQttEntrantFevesAuStep(s, Feve.F_HQ_BE) * this.pourcentageTransfo.get(Feve.F_HQ_BE).get(Chocolat.C_HQ_BE), this.prodMax.getValeur() * this.repartitionTransfo.get(Chocolat.C_HQ_BE).getValeur());
 							qttEntrant += - determinerQttSortantChocoAuStep(s, prod.getChocolat()) - péremption_C_HQ_BE_Limdt[11] - péremption_C_HQ_BE_Limdt[10];
 						}
 						else{
