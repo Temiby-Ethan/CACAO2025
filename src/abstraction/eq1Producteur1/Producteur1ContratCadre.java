@@ -8,27 +8,16 @@ import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
-// ADAM SEBIANE
-//
-
-
 public class Producteur1ContratCadre extends Producteur1Acteur implements IVendeurContratCadre {
 
-    private Producteur1 vendeur; // Référence au Producteur1 principal
+    private Producteur1 vendeur;
     private List<ExemplaireContratCadre> contrats;
-    private Journal journal; // Journal pour enregistrer les opérations
+    private Journal journal;
 
     public Producteur1ContratCadre() {
-        
-        // Initialisation du journal avant de l'utiliser
-        this.journal = new Journal(getNom() + " - Journal Contrat Cadre",this);
-
-        // Initialisation du stock avec le journal
-        //this.stock = new Stock(this);
-
+        this.journal = new Journal(getNom() + " - Journal Contrat Cadre", this);
         this.contrats = new ArrayList<>();
-    } 
-
+    }
 
     @Override
     public boolean vend(IProduit produit) {
@@ -39,44 +28,49 @@ public class Producteur1ContratCadre extends Producteur1Acteur implements IVende
     public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
         IProduit produit = contrat.getProduit();
 
-        // Vérification du type de produit
         if (!(produit instanceof Feve)) {
             journal.ajouter("Erreur : Produit non reconnu pour la contre-proposition.");
             return null;
         }
-        Feve feve = (Feve) produit;
 
-        // Vérification du stock disponible
+        Feve feve = (Feve) produit;
+        Echeancier echeancierPropose = contrat.getEcheancier();
         double stockDispo = stock.getStock(feve);
         double quantiteMax = 0.25 * stockDispo;
 
-        Echeancier echeancierPropose = contrat.getEcheancier();
+        double masseTotale = echeancierPropose.getQuantiteTotale();
+        int duree = echeancierPropose.getStepFin() - echeancierPropose.getStepDebut() + 1;
 
-        // Si l'échéancier proposé dépasse la quantité maximale
-        if (echeancierPropose.getQuantiteTotale() > quantiteMax) {
-            Echeancier contreProp = new Echeancier(echeancierPropose.getStepDebut());
-            double quantiteRestante = quantiteMax;
+        if (masseTotale < 100 || duree < 8) {
+            journal.ajouter("Refus de l'échéancier : ne respecte pas les conditions minimales (masse ou durée).");
+            return null;
+        }
 
-            for (int step = echeancierPropose.getStepDebut(); step <= echeancierPropose.getStepFin(); step++) {
-                double q = echeancierPropose.getQuantite(step);
+        double quantiteMinParStep = masseTotale / (10.0 * duree);
 
-                // Vérification des quantités négatives
-                if (q < 0) {
-                    journal.ajouter("Erreur : Quantité négative détectée dans la contre-proposition.");
-                    return null;
-                }
+        if (masseTotale > quantiteMax) {
+            // Répartir au mieux les quantités sans descendre sous le minimum par step
+            double nouvelleMasse = quantiteMax;
+            double quantiteParStep = Math.max(nouvelleMasse / duree, quantiteMinParStep);
 
-                // Répartition de la quantité maximale
-                double quantitePourEtape = Math.min(q, quantiteRestante);
-                contreProp.ajouter(quantitePourEtape);
-                quantiteRestante -= quantitePourEtape;
+            // Adapter la nouvelle masse à cette quantité par step
+            Echeancier contreProp = new Echeancier(echeancierPropose.getStepDebut(),duree,quantiteParStep);
+            for (int i = 0; i < duree; i++) {
+                contreProp.ajouter(quantiteParStep);
             }
 
             journal.ajouter("Contre-proposition envoyée : " + contreProp);
             return contreProp;
         }
 
-        // Si l'échéancier proposé est acceptable
+        // Masse acceptable, mais vérifier si l’échéancier respecte les minimums
+        for (int step = echeancierPropose.getStepDebut(); step <= echeancierPropose.getStepFin(); step++) {
+            if (echeancierPropose.getQuantite(step) < quantiteMinParStep) {
+                journal.ajouter("Refus : quantité trop faible à l'étape " + step);
+                return null;
+            }
+        }
+
         journal.ajouter("Échéancier proposé accepté : " + echeancierPropose);
         return echeancierPropose;
     }
@@ -85,9 +79,9 @@ public class Producteur1ContratCadre extends Producteur1Acteur implements IVende
     public double propositionPrix(ExemplaireContratCadre contrat) {
         IProduit produit = contrat.getProduit();
 
-        if (produit.equals(Feve.F_BQ)) return 1.2;
-        if (produit.equals(Feve.F_MQ)) return 1.8;
-        if (produit.equals(Feve.F_HQ_BE)) return 2.5;
+        if (produit.equals(Feve.F_BQ)) return 1200;
+        if (produit.equals(Feve.F_MQ)) return 1800;
+        if (produit.equals(Feve.F_HQ_BE)) return 2500;
 
         return 1.0;
     }
@@ -95,8 +89,8 @@ public class Producteur1ContratCadre extends Producteur1Acteur implements IVende
     @Override
     public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
         double prixPropose = contrat.getPrix();
-        double contreProposition = prixPropose * 1.10; // 10% de plus que la proposition de l'acheteur
-        journal.ajouter("Contre-proposition de prix : " + contreProposition + " au lieu de " + prixPropose);
+        double contreProposition = prixPropose * 1.10;
+        journal.ajouter("Contre-proposition de prix : " + contreProposition + " (initialement " + prixPropose + ")");
         return contreProposition;
     }
 
@@ -114,6 +108,7 @@ public class Producteur1ContratCadre extends Producteur1Acteur implements IVende
         return quantiteLivree;
     }
 
+    @Override
     public List<Journal> getJournaux() {
         List<Journal> res = super.getJournaux();
         res.add(journal);
