@@ -74,7 +74,7 @@ public class Distributeur3ContratCadre extends Distributeur3Charges implements I
             prixMoyen = 1500;
         }else{
             prixMoyen = (int) Filiere.LA_FILIERE.prixMoyen((ChocolatDeMarque) contrat.getProduit(), Filiere.LA_FILIERE.getEtape()-1);
-            System.out.println(" le prix moyen de "+((ChocolatDeMarque) contrat.getProduit()).getNom()+" est : "+prixMoyen);
+            //System.out.println(" le prix moyen de "+((ChocolatDeMarque) contrat.getProduit()).getNom()+" est : "+prixMoyen);
         }
 
 
@@ -107,11 +107,11 @@ public class Distributeur3ContratCadre extends Distributeur3Charges implements I
 
     @Override
     public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
-        System.out.println("quantité du chocolat après recepetion : "+p.toString()+" "+this.stockChocoMarque.get(p));
+        //System.out.println("quantité du chocolat après recepetion : "+p.toString()+" "+this.stockChocoMarque.get(p));
         stockChocoMarque.put((ChocolatDeMarque) p,this.stockChocoMarque.get(p)+quantiteEnTonnes);
         journalActeur.ajouter("reception de "+quantiteEnTonnes+" tonnes de "+p.toString()+" du contrat "+ contrat.toString());
         this.MAJStocks();
-        System.out.println("quantité du chocolat après recepetion : "+p.toString()+" "+this.stockChocoMarque.get(p));
+        //System.out.println("quantité du chocolat après recepetion : "+p.toString()+" "+this.stockChocoMarque.get(p));
         ChocolatDeMarque choco = (ChocolatDeMarque) p;
 //        if(choco.getChocolat().isEquitable()){
 //            if(Filiere.LA_FILIERE.getEtape()!=0 && Filiere.LA_FILIERE.prixMoyen((ChocolatDeMarque) p,Filiere.LA_FILIERE.getEtape())!=0){
