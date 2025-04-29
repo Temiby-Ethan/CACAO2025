@@ -161,6 +161,17 @@ public class Plantation {
         replante = true;
     }
 
+    public boolean getReplante() {
+        return replante;
+    }
+
+    public double getprix_achat() {
+        return prix_achat;
+    }
+    public double getprix_replantation() {
+        return prix_replantation;
+    }
+
     public double getcout() {
         if ((age == 0) && (replante == false)) {
             return parcelles*prix_achat;
@@ -176,6 +187,20 @@ public class Plantation {
         }
     }
 
+    public double getcout_amorti() {
+        if ((age == 0) && (replante == false)) {
+            return parcelles*prix_achat / 960;
+        }
+        else if ((age == 0) && (replante == true)) {
+            return parcelles*prix_replantation / 960;
+        }
+        else if ((age <= dureeDeVie) && (replante == false)){
+            return parcelles*salaire_employe + (parcelles*prix_achat / 960);
+        }
+        else {
+            return parcelles*prix_vente + (parcelles*prix_replantation / 960);
+        }
+    }
     public double get_prix_vente() {
         return prix_vente;
     }

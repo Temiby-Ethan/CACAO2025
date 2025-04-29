@@ -10,11 +10,12 @@ import abstraction.eqXRomu.produits.IProduit;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Distributeur3ContratCadre extends Distributeur3Distributeur implements IAcheteurContratCadre{
+public class Distributeur3ContratCadre extends Distributeur3Charges implements IAcheteurContratCadre{
 
-    @Override
+@Override
+
     // Implémentée par tout le monde
-    public void next() {
+
 
         super.next();
        SuperviseurVentesContratCadre superviseur = (SuperviseurVentesContratCadre) Filiere.LA_FILIERE.getActeur("Sup.CCadre");
@@ -23,13 +24,12 @@ public class Distributeur3ContratCadre extends Distributeur3Distributeur impleme
         transfo.add(Filiere.LA_FILIERE. getActeur("EQ4"));
         transfo.add(Filiere.LA_FILIERE. getActeur("EQ5"));
         transfo.add(Filiere.LA_FILIERE. getActeur("EQ6"));
-       for(ChocolatDeMarque choco :  Filiere.LA_FILIERE.getChocolatsProduits()){
+        for(ChocolatDeMarque choco :  Filiere.LA_FILIERE.getChocolatsProduits()){
            if(choco.getGamme()== Gamme.BQ){
                listeChcocolatPertinents.add(choco);
            }
        }
-
-
+       
        for (IActeur a : transfo){
            if(a instanceof IVendeurContratCadre && Filiere.LA_FILIERE.getActeursSolvables().contains(a)){
                for(ChocolatDeMarque choco : listeChcocolatPertinents) {
@@ -40,7 +40,6 @@ public class Distributeur3ContratCadre extends Distributeur3Distributeur impleme
                }
            }
        }
-
     }
 
     @Override
@@ -67,19 +66,31 @@ public class Distributeur3ContratCadre extends Distributeur3Distributeur impleme
 
     @Override
     // Implémentée par Héloïse
-    public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat) {
+    public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat){
         journalContrats.ajouter("negocie le contrat");
+
+        int prixMoyen=0;
+        if(Filiere.LA_FILIERE.getEtape()==0) {
+            prixMoyen = 1500;
+        }else{
+            prixMoyen = (int) Filiere.LA_FILIERE.prixMoyen((ChocolatDeMarque) contrat.getProduit(), Filiere.LA_FILIERE.getEtape()-1);
+            System.out.println(" le prix moyen de "+((ChocolatDeMarque) contrat.getProduit()).getNom()+" est : "+prixMoyen);
+        }
+
+
+
         //double fourchetteLimiteNegociation  = 1500;
 
         // a enlever, on laisse juste ça pour pouvoir négocier avec les autres
-        double fourchetteLimiteNegociation  = 2100;
-        double fourchetteLimiteAchat = 1000;
-        double baisseNego = 0.5; // Correspond a 50% du prix proposé soit une baisse de 50%
+        double fourchetteLimiteNegociation  = prixMoyen-(chargesTotal()/getVentesByStep(Filiere.LA_FILIERE.getEtape()));
+        double fourchetteLimiteAchat = fourchetteLimiteNegociation*0.95;
+
+
         if(contrat.getPrix()<fourchetteLimiteNegociation){
             if(contrat.getPrix()<fourchetteLimiteAchat){
                 return contrat.getPrix();
             }else{
-                return contrat.getPrix()*baisseNego;
+                return fourchetteLimiteNegociation*0.85;
             }
         }else{
             return -1;
@@ -96,8 +107,26 @@ public class Distributeur3ContratCadre extends Distributeur3Distributeur impleme
 
     @Override
     public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
+        System.out.println("quantité du chocolat après recepetion : "+p.toString()+" "+this.stockChocoMarque.get(p));
         stockChocoMarque.put((ChocolatDeMarque) p,this.stockChocoMarque.get(p)+quantiteEnTonnes);
         journalActeur.ajouter("reception de "+quantiteEnTonnes+" tonnes de "+p.toString()+" du contrat "+ contrat.toString());
         this.MAJStocks();
+        System.out.println("quantité du chocolat après recepetion : "+p.toString()+" "+this.stockChocoMarque.get(p));
+        ChocolatDeMarque choco = (ChocolatDeMarque) p;
+//        if(choco.getChocolat().isEquitable()){
+//            if(Filiere.LA_FILIERE.getEtape()!=0 && Filiere.LA_FILIERE.prixMoyen((ChocolatDeMarque) p,Filiere.LA_FILIERE.getEtape())!=0){
+//                this.prix.put((ChocolatDeMarque) p,(float) (Filiere.LA_FILIERE.prixMoyen((ChocolatDeMarque) p,Filiere.LA_FILIERE.getEtape())*0.97));
+//            }else {
+//                this.prix.put((ChocolatDeMarque) p, 2500.0F);
+//            }
+//        }else{
+//            if(Filiere.LA_FILIERE.getEtape()!=0 && Filiere.LA_FILIERE.prixMoyen((ChocolatDeMarque) p,Filiere.LA_FILIERE.getEtape())!=0){
+//                this.prix.put((ChocolatDeMarque) p,(float) (Filiere.LA_FILIERE.prixMoyen((ChocolatDeMarque) p,Filiere.LA_FILIERE.getEtape())*0.97));
+//            }else {
+//                this.prix.put((ChocolatDeMarque)p, 3000.0F);
+//            }
+//
+//            this.prix.put((ChocolatDeMarque) p,4000.0F);
+//        }
     }
 }
