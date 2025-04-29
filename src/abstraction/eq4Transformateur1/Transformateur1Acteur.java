@@ -68,7 +68,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 
 	//Informations sur la production de chocolats
 	protected HashMap<Feve, HashMap<Chocolat, Double>> pourcentageTransfo; // pour les differentes feves, le chocolat qu'elles peuvent contribuer a produire avec le ratio qttChocoProduit/qttFevesUtilisée
-	protected HashMap<Chocolat, Variable> repartitionTransfo;
+	protected HashMap<Chocolat, Variable> repartitionTransfo; // le pourcentage de prodMax qu'on souhaite produire pour chaque chocolat
 
 
 	//Des tables de hachages pour connaître l'état des chocolats à une période précise
