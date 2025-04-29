@@ -37,11 +37,7 @@ public class Transformateur1Usine extends Transformateur1Acteur {
 	public double getProdMax() {
 		double prodMaxMachine = this.nbMachines.getValeur() * prodMachine * 1e-4;
 		double prodMaxOuvrier = this.nbOuvriers.getValeur() * prodOuvrier * 1e-4;
-		if (prodMaxMachine < prodMaxOuvrier) {
-			return prodMaxMachine;
-		} else {
-			return prodMaxOuvrier;
-		}
+		return Math.min(prodMaxMachine, prodMaxOuvrier);
 	}
 
 	public void initialiser() {
