@@ -27,15 +27,18 @@ public class Distributeur3Charges extends Distributeur3ContratCadre {
 
         for(ChocolatDeMarque choco : Filiere.LA_FILIERE.getChocolatsProduits()){
             if(this.stockChocoMarque.containsKey(choco)){
-                //System.out.println(choco.toString()+" : "+this.quantiteEnVente(choco,cryptogramme)+" tonnes");
-                //System.out.println(choco.toString()+" : "+this.quantiteEnVenteTG(choco,cryptogramme)+" tonnes en tête de gondole");
+                System.out.println(choco.toString()+" : "+this.quantiteEnVente(choco,cryptogramme)+" tonnes");
+                System.out.println(choco.toString()+" : "+this.quantiteEnVenteTG(choco,cryptogramme)+" tonnes en tête de gondole");
                 totalEnRayon += this.quantiteEnVente(choco,cryptogramme);
             }
         }
-        Filiere.LA_FILIERE.getBanque().payerCout(this,this.cryptogramme,"Mise en rayon",Filiere.LA_FILIERE.getParametre("cout mise en rayon").getValeur()*totalEnRayon);
-        this.journalCharges.ajouter("paiement mise en rayon "+Filiere.LA_FILIERE.getParametre("cout mise en rayon").getValeur()*totalEnRayon);
-        Filiere.LA_FILIERE.getBanque().payerCout(this,this.cryptogramme,"Salaires",salaireEmployes*nbEmployes);
-        this.journalCharges.ajouter("Paiement des salaire : "+salaireEmployes*nbEmployes);
+        if(Filiere.LA_FILIERE.getParametre("cout mise en rayon").getValeur()*totalEnRayon>0) {
+            Filiere.LA_FILIERE.getBanque().payerCout(this, this.cryptogramme, "Mise en rayon", Filiere.LA_FILIERE.getParametre("cout mise en rayon").getValeur() * totalEnRayon);
+            this.journalCharges.ajouter("paiement mise en rayon " + Filiere.LA_FILIERE.getParametre("cout mise en rayon").getValeur() * totalEnRayon);
+        }
 
+
+        //Filiere.LA_FILIERE.getBanque().payerCout(this,this.cryptogramme,"Salaires",salaireEmployes*nbEmployes);
+        this.journalCharges.ajouter("Paiement des salaire : "+salaireEmployes*nbEmployes);
     }
 }
