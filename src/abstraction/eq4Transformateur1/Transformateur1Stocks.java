@@ -352,60 +352,29 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 		this.transformation();
 
 
-		// Respect de la règle de péremption après 6 mois soit 12 nexts
+		// Respect de la règle de péremption après 6 mois soit 12 nexts: on retire du stock ce qui est périmé
+
 		for (ChocolatDeMarque cm : chocolatsLimDt){
 			switch (cm.getChocolat()){
 
 
 				case C_MQ : 
-				    if (péremption_C_MQ_Limdt[11] > 0) {
-                        stocksMarqueVar.get(cm).retirer(this, péremption_C_MQ_Limdt[11], this.cryptogramme);
-						this.journalPeremption.ajouter(Color.pink, Color.BLACK, "Péremption: On retire "+this.péremption_C_MQ_Limdt[11]+ " tonnes de "+cm+" de notre stock");
-					}
-
-					for (int i=11; i>=1; i--) {
-						péremption_C_MQ_Limdt[i] = péremption_C_MQ_Limdt[i-1];
-					}
-					this.péremption_C_MQ_Limdt[0] = 0;
+				    pertePeremption(péremption_C_MQ_Limdt, cm, Color.black);
 					break;
 
 
 				case C_BQ_E : 
-				    if (péremption_C_BQ_E_Limdt[11] > 0) {
-						stocksMarqueVar.get(cm).retirer(this, péremption_C_BQ_E_Limdt[11], this.cryptogramme);
-					    this.journalPeremption.ajouter(Color.pink, Romu.COLOR_GREEN, "Péremption: On retire "+this.péremption_C_BQ_E_Limdt[11]+ " tonnes de "+cm+" de notre stock");
-					}
-
-					for (int i=11; i>=1; i--) {
-						péremption_C_BQ_E_Limdt[i] = péremption_C_BQ_E_Limdt[i-1];
-					}
-					this.péremption_C_BQ_E_Limdt[0] = 0;
+				    pertePeremption(péremption_C_BQ_E_Limdt, cm, Romu.COLOR_GREEN);
 					break;
 
 
 				case C_MQ_E : 
-				    if (péremption_C_MQ_E_Limdt[11] > 0) {
-						stocksMarqueVar.get(cm).retirer(this, péremption_C_MQ_E_Limdt[11], this.cryptogramme);
-					    this.journalPeremption.ajouter(Color.pink, Color.BLUE, "Péremption: On retire "+this.péremption_C_MQ_E_Limdt[11]+ " tonnes de "+cm+" de notre stock");
-					}
-
-					for (int i=11; i>=1; i--) {
-						péremption_C_MQ_E_Limdt[i] = péremption_C_MQ_E_Limdt[i-1];
-					}
-					this.péremption_C_MQ_E_Limdt[0] = 0;
+				    pertePeremption(péremption_C_MQ_E_Limdt, cm, Color.blue);
 					break;
 
 
 				case C_HQ_BE :
-				    if (péremption_C_HQ_BE_Limdt[11] > 0) {
-						stocksMarqueVar.get(cm).retirer(this, péremption_C_HQ_BE_Limdt[11], this.cryptogramme);
-					    this.journalPeremption.ajouter(Color.pink, Color.RED, "Péremption: On retire "+this.péremption_C_HQ_BE_Limdt[11]+ " tonnes de "+cm+" de notre stock");
-					} 
-
-					for (int i=11; i>=1; i--) {
-						péremption_C_HQ_BE_Limdt[i] = péremption_C_HQ_BE_Limdt[i-1];
-					}
-					this.péremption_C_HQ_BE_Limdt[0] = 0;
+				    pertePeremption(péremption_C_HQ_BE_Limdt, cm, Color.red);
 					break;
 
 
@@ -613,55 +582,19 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 				switch (((ChocolatDeMarque)produit).getChocolat()){
 					case C_MQ : 
 						this.stocksMarqueVar.get(produit).retirer(this, quantite, cryptogramme);
-						for (int i=11; i>=0; i--){
-							if (this.péremption_C_MQ_Limdt[i] > 0 && this.péremption_C_MQ_Limdt[i] - quantite >= 0){
-								this.péremption_C_MQ_Limdt[i] -= quantite;
-								break;
-							}
-							else if (this.péremption_C_MQ_Limdt[i] > 0 && this.péremption_C_MQ_Limdt[i] - quantite < 0){
-								quantite -= this.péremption_C_MQ_Limdt[i];
-								this.péremption_C_MQ_Limdt[i] = 0;
-							}
-						}
+						retirerPeremption(this.péremption_C_MQ_Limdt, quantite);
 						break;
 					case C_BQ_E : 
 						this.stocksMarqueVar.get(produit).retirer(this, quantite, cryptogramme);
-						for (int i=11; i>=0; i--){
-							if (this.péremption_C_BQ_E_Limdt[i] > 0 && this.péremption_C_BQ_E_Limdt[i] - quantite >= 0){
-								this.péremption_C_BQ_E_Limdt[i] -= quantite;
-								break;
-							}
-							else if (this.péremption_C_BQ_E_Limdt[i] > 0 && this.péremption_C_BQ_E_Limdt[i] - quantite < 0){
-								quantite -= this.péremption_C_BQ_E_Limdt[i];
-								this.péremption_C_BQ_E_Limdt[i] = 0;
-							}
-						}
+						retirerPeremption(this.péremption_C_BQ_E_Limdt, quantite);
 						break;
 					case C_MQ_E : 
 						this.stocksMarqueVar.get(produit).retirer(this, quantite, cryptogramme);
-						for (int i=11; i>=0; i--){
-							if (this.péremption_C_MQ_E_Limdt[i] > 0 && this.péremption_C_MQ_E_Limdt[i] - quantite >= 0){
-								this.péremption_C_MQ_E_Limdt[i] -= quantite;
-								break;
-							}
-							else if (this.péremption_C_MQ_E_Limdt[i] > 0 && this.péremption_C_MQ_E_Limdt[i] - quantite < 0){
-								quantite -= this.péremption_C_MQ_E_Limdt[i];
-								this.péremption_C_MQ_E_Limdt[i] = 0;
-							}
-						}
+						retirerPeremption(this.péremption_C_MQ_E_Limdt, quantite);
 						break;
 					case C_HQ_BE : 
 						this.stocksMarqueVar.get(produit).retirer(this, quantite, cryptogramme);
-						for (int i=11; i>=0; i--){
-							if (this.péremption_C_HQ_BE_Limdt[i] > 0 && this.péremption_C_HQ_BE_Limdt[i] - quantite >= 0){
-								this.péremption_C_HQ_BE_Limdt[i] -= quantite;
-								break;
-							}
-							else if (this.péremption_C_HQ_BE_Limdt[i] > 0 && this.péremption_C_HQ_BE_Limdt[i] - quantite < 0){
-								quantite -= this.péremption_C_HQ_BE_Limdt[i];
-								this.péremption_C_HQ_BE_Limdt[i] = 0;
-							}
-						}
+						retirerPeremption(this.péremption_C_HQ_BE_Limdt, quantite);
 						break;
 					default : 
 						journalStock.ajouter(Color.pink, Color.BLACK,"EQ4T : Ce type de chocolat n'est pas censée entrer dans nos stocks: " + produit);
@@ -671,6 +604,39 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 				journalStock.ajouter(Color.pink, Color.BLACK,"Ce produit (" + produit + ") n'a pas un type connu ("+ type + ")");
 			}
 		}
+	}
+
+	/**
+	 * @author YAOU Reda 
+	 * Cette méthode permet de gérer la péremption lorsqu'on retire du stock
+	 */
+	private void retirerPeremption(double[] peremptionArray, double quantite) {
+		for (int i=11; i>=0; i--){
+			if (peremptionArray[i] > 0 && peremptionArray[i] - quantite >= 0){
+				peremptionArray[i] -= quantite;
+				break;
+			}
+			else if (peremptionArray[i] > 0 && peremptionArray[i] - quantite < 0){
+				quantite -= peremptionArray[i];
+				peremptionArray[i] = 0;
+			}
+		}
+	}
+
+	/**
+	 * @author YAOU Reda 
+	 * Cette méthode nous fait perdre du stock lorsque le chocolat de marque est périmé
+	 */
+	private void pertePeremption(double[] peremptionArray, ChocolatDeMarque cm, Color color) {
+		if (peremptionArray[11] > 0) {
+			stocksMarqueVar.get(cm).retirer(this, peremptionArray[11], this.cryptogramme);
+			this.journalPeremption.ajouter(Color.pink, color, "Péremption: On retire "+peremptionArray[11]+ " tonnes de "+cm+" de notre stock");
+		}
+
+		for (int i=11; i>=1; i--) {
+			peremptionArray[i] = peremptionArray[i-1];
+		}
+		peremptionArray[0] = 0;
 	}
 }
 
