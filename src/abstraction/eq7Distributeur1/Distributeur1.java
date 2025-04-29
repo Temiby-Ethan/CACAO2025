@@ -63,7 +63,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 		this.chocolats= Filiere.LA_FILIERE.getChocolatsProduits();
 
 		for (int i=0; i<this.chocolats.size(); i++) {
-			this.stocksChocolats.put(chocolats.get(i), new Variable("Stock"+chocolats.get(i).getNom(), this, 1000.0));
+			this.stocksChocolats.put(chocolats.get(i), new Variable("Stock"+chocolats.get(i).getNom(), this, 0.0));
 			successedSell.add(0);
 			priceProduct.add(1000.0);
 			requiredQuantities.add(0.0);
@@ -71,8 +71,8 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 			this.capaciteDeVente.add(0.0);}
 
 		for (int i = 0; i < this.chocolats.size(); i++) {
-			this.stocksChocolats.put(chocolats.get(i), new Variable(this.getNom()+"Stock"+chocolats.get(i).getNom(), this, 1000.0));
-			this.capaciteDeVente.set(i, stocksChocolats.get(chocolats.get(i)).getValeur()/1.5);
+			this.stocksChocolats.put(chocolats.get(i), new Variable(this.getNom()+"Stock"+chocolats.get(i).getNom(), this, 0.0));
+			this.capaciteDeVente.set(i, stocksChocolats.get(chocolats.get(i)).getValeur()/1.1);
 		}
 	}
 
@@ -81,7 +81,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 		//ChocolatDeMarque chocoM = new ChocolatDeMarque(choco.getChocolat(), "Villors", 90);
 		int pos= (chocolats.indexOf(choco));
 		if (pos<0) {
-			return 8880.0;
+			return 99999999.0;
 		} else {
 			//return prix.get(pos);
 			double price = 5*this.priceProduct.get(pos) ;
@@ -109,14 +109,27 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 		//IAcheteurAO acheteurAppelOffre = new Distributeur1AcheteurAppelOffre();
 		this.next_ao();
 		
-
-		//ChocolatDeMarque produit = new ChocolatDeMarque(Chocolat.C_MQ, "Villors", 50); // Produit choisi
-        //double quantiteAjoutee = 100.0; // 100 tonnes
-
-		//capaciteDeVente.set(3, 100.0);
-
-        //journal.ajouter("Étape " + etape + " : Ajout de " + quantiteAjoutee + " t de " + produit + " en rayon.");
-		
+		//Ethan - Indicateurs de stocks
+		for (int i = 0; i < this.chocolats.size(); i++) {
+			if (stocksChocolats.get(chocolats.get(i)).getNom().contains("BQ_E")) {
+				this.stock_C_BQ_E.ajouter(this, stocksChocolats.get(chocolats.get(i)).getValeur(), cryptogramme);
+			}
+			if (stocksChocolats.get(chocolats.get(i)).getNom().contains("BQ") && (!stocksChocolats.get(chocolats.get(i)).getNom().contains("BQ_E"))) {
+				this.stock_C_BQ.ajouter(this, stocksChocolats.get(chocolats.get(i)).getValeur(), cryptogramme);
+			}
+			if (stocksChocolats.get(chocolats.get(i)).getNom().contains("MQ_E")) {
+				this.stock_C_MQ_E.ajouter(this, stocksChocolats.get(chocolats.get(i)).getValeur(), cryptogramme);
+			}
+			if (stocksChocolats.get(chocolats.get(i)).getNom().contains("MQ") && (!stocksChocolats.get(chocolats.get(i)).getNom().contains("MQ_E"))) {
+				this.stock_C_MQ.ajouter(this, stocksChocolats.get(chocolats.get(i)).getValeur(), cryptogramme);
+			}
+			if (stocksChocolats.get(chocolats.get(i)).getNom().contains("HQ_E")) {
+				this.stock_C_HQ_E.ajouter(this, stocksChocolats.get(chocolats.get(i)).getValeur(), cryptogramme);
+			}
+			if (stocksChocolats.get(chocolats.get(i)).getNom().contains("HQ_BE")) {
+				this.stock_C_HQ_BE.ajouter(this, stocksChocolats.get(chocolats.get(i)).getValeur(), cryptogramme);
+			}
+		}
 		//par Ethan
 		String str_journal_stock = "";
 		String str_journal_E = "";
@@ -124,26 +137,26 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 		String str_journal_AO = "";
 
 		for (int i = 0 ; i<chocolats.size() ; i++){
-			str_journal_stock += this.stocksChocolats.get(chocolats.get(i)).getNom() + " = " + this.stocksChocolats.get(chocolats.get(i)).getValeur() + " ; ";
-			str_journal_E += this.successedSell.get(i) + " ; ";
-			str_journal_CC += "b";
-			str_journal_AO += " ; ";
+			str_journal_stock = this.stocksChocolats.get(chocolats.get(i)).getNom() + " = " + this.stocksChocolats.get(chocolats.get(i)).getValeur() + ";";
+			journal.ajouter(str_journal_stock);
+			str_journal_E ="Achat en enchère de " + this.stocksChocolats.get(chocolats.get(i)).getNom()+ " = " + this.successedSell.get(i) + " tonne(s); ";
+			journalE.ajouter(str_journal_E);
+			str_journal_CC = "Achat en contrat cadre de " + this.stocksChocolats.get(chocolats.get(i)).getNom()+ " = " + "0" + " tonne(s);" ;
+			journalCC.ajouter(str_journal_CC);
+			str_journal_AO = "Achat en appel d'offre de " + this.stocksChocolats.get(chocolats.get(i)).getNom()+ " = " + "0" + " tonne(s);";
+			journalAO.ajouter(str_journal_AO);
 		}
-
-		journal.ajouter(str_journal_stock);
-		journalE.ajouter(str_journal_E);
-		journalCC.ajouter(str_journal_CC);
-		journalAO.ajouter(str_journal_AO);
 
 		// définition des capacités de ventes
 
 		for (int i=0; i<this.chocolats.size(); i++) {
-			this.capaciteDeVente.set(i, stocksChocolats.get(chocolats.get(i)).getValeur()/2);
+			this.capaciteDeVente.set(i, stocksChocolats.get(chocolats.get(i)).getValeur()/1.1);
 		}
 
 	}
 
 	public List<String> getMarquesChocolat() { // par Alexiho
+                @SuppressWarnings("Convert2Diamond")
 		List<String> marques = new ArrayList<String>();
 		marques.add("Hexafridge");
 		return marques;
@@ -213,6 +226,14 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 			return 0;
 		}
 	}
+	@Override
+	public List<Variable> getIndicateurs() {
+		List<Variable> res = super.getIndicateurs();
+		for (int i=0; i<this.chocolats.size(); i++) {
+			res.add(this.stocksChocolats.get(chocolats.get(i)));
+		}
+		return res;
+	}
 
 	public void notificationRayonVide(ChocolatDeMarque choco) {
 		journal.ajouter(" Aie... j'aurais du mettre davantage de "+choco.getNom()+" en vente");
@@ -225,6 +246,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 	@Override
 	// Renvoie les journaux
 	public List<Journal> getJournaux() { // par Alexiho
+                @SuppressWarnings("Convert2Diamond")
 		List<Journal> res=new ArrayList<Journal>();
 		res.add(journal);
 		res.add(journalE);
@@ -234,3 +256,4 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 	}
 	
 }
+

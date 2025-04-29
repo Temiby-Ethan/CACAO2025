@@ -3,9 +3,11 @@ package abstraction.eq6Transformateur3;
 import java.util.ArrayList;
 import java.util.List;
 
+import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
+import abstraction.eqXRomu.produits.IProduit;
 
 public class Transformateur3 extends Transformateur3AO{
 
@@ -37,6 +39,17 @@ public class Transformateur3 extends Transformateur3AO{
 		String suff = "k€";
 		super.jdb.ajouter("Payement Coût stockage : "+Math.round(super.coutStockage*stockTotal/div)+suff);
 
+		//Estimation coût par fèves
+		IProduit testFeve = super.lesFeves.get(0);
+
+		for(ExemplaireContratCadre contrat : super.ContratsAcheteur){
+			//if(contrat.getProduit()==testFeve){
+				super.jdb.ajouter(contrat.getListePrix().toString());
+			
+		}
+
+
+
 		super.stockFeves.display();
 		super.stockChoco.display();
 		super.jdb.ajouter("");//Saut de ligne de fin de next
@@ -45,6 +58,7 @@ public class Transformateur3 extends Transformateur3AO{
 	public List<Journal> getJournaux() {
 		ArrayList<Journal> res = new ArrayList<Journal>();
 		res.add(super.jdb);
+		res.add(super.journalProduction);
 		res.add(super.journalStock);
 		res.add(super.journalTransac);
 		res.add(super.journalCC);
