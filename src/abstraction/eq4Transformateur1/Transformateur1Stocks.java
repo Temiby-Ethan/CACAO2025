@@ -61,7 +61,7 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 				if (this.getQuantiteEnStock(f, this.cryptogramme) > 0. && this.pourcentageTransfo.get(f).get(c) != null){
 
 					//On calcule la quantité de fèves à transformer
-					transfo = Math.min(this.getQuantiteEnStock(f, this.cryptogramme), this.prodMachine * this.repartitionTransfo.get(c) / this.pourcentageTransfo.get(f).get(c));
+					transfo = Math.min(this.getQuantiteEnStock(f, this.cryptogramme), this.prodMachine * this.repartitionTransfo.get(c).getValeur() / this.pourcentageTransfo.get(f).get(c));
 
 					//On s'assure que l'on produit quelque chose pour faire nos opérations
 					if (transfo<=this.getQuantiteEnStock(f, this.cryptogramme) && transfo > 0.) {
@@ -427,7 +427,10 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 		res.add(this.nbMachines);
 		res.add(this.nbOuvriers);
 		res.add(this.prodMax);
-
+		for (Chocolat c : lesChocolats){
+			res.add(this.repartitionTransfo.get(c));
+		}
+		
 		return res;
 	}
 
