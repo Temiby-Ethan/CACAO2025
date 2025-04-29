@@ -30,15 +30,18 @@ public class Transformateur1VendeurAppelDoffre extends Transformateur1AcheteurBo
 		double prixT = 0;
 
 		if (chocolatsLimDt.contains(offre.getProduit())) {
-			if (offre.getQuantiteT() <= 0.4*this.getQuantiteEnStock(offre.getProduit(), this.cryptogramme)) {
+			if (offre.getQuantiteT() <= 0.2*this.getQuantiteEnStock(offre.getProduit(), this.cryptogramme)) {
 				if (((ChocolatDeMarque) offre.getProduit()).getChocolat() == Chocolat.C_MQ) {
-					prixT = prixTChocoBase.get(Chocolat.C_MQ);
-				} else if (((ChocolatDeMarque) offre.getProduit()).getChocolat() == Chocolat.C_BQ_E) {
-					prixT = prixTChocoBase.get(Chocolat.C_BQ_E);
-				} else if (((ChocolatDeMarque) offre.getProduit()).getChocolat() == Chocolat.C_MQ_E) {
-					prixT = prixTChocoBase.get(Chocolat.C_MQ_E);
-				} else if (((ChocolatDeMarque) offre.getProduit()).getChocolat() == Chocolat.C_HQ_BE) {
-					prixT = prixTChocoBase.get(Chocolat.C_HQ_BE);
+					prixT = (prixTChocoBase.get(Chocolat.C_MQ) + this.coutProd + this.coutStockage) * 1.3;
+				} 
+				else if (((ChocolatDeMarque) offre.getProduit()).getChocolat() == Chocolat.C_BQ_E) {
+					prixT = (prixTChocoBase.get(Chocolat.C_BQ_E)+ this.coutProd + this.coutStockage) *1.1;
+				} 
+				else if (((ChocolatDeMarque) offre.getProduit()).getChocolat() == Chocolat.C_MQ_E) {
+					prixT =(prixTChocoBase.get(Chocolat.C_MQ_E)+ this.coutProd + this.coutStockage) *1.1;
+				} 
+				else if (((ChocolatDeMarque) offre.getProduit()).getChocolat() == Chocolat.C_HQ_BE) {
+					prixT = (prixTChocoBase.get(Chocolat.C_HQ_BE)+ this.coutProd + this.coutStockage) * 1.2;
 				}
 	
 				if (prixT == 0) {

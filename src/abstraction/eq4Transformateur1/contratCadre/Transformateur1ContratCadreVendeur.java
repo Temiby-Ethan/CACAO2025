@@ -489,7 +489,7 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 		
 
 			if (produit.getType() == "ChocolatDeMarque"){
-				double livre = Math.min(Math.max(getQuantiteEnStock(produit, this.cryptogramme), 0.), quantite);
+				double livre = Math.min(Math.max(this.getQuantiteEnStock(produit, this.cryptogramme), 0.), quantite);
 				if (livre > 0.){
 
 					//Retrait du produit concerné par le contrat

@@ -59,26 +59,36 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 					for (int step = contrat.getEcheancier().getStepDebut() ; step <= contrat.getEcheancier().getStepFin() ; step++){
 
 						Feve prod = (Feve)contrat.getProduit();
+						ChocolatDeMarque cmAssocie;
+						int pourcentageCacao;
 
 						//Calcul du manque de la quantité de fève nécessaire pour chacun des steps
 						if(prod.getGamme().equals(Gamme.MQ)){
 								if (prod.isEquitable()) {
-									qttSortant = Math.min(this.prodMax.getValeur() * this.repartitionTransfo.get(Chocolat.C_MQ_E).getValeur() / this.pourcentageTransfo.get(prod).get(Chocolat.C_MQ_E), determinerQttSortantChocoAuStep(step, Chocolat.C_MQ_E));
+									pourcentageCacao = (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+ Gamme.MQ).getValeur());
+									cmAssocie = new ChocolatDeMarque(Chocolat.C_MQ_E, "LimDt", pourcentageCacao);
+									qttSortant = Math.min(this.prodMax.getValeur() * this.repartitionTransfo.get(Chocolat.C_MQ_E).getValeur() / this.pourcentageTransfo.get(prod).get(Chocolat.C_MQ_E), determinerQttSortantChocoAuStep(step, cmAssocie));
 									qttSortant += péremption_C_MQ_E_Limdt[11] + péremption_C_MQ_E_Limdt[10] - determinerQttEntrantFevesAuStep(step, prod);
 								}
 								else {
-									qttSortant = Math.min(this.prodMax.getValeur() * this.repartitionTransfo.get(Chocolat.C_MQ).getValeur() / this.pourcentageTransfo.get(prod).get(Chocolat.C_MQ), determinerQttSortantChocoAuStep(step, Chocolat.C_MQ));
+									pourcentageCacao = (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+ Gamme.MQ).getValeur());
+									cmAssocie = new ChocolatDeMarque(Chocolat.C_MQ, "LimDt", pourcentageCacao);
+									qttSortant = Math.min(this.prodMax.getValeur() * this.repartitionTransfo.get(Chocolat.C_MQ).getValeur() / this.pourcentageTransfo.get(prod).get(Chocolat.C_MQ), determinerQttSortantChocoAuStep(step, cmAssocie));
 									qttSortant +=  péremption_C_MQ_Limdt[11] + péremption_C_MQ_Limdt[10] - determinerQttEntrantFevesAuStep(step, prod);
 							}
 						}
 
 						else if (prod.getGamme().equals(Gamme.BQ)){
-								qttSortant = Math.min(this.prodMax.getValeur() * this.repartitionTransfo.get(Chocolat.C_BQ_E).getValeur() / this.pourcentageTransfo.get(prod).get(Chocolat.C_BQ_E), determinerQttSortantChocoAuStep(step, Chocolat.C_BQ_E));
+								pourcentageCacao = (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+ Gamme.BQ).getValeur());
+								cmAssocie = new ChocolatDeMarque(Chocolat.C_BQ_E, "LimDt", pourcentageCacao);
+								qttSortant = Math.min(this.prodMax.getValeur() * this.repartitionTransfo.get(Chocolat.C_BQ_E).getValeur() / this.pourcentageTransfo.get(prod).get(Chocolat.C_BQ_E), determinerQttSortantChocoAuStep(step, cmAssocie));
 								qttSortant += péremption_C_BQ_E_Limdt[11] + péremption_C_BQ_E_Limdt[10] - determinerQttEntrantFevesAuStep(step, prod);
 						}
 
 						else if (prod.getGamme().equals(Gamme.HQ)){
-								qttSortant = Math.min(this.prodMax.getValeur() * this.repartitionTransfo.get(Chocolat.C_HQ_BE).getValeur() / this.pourcentageTransfo.get(prod).get(Chocolat.C_HQ_BE), determinerQttSortantChocoAuStep(step, Chocolat.C_HQ_BE));
+								pourcentageCacao = (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+ Gamme.HQ).getValeur());
+								cmAssocie = new ChocolatDeMarque(Chocolat.C_HQ_BE, "LimDt", pourcentageCacao);
+								qttSortant = Math.min(this.prodMax.getValeur() * this.repartitionTransfo.get(Chocolat.C_HQ_BE).getValeur() / this.pourcentageTransfo.get(prod).get(Chocolat.C_HQ_BE), determinerQttSortantChocoAuStep(step, cmAssocie));
 								qttSortant += péremption_C_HQ_BE_Limdt[11] + péremption_C_HQ_BE_Limdt[10] - determinerQttEntrantFevesAuStep(step, prod);
 						}
 
@@ -113,6 +123,7 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 					//Recherche du maximum de l'échancier
 					double qttMax = 0.;
 					double qttMin = e.getQuantite(e.getStepDebut()+1);
+					boolean modifNecessaires = false;
 					for (int s =e.getStepDebut() ; s< e.getStepFin() ; s++){
 						if (e.getQuantite(s) > qttMax){
 							qttMax = e.getQuantite(s);
@@ -120,11 +131,17 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 						if (e.getQuantite(s) < qttMin){
 							qttMin = e.getQuantite(s);
 						}
+						if (e.getQuantite(s)< e.getQuantiteTotale()/(10*e.getNbEcheances())){
+							modifNecessaires = true;
+						}
+
 					}
 
 					//Si un des steps est inférieur à la quantité minimale, on met tous les steps à la quantité moyenne
-					for (int s = e.getStepDebut() ; s <= e.getStepFin() ; s++){
-						e.set(s, (qttMax + qttMin)/2);
+					if (modifNecessaires){
+						for (int s = e.getStepDebut() ; s <= e.getStepFin() ; s++){
+							e.set(s, (qttMax + qttMin)/2);
+						}
 					}
 
 					//Si la quantité totale est trop faible, on va se mettre au minimum sur tout le contrat 
@@ -155,8 +172,12 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 				}
 
 
-				//Si on n'a pas suffisamment de contrats actifs, on accepte le contrat proposé
+				//Si on n'a pas suffisamment de contrats actifs, on accepte le contrat proposé seulement si la quantité moyenne par step est assez grande
 				else {
+					if(contrat.getEcheancier().getQuantiteTotale()/contrat.getEcheancier().getNbEcheances()< 1000.){
+						return null;
+					}
+
 					return contrat.getEcheancier();
 				}
 
