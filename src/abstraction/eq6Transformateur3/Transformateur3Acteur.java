@@ -24,6 +24,7 @@ public class Transformateur3Acteur implements IActeur {
 	protected Banque LaBanque;
 
 	protected Journal jdb;
+	protected Journal journalProduction;
 	protected Journal journalStock;
 	protected Journal journalTransac;
 	protected Journal journalCC;
@@ -50,6 +51,7 @@ public class Transformateur3Acteur implements IActeur {
 		public Transformateur3Acteur() {
 			// Initialisation des journaux
 			this.jdb = new Journal("Journal de bord", this);
+			this.journalProduction = new Journal("Journal de production", this);
 			this.journalStock = new Journal("Journal des stocks", this);
 			this.journalTransac = new Journal("Journal des transactions", this);
 			this.journalCC = new Journal("Journal des contrats cadre", this);
