@@ -8,7 +8,6 @@ import java.util.List;
 
 import abstraction.eqXRomu.acteurs.Romu;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
-import abstraction.eqXRomu.filiere.Banque;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.filiere.IMarqueChocolat;
@@ -69,7 +68,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 
 	//Informations sur la production de chocolats
 	protected HashMap<Feve, HashMap<Chocolat, Double>> pourcentageTransfo; // pour les differentes feves, le chocolat qu'elles peuvent contribuer a produire avec le ratio qttChocoProduit/qttFevesUtilisée
-	protected HashMap<Chocolat, Double> repartitionTransfo;
+	protected HashMap<Chocolat, Variable> repartitionTransfo;
 
 
 	//Des tables de hachages pour connaître l'état des chocolats à une période précise
@@ -159,7 +158,11 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 		this.péremption_C_HQ_BE_Limdt = new double[12];
 
 		this.pourcentageTransfo = new HashMap<Feve, HashMap<Chocolat, Double>>();
-		this.repartitionTransfo = new HashMap<Chocolat, Double>();
+		this.repartitionTransfo = new HashMap<Chocolat, Variable>();
+		repartitionTransfo.put(Chocolat.C_MQ, new Variable("pourcentageC_MQ", this, 0, 1, 0.25));
+		repartitionTransfo.put(Chocolat.C_BQ_E, new Variable("pourcentageC_BQ_E", this, 0, 1, 0.25));
+		repartitionTransfo.put(Chocolat.C_MQ_E, new Variable("pourcentageC_MQ_E", this, 0, 1, 0.25));
+		repartitionTransfo.put(Chocolat.C_HQ_BE, new Variable("pourcentageC_HQ_BE", this, 0, 1, 0.25));
 		
 		this.prixTFeveStockee = new HashMap<Feve, Double>();
 		this.prixTChocoBase = new HashMap<Chocolat, Double>();
@@ -198,7 +201,6 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 			switch (cm.getChocolat()){
 				case C_MQ : 
 					stocksMarqueVar.put(cm, stock_C_MQ_Limdt);
-					repartitionTransfo.put(Chocolat.C_MQ, 0.25);
 					this.péremption_C_MQ_Limdt[0] = stock_C_MQ_Limdt.getValeur();
 
 					for (int i=1; i<12; i++){
@@ -207,7 +209,6 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 					break;
 				case C_BQ_E : 
 					stocksMarqueVar.put(cm, stock_C_BQ_E_Limdt);
-					repartitionTransfo.put(Chocolat.C_BQ_E, 0.25);
 					this.péremption_C_BQ_E_Limdt[0] = stock_C_BQ_E_Limdt.getValeur();
 
 					for (int i=1; i<12; i++){
@@ -216,7 +217,6 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 					break;
 				case C_MQ_E : 
 					stocksMarqueVar.put(cm, stock_C_MQ_E_Limdt);
-					repartitionTransfo.put(Chocolat.C_MQ_E, 0.25);
 					this.péremption_C_MQ_E_Limdt[0] = stock_C_MQ_E_Limdt.getValeur();
 					
 					for (int i=1; i<12; i++){
@@ -225,7 +225,6 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 					break;
 				case C_HQ_BE : 
 					stocksMarqueVar.put(cm, stock_C_HQ_BE_Limdt);
-					repartitionTransfo.put(Chocolat.C_HQ_BE, 0.25);
 					this.péremption_C_HQ_BE_Limdt[0] = stock_C_HQ_BE_Limdt.getValeur();
 
 					for (int i=1; i<12; i++){
