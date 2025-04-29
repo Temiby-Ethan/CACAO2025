@@ -58,12 +58,13 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 			for (Chocolat c : lesChocolats) {
 
 				double transfo;
-				if (this.stocksFevesVar.get(f) != null && this.pourcentageTransfo.get(f).get(c) != null){
-					//On transforme toutes nos fèves
-					transfo = this.stocksFevesVar.get(f).getValeur();
+				if (this.getQuantiteEnStock(f, this.cryptogramme) > 0. && this.pourcentageTransfo.get(f).get(c) != null){
+
+					//On calcule la quantité de fèves à transformer
+					transfo = Math.min(this.getQuantiteEnStock(f, this.cryptogramme), this.prodMachine * this.repartitionTransfo.get(c) / this.pourcentageTransfo.get(f).get(c));
 
 					//On s'assure que l'on produit quelque chose pour faire nos opérations
-					if (transfo<=this.getQuantiteEnStock(f, this.cryptogramme) && transfo >0) {
+					if (transfo<=this.getQuantiteEnStock(f, this.cryptogramme) && transfo > 0.) {
 
 						double pourcentageMarque = 1.0;  //Modifiable
 						// La Pourcentage ainsi definie sera stockee sous forme de marquee, la quantité restante sera alors stockee comme non marquee
@@ -83,7 +84,7 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 
 							//On vérifie que nos stocks ne sont pas négatifs car sinon on pourrait se retrouver avec des prix négatifs
 							if ( this.getQuantiteEnStock(cm, this.cryptogramme) >=0.){
-								nouveauPrix = ancienPrix * ((getQuantiteEnStock(c, this.cryptogramme) + getQuantiteEnStock(cm, this.cryptogramme))/ (nouveauStock+getQuantiteEnStock(c, this.cryptogramme) + getQuantiteEnStock(cm, this.cryptogramme))) + (prixTFeveStockee.get(f) + this.coutProd + this.coutStockage) * (pourcentageTransfo.get(f).get(c) * transfo / (nouveauStock+ getQuantiteEnStock(c, this.cryptogramme) + getQuantiteEnStock(cm, this.cryptogramme)));
+								nouveauPrix = ancienPrix * ((this.getQuantiteEnStock(c, this.cryptogramme) + this.getQuantiteEnStock(cm, this.cryptogramme))/ (nouveauStock+this.getQuantiteEnStock(c, this.cryptogramme) + this.getQuantiteEnStock(cm, this.cryptogramme))) + (prixTFeveStockee.get(f) + this.coutProd + this.coutStockage) * (pourcentageTransfo.get(f).get(c) * transfo / (nouveauStock+ this.getQuantiteEnStock(c, this.cryptogramme) + this.getQuantiteEnStock(cm, this.cryptogramme)));
 							}
 							//Si on est en dette de stock, on va garder le même prix qu'au step précédent et on l'augmente pour évite que l'on ne s'enfonce davantage
 							else {
@@ -450,6 +451,8 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 		return this.chocosProduits;
 	}
 
+
+
     /**
      * @author MURY Julien
 	 * @author YAOU Reda : Gestion de la péremption
@@ -528,6 +531,7 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 			}
 		}
 	}
+
 
     /**
      * @author MURY Julien
