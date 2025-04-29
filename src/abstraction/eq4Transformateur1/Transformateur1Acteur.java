@@ -198,7 +198,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 			switch (cm.getChocolat()){
 				case C_MQ : 
 					stocksMarqueVar.put(cm, stock_C_MQ_Limdt);
-					
+					repartitionTransfo.put(Chocolat.C_MQ, 0.25);
 					this.péremption_C_MQ_Limdt[0] = stock_C_MQ_Limdt.getValeur();
 
 					for (int i=1; i<12; i++){
@@ -207,7 +207,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 					break;
 				case C_BQ_E : 
 					stocksMarqueVar.put(cm, stock_C_BQ_E_Limdt);
-
+					repartitionTransfo.put(Chocolat.C_BQ_E, 0.25);
 					this.péremption_C_BQ_E_Limdt[0] = stock_C_BQ_E_Limdt.getValeur();
 
 					for (int i=1; i<12; i++){
@@ -216,7 +216,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 					break;
 				case C_MQ_E : 
 					stocksMarqueVar.put(cm, stock_C_MQ_E_Limdt);
-
+					repartitionTransfo.put(Chocolat.C_MQ_E, 0.25);
 					this.péremption_C_MQ_E_Limdt[0] = stock_C_MQ_E_Limdt.getValeur();
 					
 					for (int i=1; i<12; i++){
@@ -225,7 +225,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 					break;
 				case C_HQ_BE : 
 					stocksMarqueVar.put(cm, stock_C_HQ_BE_Limdt);
-
+					repartitionTransfo.put(Chocolat.C_HQ_BE, 0.25);
 					this.péremption_C_HQ_BE_Limdt[0] = stock_C_HQ_BE_Limdt.getValeur();
 
 					for (int i=1; i<12; i++){
