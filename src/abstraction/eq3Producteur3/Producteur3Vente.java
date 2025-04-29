@@ -98,7 +98,7 @@ public class Producteur3Vente extends Producteur3GestionDesCoûts implements IVe
             }
             boolean A = feve.getGamme().equals(Gamme.MQ) && feve.isEquitable() && calculTotalStockParticulier(feve) >= 0 && stockPotentiel*0.7 >= aLivrer;
             boolean B = feve.getGamme().equals(Gamme.BQ) && !feve.isEquitable()&& calculTotalStockParticulier(feve) >= 0 && stockPotentiel*0.7 >= aLivrer;
-            boolean C = feve.getGamme().equals(Gamme.HQ) && feve.isBio()&& calculTotalStockParticulier(feve) >= 0 && stockPotentiel*0.7 >= aLivrer && date != 0;
+            boolean C = feve.getGamme().equals(Gamme.HQ) && feve.isBio() && calculTotalStockParticulier(feve) >= 0 && stockPotentiel*0.7 >= aLivrer && date != 0;
             return A || B || C;
         }
         return false;
@@ -152,7 +152,7 @@ public class Producteur3Vente extends Producteur3GestionDesCoûts implements IVe
         Feve feve = (Feve)contrat.getProduit();
         double Cump = getCump(feve);
         Gamme gamme = feve.getGamme();
-        if (gamme.equals(Gamme.HQ)  ) {
+        if (gamme.equals(Gamme.HQ) ) {
             return Cump*1.1;
         }
         else{
@@ -178,7 +178,7 @@ public class Producteur3Vente extends Producteur3GestionDesCoûts implements IVe
         if (prixProp >= ancienneOffre){
             return prixProp;
         }
-        double nouvelleOffre = (((ancienneOffre + prixProp)/2) + Cump)/2;
+        double nouvelleOffre = ((ancienneOffre + prixProp)/2);
         if (Cump >= nouvelleOffre) {
             return Cump;
         }
