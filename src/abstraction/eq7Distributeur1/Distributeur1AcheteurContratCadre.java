@@ -103,8 +103,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 			
 			}
 			if (quantiteDemandee < 100){
-				System.out.println(quantiteDemandee);
-				System.exit(0);
+				echeancierActuel.set(step, 100);
 			}
 		}
 		return(echeancierActuel);
