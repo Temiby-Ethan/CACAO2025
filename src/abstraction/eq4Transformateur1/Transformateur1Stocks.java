@@ -20,7 +20,7 @@ import abstraction.eqXRomu.general.Variable;
 public class Transformateur1Stocks extends Transformateur1Usine implements IFabricantChocolatDeMarque {
 
 	//Des variables qui ne seront au final que des constantes lors de la simulation
-	private double coutProd; // cout de la production d'une tonne de chocolat, valeur arbitraire censée contenir salaires, ingrédients secondaires, et autres couts fixes
+	protected double coutProd; // cout de la production d'une tonne de chocolat, valeur arbitraire censée contenir salaires, ingrédients secondaires, et autres couts fixes
 	protected double coutStockage; // cout de stockage par tonne et par step
 	protected double STOCK_MAX_TOTAL_FEVES = 1000000;
 
@@ -29,6 +29,7 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 	public Transformateur1Stocks() {
 		super();
 		this.chocosProduits = new LinkedList<ChocolatDeMarque>();
+		this.coutProd = 0.;
 	}
 
 	public void initialiser() {
@@ -42,6 +43,7 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 
 	/**
 	 * @author ABBASSI Rayene
+	 * @author MURY Julien
 	 * Cette méthode transforme une partie du stock de fève en chacun des chocolats que l'on a décidé de produire.
 	 * Elle détermine et place dans la HashMap prixTChocoBase le prix sans marge des chocolats produits en se basant sur le prix du stock de fèves
 	 * @param None
@@ -49,6 +51,7 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 	 */
 	protected void transformation(){
 
+		//On reporte les coûts fixes liés à la production uniformément sur l'ensemble des produits
 		this.coutProd = totalCoutsUsineStep/prodMax.getValeur(); 
 		
 		for (Feve f : lesFeves) {
@@ -73,10 +76,19 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 						double nouveauStock = transfo*this.pourcentageTransfo.get(f).get(c);
 
 						//Détermination du prix de base des chocolats à la tonne en pondérant avec les coûts de la période précédente
-						if(prixTChocoBase.containsKey(c) && nouveauStock > 0){
+						if(prixTChocoBase.containsKey(c) && nouveauStock > 0 ){
+							
 							double ancienPrix = prixTChocoBase.get(c);
-							double nouveauPrix = ancienPrix * ((getQuantiteEnStock(c, this.cryptogramme) + getQuantiteEnStock(cm, this.cryptogramme))/ (nouveauStock+getQuantiteEnStock(c, this.cryptogramme) + getQuantiteEnStock(cm, this.cryptogramme))) + (prixTFeveStockee.get(f) + coutProd + coutStockage) * (pourcentageTransfo.get(f).get(c) * transfo / (nouveauStock+ getQuantiteEnStock(c, this.cryptogramme) + getQuantiteEnStock(cm, this.cryptogramme)));
+							double nouveauPrix;
 
+							//On vérifie que nos stocks ne sont pas négatifs car sinon on pourrait se retrouver avec des prix négatifs
+							if ( this.getQuantiteEnStock(cm, this.cryptogramme) >=0.){
+								nouveauPrix = ancienPrix * ((getQuantiteEnStock(c, this.cryptogramme) + getQuantiteEnStock(cm, this.cryptogramme))/ (nouveauStock+getQuantiteEnStock(c, this.cryptogramme) + getQuantiteEnStock(cm, this.cryptogramme))) + (prixTFeveStockee.get(f) + this.coutProd + this.coutStockage) * (pourcentageTransfo.get(f).get(c) * transfo / (nouveauStock+ getQuantiteEnStock(c, this.cryptogramme) + getQuantiteEnStock(cm, this.cryptogramme)));
+							}
+							//Si on est en dette de stock, on va garder le même prix qu'au step précédent et on l'augmente pour évite que l'on ne s'enfonce davantage
+							else {
+								nouveauPrix = 1.15*ancienPrix;
+							}
 							prixTChocoBase.put(c, nouveauPrix);
 							if (c == Chocolat.C_MQ) {
 								this.prix_Limdt_MQ.setValeur(this, nouveauPrix);
@@ -250,10 +262,16 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 			}
 
 			//Calcul du nouveau prix des fèves en stock
-			if ((getQuantiteEnStock(f, this.cryptogramme)+ qttEntrantesFeve.get(f)) != 0.){
+			double ancienPrixPondere = 0.;
+			if ((getQuantiteEnStock(f, this.cryptogramme)+ qttEntrantesFeve.get(f)) >= 0.){
 
-				double ancienPrixPondere =lesFeves.contains(f)? prixTFeveStockee.get(f)*(getQuantiteEnStock(f, this.cryptogramme)/(getQuantiteEnStock(f, this.cryptogramme)+ qttEntrantesFeve.get(f))) : 0.;
-				
+				//On calcul l'ancien prix que l'on pondère par la quantité que cela représente dans les stocks
+				if (lesFeves.contains(f) && this.getQuantiteEnStock(f, cryptogramme)>= 0.){
+					ancienPrixPondere = prixTFeveStockee.get(f)*(getQuantiteEnStock(f, this.cryptogramme)/(getQuantiteEnStock(f, this.cryptogramme)+ qttEntrantesFeve.get(f)));
+				}
+				else {
+					ancienPrixPondere = 0.;
+				}
 				prixTFeveStockee.put(f, ancienPrixPondere + prix*(qttEntrantesFeve.get(f)/(qttEntrantesFeve.get(f)+getQuantiteEnStock(f, this.cryptogramme))));
 			}
 		}
@@ -329,13 +347,16 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 		}
 		this.journalPeremption.ajouter("\n");
 
-		// Détermination de prix des fèves et transformation
+		// Détermination de prix des fèves et transformation de ces dernières
 		this.determinerPrixTFevesStockees();
 		this.transformation();
+
 
 		// Respect de la règle de péremption après 6 mois soit 12 nexts
 		for (ChocolatDeMarque cm : chocolatsLimDt){
 			switch (cm.getChocolat()){
+
+
 				case C_MQ : 
 				    if (péremption_C_MQ_Limdt[11] > 0) {
                         stocksMarqueVar.get(cm).retirer(this, péremption_C_MQ_Limdt[11], this.cryptogramme);
@@ -347,6 +368,8 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 					}
 					this.péremption_C_MQ_Limdt[0] = 0;
 					break;
+
+
 				case C_BQ_E : 
 				    if (péremption_C_BQ_E_Limdt[11] > 0) {
 						stocksMarqueVar.get(cm).retirer(this, péremption_C_BQ_E_Limdt[11], this.cryptogramme);
@@ -358,6 +381,8 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 					}
 					this.péremption_C_BQ_E_Limdt[0] = 0;
 					break;
+
+
 				case C_MQ_E : 
 				    if (péremption_C_MQ_E_Limdt[11] > 0) {
 						stocksMarqueVar.get(cm).retirer(this, péremption_C_MQ_E_Limdt[11], this.cryptogramme);
@@ -369,6 +394,8 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 					}
 					this.péremption_C_MQ_E_Limdt[0] = 0;
 					break;
+
+
 				case C_HQ_BE :
 				    if (péremption_C_HQ_BE_Limdt[11] > 0) {
 						stocksMarqueVar.get(cm).retirer(this, péremption_C_HQ_BE_Limdt[11], this.cryptogramme);
@@ -380,6 +407,7 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 					}
 					this.péremption_C_HQ_BE_Limdt[0] = 0;
 					break;
+
 
 				default : 
 					this.journalStock.ajouter(Color.pink, Color.BLACK, "Le chocolat " + cm + " ne devrait pas être présent dans notre gammme");

@@ -64,7 +64,7 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 				qttVoulue = 0.3 * qttEntrantesFeve.get(Feve.F_MQ_E) * contrat.getEcheancier().getNbEcheances();
 		
 		else if(chocoVendu.getGamme().equals(Gamme.HQ) && chocoVendu.isEquitable() && chocoVendu.isBio())
-				qttVoulue = 0.3 * qttEntrantesFeve.get(Feve.F_HQ_BE) * contrat.getEcheancier().getNbEcheances();
+				qttVoulue = 0.15 * qttEntrantesFeve.get(Feve.F_HQ_BE) * contrat.getEcheancier().getNbEcheances();
 
 		else
 				System.out.println("Ce chocolat n'est pas sensé être vendu : " + contrat.getProduit());
@@ -101,29 +101,29 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 
 						//Détermination de la quantité entrante de chocolat que l'on ne va pas vendre au step s
 						if(chocoVendu.getGamme().equals(Gamme.BQ) && chocoVendu.isEquitable()) 
-								qttEntrant = determinerQttEntrantFevesAuStep(s, Feve.F_BQ_E) * this.pourcentageTransfo.get(Feve.F_BQ_E).get(Chocolat.C_BQ_E) - determinerQttSortantChocoAuStep(s, prod.getChocolat());
+								qttEntrant = determinerQttEntrantFevesAuStep(s, Feve.F_BQ_E) * this.pourcentageTransfo.get(Feve.F_BQ_E).get(Chocolat.C_BQ_E) - determinerQttSortantChocoAuStep(s, prod.getChocolat()) - péremption_C_BQ_E_Limdt[11] - péremption_C_BQ_E_Limdt[10];
 						else if(chocoVendu.getGamme().equals(Gamme.MQ) && chocoVendu.isEquitable()) 
-								qttEntrant = determinerQttEntrantFevesAuStep(s, Feve.F_MQ_E) * this.pourcentageTransfo.get(Feve.F_MQ_E).get(Chocolat.C_MQ_E) - determinerQttSortantChocoAuStep(s, prod.getChocolat());
+								qttEntrant = determinerQttEntrantFevesAuStep(s, Feve.F_MQ_E) * this.pourcentageTransfo.get(Feve.F_MQ_E).get(Chocolat.C_MQ_E) - determinerQttSortantChocoAuStep(s, prod.getChocolat()) - péremption_C_MQ_E_Limdt[11] - péremption_C_MQ_E_Limdt[10];
 						else if(chocoVendu.getGamme().equals(Gamme.MQ) && !chocoVendu.isEquitable())
-								qttEntrant = determinerQttEntrantFevesAuStep(s, Feve.F_MQ) * this.pourcentageTransfo.get(Feve.F_MQ).get(Chocolat.C_MQ) - determinerQttSortantChocoAuStep(s, prod.getChocolat());
+								qttEntrant = determinerQttEntrantFevesAuStep(s, Feve.F_MQ) * this.pourcentageTransfo.get(Feve.F_MQ).get(Chocolat.C_MQ) - determinerQttSortantChocoAuStep(s, prod.getChocolat()) - péremption_C_MQ_Limdt[11] - péremption_C_MQ_Limdt[10];
 						else if(chocoVendu.getGamme().equals(Gamme.HQ) && chocoVendu.isEquitable() && chocoVendu.isBio())
-								qttEntrant = determinerQttEntrantFevesAuStep(s, Feve.F_HQ_BE) * this.pourcentageTransfo.get(Feve.F_HQ_BE).get(Chocolat.C_HQ_BE) - determinerQttSortantChocoAuStep(s, prod.getChocolat());
+								qttEntrant = determinerQttEntrantFevesAuStep(s, Feve.F_HQ_BE) * this.pourcentageTransfo.get(Feve.F_HQ_BE).get(Chocolat.C_HQ_BE) - determinerQttSortantChocoAuStep(s, prod.getChocolat()) - péremption_C_HQ_BE_Limdt[11] - péremption_C_HQ_BE_Limdt[10];
 						else
 								System.out.println("Ce chocolat n'est pas censé être vendu : " + prod);
 							
 						
 						//Selon la valeur de qttEntrant, on va agir différemment sur le contrat		
 						//si qtt entrant est très négatif, c'est que l'on vend plus de chocolat que l'on ne recoit de fèves, on annule donc le contrat
-						if (qttEntrant < -10000.){
+						if (qttEntrant < -10.){
 							return null;
 						}
-						//Sinon, si on a suffisamment de fève qui entrent en stock à chaque step et que la proposition est proche de ce que l'on souhaite, on met la qtt entrante à condition qu'elle soit positive
-						else if (Math.abs(qttEntrant - e.getQuantite(s))/qttEntrant < 0.2 && qttEntrant>0. ){
-							e.set(s, 0.3*qttEntrant*0.75 + 0.25*e.getQuantite(s));
+						//Sinon, si on a suffisamment de fève qui entrent en stock à chaque step et que la proposition est proche de ce que l'on souhaite, on accepte la proposition sur ce step
+						else if (Math.abs(qttEntrant - e.getQuantite(s))/qttEntrant < 0.15 ){
+							e.set(s, e.getQuantite(s));
 						}
 						//si la qtt entrante est faible, on vérifie quand meme que celle ci respecte les spécifications sur les CC
-						else if (Math.abs(qttEntrant)< 10000. && 0.3*qttEntrant > e.getQuantiteTotale()/(10*e.getNbEcheances())){
-							e.set(s,0.3*qttEntrant);
+						else if (Math.abs(qttEntrant)< 1000. && 0.2*qttEntrant > e.getQuantiteTotale()/(10*e.getNbEcheances())){
+							e.set(s,0.2*Math.abs(qttEntrant));
 						}
 						//Sinon, on met le double du minimum pour le step
 						else {
@@ -239,13 +239,15 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 				return 6000;
 			}
 			else{
-				prixBase = prixTChocoBase.get(prod)*marges.get(prod);
+				prixBase = (prixTChocoBase.get(prod) + this.coutProd + this.coutStockage)*marges.get(prod);
 				if(contrat.getQuantiteTotale() < 2000){
 					return prixBase*(1 - 0.05*contrat.getQuantiteTotale()/2000);
 				}
 				return 0.95*prixBase;// plus la quantite est elevee, plus le prix est interessant
 			}
 		}
+
+
 		else {
 			IProduit prod = contrat.getProduit();
 			if (prixTChocoBase.get(prod) ==  null){

@@ -51,7 +51,7 @@ public class Transformateur1AcheteurAppelDOffre extends Transformateur1VendeurEn
 	}
 
 	public OffreVente choisirOV(List<OffreVente> propositions) {
-		// TODO Auto-generated method stub
+
 		double cours = prixTFeveStockee.get((Feve) (propositions.get(0).getProduit()));
 		if (propositions.size() == 0) {
 			journalTransactions.ajouter("Je ne choisis pas l'offre car il n'y a pas d'offre");

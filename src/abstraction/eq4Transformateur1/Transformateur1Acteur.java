@@ -67,7 +67,10 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 	protected List<ExemplaireContratCadre> mesContratEnTantQuAcheteur;
 	protected List<ExemplaireContratCadre> mesContratEnTantQueVendeur;
 
+	//Informations sur la production de chocolats
 	protected HashMap<Feve, HashMap<Chocolat, Double>> pourcentageTransfo; // pour les differentes feves, le chocolat qu'elles peuvent contribuer a produire avec le ratio qttChocoProduit/qttFevesUtilisée
+	protected HashMap<Chocolat, Double> repartitionTransfo;
+
 
 	//Des tables de hachages pour connaître l'état des chocolats à une période précise
 	protected HashMap<Feve, Double> qttEntrantesFeve; //Contient les quantités entrant dans le stock à la période actuelle
@@ -156,6 +159,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 		this.péremption_C_HQ_BE_Limdt = new double[12];
 
 		this.pourcentageTransfo = new HashMap<Feve, HashMap<Chocolat, Double>>();
+		this.repartitionTransfo = new HashMap<Chocolat, Double>();
 		
 		this.prixTFeveStockee = new HashMap<Feve, Double>();
 		this.prixTChocoBase = new HashMap<Chocolat, Double>();
@@ -194,7 +198,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 			switch (cm.getChocolat()){
 				case C_MQ : 
 					stocksMarqueVar.put(cm, stock_C_MQ_Limdt);
-
+					
 					this.péremption_C_MQ_Limdt[0] = stock_C_MQ_Limdt.getValeur();
 
 					for (int i=1; i<12; i++){
@@ -246,17 +250,17 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 		this.prixTFeveStockee.put(Feve.F_HQ_BE, 2000.);
 
 		//Initialisation des prix de base des chocolats que l'on veut produire
-		this.prixTChocoBase.put(Chocolat.C_MQ, 2000.);
-		this.prix_Limdt_MQ.setValeur(this, 2000.);
+		this.prixTChocoBase.put(Chocolat.C_MQ, 5000.);
+		this.prix_Limdt_MQ.setValeur(this, 5000.);
 
-		this.prixTChocoBase.put(Chocolat.C_BQ_E, 2000.);
-		this.prix_Limdt_BQ_E.setValeur(this, 2000.);
+		this.prixTChocoBase.put(Chocolat.C_BQ_E, 5000.);
+		this.prix_Limdt_BQ_E.setValeur(this, 5000.);
 
-		this.prixTChocoBase.put(Chocolat.C_MQ_E, 2000.);
-		this.prix_Limdt_MQ_E.setValeur(this, 2000.);
+		this.prixTChocoBase.put(Chocolat.C_MQ_E, 5000.);
+		this.prix_Limdt_MQ_E.setValeur(this, 5000.);
 
-		this.prixTChocoBase.put(Chocolat.C_HQ_BE, 2000.);
-		this.prix_Limdt_HQ_BE.setValeur(this, 2000.);
+		this.prixTChocoBase.put(Chocolat.C_HQ_BE, 5000.);
+		this.prix_Limdt_HQ_BE.setValeur(this, 5000.);
 		
 
 		//Initialisation des marges que l'on va faire sur les différents produits
