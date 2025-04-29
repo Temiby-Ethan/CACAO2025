@@ -7,6 +7,7 @@ import java.util.Map;
 
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.produits.Chocolat;
+import abstraction.eqXRomu.produits.ChocolatDeMarque;
 
 /**
  * @author YAOU Reda
@@ -22,8 +23,8 @@ public class Transformateur1 extends Transformateur1AcheteurAppelDOffre {
         
         // On met à jour la répartition de prodMax sur les chocolats selon ce qui se vend le plus
         HashMap<Chocolat, Double> map = new HashMap<Chocolat, Double>();
-        for (Chocolat c : lesChocolats) {
-            map.put(c, determinerQttSortantChocoAuStep(Filiere.LA_FILIERE.getEtape(), c));
+        for (ChocolatDeMarque cm : chocolatsLimDt) {
+            map.put(cm.getChocolat(), determinerQttSortantChocoAuStep(Filiere.LA_FILIERE.getEtape(), cm));
         }
         List<Map.Entry<Chocolat, Double>> sortedEntries = new ArrayList<>(map.entrySet());
         sortedEntries.sort(Map.Entry.comparingByValue());
@@ -46,6 +47,4 @@ public class Transformateur1 extends Transformateur1AcheteurAppelDOffre {
             this.repartitionTransfo.get(secondSmallestKey).setValeur(this, repartitionTransfo.get(secondSmallestKey).getValeur() - 0.05);
         } 
     }
-
-	
 }
