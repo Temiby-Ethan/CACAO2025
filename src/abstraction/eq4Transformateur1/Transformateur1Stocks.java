@@ -221,14 +221,22 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 	/**
 	 * @author MURY Julien
 	 */
-	public double determinerQttSortantChocoAuStep(int step, Chocolat c){
+	public double determinerQttSortantChocoAuStep(int step, ChocolatDeMarque c){
 		double qttSortant = 0.;
 
+		//Chocolat se vendant par contrat cadre
 		for (ExemplaireContratCadre cc : mesContratEnTantQueVendeur){
-			if (cc.getProduit().equals(c) || ((ChocolatDeMarque)cc.getProduit()).getChocolat().equals(c)){
+			if (cc.getProduit().equals(c) || ((ChocolatDeMarque)cc.getProduit()).equals(c)){
 				qttSortant += cc.getEcheancier().getQuantite(step);
 			}
 		}
+
+		//Chocolat se vendant par enchères 
+		qttSortant += 0.4 * this.getQuantiteEnStock(c, this.cryptogramme);
+
+		//Chocolat se vendant par appels d'offre
+		qttSortant += 0.1 * this.getQuantiteEnStock(c, this.cryptogramme);
+		
 		return qttSortant;
 	}
 

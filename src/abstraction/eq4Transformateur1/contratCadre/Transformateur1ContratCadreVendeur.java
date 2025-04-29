@@ -101,21 +101,21 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 
 						//Détermination de la quantité entrante de chocolat que l'on ne va pas vendre au step s
 						if(chocoVendu.getGamme().equals(Gamme.BQ) && chocoVendu.isEquitable()){
-								qttEntrant = Math.min(determinerQttEntrantFevesAuStep(s, Feve.F_BQ_E) * this.pourcentageTransfo.get(Feve.F_BQ_E).get(Chocolat.C_BQ_E), this.prodMax.getValeur() * this.repartitionTransfo.get(Chocolat.C_BQ_E).getValeur());
-								qttEntrant += - determinerQttSortantChocoAuStep(s, prod.getChocolat()) - péremption_C_BQ_E_Limdt[11] - péremption_C_BQ_E_Limdt[10];
+								qttEntrant = 0.4*Math.min(determinerQttEntrantFevesAuStep(s, Feve.F_BQ_E) * this.pourcentageTransfo.get(Feve.F_BQ_E).get(Chocolat.C_BQ_E), this.prodMax.getValeur() * this.repartitionTransfo.get(Chocolat.C_BQ_E).getValeur());
+								qttEntrant += - determinerQttSortantChocoAuStep(s, prod) - péremption_C_BQ_E_Limdt[11] - péremption_C_BQ_E_Limdt[10];
 						}
 
 						else if(chocoVendu.getGamme().equals(Gamme.MQ) && chocoVendu.isEquitable()) {
-							qttEntrant = Math.min(determinerQttEntrantFevesAuStep(s, Feve.F_MQ_E) * this.pourcentageTransfo.get(Feve.F_MQ_E).get(Chocolat.C_MQ_E), this.prodMax.getValeur() * this.repartitionTransfo.get(Chocolat.C_MQ_E).getValeur());
-							qttEntrant += - determinerQttSortantChocoAuStep(s, prod.getChocolat()) - péremption_C_MQ_E_Limdt[11] - péremption_C_MQ_E_Limdt[10];
+							qttEntrant = 0.4*Math.min(determinerQttEntrantFevesAuStep(s, Feve.F_MQ_E) * this.pourcentageTransfo.get(Feve.F_MQ_E).get(Chocolat.C_MQ_E), this.prodMax.getValeur() * this.repartitionTransfo.get(Chocolat.C_MQ_E).getValeur());
+							qttEntrant += - determinerQttSortantChocoAuStep(s, prod) - péremption_C_MQ_E_Limdt[11] - péremption_C_MQ_E_Limdt[10];
 						}
 						else if(chocoVendu.getGamme().equals(Gamme.MQ) && !chocoVendu.isEquitable()){
-							qttEntrant = Math.min(determinerQttEntrantFevesAuStep(s, Feve.F_MQ_E) * this.pourcentageTransfo.get(Feve.F_MQ).get(Chocolat.C_MQ), this.prodMax.getValeur() * this.repartitionTransfo.get(Chocolat.C_MQ).getValeur());
-							qttEntrant += - determinerQttSortantChocoAuStep(s, prod.getChocolat()) - péremption_C_MQ_Limdt[11] - péremption_C_MQ_Limdt[10];
+							qttEntrant = 0.4*Math.min(determinerQttEntrantFevesAuStep(s, Feve.F_MQ_E) * this.pourcentageTransfo.get(Feve.F_MQ).get(Chocolat.C_MQ), this.prodMax.getValeur() * this.repartitionTransfo.get(Chocolat.C_MQ).getValeur());
+							qttEntrant += - determinerQttSortantChocoAuStep(s, prod) - péremption_C_MQ_Limdt[11] - péremption_C_MQ_Limdt[10];
 						}
 						else if(chocoVendu.getGamme().equals(Gamme.HQ) && chocoVendu.isEquitable() && chocoVendu.isBio()){
-							qttEntrant = Math.min(determinerQttEntrantFevesAuStep(s, Feve.F_HQ_BE) * this.pourcentageTransfo.get(Feve.F_HQ_BE).get(Chocolat.C_HQ_BE), this.prodMax.getValeur() * this.repartitionTransfo.get(Chocolat.C_HQ_BE).getValeur());
-							qttEntrant += - determinerQttSortantChocoAuStep(s, prod.getChocolat()) - péremption_C_HQ_BE_Limdt[11] - péremption_C_HQ_BE_Limdt[10];
+							qttEntrant = 0.4*Math.min(determinerQttEntrantFevesAuStep(s, Feve.F_HQ_BE) * this.pourcentageTransfo.get(Feve.F_HQ_BE).get(Chocolat.C_HQ_BE), this.prodMax.getValeur() * this.repartitionTransfo.get(Chocolat.C_HQ_BE).getValeur());
+							qttEntrant += - determinerQttSortantChocoAuStep(s, prod) - péremption_C_HQ_BE_Limdt[11] - péremption_C_HQ_BE_Limdt[10];
 						}
 						else{
 							System.out.println("Ce chocolat n'est pas censé être vendu : " + prod);
@@ -489,7 +489,7 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 		
 
 			if (produit.getType() == "ChocolatDeMarque"){
-				double livre = Math.min(Math.max(getQuantiteEnStock(produit, this.cryptogramme), 0.), quantite);
+				double livre = Math.min(Math.max(this.getQuantiteEnStock(produit, this.cryptogramme), 0.), quantite);
 				if (livre > 0.){
 
 					//Retrait du produit concerné par le contrat
