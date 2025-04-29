@@ -100,16 +100,26 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 						ChocolatDeMarque prod = (ChocolatDeMarque)contrat.getProduit();
 
 						//Détermination de la quantité entrante de chocolat que l'on ne va pas vendre au step s
-						if(chocoVendu.getGamme().equals(Gamme.BQ) && chocoVendu.isEquitable()) 
-								qttEntrant = determinerQttEntrantFevesAuStep(s, Feve.F_BQ_E) * this.pourcentageTransfo.get(Feve.F_BQ_E).get(Chocolat.C_BQ_E) - determinerQttSortantChocoAuStep(s, prod.getChocolat()) - péremption_C_BQ_E_Limdt[11] - péremption_C_BQ_E_Limdt[10];
-						else if(chocoVendu.getGamme().equals(Gamme.MQ) && chocoVendu.isEquitable()) 
-								qttEntrant = determinerQttEntrantFevesAuStep(s, Feve.F_MQ_E) * this.pourcentageTransfo.get(Feve.F_MQ_E).get(Chocolat.C_MQ_E) - determinerQttSortantChocoAuStep(s, prod.getChocolat()) - péremption_C_MQ_E_Limdt[11] - péremption_C_MQ_E_Limdt[10];
-						else if(chocoVendu.getGamme().equals(Gamme.MQ) && !chocoVendu.isEquitable())
-								qttEntrant = determinerQttEntrantFevesAuStep(s, Feve.F_MQ) * this.pourcentageTransfo.get(Feve.F_MQ).get(Chocolat.C_MQ) - determinerQttSortantChocoAuStep(s, prod.getChocolat()) - péremption_C_MQ_Limdt[11] - péremption_C_MQ_Limdt[10];
-						else if(chocoVendu.getGamme().equals(Gamme.HQ) && chocoVendu.isEquitable() && chocoVendu.isBio())
-								qttEntrant = determinerQttEntrantFevesAuStep(s, Feve.F_HQ_BE) * this.pourcentageTransfo.get(Feve.F_HQ_BE).get(Chocolat.C_HQ_BE) - determinerQttSortantChocoAuStep(s, prod.getChocolat()) - péremption_C_HQ_BE_Limdt[11] - péremption_C_HQ_BE_Limdt[10];
-						else
-								System.out.println("Ce chocolat n'est pas censé être vendu : " + prod);
+						if(chocoVendu.getGamme().equals(Gamme.BQ) && chocoVendu.isEquitable()){
+								qttEntrant = Math.min(determinerQttEntrantFevesAuStep(s, Feve.F_BQ_E) * this.pourcentageTransfo.get(Feve.F_BQ_E).get(Chocolat.C_BQ_E), this.prodMax.getValeur() * this.repartitionTransfo.get(Chocolat.C_BQ_E).getValeur());
+								qttEntrant += - determinerQttSortantChocoAuStep(s, prod.getChocolat()) - péremption_C_BQ_E_Limdt[11] - péremption_C_BQ_E_Limdt[10];
+						}
+
+						else if(chocoVendu.getGamme().equals(Gamme.MQ) && chocoVendu.isEquitable()) {
+							qttEntrant = Math.min(determinerQttEntrantFevesAuStep(s, Feve.F_MQ_E) * this.pourcentageTransfo.get(Feve.F_MQ_E).get(Chocolat.C_MQ_E), this.prodMax.getValeur() * this.repartitionTransfo.get(Chocolat.C_MQ_E).getValeur())
+							qttEntrant += - determinerQttSortantChocoAuStep(s, prod.getChocolat()) - péremption_C_MQ_E_Limdt[11] - péremption_C_MQ_E_Limdt[10];
+						}
+						else if(chocoVendu.getGamme().equals(Gamme.MQ) && !chocoVendu.isEquitable()){
+							qttEntrant = Math.min(determinerQttEntrantFevesAuStep(s, Feve.F_MQ_E) * this.pourcentageTransfo.get(Feve.F_MQ).get(Chocolat.C_MQ), this.prodMax.getValeur() * this.repartitionTransfo.get(Chocolat.C_MQ).getValeur())
+							qttEntrant += - determinerQttSortantChocoAuStep(s, prod.getChocolat()) - péremption_C_MQ_Limdt[11] - péremption_C_MQ_Limdt[10];
+						}
+						else if(chocoVendu.getGamme().equals(Gamme.HQ) && chocoVendu.isEquitable() && chocoVendu.isBio()){
+							qttEntrant = Math.min(determinerQttEntrantFevesAuStep(s, Feve.F_HQ_BE) * this.pourcentageTransfo.get(Feve.F_HQ_BE).get(Chocolat.C_HQ_BE), this.prodMax.getValeur() * this.repartitionTransfo.get(Chocolat.C_HQ_BE).getValeur())
+							qttEntrant += - determinerQttSortantChocoAuStep(s, prod.getChocolat()) - péremption_C_HQ_BE_Limdt[11] - péremption_C_HQ_BE_Limdt[10];
+						}
+						else{
+							System.out.println("Ce chocolat n'est pas censé être vendu : " + prod);
+						}
 							
 						
 						//Selon la valeur de qttEntrant, on va agir différemment sur le contrat		
@@ -123,7 +133,7 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 						}
 						//si la qtt entrante est faible, on vérifie quand meme que celle ci respecte les spécifications sur les CC
 						else if (Math.abs(qttEntrant)< 1000. && 0.2*qttEntrant > e.getQuantiteTotale()/(10*e.getNbEcheances())){
-							e.set(s,0.2*Math.abs(qttEntrant));
+							e.set(s, 0.2*Math.abs(qttEntrant));
 						}
 						//Sinon, on met le double du minimum pour le step
 						else {

@@ -62,14 +62,24 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 
 						//Calcul du manque de la quantité de fève nécessaire pour chacun des steps
 						if(prod.getGamme().equals(Gamme.MQ)){
-								if (prod.isEquitable()) qttSortant = determinerQttSortantChocoAuStep(step, Chocolat.C_MQ_E) +péremption_C_MQ_E_Limdt[11] + péremption_C_MQ_E_Limdt[10] - determinerQttEntrantFevesAuStep(step, prod);
-								else qttSortant = determinerQttSortantChocoAuStep(step, Chocolat.C_MQ) + péremption_C_MQ_Limdt[11] + péremption_C_MQ_Limdt[10] - determinerQttEntrantFevesAuStep(step, prod);
+								if (prod.isEquitable()) {
+									qttSortant = Math.min(this.prodMax * this.repartitionTransfo.get(Chocolat.C_MQ_E).getValeur() / this.pourcentageTransfo.get(prod).get(Chocolat.C_MQ_E), determinerQttSortantChocoAuStep(step, Chocolat.C_MQ_E));
+									qttSortant += péremption_C_MQ_E_Limdt[11] + péremption_C_MQ_E_Limdt[10] - determinerQttEntrantFevesAuStep(step, prod);
+								}
+								else {
+									qttSortant = Math.min(this.prodMax * this.repartitionTransfo.get(Chocolat.C_MQ).getValeur() / this.pourcentageTransfo.get(prod).get(Chocolat.C_MQ), determinerQttSortantChocoAuStep(step, Chocolat.C_MQ));
+									qttSortant +=  péremption_C_MQ_Limdt[11] + péremption_C_MQ_Limdt[10] - determinerQttEntrantFevesAuStep(step, prod);
+							}
 						}
+
 						else if (prod.getGamme().equals(Gamme.BQ)){
-								qttSortant = determinerQttSortantChocoAuStep(step, Chocolat.C_BQ_E) + péremption_C_BQ_E_Limdt[11] + péremption_C_BQ_E_Limdt[10] - determinerQttEntrantFevesAuStep(step, prod);
+								qttSortant = Math.min(this.prodMax * this.repartitionTransfo.get(Chocolat.C_BQ_E).getValeur() / this.pourcentageTransfo.get(prod).get(Chocolat.C_BQ_E), determinerQttSortantChocoAuStep(step, Chocolat.C_BQ_E));
+								qttSortant += péremption_C_BQ_E_Limdt[11] + péremption_C_BQ_E_Limdt[10] - determinerQttEntrantFevesAuStep(step, prod);
 						}
+
 						else if (prod.getGamme().equals(Gamme.HQ)){
-								qttSortant = determinerQttSortantChocoAuStep(step, Chocolat.C_HQ_BE) + péremption_C_HQ_BE_Limdt[11] + péremption_C_HQ_BE_Limdt[10] - determinerQttEntrantFevesAuStep(step, prod);
+								qttSortant = Math.min(this.prodMax * this.repartitionTransfo.get(Chocolat.C_HQ_BE).getValeur() / this.pourcentageTransfo.get(prod).get(Chocolat.C_HQ_BE), determinerQttSortantChocoAuStep(step, Chocolat.C_HQ_BE));
+								qttSortant += péremption_C_HQ_BE_Limdt[11] + péremption_C_HQ_BE_Limdt[10] - determinerQttEntrantFevesAuStep(step, prod);
 						}
 
 
@@ -329,7 +339,7 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 								journalCC.ajouter("\n");
 								this.mesContratEnTantQueVendeur.add(cc);
 							}
-							
+
 							else {
 								journalCC.ajouter(Color.pink, Romu.COLOR_PURPLE, "-->Le contrat n'a pas pu aboutir");
 								journalCC.ajouter("\n");
