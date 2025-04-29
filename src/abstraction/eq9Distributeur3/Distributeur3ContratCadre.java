@@ -10,7 +10,7 @@ import abstraction.eqXRomu.produits.IProduit;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Distributeur3ContratCadre extends Distributeur3Distributeur implements IAcheteurContratCadre{
+public class Distributeur3ContratCadre extends Distributeur3Charges implements IAcheteurContratCadre{
 
     @Override
     // Implémentée par Héloise et Jeanne
@@ -74,6 +74,7 @@ public class Distributeur3ContratCadre extends Distributeur3Distributeur impleme
             prixMoyen = 1500;
         }else{
             prixMoyen = (int) Filiere.LA_FILIERE.prixMoyen((ChocolatDeMarque) contrat.getProduit(), Filiere.LA_FILIERE.getEtape()-1);
+            System.out.println(" le prix moyen de "+((ChocolatDeMarque) contrat.getProduit()).getNom()+" est : "+prixMoyen);
         }
 
 
@@ -81,16 +82,15 @@ public class Distributeur3ContratCadre extends Distributeur3Distributeur impleme
         //double fourchetteLimiteNegociation  = 1500;
 
         // a enlever, on laisse juste ça pour pouvoir négocier avec les autres
-        double fourchetteLimiteNegociation  = prixMoyen;
-        double fourchetteLimiteAchat = prixMoyen*0.9;
-        double baisseNego = 0.5; // Correspond a 50% du prix proposé soit une baisse de 50%
+        double fourchetteLimiteNegociation  = prixMoyen-(chargesTotal()/getVentesByStep(Filiere.LA_FILIERE.getEtape()));
+        double fourchetteLimiteAchat = fourchetteLimiteNegociation*0.95;
 
 
         if(contrat.getPrix()<fourchetteLimiteNegociation){
             if(contrat.getPrix()<fourchetteLimiteAchat){
                 return contrat.getPrix();
             }else{
-                return prixMoyen*0.85;
+                return fourchetteLimiteNegociation*0.85;
             }
         }else{
             return -1;
@@ -112,5 +112,21 @@ public class Distributeur3ContratCadre extends Distributeur3Distributeur impleme
         journalActeur.ajouter("reception de "+quantiteEnTonnes+" tonnes de "+p.toString()+" du contrat "+ contrat.toString());
         this.MAJStocks();
         System.out.println("quantité du chocolat après recepetion : "+p.toString()+" "+this.stockChocoMarque.get(p));
+        ChocolatDeMarque choco = (ChocolatDeMarque) p;
+//        if(choco.getChocolat().isEquitable()){
+//            if(Filiere.LA_FILIERE.getEtape()!=0 && Filiere.LA_FILIERE.prixMoyen((ChocolatDeMarque) p,Filiere.LA_FILIERE.getEtape())!=0){
+//                this.prix.put((ChocolatDeMarque) p,(float) (Filiere.LA_FILIERE.prixMoyen((ChocolatDeMarque) p,Filiere.LA_FILIERE.getEtape())*0.97));
+//            }else {
+//                this.prix.put((ChocolatDeMarque) p, 2500.0F);
+//            }
+//        }else{
+//            if(Filiere.LA_FILIERE.getEtape()!=0 && Filiere.LA_FILIERE.prixMoyen((ChocolatDeMarque) p,Filiere.LA_FILIERE.getEtape())!=0){
+//                this.prix.put((ChocolatDeMarque) p,(float) (Filiere.LA_FILIERE.prixMoyen((ChocolatDeMarque) p,Filiere.LA_FILIERE.getEtape())*0.97));
+//            }else {
+//                this.prix.put((ChocolatDeMarque)p, 3000.0F);
+//            }
+//
+//            this.prix.put((ChocolatDeMarque) p,4000.0F);
+//        }
     }
 }
