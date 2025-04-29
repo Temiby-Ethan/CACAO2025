@@ -28,10 +28,10 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
         super.next();
         //on remet capacité_vente_max à 0 
         capacite_vente_max = new HashMap<IProduit, Double>();
-        capacite_vente_max.put(fraud,productionMax/3);
-        capacite_vente_max.put(hypo,productionMax/6);
-        capacite_vente_max.put(arna,productionMax/6);
-        capacite_vente_max.put(bollo,productionMax/3);
+        capacite_vente_max.put(fraud,(productionMax*0.9)/3);
+        capacite_vente_max.put(hypo,(productionMax*0.9)/6);
+        capacite_vente_max.put(arna,(productionMax*0.9)/6);
+        capacite_vente_max.put(bollo,(productionMax*0.9)/3);
         //on lui enlève tous les contrats cadres en cours  
         //on parcourt tous les chocolats
         for(IProduit choco : super.lesChocolats){
