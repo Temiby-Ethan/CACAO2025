@@ -68,13 +68,13 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 									pourcentageCacao = (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+ Gamme.MQ).getValeur());
 									cmAssocie = new ChocolatDeMarque(Chocolat.C_MQ_E, "LimDt", pourcentageCacao);
 									qttSortant = Math.min(this.prodMax.getValeur() * this.repartitionTransfo.get(Chocolat.C_MQ_E).getValeur() / this.pourcentageTransfo.get(prod).get(Chocolat.C_MQ_E), determinerQttSortantChocoAuStep(step, cmAssocie));
-									qttSortant += péremption_C_MQ_E_Limdt[11] + péremption_C_MQ_E_Limdt[10] - determinerQttEntrantFevesAuStep(step, prod);
+									qttSortant += peremption_C_MQ_E_Limdt[11] + peremption_C_MQ_E_Limdt[10] - determinerQttEntrantFevesAuStep(step, prod);
 								}
 								else {
 									pourcentageCacao = (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+ Gamme.MQ).getValeur());
 									cmAssocie = new ChocolatDeMarque(Chocolat.C_MQ, "LimDt", pourcentageCacao);
 									qttSortant = Math.min(this.prodMax.getValeur() * this.repartitionTransfo.get(Chocolat.C_MQ).getValeur() / this.pourcentageTransfo.get(prod).get(Chocolat.C_MQ), determinerQttSortantChocoAuStep(step, cmAssocie));
-									qttSortant +=  péremption_C_MQ_Limdt[11] + péremption_C_MQ_Limdt[10] - determinerQttEntrantFevesAuStep(step, prod);
+									qttSortant +=  peremption_C_MQ_Limdt[11] + peremption_C_MQ_Limdt[10] - determinerQttEntrantFevesAuStep(step, prod);
 							}
 						}
 
@@ -82,14 +82,14 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 								pourcentageCacao = (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+ Gamme.BQ).getValeur());
 								cmAssocie = new ChocolatDeMarque(Chocolat.C_BQ_E, "LimDt", pourcentageCacao);
 								qttSortant = Math.min(this.prodMax.getValeur() * this.repartitionTransfo.get(Chocolat.C_BQ_E).getValeur() / this.pourcentageTransfo.get(prod).get(Chocolat.C_BQ_E), determinerQttSortantChocoAuStep(step, cmAssocie));
-								qttSortant += péremption_C_BQ_E_Limdt[11] + péremption_C_BQ_E_Limdt[10] - determinerQttEntrantFevesAuStep(step, prod);
+								qttSortant += peremption_C_BQ_E_Limdt[11] + peremption_C_BQ_E_Limdt[10] - determinerQttEntrantFevesAuStep(step, prod);
 						}
 
 						else if (prod.getGamme().equals(Gamme.HQ)){
 								pourcentageCacao = (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+ Gamme.HQ).getValeur());
 								cmAssocie = new ChocolatDeMarque(Chocolat.C_HQ_BE, "LimDt", pourcentageCacao);
 								qttSortant = Math.min(this.prodMax.getValeur() * this.repartitionTransfo.get(Chocolat.C_HQ_BE).getValeur() / this.pourcentageTransfo.get(prod).get(Chocolat.C_HQ_BE), determinerQttSortantChocoAuStep(step, cmAssocie));
-								qttSortant += péremption_C_HQ_BE_Limdt[11] + péremption_C_HQ_BE_Limdt[10] - determinerQttEntrantFevesAuStep(step, prod);
+								qttSortant += peremption_C_HQ_BE_Limdt[11] + peremption_C_HQ_BE_Limdt[10] - determinerQttEntrantFevesAuStep(step, prod);
 						}
 
 

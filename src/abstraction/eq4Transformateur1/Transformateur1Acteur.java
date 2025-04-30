@@ -25,7 +25,8 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 	protected Journal journalStock;
 	protected Journal journalCC;
 	protected Journal journalTransactions;
-	protected Journal journalPeremption;
+	protected Journal journalPeremptionLimdt;
+	protected Journal journalPeremptionFeves;
 	protected Journal journalCouts;
 
 	protected int cryptogramme; // Notre cryptogramme, qui nous est attribué par la banque
@@ -57,10 +58,16 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 	protected HashMap<ChocolatDeMarque, Variable> stocksMarqueVar;
 
 	// Tableux qui tracent la péremption de nos chocolats de marque
-	protected double[] péremption_C_MQ_Limdt = new double[12];
-	protected double[] péremption_C_BQ_E_Limdt = new double[12];
-	protected double[] péremption_C_MQ_E_Limdt = new double[12];
-	protected double[] péremption_C_HQ_BE_Limdt = new double[12];
+	protected double[] peremption_C_MQ_Limdt = new double[12];
+	protected double[] peremption_C_BQ_E_Limdt = new double[12];
+	protected double[] peremption_C_MQ_E_Limdt = new double[12];
+	protected double[] peremption_C_HQ_BE_Limdt = new double[12];
+
+	//Tableaux qui tracent la péremption de nos fèves
+	protected double[] peremption_F_MQ = new double[8];
+	protected double[] peremption_F_BQ_E = new double[8];
+	protected double[] peremption_F_MQ_E = new double[8];
+	protected double[] peremption_F_HQ_BE = new double[8];
 
 	//Listes regroupant les contrats cadres actifs
 	protected List<ExemplaireContratCadre> mesContratEnTantQuAcheteur;
@@ -99,7 +106,8 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 		this.journalStock = new Journal("Journal Stock " + this.getNom(), this);
 		this.journalCC = new Journal("Journal CC " + this.getNom(), this);
 		this.journalTransactions = new Journal("Journal Transactions " + this.getNom(), this);
-		this.journalPeremption = new Journal("Journal Péremption " + this.getNom(), this);
+		this.journalPeremptionLimdt = new Journal("Journal Péremption LimDt " + this.getNom(), this);
+		this.journalPeremptionFeves = new Journal("Journal Péremption Feves " + this.getNom(), this);
 		this.journalCouts = new Journal("Journal Coûts " + this.getNom(), this);
 
 		//On fixe les types de fèves dont on aura besoin
@@ -136,12 +144,26 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 		this.stock_C_MQ_E_Limdt=new Variable("EQ4T Stock C_MQ_E_Limdt", "<html>Quantite totale de C_MQ_E_Limdt en stock</html>",this, 0.0, 1000000.0, 40000.0);
 		this.stock_C_HQ_BE_Limdt=new Variable("EQ4T Stock C_HQ_BE_Limdt", "<html>Quantite totale de C_HQ_BE_Limdt en stock</html>",this, 0.0, 1000000.0, 40000.0);
 	
+		// Initialisation des variables de péremption
+        this.peremption_C_MQ_Limdt = new double[12];
+		this.peremption_C_BQ_E_Limdt = new double[12];
+		this.peremption_C_MQ_E_Limdt = new double[12];
+		this.peremption_C_HQ_BE_Limdt = new double[12];
+		this.peremption_F_MQ = new double[8];
+		this.peremption_F_BQ_E = new double[8];
+		this.peremption_F_MQ_E = new double[8];
+		this.peremption_F_HQ_BE = new double[8];
+
         // Initialisation des hashmaps de stocks
 		this.stocksFevesVar = new HashMap<Feve, Variable>();
 		this.stocksFevesVar.put(Feve.F_MQ, stock_F_MQ);
+		initialiserPeremption(peremption_F_MQ, stock_F_MQ);
 		this.stocksFevesVar.put(Feve.F_BQ_E, stock_F_BQ_E);
+		initialiserPeremption(peremption_F_BQ_E, stock_F_BQ_E);
 		this.stocksFevesVar.put(Feve.F_MQ_E, stock_F_MQ_E);
+		initialiserPeremption(peremption_F_MQ_E, stock_F_MQ_E);
 		this.stocksFevesVar.put(Feve.F_HQ_BE, stock_F_HQ_BE);
+		initialiserPeremption(peremption_F_HQ_BE, stock_F_HQ_BE);
 
 		this.stocksChocoVar= new HashMap<Chocolat, Variable>();
 		this.stocksChocoVar.put(Chocolat.C_MQ, stock_C_MQ);
@@ -150,12 +172,6 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 		this.stocksChocoVar.put(Chocolat.C_HQ_BE, stock_C_HQ_BE);
 
 		this.stocksMarqueVar = new HashMap<ChocolatDeMarque, Variable>();
-
-		// Initialisation des variables de péremption
-        this.péremption_C_MQ_Limdt = new double[12];
-		this.péremption_C_BQ_E_Limdt = new double[12];
-		this.péremption_C_MQ_E_Limdt = new double[12];
-		this.péremption_C_HQ_BE_Limdt = new double[12];
 
 		this.pourcentageTransfo = new HashMap<Feve, HashMap<Chocolat, Double>>();
 		this.repartitionTransfo = new HashMap<Chocolat, Variable>();
@@ -201,35 +217,22 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 			switch (cm.getChocolat()){
 				case C_MQ : 
 					stocksMarqueVar.put(cm, stock_C_MQ_Limdt);
-					this.péremption_C_MQ_Limdt[0] = stock_C_MQ_Limdt.getValeur();
-
-					for (int i=1; i<12; i++){
-						this.péremption_C_MQ_Limdt [i] = 0.0;
-					}
+					initialiserPeremption(peremption_C_MQ_Limdt, stock_C_MQ_Limdt);
 					break;
+					
 				case C_BQ_E : 
 					stocksMarqueVar.put(cm, stock_C_BQ_E_Limdt);
-					this.péremption_C_BQ_E_Limdt[0] = stock_C_BQ_E_Limdt.getValeur();
-
-					for (int i=1; i<12; i++){
-						this.péremption_C_BQ_E_Limdt [i] = 0.0;
-					}
+					initialiserPeremption(peremption_C_BQ_E_Limdt, stock_C_BQ_E);
 					break;
+
 				case C_MQ_E : 
 					stocksMarqueVar.put(cm, stock_C_MQ_E_Limdt);
-					this.péremption_C_MQ_E_Limdt[0] = stock_C_MQ_E_Limdt.getValeur();
-					
-					for (int i=1; i<12; i++){
-						this.péremption_C_MQ_E_Limdt [i] = 0.0;
-					}
+					initialiserPeremption(peremption_C_MQ_E_Limdt, stock_C_MQ_E_Limdt);
 					break;
+
 				case C_HQ_BE : 
 					stocksMarqueVar.put(cm, stock_C_HQ_BE_Limdt);
-					this.péremption_C_HQ_BE_Limdt[0] = stock_C_HQ_BE_Limdt.getValeur();
-
-					for (int i=1; i<12; i++){
-						this.péremption_C_HQ_BE_Limdt [i] = 0.0;
-					}
+					initialiserPeremption(peremption_C_HQ_BE_Limdt, stock_C_HQ_BE_Limdt);
 					break;
 
 				default : 
@@ -335,9 +338,13 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 		this.journalTransactions.ajouter("##########");
 		this.journalTransactions.ajouter(Color.yellow, Romu.COLOR_LBLUE, "N° Etape " + Filiere.LA_FILIERE.getEtape());
 
-		this.journalPeremption.ajouter("\n");
-		this.journalPeremption.ajouter("##########");
-		this.journalPeremption.ajouter(Color.yellow, Romu.COLOR_LBLUE, "N° Etape " + Filiere.LA_FILIERE.getEtape());
+		this.journalPeremptionLimdt.ajouter("\n");
+		this.journalPeremptionLimdt.ajouter("##########");
+		this.journalPeremptionLimdt.ajouter(Color.yellow, Romu.COLOR_LBLUE, "N° Etape " + Filiere.LA_FILIERE.getEtape());
+
+		this.journalPeremptionFeves.ajouter("\n");
+		this.journalPeremptionFeves.ajouter("##########");
+		this.journalPeremptionFeves.ajouter(Color.yellow, Romu.COLOR_LBLUE, "N° Etape " + Filiere.LA_FILIERE.getEtape());
 
 		this.journalCouts.ajouter("##########");
 		this.journalCouts.ajouter(Color.yellow, Romu.COLOR_LBLUE, "N° Etape " + Filiere.LA_FILIERE.getEtape());
@@ -370,7 +377,8 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 		res.add(this.journalStock);
 		res.add(this.journalTransactions);
 		res.add(this.journalCC);
-		res.add(this.journalPeremption);
+		res.add(this.journalPeremptionLimdt);
+		res.add(this.journalPeremptionFeves);
 		res.add(this.journalCouts);
 		return res;
 	}
@@ -454,6 +462,16 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 			}
 		} else {
 			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
+		}
+	}
+	/**
+	 * @author YAOU Reda
+	 * Cette période initialise les tableaux de péremption de nos produits
+	 */
+	public void initialiserPeremption(double[] peremptionArray, Variable stock) {
+		peremptionArray[0] = stock.getValeur();
+		for (int i=1; i<peremptionArray.length; i++){
+			peremptionArray[i] = 0.0;
 		}
 	}
 }
