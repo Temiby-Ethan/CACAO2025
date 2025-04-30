@@ -191,7 +191,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 		this.qttEntrantesFeve = new HashMap<Feve, Double>();
 		this.qttSortantesChoco = new HashMap<Chocolat, Double>();
 		this.qttSortantesTransactions = new HashMap<Chocolat, Double>();
-		this.qttFevesAcheteesBourse = new Variable("Qtt Feves Achetees Bourse", "<html>Quantité de fèves achetées en bourse</html>", this, 0., 1000000., 1000.);
+		this.qttFevesAcheteesBourse = new Variable("Qtt Feves Achetees Bourse", "<html>Quantité de fèves achetées en bourse</html>", this, 0., 1000000., 0.);
 
 		this.marges = new HashMap<Chocolat, Double>();
 	}
@@ -219,7 +219,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 					stocksMarqueVar.put(cm, stock_C_MQ_Limdt);
 					initialiserPeremption(peremption_C_MQ_Limdt, stock_C_MQ_Limdt);
 					break;
-					
+
 				case C_BQ_E : 
 					stocksMarqueVar.put(cm, stock_C_BQ_E_Limdt);
 					initialiserPeremption(peremption_C_BQ_E_Limdt, stock_C_BQ_E);

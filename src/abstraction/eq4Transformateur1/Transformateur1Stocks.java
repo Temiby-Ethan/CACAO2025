@@ -299,7 +299,7 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 	public void next() {
 		super.next();
 
-		if (Filiere.LA_FILIERE.getEtape() >= 1) {
+		/*if (Filiere.LA_FILIERE.getEtape() >= 1) {
 			determinerQttEntrantFeves();
 			determinerQttSortantChoco();
 			if (qttEntrantesFeve.get(Feve.F_MQ)*pourcentageTransfo.get(Feve.F_MQ).get(Chocolat.C_MQ) > qttSortantesChoco.get(Chocolat.C_MQ)) {
@@ -308,7 +308,7 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 			if (qttEntrantesFeve.get(Feve.F_MQ)*pourcentageTransfo.get(Feve.F_MQ).get(Chocolat.C_MQ) < qttSortantesChoco.get(Chocolat.C_MQ)) {
 				this.qttFevesAcheteesBourse.setValeur(this, 1.1 * this.qttFevesAcheteesBourse.getValeur());
 			}
-		}
+		}*/
 
 		for (Chocolat c : lesChocolats) {
 			this.qttSortantesTransactions.put(c, 0.);

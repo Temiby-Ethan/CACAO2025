@@ -25,7 +25,7 @@ public class Transformateur1AcheteurBourse extends Transformateur1ContratCadreVe
 	public double demande(Feve f, double cours) {
 		if (this.feve.equals(f)) {
 			this.journalTransactions.ajouter(Color.white, Color.magenta,"B: Je demande " + qttFevesAcheteesBourse.getValeur() + " tonnes de " + f + " au cours de " + cours + " euros par tonne.");
-			return qttFevesAcheteesBourse.getValeur();
+			return 1000;
 		} else {
 			return 0.0;
 		}
@@ -35,6 +35,7 @@ public class Transformateur1AcheteurBourse extends Transformateur1ContratCadreVe
 	public void notificationAchat(Feve f, double quantiteEnT, double coursEnEuroParT) {
 
 		this.journalTransactions.ajouter(Romu.COLOR_LLGRAY, Color.magenta, "--> B: J'ai achete " + quantiteEnT + " tonnes de " + f + " au cours de " + coursEnEuroParT + " euros par tonne.");
+		this.qttFevesAcheteesBourse.setValeur(this, quantiteEnT);
 		this.journalTransactions.ajouter("\n");
 		
 		//Ajoute des fèves achetées dans notre stock
