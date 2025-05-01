@@ -1,6 +1,7 @@
 package abstraction.eq4Transformateur1;
 
 import java.awt.Color;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List; 
 
@@ -22,6 +23,7 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 	//Des variables qui ne seront au final que des constantes lors de la simulation
 	protected double coutStockage; // cout de stockage par tonne et par step
 	protected double coutProd; // cout de production unitaire, censé contenir salaires, ingrédients secondaires, et autres couts fixes
+	protected HashMap<Chocolat, Double> coutProdChoco; // cout de production unitaire du chocolat produit durant cette step, censé contenir salaires, ingrédients secondaires, et autres couts fixes
 	protected double STOCK_MAX_TOTAL_FEVES = 1000000;
 
 	private List<ChocolatDeMarque> chocosProduits; // la liste de toutes les sortes de ChocolatDeMarque que l'acteur produit et peut vendre
@@ -29,11 +31,15 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 	public Transformateur1Stocks() {
 		super();
 		this.chocosProduits = new LinkedList<ChocolatDeMarque>();
+		this.coutProdChoco = new HashMap<Chocolat, Double>();
 	}
 
 	public void initialiser() {
 		super.initialiser();
 		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*4;
+		for (Chocolat c : lesChocolats) {
+			this.coutProdChoco.put(c, 0.);
+		}
 	}
 
 	////////////////////////////////////////////////////////
@@ -55,8 +61,6 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 			for (Chocolat c : lesChocolats) {
                 // La quantité de fèves à transformer
 				double transfo;
-                // Le cout de production du chocolat en question, censé contenir salaires, ingrédients secondaires, et autres couts fixes
-				double coutProdChoco;
 
 				if (this.getQuantiteEnStock(f, this.cryptogramme) > 0. && this.pourcentageTransfo.get(f).get(c) != null){
 
@@ -77,10 +81,10 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 						double nouveauStock = transfo*this.pourcentageTransfo.get(f).get(c);
 
 						//calcul du cout de production unitaire du chocolat produit durant cette step
-						coutProdChoco = totalCoutsUsineStep/(4*nouveauStock);
+						this.coutProdChoco.put(c, totalCoutsUsineStep/(4*nouveauStock));
 
 						// Cout de production unitaire total
-						this.coutProd += coutProdChoco;
+						this.coutProd += this.coutProdChoco.get(c);
 
 						//Détermination du prix de base des chocolats à la tonne en pondérant avec les coûts de la période précédente
 						if(prixTChocoBase.containsKey(c) && nouveauStock > 0 ){
