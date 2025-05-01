@@ -189,7 +189,14 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 		this.prix_Limdt_HQ_BE = new Variable("Prix LimDt HQ_BE", "<html>Prix de vente du chocolat de marque HQ_BE</html>", this, 0., 1000000., 0.);
 
 		this.qttEntrantesFeve = new HashMap<Feve, Double>();
+		for (Feve f : lesFeves){
+			qttEntrantesFeve.put(f, 0.);
+		}
+
 		this.qttSortantesChoco = new HashMap<Chocolat, Double>();
+		for (Chocolat c : lesChocolats){
+			qttSortantesChoco.put(c, 0.);
+		}
 		this.qttSortantesTransactions = new HashMap<Chocolat, Double>();
 		this.qttFevesAcheteesBourse = new Variable("Qtt Feves Achetees Bourse", "<html>Quantité de fèves achetées en bourse</html>", this, 0., 1000000., 0.);
 

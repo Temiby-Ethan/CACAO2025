@@ -286,33 +286,31 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 					if (prod.isEquitable()) {
 						pourcentageCacao = (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+ Gamme.MQ).getValeur());
 						cmAssocie = new ChocolatDeMarque(Chocolat.C_MQ_E, "LimDt", pourcentageCacao);
-						qttSortant = Math.min(this.prodMax.getValeur() * this.repartitionTransfo.get(Chocolat.C_MQ_E).getValeur() / this.pourcentageTransfo.get(prod).get(Chocolat.C_MQ_E), determinerQttSortantChocoAuStep(step, cmAssocie));
-						qttSortant += peremption_C_MQ_E_Limdt[11] + peremption_C_MQ_E_Limdt[10] - determinerQttEntrantFevesAuStep(step, prod);
+						qttSortant = Math.min(this.prodMax.getValeur() * this.repartitionTransfo.get(Chocolat.C_MQ_E).getValeur(), qttSortantesChoco.get(cmAssocie.getChocolat())) / this.pourcentageTransfo.get(prod).get(Chocolat.C_MQ_E);
+						qttSortant += - qttEntrantesFeve.get(Feve.F_MQ_E);
 					}
 					else {
 						pourcentageCacao = (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+ Gamme.MQ).getValeur());
 						cmAssocie = new ChocolatDeMarque(Chocolat.C_MQ, "LimDt", pourcentageCacao);
-						qttSortant = Math.min(this.prodMax.getValeur() * this.repartitionTransfo.get(Chocolat.C_MQ).getValeur() / this.pourcentageTransfo.get(prod).get(Chocolat.C_MQ), determinerQttSortantChocoAuStep(step, cmAssocie));
-						qttSortant +=  peremption_C_MQ_Limdt[11] + peremption_C_MQ_Limdt[10] - determinerQttEntrantFevesAuStep(step, prod);
+						qttSortant = Math.min(this.prodMax.getValeur() * this.repartitionTransfo.get(Chocolat.C_MQ).getValeur() , qttSortantesChoco.get(cmAssocie.getChocolat()))/ this.pourcentageTransfo.get(prod).get(Chocolat.C_MQ);
+						qttSortant += - qttEntrantesFeve.get(Feve.F_MQ);
 					}
 				}
 
 				else if (prod.getGamme().equals(Gamme.BQ)){
 					pourcentageCacao = (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+ Gamme.BQ).getValeur());
 					cmAssocie = new ChocolatDeMarque(Chocolat.C_BQ_E, "LimDt", pourcentageCacao);
-					qttSortant = Math.min(this.prodMax.getValeur() * this.repartitionTransfo.get(Chocolat.C_BQ_E).getValeur() / this.pourcentageTransfo.get(prod).get(Chocolat.C_BQ_E), determinerQttSortantChocoAuStep(step, cmAssocie));
-					qttSortant += peremption_C_BQ_E_Limdt[11] + peremption_C_BQ_E_Limdt[10] - determinerQttEntrantFevesAuStep(step, prod);
+					qttSortant = Math.min(this.prodMax.getValeur() * this.repartitionTransfo.get(Chocolat.C_BQ_E).getValeur(), qttSortantesChoco.get(cmAssocie.getChocolat()))/ this.pourcentageTransfo.get(prod).get(Chocolat.C_BQ_E);
+					qttSortant += - qttEntrantesFeve.get(Feve.F_BQ_E);
 				}
 
 				else if (prod.getGamme().equals(Gamme.HQ)){
 					pourcentageCacao = (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+ Gamme.HQ).getValeur());
 					cmAssocie = new ChocolatDeMarque(Chocolat.C_HQ_BE, "LimDt", pourcentageCacao);
-					qttSortant = Math.min(this.prodMax.getValeur() * this.repartitionTransfo.get(Chocolat.C_HQ_BE).getValeur() / this.pourcentageTransfo.get(prod).get(Chocolat.C_HQ_BE), determinerQttSortantChocoAuStep(step, cmAssocie));
-					qttSortant += peremption_C_HQ_BE_Limdt[11] + peremption_C_HQ_BE_Limdt[10] - determinerQttEntrantFevesAuStep(step, prod);
+					qttSortant = Math.min(this.prodMax.getValeur() * this.repartitionTransfo.get(Chocolat.C_HQ_BE).getValeur(), qttSortantesChoco.get(cmAssocie.getChocolat()))  / this.pourcentageTransfo.get(prod).get(Chocolat.C_HQ_BE);
+					qttSortant += - qttEntrantesFeve.get(Feve.F_HQ_BE);
 				}
 			
-
-
 
 
 
@@ -421,41 +419,15 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 
 
 			//On calcule la quantité de chocolat qu'il est possible de vendre au step suivant : on extrapole cette quantité à tous les futurs steps
-			double qttEntrant = 0.;
-			ChocolatDeMarque chocoVendu = produit;
-			int s = Filiere.LA_FILIERE.getEtape();
-			if(chocoVendu.getGamme().equals(Gamme.BQ) && chocoVendu.isEquitable()){
-				qttEntrant = 0.4*Math.min(determinerQttEntrantFevesAuStep(s, Feve.F_BQ_E) * this.pourcentageTransfo.get(Feve.F_BQ_E).get(Chocolat.C_BQ_E), this.prodMax.getValeur() * this.repartitionTransfo.get(Chocolat.C_BQ_E).getValeur());
-				qttEntrant += - determinerQttSortantChocoAuStep(s, produit) - peremption_C_BQ_E_Limdt[11] - peremption_C_BQ_E_Limdt[10];
-			}
-
-			else if(chocoVendu.getGamme().equals(Gamme.MQ) && chocoVendu.isEquitable()) {
-				qttEntrant = 0.4*Math.min(determinerQttEntrantFevesAuStep(s, Feve.F_MQ_E) * this.pourcentageTransfo.get(Feve.F_MQ_E).get(Chocolat.C_MQ_E), this.prodMax.getValeur() * this.repartitionTransfo.get(Chocolat.C_MQ_E).getValeur());
-				qttEntrant += - determinerQttSortantChocoAuStep(s, produit) - peremption_C_MQ_E_Limdt[11] - peremption_C_MQ_E_Limdt[10];
-			}
-			else if(chocoVendu.getGamme().equals(Gamme.MQ) && !chocoVendu.isEquitable()){
-				qttEntrant = 0.4*Math.min(determinerQttEntrantFevesAuStep(s, Feve.F_MQ_E) * this.pourcentageTransfo.get(Feve.F_MQ).get(Chocolat.C_MQ), this.prodMax.getValeur() * this.repartitionTransfo.get(Chocolat.C_MQ).getValeur());
-				qttEntrant += - determinerQttSortantChocoAuStep(s, produit) - peremption_C_MQ_Limdt[11] - peremption_C_MQ_Limdt[10];
-			}
-			else if(chocoVendu.getGamme().equals(Gamme.HQ) && chocoVendu.isEquitable() && chocoVendu.isBio()){
-				qttEntrant = 0.4*Math.min(determinerQttEntrantFevesAuStep(s, Feve.F_HQ_BE) * this.pourcentageTransfo.get(Feve.F_HQ_BE).get(Chocolat.C_HQ_BE), this.prodMax.getValeur() * this.repartitionTransfo.get(Chocolat.C_HQ_BE).getValeur());
-				qttEntrant += - determinerQttSortantChocoAuStep(s, produit) - peremption_C_HQ_BE_Limdt[11] - peremption_C_HQ_BE_Limdt[10];
-			}
-			else{
-				System.out.println("Ce chocolat n'est pas censé être vendu : " + produit);
-			}
-
-
-
-
-
+			double qttEntrant = Math.min(qttEntrantesFeve.get(feveAssociee) * pourcentageTransfo.get(feveAssociee).get(produit.getChocolat()), this.prodMax.getValeur() * this.repartitionTransfo.get(produit.getChocolat()).getValeur());
+			qttEntrant -= qttSortantesChoco.get(produit.getChocolat());
 
 			//On ne cherche des contrats cadres que si l'on a de la matière à vendre 
-			if (qttEntrant > 0.){
+			if (0.2*qttEntrant > 1000.){
 				//détermination du nombre de contrat pour ce produit : 
 				int nbContrat = 0;
 				for (ExemplaireContratCadre cc : mesContratEnTantQueVendeur){
-					if (cc.getProduit().equals(produit)){
+					if (((ChocolatDeMarque)cc.getProduit()).equals(produit)){
 						nbContrat++;
 					}
 				}

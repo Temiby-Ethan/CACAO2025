@@ -149,6 +149,7 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 			}
 		}
 
+
 		//Quantité entrante de fèves par achat en bourse
 		if (qttEntrantesFeve.containsKey(Feve.F_MQ)){
 			double ancienneValeur = this.qttEntrantesFeve.get(Feve.F_MQ);
@@ -232,10 +233,7 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 		}
 
 		//Chocolat se vendant par enchères 
-		qttSortant += 0.4 * this.getQuantiteEnStock(c, this.cryptogramme);
-
-		//Chocolat se vendant par appels d'offre
-		qttSortant += 0.1 * this.getQuantiteEnStock(c, this.cryptogramme);
+		qttSortant += this.qttSortantesTransactions.get(c.getChocolat());
 		
 		return qttSortant;
 	}
