@@ -20,8 +20,8 @@ import abstraction.eqXRomu.general.Variable;
 public class Transformateur1Stocks extends Transformateur1Usine implements IFabricantChocolatDeMarque {
 
 	//Des variables qui ne seront au final que des constantes lors de la simulation
-	protected double coutProd; // cout de la production d'une tonne de chocolat, valeur arbitraire censée contenir salaires, ingrédients secondaires, et autres couts fixes
 	protected double coutStockage; // cout de stockage par tonne et par step
+	protected double coutProd; // cout de production unitaire, censé contenir salaires, ingrédients secondaires, et autres couts fixes
 	protected double STOCK_MAX_TOTAL_FEVES = 1000000;
 
 	private List<ChocolatDeMarque> chocosProduits; // la liste de toutes les sortes de ChocolatDeMarque que l'acteur produit et peut vendre
@@ -29,7 +29,6 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 	public Transformateur1Stocks() {
 		super();
 		this.chocosProduits = new LinkedList<ChocolatDeMarque>();
-		this.coutProd = 0.;
 	}
 
 	public void initialiser() {
@@ -50,21 +49,22 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 	 * @return None
 	 */
 	protected void transformation(){
-
-		//On reporte les coûts fixes liés à la production uniformément sur l'ensemble des produits
-		this.coutProd = totalCoutsUsineStep/prodMax.getValeur(); 
 		
+		this.coutProd = 0.;
 		for (Feve f : lesFeves) {
 			for (Chocolat c : lesChocolats) {
-
+                // La quantité de fèves à transformer
 				double transfo;
+                // Le cout de production du chocolat en question, censé contenir salaires, ingrédients secondaires, et autres couts fixes
+				double coutProdChoco;
+
 				if (this.getQuantiteEnStock(f, this.cryptogramme) > 0. && this.pourcentageTransfo.get(f).get(c) != null){
 
 					//On calcule la quantité de fèves à transformer
-					transfo = Math.min(this.getQuantiteEnStock(f, this.cryptogramme), this.prodMachine * this.repartitionTransfo.get(c).getValeur() / this.pourcentageTransfo.get(f).get(c));
+					transfo = Math.min(this.getQuantiteEnStock(f, this.cryptogramme), this.prodMax.getValeur() * this.repartitionTransfo.get(c).getValeur() / this.pourcentageTransfo.get(f).get(c));
 
 					//On s'assure que l'on produit quelque chose pour faire nos opérations
-					if (transfo<=this.getQuantiteEnStock(f, this.cryptogramme) && transfo > 0.) {
+					if (transfo > 0.) {
 
 						double pourcentageMarque = 1.0;  //Modifiable
 						// La Pourcentage ainsi definie sera stockee sous forme de marquee, la quantité restante sera alors stockee comme non marquee
@@ -73,8 +73,14 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 						int pourcentageCacao =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+c.getGamme()).getValeur());
 						ChocolatDeMarque cm= new ChocolatDeMarque(c, "LimDt", pourcentageCacao);
 						
-						//calcul du stock de chocolat après les transformations
+						//calcul du choclat produit
 						double nouveauStock = transfo*this.pourcentageTransfo.get(f).get(c);
+
+						//calcul du cout de production unitaire du chocolat produit durant cette step
+						coutProdChoco = totalCoutsUsineStep/(4*nouveauStock);
+
+						// Cout de production unitaire total
+						this.coutProd += coutProdChoco;
 
 						//Détermination du prix de base des chocolats à la tonne en pondérant avec les coûts de la période précédente
 						if(prixTChocoBase.containsKey(c) && nouveauStock > 0 ){
@@ -84,7 +90,7 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 
 							//On vérifie que nos stocks ne sont pas négatifs car sinon on pourrait se retrouver avec des prix négatifs
 							if ( this.getQuantiteEnStock(cm, this.cryptogramme) >=0.){
-								nouveauPrix = ancienPrix * ((this.getQuantiteEnStock(c, this.cryptogramme) + this.getQuantiteEnStock(cm, this.cryptogramme))/ (nouveauStock+this.getQuantiteEnStock(c, this.cryptogramme) + this.getQuantiteEnStock(cm, this.cryptogramme))) + (prixTFeveStockee.get(f) + this.coutProd + this.coutStockage) * (pourcentageTransfo.get(f).get(c) * transfo / (nouveauStock+ this.getQuantiteEnStock(c, this.cryptogramme) + this.getQuantiteEnStock(cm, this.cryptogramme)));
+								nouveauPrix = ancienPrix * ((this.getQuantiteEnStock(c, this.cryptogramme) + this.getQuantiteEnStock(cm, this.cryptogramme))/ (nouveauStock+this.getQuantiteEnStock(c, this.cryptogramme) + this.getQuantiteEnStock(cm, this.cryptogramme))) + (prixTFeveStockee.get(f) + coutProdChoco + this.coutStockage) * (pourcentageTransfo.get(f).get(c) * transfo / (nouveauStock+ this.getQuantiteEnStock(c, this.cryptogramme) + this.getQuantiteEnStock(cm, this.cryptogramme)));
 							}
 							//Si on est en dette de stock, on va garder le même prix qu'au step précédent et on l'augmente pour évite que l'on ne s'enfonce davantage
 							else {
