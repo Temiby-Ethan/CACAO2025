@@ -16,6 +16,11 @@ import abstraction.eqXRomu.produits.ChocolatDeMarque;
 
 public class Transformateur1VendeurAppelDoffre extends Transformateur1AcheteurBourse implements IVendeurAO {
 
+	protected double qttVendueAOC_MQ;
+	protected double qttVendueAOC_MQ_E;
+	protected double qttVendueAOC_BQ_E;
+	protected double qttVendueAOC_HQ_BE;
+
     public Transformateur1VendeurAppelDoffre() {
 		super();
 	}
@@ -30,7 +35,7 @@ public class Transformateur1VendeurAppelDoffre extends Transformateur1AcheteurBo
 		double prixT = 0;
 
 		if (chocolatsLimDt.contains(offre.getProduit())) {
-			if (offre.getQuantiteT() <= 0.2*this.getQuantiteEnStock(offre.getProduit(), this.cryptogramme)) {
+			if (offre.getQuantiteT() <= 0.4*this.getQuantiteEnStock(offre.getProduit(), this.cryptogramme)) {
 				if (((ChocolatDeMarque) offre.getProduit()).getChocolat() == Chocolat.C_MQ) {
 					prixT = (prixTChocoBase.get(Chocolat.C_MQ) + this.coutProd + this.coutStockage) * 1.3;
 				} 
@@ -48,7 +53,8 @@ public class Transformateur1VendeurAppelDoffre extends Transformateur1AcheteurBo
 					return null;
 				}
 				
-				this.journalTransactions.ajouter(Color.white, Color.RED, "AO: Je propose " + offre.getQuantiteT() + " tonnes de " + offre.getProduit() + " au cours de " + prixT + " euros par tonne.");
+				this.journalTransactions.ajouter(Color.white, Color.RED, "AO: Je propose " + offre.getQuantiteT() + " tonnes de " + offre.getProduit() + " au prix de " + prixT + " euros par tonne.");
+
 				return new OffreVente(offre, this, offre.getProduit(), prixT);
 			
 		    } else {
