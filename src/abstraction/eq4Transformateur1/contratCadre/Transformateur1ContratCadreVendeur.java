@@ -50,11 +50,11 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 
 		//A MODIFIER 
 		//On cherche à vendre une partie de la quantité de chocolat correspondant à la qtt de fèves entrantes
-		double qttVoulue = 0.;
+		double qttVoulue = 0.1*this.getQuantiteEnStock(contrat.getProduit(), this.cryptogramme) * contrat.getEcheancier().getNbEcheances();
 
 		Chocolat chocoVendu = ((ChocolatDeMarque)contrat.getProduit()).getChocolat();
 
-		if(chocoVendu.getGamme().equals(Gamme.BQ) && chocoVendu.isEquitable())
+		/*if(chocoVendu.getGamme().equals(Gamme.BQ) && chocoVendu.isEquitable())
 				qttVoulue = 0.3 * qttEntrantesFeve.get(Feve.F_BQ_E) * contrat.getEcheancier().getNbEcheances();
 			
 		else if(chocoVendu.getGamme().equals(Gamme.MQ) && !chocoVendu.isEquitable())
@@ -67,10 +67,11 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 				qttVoulue = 0.15 * qttEntrantesFeve.get(Feve.F_HQ_BE) * contrat.getEcheancier().getNbEcheances();
 
 		else
-				System.out.println("Ce chocolat n'est pas sensé être vendu : " + contrat.getProduit());
+				System.out.println("Ce chocolat n'est pas sensé être vendu : " + contrat.getProduit());*/
 		
 
 		double qttEntrant = 0.;
+
 		//A MODIFIER	
 		//On vérifie que l'échéancier renvoyé respecte les règles et que la quantité en stock de produit est au moins le quart de la quantité totale
 		//Il faudrait dans l'idéal modifier cette condition pour prendre en compte la quantité de chocolat sortante et la quantité produite par step
@@ -81,13 +82,15 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 			if (contrat.getProduit().getType() == "ChocolatDeMarque"){
 				produit = ((ChocolatDeMarque)contrat.getProduit());
 
-				if (!this.peutVendre(produit)) return null; //On ne vend pas de ce produit
+				if (!this.peutVendre(produit)) {
+					return null;
+				} //On ne vend pas de ce produit
 
 				Echeancier e = contrat.getEcheancier(); //Récupération de l'échéancier actuel
 
 
 				//Cas d'acceptation : la quantité totale est légale et proche de la quantité que l'on souhaite vendre à 30% près
-				if(e.getNbEcheances()> 20 && e.getQuantiteTotale()> 100. && Math.abs(e.getQuantiteTotale()-qttVoulue)/qttVoulue < 0.3){
+				if(e.getNbEcheances()> 8 && e.getQuantiteTotale()> 100. && Math.abs(e.getQuantiteTotale()-qttVoulue)/qttVoulue< 0.1){
 					return e;
 				}
 
@@ -124,11 +127,11 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 						
 						//Selon la valeur de qttEntrant, on va agir différemment sur le contrat		
 						//si qtt entrant est très négatif, c'est que l'on vend plus de chocolat que l'on ne recoit de fèves, on annule donc le contrat
-						if (qttEntrant < -10.){
+						if (qttEntrant < -100.){
 							return null;
 						}
 						//Sinon, si on a suffisamment de fève qui entrent en stock à chaque step et que la proposition est proche de ce que l'on souhaite, on accepte la proposition sur ce step
-						else if (Math.abs(qttEntrant - e.getQuantite(s))/qttEntrant < 0.15 ){
+						else if (Math.abs(0.2*qttEntrant - e.getQuantite(s))/0.2*qttEntrant < 0.1 ){
 							e.set(s, e.getQuantite(s));
 						}
 						//si la qtt entrante est faible, on vérifie quand meme que celle ci respecte les spécifications sur les CC
@@ -182,15 +185,7 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 					
 
 					/*Renvoie de l'échéancier modifié */
-					qttMin = e.getQuantite(e.getStepDebut()+1);
-					for (int s =e.getStepDebut() ; s<= e.getStepFin() ; s++){
-						if (e.getQuantite(s) >= qttMax){
-							qttMax = e.getQuantite(s);
-						}
-						if (e.getQuantite(s) <= qttMin){
-							qttMin = e.getQuantite(s);
-						}
-					}
+					
 					return e;
 				}
 
@@ -286,15 +281,16 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 		//Si le produit vendu est un chocolat MQ, on négocie de manière à avoir de très grandes marges
 		if (produit.equals(Chocolat.C_MQ) || (produit.getType()=="ChocolatDeMarque" && ((ChocolatDeMarque)produit).getChocolat().equals(Chocolat.C_MQ))){
 			//Si le prix proposé est plus élevé que celui que l'on a calculé, on accepte le contrat
-			if (contrat.getPrix() > prixTChocoBase.get(Chocolat.C_MQ) * marges.get(Chocolat.C_MQ)){
+			if (contrat.getPrix() > (prixTChocoBase.get(Chocolat.C_MQ) + this.coutProd + this.coutStockage)* marges.get(Chocolat.C_MQ)){
 				return contrat.getPrix();
 			}
 			//Si le prix est trop faible, on reste sur le prix minimum auquel on veut vendre
-			if (contrat.getPrix()< prixTChocoBase.get(Chocolat.C_MQ)*marges.get(Chocolat.C_MQ)*0.75){
+			if (contrat.getPrix()< (prixTChocoBase.get(Chocolat.C_MQ) + this.coutProd + this.coutStockage)*marges.get(Chocolat.C_MQ)*0.75){
 				return prixTChocoBase.get(Chocolat.C_MQ)*marges.get(Chocolat.C_MQ)*0.75;
 			}
+
 			//Si le prix du contrat est à un epsilon près de notre prix, on accepte
-			double notrePrix = prixTChocoBase.get(Chocolat.C_MQ)*marges.get(Chocolat.C_MQ);
+			double notrePrix = (prixTChocoBase.get(Chocolat.C_MQ) + this.coutProd + this.coutStockage)*marges.get(Chocolat.C_MQ);
 			double diffRelative = Math.abs(contrat.getPrix()- notrePrix)/notrePrix;
 			if (diffRelative<epsilon){
 				return contrat.getPrix();
@@ -302,8 +298,8 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 			//Sinon on cherche à négocier le prix, vers le bas par dichotomie en notre faveur à 90%
 			else{
 				double nouveauPrix = contrat.getPrix() * 0.1 + notrePrix * 0.9;
-				if (nouveauPrix < prixTChocoBase.get(Chocolat.C_MQ)*marges.get(Chocolat.C_MQ)*0.75){
-					return prixTChocoBase.get(Chocolat.C_MQ)*marges.get(Chocolat.C_MQ)*0.75;
+				if (nouveauPrix < (prixTChocoBase.get(Chocolat.C_MQ) + this.coutProd + this.coutStockage)*marges.get(Chocolat.C_MQ)*0.75){
+					return (prixTChocoBase.get(Chocolat.C_MQ) + this.coutProd + this.coutStockage)*marges.get(Chocolat.C_MQ)*0. + contrat.getPrix()*0.1;
 				}
 				else{
 					notrePrix = nouveauPrix;
@@ -315,15 +311,15 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 		//Si le produit vendu est BQ_E, on cherche a des marges réduites ce qui réduit le champ des négociations
 		if (produit.equals(Chocolat.C_BQ_E) || (produit.getType()=="ChocolatDeMarque" && ((ChocolatDeMarque)produit).getChocolat().equals(Chocolat.C_BQ_E))){
 			//Si le prix proposé est plus élevé que celui que l'on a calculé, on vérifie que le prix n'est pas trop élevé non plus pour maitriser un minimum le prix de vente final
-			if (contrat.getPrix() > prixTChocoBase.get(Chocolat.C_BQ_E) * marges.get(Chocolat.C_BQ_E)){
+			if (contrat.getPrix() > (prixTChocoBase.get(Chocolat.C_BQ_E) +this.coutProd + this.coutStockage)* marges.get(Chocolat.C_BQ_E)){
 				return contrat.getPrix();
 			}
 			//Si le prix est trop faible, on reste sur le prix minimum auquel on veut vendre
-			if (contrat.getPrix()< prixTChocoBase.get(Chocolat.C_BQ_E)*marges.get(Chocolat.C_BQ_E)*0.93){
+			if (contrat.getPrix()< (prixTChocoBase.get(Chocolat.C_BQ_E) +this.coutProd + this.coutStockage)*marges.get(Chocolat.C_BQ_E)*0.93){
 				return prixTChocoBase.get(Chocolat.C_BQ_E)*marges.get(Chocolat.C_BQ_E)*0.93;
 			}
 			//Si le prix du contrat est à un epsilon près de notre prix, on accepte
-			double notrePrix = prixTChocoBase.get(Chocolat.C_BQ_E)*marges.get(Chocolat.C_BQ_E);
+			double notrePrix = (prixTChocoBase.get(Chocolat.C_BQ_E) +this.coutProd + this.coutStockage)*marges.get(Chocolat.C_BQ_E);
 			double diffRelative = Math.abs(contrat.getPrix()- notrePrix)/notrePrix;
 			if (diffRelative<epsilon){
 				return contrat.getPrix();
@@ -331,8 +327,8 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 			//Sinon on cherche à négocier le prix, vers le bas par dichotomie en notre faveur à 90%
 			else{
 				double nouveauPrix = contrat.getPrix() * 0.1 + notrePrix * 0.9;
-				if (nouveauPrix < prixTChocoBase.get(Chocolat.C_BQ_E)*marges.get(Chocolat.C_BQ_E)*0.93){
-					return prixTChocoBase.get(Chocolat.C_BQ_E)*marges.get(Chocolat.C_BQ_E)*0.93;
+				if (nouveauPrix < (prixTChocoBase.get(Chocolat.C_BQ_E) +this.coutProd + this.coutStockage)*marges.get(Chocolat.C_BQ_E)*0.93){
+					return (prixTChocoBase.get(Chocolat.C_BQ_E) +this.coutProd + this.coutStockage)*0.93;
 				}
 				else{
 					notrePrix = nouveauPrix;
@@ -345,15 +341,15 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 		//Idem, si le produit est de moyenne gamme équitable, on veut avoir des marges faibles et controler le prix de vente sans pour autant vendre à perte
 		if (produit.equals(Chocolat.C_MQ_E) || (produit.getType()=="ChocolatDeMarque" && ((ChocolatDeMarque)produit).getChocolat().equals(Chocolat.C_MQ_E))){
 			//Si le prix proposé est plus élevé que celui que l'on a calculé, on accepte le contrat
-			if (contrat.getPrix() > prixTChocoBase.get(Chocolat.C_MQ_E) * marges.get(Chocolat.C_MQ_E)){
+			if (contrat.getPrix() > (prixTChocoBase.get(Chocolat.C_MQ_E) + this.coutProd + this.coutStockage) * marges.get(Chocolat.C_MQ_E)){
 				return contrat.getPrix();
 			}
 			//Si le prix est trop faible, on reste sur le prix minimum auquel on veut vendre
-			if (contrat.getPrix()< prixTChocoBase.get(Chocolat.C_MQ_E)*marges.get(Chocolat.C_MQ_E)*0.93){
-				return prixTChocoBase.get(Chocolat.C_MQ_E)*marges.get(Chocolat.C_MQ_E)*0.93;
+			if (contrat.getPrix()< (prixTChocoBase.get(Chocolat.C_MQ_E) + this.coutProd + this.coutStockage)*marges.get(Chocolat.C_MQ_E)*0.93){
+				return (prixTChocoBase.get(Chocolat.C_MQ_E) + this.coutProd + this.coutStockage)*marges.get(Chocolat.C_MQ_E)*0.93;
 			}
 			//Si le prix du contrat est à un epsilon près de notre prix, on accepte
-			double notrePrix = prixTChocoBase.get(Chocolat.C_MQ_E)*marges.get(Chocolat.C_MQ_E);
+			double notrePrix = (prixTChocoBase.get(Chocolat.C_MQ_E) + this.coutProd + this.coutStockage)*marges.get(Chocolat.C_MQ_E);
 			double diffRelative = Math.abs(contrat.getPrix()- notrePrix)/notrePrix;
 			if (diffRelative<epsilon){
 				return contrat.getPrix();
@@ -361,8 +357,8 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 			//Sinon on cherche à négocier le prix, vers le bas par dichotomie en notre faveur à 90%
 			else{
 				double nouveauPrix = contrat.getPrix() * 0.1 + notrePrix * 0.9;
-				if (nouveauPrix < prixTChocoBase.get(Chocolat.C_MQ_E)*marges.get(Chocolat.C_MQ_E)*0.93){
-					return prixTChocoBase.get(Chocolat.C_MQ_E)*marges.get(Chocolat.C_MQ_E)*0.93;
+				if (nouveauPrix < (prixTChocoBase.get(Chocolat.C_MQ_E) + this.coutProd + this.coutStockage)*marges.get(Chocolat.C_MQ_E)*0.93){
+					return (prixTChocoBase.get(Chocolat.C_MQ_E) + this.coutProd + this.coutStockage)*marges.get(Chocolat.C_MQ_E)*0.93;
 				}
 				else{
 					notrePrix = nouveauPrix;
@@ -374,15 +370,15 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 		//Si le produit vendu est HQ_BE, on peut se permettre de prendre des marges plus grandes car un acheteur de haut de gamme sera peu regardant sur le prix, cherchant principalement à se faire plaisir
 		if (produit.equals(Chocolat.C_HQ_BE) || (produit.getType()=="ChocolatDeMarque" && ((ChocolatDeMarque)produit).getChocolat().equals(Chocolat.C_HQ_BE))){
 			//Si le prix proposé est plus élevé que celui que l'on a calculé, on accepte le contrat
-			if (contrat.getPrix() > prixTChocoBase.get(Chocolat.C_HQ_BE) * marges.get(Chocolat.C_HQ_BE)){
+			if (contrat.getPrix() > (prixTChocoBase.get(Chocolat.C_HQ_BE) + this.coutProd + this.coutStockage) * marges.get(Chocolat.C_HQ_BE)){
 				return contrat.getPrix();
 			}
 			//Si le prix est trop faible, on reste sur le prix minimum auquel on veut vendre
-			if (contrat.getPrix()< prixTChocoBase.get(Chocolat.C_HQ_BE)*marges.get(Chocolat.C_HQ_BE)*0.78){
+			if (contrat.getPrix()< (prixTChocoBase.get(Chocolat.C_HQ_BE) + this.coutProd + this.coutStockage)*marges.get(Chocolat.C_HQ_BE)*0.78){
 				return prixTChocoBase.get(Chocolat.C_HQ_BE)*marges.get(Chocolat.C_HQ_BE)*0.78;
 			}
 			//Si le prix du contrat est à un epsilon près de notre prix, on accepte
-			double notrePrix = prixTChocoBase.get(Chocolat.C_HQ_BE)*marges.get(Chocolat.C_HQ_BE);
+			double notrePrix = (prixTChocoBase.get(Chocolat.C_HQ_BE) + this.coutProd + this.coutStockage)*marges.get(Chocolat.C_HQ_BE);
 			double diffRelative = Math.abs(contrat.getPrix()- notrePrix)/notrePrix;
 			if (diffRelative<epsilon){
 				return contrat.getPrix();
@@ -390,8 +386,8 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 			//Sinon on cherche à négocier le prix, vers le bas par dichotomie en notre faveur à 90%
 			else{
 				double nouveauPrix = contrat.getPrix() * 0.1 + notrePrix * 0.9;
-				if (nouveauPrix < prixTChocoBase.get(Chocolat.C_HQ_BE)*marges.get(Chocolat.C_HQ_BE)*0.78){
-					return prixTChocoBase.get(Chocolat.C_HQ_BE)*marges.get(Chocolat.C_HQ_BE)*0.78;
+				if (nouveauPrix < (prixTChocoBase.get(Chocolat.C_HQ_BE) + this.coutProd + this.coutStockage)*marges.get(Chocolat.C_HQ_BE)*0.78){
+					return (prixTChocoBase.get(Chocolat.C_HQ_BE) + this.coutProd + this.coutStockage)*marges.get(Chocolat.C_HQ_BE)*0.78;
 				}
 				else{
 					notrePrix = nouveauPrix;
