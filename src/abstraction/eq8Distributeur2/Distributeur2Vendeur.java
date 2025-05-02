@@ -7,6 +7,7 @@ package abstraction.eq8Distributeur2;
 import java.util.HashMap;
 
 import abstraction.eqXRomu.filiere.Filiere;
+import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.filiere.IDistributeurChocolatDeMarque;
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
@@ -25,6 +26,8 @@ public class Distributeur2Vendeur extends Distributeur2Acteur implements IDistri
     
     
     protected double capaciteDeVente;
+	
+	protected HashMap<ChocolatDeMarque, Double> prix_min;
 	
 	protected  HashMap<ChocolatDeMarque, Double> ListPrix;
 	protected String[] marques;
@@ -266,13 +269,13 @@ public class Distributeur2Vendeur extends Distributeur2Acteur implements IDistri
 				double prixMaximum;
 				
 				if (cm.getChocolat() == Chocolat.C_MQ_E) {
-					prixMinimum = 9500;
+					prixMinimum = prix_minimum(cm, 9500);
 					prixMaximum = 13000;
 				} else if (cm.getChocolat() == Chocolat.C_HQ_E) {
-					prixMinimum = 20000;
+					prixMinimum = prix_minimum(cm, 20000);
 					prixMaximum = 25000;
 				} else if (cm.getChocolat() == Chocolat.C_HQ_BE) {
-					prixMinimum = 28000;
+					prixMinimum = prix_minimum(cm, 28000);
 					prixMaximum = 35000;
 				} else {
 					prixMinimum = 8000;
@@ -335,5 +338,24 @@ public class Distributeur2Vendeur extends Distributeur2Acteur implements IDistri
 			}
 		}
 	}
+
+	private double prix_minimum(ChocolatDeMarque choco, double min) {
+		double minimum = min;
+		LinkedList<IDistributeurChocolatDeMarque> distributeurs = new LinkedList<>();
+		for (IActeur distributeur : Filiere.LA_FILIERE.getActeurs()) {
+			
+			if (distributeur instanceof IDistributeurChocolatDeMarque && distributeur != this) {
+				distributeurs.add((IDistributeurChocolatDeMarque) distributeur);
+			}
+			IDistributeurChocolatDeMarque distributeurChoco = (IDistributeurChocolatDeMarque) distributeur;
+			double prix = distributeurChoco.prix(choco);
+			if (prix < minimum && prix > 0) {
+				//System.out.println("prix de "+choco+" chez "+distributeurChoco.getNom()+" est de "+prix);
+				minimum = prix;
+			}
+		}
+		return minimum;
+	}
+
 
 }
