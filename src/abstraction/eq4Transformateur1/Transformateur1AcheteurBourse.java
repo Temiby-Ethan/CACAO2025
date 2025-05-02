@@ -36,7 +36,7 @@ public class Transformateur1AcheteurBourse extends Transformateur1ContratCadreVe
 	@Override
 	public void notificationAchat(Feve f, double quantiteEnT, double coursEnEuroParT) {
 
-<
+
 		this.journalTransactions.ajouter(Romu.COLOR_LLGRAY, Color.magenta, "--> B: J'ai achete " + quantiteEnT + " tonnes de " + f + " au cours de " + coursEnEuroParT + " euros par tonne.");
 		this.qttFevesAcheteesBourse.setValeur(this, quantiteEnT);
 
