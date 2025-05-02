@@ -35,7 +35,7 @@ public class Distributeur2Vendeur extends Distributeur2Acteur implements IDistri
 	protected HashMap<String,Double> Coefficient;
 	protected LinkedList<String> equipe;
 	
-	protected HashMap<ChocolatDeMarque,Integer> aVendu;
+	protected HashMap<ChocolatDeMarque,Boolean> aVendu;
 
 
 	public Distributeur2Vendeur() {
@@ -48,7 +48,7 @@ public class Distributeur2Vendeur extends Distributeur2Acteur implements IDistri
 		
 		this.equipe = new LinkedList<String>();
 		
-		this.aVendu = new HashMap<ChocolatDeMarque,Integer>();
+		this.aVendu = new HashMap<ChocolatDeMarque,Boolean>();
 	}
 
 	public void initialiser () {
@@ -64,7 +64,7 @@ public class Distributeur2Vendeur extends Distributeur2Acteur implements IDistri
 		
 		
 		for (ChocolatDeMarque choc : chocolats) {
-			this.aVendu.putIfAbsent(choc, 0);
+			this.aVendu.putIfAbsent(choc, false);
 		}
 	}
 
