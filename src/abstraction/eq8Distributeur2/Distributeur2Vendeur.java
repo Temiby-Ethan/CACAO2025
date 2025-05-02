@@ -35,7 +35,7 @@ public class Distributeur2Vendeur extends Distributeur2Acteur implements IDistri
 	protected HashMap<String,Double> Coefficient;
 	protected LinkedList<String> equipe;
 	
-	protected HashMap<ChocolatDeMarque,Integer> aVendu;
+	protected HashMap<ChocolatDeMarque,Boolean> aVendu;
 
 
 	public Distributeur2Vendeur() {
@@ -48,7 +48,7 @@ public class Distributeur2Vendeur extends Distributeur2Acteur implements IDistri
 		
 		this.equipe = new LinkedList<String>();
 		
-		this.aVendu = new HashMap<ChocolatDeMarque,Integer>();
+		this.aVendu = new HashMap<ChocolatDeMarque,Boolean>();
 	}
 
 	public void initialiser () {
@@ -64,7 +64,7 @@ public class Distributeur2Vendeur extends Distributeur2Acteur implements IDistri
 		
 		
 		for (ChocolatDeMarque choc : chocolats) {
-			this.aVendu.putIfAbsent(choc, 0);
+			this.aVendu.putIfAbsent(choc, false);
 		}
 	}
 
@@ -170,8 +170,9 @@ public void setPrix(ChocolatDeMarque choco) {
 			double nouveauStock = this.getQuantiteEnStock(choco,crypto) - quantite;
 			if (nouveauStock >= 0) {
 				stock_Choco.put(choco, nouveauStock);
-				this.aVendu.replace(choco, 1);
-				journalVente.ajouter(client.getNom()+" a acheté "+String.format("%.2f", quantite)+"kg de "+choco+" pour "+String.format("%.2f", montant)+" d'euros ");
+				this.aVendu.replace(choco, true);
+				journalVente.ajouter(Romu.COLOR_GREEN, Romu.COLOR_LLGRAY, client.getNom()+" a acheté "+String.format("%.2f", quantite)+"kg de "+choco+" pour "+String.format("%.2f", montant)+" d'euros ");
+
 			} else {
 				journalVente.ajouter("ERREUR : Tentative de vendre plus que le stock disponible pour "+choco);
 			}
