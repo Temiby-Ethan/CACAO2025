@@ -344,14 +344,13 @@ public class Distributeur2Vendeur extends Distributeur2Acteur implements IDistri
 		LinkedList<IDistributeurChocolatDeMarque> distributeurs = new LinkedList<>();
 		for (IActeur distributeur : Filiere.LA_FILIERE.getActeurs()) {
 			
+			// Vérification avant le cast
 			if (distributeur instanceof IDistributeurChocolatDeMarque && distributeur != this) {
-				distributeurs.add((IDistributeurChocolatDeMarque) distributeur);
-			}
-			IDistributeurChocolatDeMarque distributeurChoco = (IDistributeurChocolatDeMarque) distributeur;
-			double prix = distributeurChoco.prix(choco);
-			if (prix < minimum && prix > 0) {
-				//System.out.println("prix de "+choco+" chez "+distributeurChoco.getNom()+" est de "+prix);
-				minimum = prix;
+				IDistributeurChocolatDeMarque distributeurChoco = (IDistributeurChocolatDeMarque) distributeur;
+				double prix = distributeurChoco.prix(choco);
+				if (prix < minimum && prix > 0) {
+					minimum = prix;
+				}
 			}
 		}
 		return minimum;
