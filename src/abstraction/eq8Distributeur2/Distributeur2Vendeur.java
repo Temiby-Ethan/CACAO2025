@@ -170,7 +170,7 @@ public class Distributeur2Vendeur extends Distributeur2Acteur implements IDistri
 			if (nouveauStock >= 0) {
 				stock_Choco.put(choco, nouveauStock);
 				this.aVendu.replace(choco, true);
-				journalVente.ajouter(client.getNom()+" a acheté "+String.format("%.2f", quantite)+"kg de "+choco+" pour "+String.format("%.2f", montant)+" d'euros ");
+				journalVente.ajouter(Romu.COLOR_GREEN, Romu.COLOR_LLGRAY, client.getNom()+" a acheté "+String.format("%.2f", quantite)+"kg de "+choco+" pour "+String.format("%.2f", montant)+" d'euros ");
 			} else {
 				journalVente.ajouter("ERREUR : Tentative de vendre plus que le stock disponible pour "+choco);
 			}
