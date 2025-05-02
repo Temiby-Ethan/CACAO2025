@@ -31,14 +31,7 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 	protected List<ExemplaireContratCadre> mesContratEnTantQueVendeur;
 
 	private List<ChocolatDeMarque> chocosProduits; // la liste de toutes les sortes de ChocolatDeMarque que l'acteur produit et peut vendre
-	protected HashMap<Feve, HashMap<Chocolat, Double>> pourcentageTransfo; // pour les differentes feves, le chocolat qu'elles peuvent contribuer a produire avec le ratio qttChocoProduit/qttFevesUtilisée
 
-	//Des tables de hachages pour connaître l'état des chocolats à une période précise
-	protected HashMap<Feve, Double> qttEntrantesFeve;//Contient les quantités entrant dans le stock à la période actuelle
-	protected HashMap<Feve, Double> prixTFeveStockee;//Contient les prix moyens des fèves en stock
-	protected HashMap<Chocolat, Double> prixTChocoBase;//Contient les prix des chocolats produits en s'appuyant sur le prix du stock de fèves
-	protected HashMap<Chocolat, Double> qttSortantesChoco;
-	protected HashMap<Chocolat, Double> marges;
 
 
 	public Transformateur1Stocks() {
@@ -47,6 +40,10 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 		this.chocosProduits = new LinkedList<ChocolatDeMarque>();
 
 		this.coutProdChoco = new HashMap<Chocolat, Double>();
+		this.prixTFeveStockee = new HashMap<Feve, Double>();
+		this.prixTChocoBase = new HashMap<Chocolat, Double>();
+
+		this.marges = new HashMap<Chocolat, Double>();
 
 	}
 
@@ -59,7 +56,7 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 		super.initialiser();
 
 		//Initialisation des prix de nos stocks de fève
-		this.prixTFeveStockee.put(Feve.F_BQ, 2000.);
+		this.prixTFeveStockee.put(Feve.F_MQ, 2000.);
 		this.prixTFeveStockee.put(Feve.F_BQ_E, 2000.);
 		this.prixTFeveStockee.put(Feve.F_MQ_E, 2000.);
 		this.prixTFeveStockee.put(Feve.F_HQ_BE, 2000.);
@@ -73,14 +70,14 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 		this.coutProd = 4000; //A MODIFIER il s'agit du cout de la production d'une tonne de chocolat, valeur arbitraire censée contenir salaires, ingrédients secondaires, et autres couts fixes
 
 		//Initialisation des prix de base des chocolats que l'on veut produire
-		this.prixTChocoBase.put(Chocolat.C_BQ, 2000.);
+		this.prixTChocoBase.put(Chocolat.C_MQ, 2000.);
 		this.prixTChocoBase.put(Chocolat.C_BQ_E, 2000.);
 		this.prixTChocoBase.put(Chocolat.C_HQ_BE, 2000.);
 		this.prixTChocoBase.put(Chocolat.C_MQ_E, 2000.);
 		
 
 		//Initialisation des marges que l'on va faire sur les différents produits
-		this.marges.put(Chocolat.C_BQ, 1.5);
+		this.marges.put(Chocolat.C_MQ, 1.5);
 		this.marges.put(Chocolat.C_BQ_E, 1.16);
 		this.marges.put(Chocolat.C_MQ_E, 1.16);
 		this.marges.put(Chocolat.C_HQ_BE, 1.3);
@@ -95,9 +92,9 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 		conversion = 1.0 + (100.0 - Filiere.LA_FILIERE.getParametre("pourcentage min cacao MQ").getValeur())/100.0;
 		this.pourcentageTransfo.get(Feve.F_MQ_E).put(Chocolat.C_MQ_E, conversion);
 
-		this.pourcentageTransfo.put(Feve.F_BQ, new HashMap<Chocolat, Double>());
+		this.pourcentageTransfo.put(Feve.F_MQ, new HashMap<Chocolat, Double>());
 		conversion = 1.0 + (100.0 - Filiere.LA_FILIERE.getParametre("pourcentage min cacao BQ").getValeur())/100.0;
-		this.pourcentageTransfo.get(Feve.F_BQ).put(Chocolat.C_BQ, conversion);
+		this.pourcentageTransfo.get(Feve.F_MQ).put(Chocolat.C_MQ, conversion);
 
 		this.pourcentageTransfo.put(Feve.F_BQ_E, new HashMap<Chocolat, Double>());
 		this.pourcentageTransfo.get(Feve.F_BQ_E).put(Chocolat.C_BQ_E, conversion);
@@ -116,7 +113,7 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 		this.journalTransactions.ajouter("\n");
 
 		//Initialisation des quantités de fève entrantes
-		this.qttEntrantesFeve.put(Feve.F_BQ, 0.);
+		this.qttEntrantesFeve.put(Feve.F_MQ, 0.);
 		this.qttEntrantesFeve.put(Feve.F_BQ_E, 0.);
 		this.qttEntrantesFeve.put(Feve.F_HQ_BE, 0.);
 		this.qttEntrantesFeve.put(Feve.F_MQ_E, 0.);
@@ -774,7 +771,7 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 	private void pertePeremption(double[] peremptionArray, IProduit p, Color color) {
 		int n = peremptionArray.length - 1;
 		if (peremptionArray[n] > 0) {
-			stocksMarqueVar.get(p).retirer(this, peremptionArray[n], this.cryptogramme);
+			this.retirerDuStock(p, peremptionArray[n], this.cryptogramme);
 			this.journalPeremptionLimdt.ajouter(Color.pink, color, "Péremption: On retire "+peremptionArray[n]+ " tonnes de "+p+" de notre stock");
 		}
 

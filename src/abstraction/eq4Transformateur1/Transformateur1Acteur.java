@@ -119,12 +119,12 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 		this.lesFeves.add(Feve.F_HQ_BE);
 		this.lesFeves.add(Feve.F_MQ_E);
 		this.lesFeves.add(Feve.F_BQ_E);
-		this.lesFeves.add(Feve.F_BQ);
+		this.lesFeves.add(Feve.F_MQ);
 
 
 		//On fixe les type de chocolat que l'on va produire
 		this.lesChocolats = new LinkedList<Chocolat>();
-		this.lesChocolats.add(Chocolat.C_BQ);
+		this.lesChocolats.add(Chocolat.C_MQ);
 		this.lesChocolats.add(Chocolat.C_BQ_E);
 		this.lesChocolats.add(Chocolat.C_MQ_E);
 		this.lesChocolats.add(Chocolat.C_HQ_BE);
@@ -170,13 +170,15 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 
 		this.stocksFevesVar.put(Feve.F_BQ_E, stock_F_BQ_E);
 		initialiserPeremption(peremption_F_BQ_E, stock_F_BQ_E);
+
 		this.stocksFevesVar.put(Feve.F_MQ_E, stock_F_MQ_E);
 		initialiserPeremption(peremption_F_MQ_E, stock_F_MQ_E);
+
 		this.stocksFevesVar.put(Feve.F_HQ_BE, stock_F_HQ_BE);
 		initialiserPeremption(peremption_F_HQ_BE, stock_F_HQ_BE);
 
 		this.stocksChocoVar= new HashMap<Chocolat, Variable>();
-		this.stocksChocoVar.put(Chocolat.C_BQ, stock_C_MQ);
+		this.stocksChocoVar.put(Chocolat.C_MQ, stock_C_MQ);
 		this.stocksChocoVar.put(Chocolat.C_BQ_E, stock_C_BQ_E);
 		this.stocksChocoVar.put(Chocolat.C_MQ_E, stock_C_MQ_E);
 		this.stocksChocoVar.put(Chocolat.C_HQ_BE, stock_C_HQ_BE);
@@ -185,6 +187,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 		this.stocksMarqueVar = new HashMap<ChocolatDeMarque, Variable>();
 
 		this.pourcentageTransfo = new HashMap<Feve, HashMap<Chocolat, Double>>();
+
 		this.repartitionTransfo = new HashMap<Chocolat, Variable>();
 		repartitionTransfo.put(Chocolat.C_MQ, new Variable("pourcentageC_MQ", this, 0, 1, 0.25));
 		repartitionTransfo.put(Chocolat.C_BQ_E, new Variable("pourcentageC_BQ_E", this, 0, 1, 0.25));
@@ -224,6 +227,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 			int pourcentageCacao =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+c.getGamme()).getValeur());
 			ChocolatDeMarque cm= new ChocolatDeMarque(c, "LimDt", pourcentageCacao);
 			this.chocolatsLimDt.add(cm);
+			this.qttSortantesTransactions.put(c, 0.);
 
 		}
 
@@ -487,14 +491,17 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 				} else {
 					return 0.0;
 				}
-			} else {
+			} 
+			else if (p instanceof ChocolatDeMarque){
 				if (this.chocolatsLimDt.contains(p)) {
 					return this.stocksMarqueVar.get(p).getValeur();
 				} else {
 					return 0.0;
 				}
 			}
-		} else {
+			else { return 0.;}
+		} 
+		else {
 			return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
 		}
 	}

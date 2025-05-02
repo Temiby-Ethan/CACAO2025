@@ -73,8 +73,8 @@ public class Transformateur1VendeurAppelDoffre extends Transformateur1AcheteurBo
 			
 			//A MODIFIER
 			//Utiliser des switch case plutot que des if else
-            if (((ChocolatDeMarque) offre.getProduit()).getChocolat() == Chocolat.C_BQ) {
-				prixT = prixTChocoBase.get(Chocolat.C_BQ);
+            if (((ChocolatDeMarque) offre.getProduit()).getChocolat() == Chocolat.C_MQ) {
+				prixT = prixTChocoBase.get(Chocolat.C_MQ);
 			} else if (((ChocolatDeMarque) offre.getProduit()).getChocolat() == Chocolat.C_BQ_E) {
 				prixT = prixTChocoBase.get(Chocolat.C_BQ_E);
 			} else if (((ChocolatDeMarque) offre.getProduit()).getChocolat() == Chocolat.C_MQ_E) {
