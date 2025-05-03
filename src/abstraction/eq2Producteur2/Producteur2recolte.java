@@ -60,7 +60,7 @@ public class Producteur2recolte extends Producteur2Acteur {
             switch (p.getTypeFeve()) {
                 case F_BQ:
                     Prod_BQ += p.prodPlantation();
-                    cout_BQ += p.getcout_amorti();
+                    cout_BQ += p.getcout();
                     break;
                 case F_BQ_E:
                     Prod_BQ_E += p.prodPlantation();
@@ -68,7 +68,7 @@ public class Producteur2recolte extends Producteur2Acteur {
                     break;
                 case F_MQ:
                     Prod_MQ += p.prodPlantation();
-                    cout_MQ += p.getcout_amorti();
+                    cout_MQ += p.getcout();
                     break;
                 case F_MQ_E:
                     Prod_MQ_E += p.prodPlantation();
