@@ -26,7 +26,7 @@ public class Transformateur1AcheteurBourse extends Transformateur1ContratCadreVe
 	public double demande(Feve f, double cours) {
 		if (this.feve.equals(f)) {
 			this.journalTransactions.ajouter(Color.white, Color.magenta,"B: Je demande " + qttFevesAcheteesBourse.getValeur() + " tonnes de " + f + " au cours de " + cours + " euros par tonne.");
-			return 1000;
+			return T;
 
 		} else {
 			return 0.0;

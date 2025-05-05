@@ -67,7 +67,7 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 			this.coutProdChoco.put(c, 0.);
 		}
 
-		this.coutProd = 4000; //A MODIFIER il s'agit du cout de la production d'une tonne de chocolat, valeur arbitraire censée contenir salaires, ingrédients secondaires, et autres couts fixes
+		this.coutProd = 0; //il s'agit du cout de la production d'une tonne de chocolat, valeur arbitraire censée contenir salaires, ingrédients secondaires, et autres couts fixes
 
 		//Initialisation des prix de base des chocolats que l'on veut produire
 		this.prixTChocoBase.put(Chocolat.C_MQ, 2000.);
@@ -150,16 +150,16 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 					//On calcule la quantité de fèves à transformer
 					transfo = Math.min(this.getQuantiteEnStock(f, this.cryptogramme), this.prodMax.getValeur() * this.repartitionTransfo.get(c).getValeur() / this.pourcentageTransfo.get(f).get(c));
 
+					if (transfo == this.getQuantiteEnStock(f, this.cryptogramme)) {
+						this.journal.ajouter(Color.pink, Color.red, "-> Aïe... On transforme tout notre stock de fèves "+f+" car on n'en achète pas assez");
+					}
+
 					//On s'assure que l'on produit quelque chose pour faire nos opérations
 					if (transfo > 0.) {
-
-
 
 						double pourcentageMarque = 1.0;  //Modifiable
 						// La Pourcentage ainsi definie sera stockee sous forme de marquee, la quantité restante sera alors stockee comme non marquee
 
-	
-						
 						//A MODIFIER
 						int pourcentageCacao =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+c.getGamme()).getValeur());
 						ChocolatDeMarque cm= new ChocolatDeMarque(c, "LimDt", pourcentageCacao);
@@ -169,6 +169,8 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 
 						//calcul du cout de production unitaire du chocolat produit durant cette step
 						this.coutProdChoco.put(c, totalCoutsUsineStep/(4*nouveauStock));
+						this.journalCouts.ajouter("** Le cout unitaire de "+c+" est "+ this.coutProdChoco.get(c));
+						this.coutProd += this.coutProdChoco.get(c)/4;
 
 						//Détermination du prix de base des chocolats à la tonne en pondérant avec les coûts de la période précédente
 						if(prixTChocoBase.containsKey(c) && nouveauStock > 0 ){
@@ -204,6 +206,8 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 				}
 			}
 		}
+        this.journalCouts.ajouter("Le cout unitaire moyen est "+coutProd);
+		this.journalCouts.ajouter("\n");
 	}
 
 
@@ -237,13 +241,8 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 				}
 			}
 		}
-
-
 		//Quantité entrante de fèves par achat en bourse
 		qttEntrantesFeve.put(Feve.F_BQ, 80.);
-
-
-
 	}
 
 
@@ -403,7 +402,7 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 		this.journalTransactions.ajouter(Color.yellow, Romu.COLOR_LBLUE, "N° Etape " + Filiere.LA_FILIERE.getEtape());
 
 		this.journalPeremptionLimdt.ajouter("\n");
-		this.journalPeremptionFeves.ajouter(Color.yellow, Romu.COLOR_LBLUE, "N° Etape " + Filiere.LA_FILIERE.getEtape());
+		this.journalPeremptionFeves.ajouter("\n");
 
 	
 
@@ -451,20 +450,20 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 			switch (cm.getChocolat()){
 
 				case C_MQ : 
-				    pertePeremption(peremption_C_MQ_Limdt, cm, Color.black);
+				    pertePeremption(peremption_C_MQ_Limdt, cm, Color.black, journalPeremptionLimdt);
 
 					break;
 
 				case C_BQ_E : 
-				    pertePeremption(peremption_C_BQ_E_Limdt, cm, Romu.COLOR_GREEN);
+				    pertePeremption(peremption_C_BQ_E_Limdt, cm, Romu.COLOR_GREEN, journalPeremptionLimdt);
 					break;
 
 				case C_MQ_E : 
-				    pertePeremption(peremption_C_MQ_E_Limdt, cm, Color.blue);
+				    pertePeremption(peremption_C_MQ_E_Limdt, cm, Color.blue, journalPeremptionLimdt);
 					break;
 
 				case C_HQ_BE :
-				    pertePeremption(peremption_C_HQ_BE_Limdt, cm, Color.red);
+				    pertePeremption(peremption_C_HQ_BE_Limdt, cm, Color.red, journalPeremptionLimdt);
 					break;
 
 				default : 
@@ -478,19 +477,19 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 			switch (f){
 
 				case F_MQ : 
-				    pertePeremption(peremption_F_MQ, f, Color.black);
+				    pertePeremption(peremption_F_MQ, f, Color.black, journalPeremptionFeves);
 					break;
 
 				case F_BQ_E : 
-				    pertePeremption(peremption_F_BQ_E, f, Romu.COLOR_GREEN);
+				    pertePeremption(peremption_F_BQ_E, f, Romu.COLOR_GREEN, journalPeremptionFeves);
 					break;
 
 				case F_MQ_E : 
-				    pertePeremption(peremption_F_MQ_E, f, Color.blue);
+				    pertePeremption(peremption_F_MQ_E, f, Color.blue, journalPeremptionFeves);
 					break;
 
 				case F_HQ_BE :
-				    pertePeremption(peremption_F_HQ_BE, f, Color.red);
+				    pertePeremption(peremption_F_HQ_BE, f, Color.red, journalPeremptionFeves);
 					break;
 
 				default : 
@@ -768,11 +767,11 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 	 * @author YAOU Reda 
 	 * Cette méthode nous fait perdre du stock lorsque le produit est périmé
 	 */
-	private void pertePeremption(double[] peremptionArray, IProduit p, Color color) {
+	private void pertePeremption(double[] peremptionArray, IProduit p, Color color, Journal journalPer) {
 		int n = peremptionArray.length - 1;
 		if (peremptionArray[n] > 0) {
 			this.retirerDuStock(p, peremptionArray[n], this.cryptogramme);
-			this.journalPeremptionLimdt.ajouter(Color.pink, color, "Péremption: On retire "+peremptionArray[n]+ " tonnes de "+p+" de notre stock");
+			journalPer.ajouter(Color.pink, color, "Péremption: On retire "+peremptionArray[n]+ " tonnes de "+p+" de notre stock");
 		}
 
 		for (int i=n; i>=1; i--) {

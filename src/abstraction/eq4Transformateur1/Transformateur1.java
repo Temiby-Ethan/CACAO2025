@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
@@ -43,5 +42,8 @@ public class Transformateur1 extends Transformateur1AcheteurAppelDOffre {
             this.repartitionTransfo.get(secondSmallestKey).setValeur(this, repartitionTransfo.get(secondSmallestKey).getValeur() + 0.05);
             this.repartitionTransfo.get(secondLargestKey).setValeur(this, repartitionTransfo.get(secondLargestKey).getValeur() - 0.05);
         } 
+
+        //on réinitialise cout prod
+        this.coutProd = 0;
     }
 }
