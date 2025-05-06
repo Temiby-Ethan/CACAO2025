@@ -208,6 +208,53 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
         total += stockFeveHQ_B.get(0).getValeur(cryptogramme);
         return total;
     }
+
+
+    double getPerimeParticulier(Feve feve){
+        if(feve.getGamme().equals(Gamme.BQ)){
+            if(feve.isEquitable()){
+                return stockFeveBQ_E.get(stockFeveBQ_E.size()-1).getValeur(cryptogramme);
+            }else{
+                return stockFeveBQ.get(stockFeveBQ_E.size()-1).getValeur(cryptogramme);
+            }
+        }
+        else if(feve.getGamme().equals(Gamme.MQ)){
+            if(feve.isEquitable()){
+                return stockFeveMQ_E.get(stockFeveBQ_E.size()-1).getValeur(cryptogramme);
+            }else{
+                return stockFeveMQ.get(stockFeveBQ_E.size()-1).getValeur(cryptogramme);
+            }
+        }else{
+            if (feve.isBio()){
+                return stockFeveHQ_B.get(stockFeveBQ_E.size()-1).getValeur(cryptogramme);
+            }else{
+                return stockFeveHQ.get(stockFeveBQ_E.size()-1).getValeur(cryptogramme);
+            }
+        }
+    }
+
+    double getDerniere2periodeParticulier(Feve feve){
+        if(feve.getGamme().equals(Gamme.BQ)){
+            if(feve.isEquitable()){
+                return getPerimeParticulier(feve) + stockFeveBQ_E.get(stockFeveBQ_E.size()-2).getValeur(cryptogramme);
+            }else{
+                return getPerimeParticulier(feve) + stockFeveBQ.get(stockFeveBQ_E.size()-2).getValeur(cryptogramme);
+            }
+        }
+        else if(feve.getGamme().equals(Gamme.MQ)){
+            if(feve.isEquitable()){
+                return getPerimeParticulier(feve) + stockFeveMQ_E.get(stockFeveBQ_E.size()-2).getValeur(cryptogramme);
+            }else{
+                return getPerimeParticulier(feve) + stockFeveMQ.get(stockFeveBQ_E.size()-2).getValeur(cryptogramme);
+            }
+        }else{
+            if (feve.isBio()){
+                return getPerimeParticulier(feve) + stockFeveHQ_B.get(stockFeveBQ_E.size()-2).getValeur(cryptogramme);
+            }else{
+                return getPerimeParticulier(feve) + stockFeveHQ.get(stockFeveBQ_E.size()-2).getValeur(cryptogramme);
+            }
+        }
+    }
     void vieillirStock(){
         for (int i = 6; i >= 0; i--) { 
             stockFeveBQ.get(i+1).setValeur(this, stockFeveBQ.get(i).getValeur(cryptogramme), cryptogramme);
@@ -227,6 +274,7 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
     
     
 // Alice
+
     public void ajouterStockBQ(Feve feve,double delta){
         stockFeveBQ.get(0).ajouter(this,delta,cryptogramme);
         journal.ajouter("Ajout de " + delta + " au stock de " + feve + ". Nouveau stock : " + stockFeveBQ.get(0).getValeur(cryptogramme));
@@ -257,6 +305,18 @@ public class Producteur3Stock extends Producteur3GestionTerrains {
         journal.ajouter("Ajout de " + delta + " au stock de " + feve + ". Nouveau stock : " + stockFeveHQ_B.get(0).getValeur(cryptogramme));
         calculTotalStock();
     }
+
+    public void ajouterStockBQFin(Feve feve,double delta){
+        stockFeveBQ.get(stockFeveBQ.size()-1).ajouter(this,delta,cryptogramme);
+        journal.ajouter("Ajout de " + delta + " au stock de " + feve + "en fin de vie.");
+        calculTotalStock();
+    }
+    public void ajouterStockMQFin(Feve feve,double delta){
+        stockFeveMQ.get(stockFeveBQ.size()-1).ajouter(this,delta,cryptogramme);
+        journal.ajouter("Ajout de " + delta + " au stock de " + feve + "en fin de vie.");
+        calculTotalStock();
+    }
+
 
     public void retirerStockBQ(Feve feve,double delta){
         double qte = delta;

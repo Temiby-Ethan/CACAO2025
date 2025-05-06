@@ -26,10 +26,102 @@ public class Producteur3Vente extends Producteur3GestionDesCoûts implements IVe
 
     // VENTE EN BOURSE //
 
-    
+    public void degraderfeve(Feve feve) {
+        int contrat_en_cours = 0;
+        for (ExemplaireContratCadre c : this.mesContratCadres){
+            if (c.getProduit().equals((IProduit)feve)){
+                contrat_en_cours++;
+            }
+        }
+        if (contrat_en_cours == 0){
+            double stock = calculTotalStockParticulier(feve);
+            if (feve.getGamme().equals(Gamme.HQ)){
+                if (feve.isBio()){
+                    retirerStockHQ_B(feve, 0.25*stock);
+                    ajouterStockMQFin(feve, 0.25*stock);
+                }else{
+                    retirerStockHQ(feve, getPerimeParticulier(feve));
+                    ajouterStockMQFin(feve, getPerimeParticulier(feve));
+                }
+            }else if (feve.getGamme().equals(Gamme.MQ)){
+                if (feve.isEquitable()){
+                    retirerStockMQ_E(feve, 0.25*stock);
+                    ajouterStockMQFin(feve, 0.25*stock);
+                }
+            }else{
+                if (feve.isEquitable()){
+                    retirerStockBQ_E(feve, 0.25*stock);
+                    ajouterStockBQFin(feve, 0.25*stock);
+                }
+            }
+        }else{
+            int a_livrer = 0;
+                for (ExemplaireContratCadre c : this.mesContratCadres){
+                    if (c.getProduit().equals((IProduit)feve)){
+                        a_livrer += c.getQuantiteRestantALivrer();
+                    }
+                }
+            double va_Perime = getPerimeParticulier(feve);
+            if (va_Perime > a_livrer){
+                double surplus = va_Perime - a_livrer;
+                if (feve.getGamme().equals(Gamme.HQ)){
+                    if (feve.isBio()){
+                        retirerStockHQ_B(feve, surplus);
+                        ajouterStockMQ(feve, surplus);
+                    }else{
+                        retirerStockHQ(feve, surplus);
+                        ajouterStockMQ(feve, surplus);
+                    }
+                }else if (feve.getGamme().equals(Gamme.MQ)){
+                    if (feve.isEquitable()){
+                        retirerStockMQ_E(feve, surplus);
+                        ajouterStockMQ(feve, surplus);
+                    }
+                }else{
+                    if (feve.isEquitable()){
+                        retirerStockBQ_E(feve, surplus);
+                        ajouterStockBQ(feve, surplus);
+                    }
+                }
+            }
+        }
+                
+        
+    }
+
     @Override
     public double offre(Feve feve, double cours) {
-       double stock = calculTotalStockParticulier(feve);
+        /* 
+        int contrat_en_cours = 0;
+        for (ExemplaireContratCadre c : this.mesContratCadres){
+            if (c.getProduit().equals((IProduit)feve)){
+                contrat_en_cours++;
+            }
+        }
+        if (contrat_en_cours == 0){
+            return getDerniere2periodeParticulier(feve);
+        */
+
+        if (feve.getGamme().equals(Gamme.MQ)){
+            return calculTotalStockMQ();
+        }
+        else{
+            int a_livrer = 0;
+            for (ExemplaireContratCadre c : this.mesContratCadres){
+                if (c.getProduit().equals((IProduit)feve)){
+                    a_livrer += c.getQuantiteRestantALivrer();
+                }
+            }
+            double va_Perime = getPerimeParticulier(feve);
+            if (va_Perime > a_livrer){
+                return va_Perime - a_livrer;
+            }else{
+                return 0.0;
+            }
+        }
+    }
+        /* 
+        double stock = calculTotalStockParticulier(feve);
         if (stock > 0){
             BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
             double pourcentage = (bourse.getCours(feve).getValeur()-bourse.getCours(feve).getMin())/(bourse.getCours(feve).getMax()-bourse.getCours(feve).getMin());
@@ -37,9 +129,9 @@ public class Producteur3Vente extends Producteur3GestionDesCoûts implements IVe
 
         }else{
             return 0.0;
-        }
+        }*/
        
-    }
+    
 
     @Override
     public double notificationVente(Feve f, double coursEnEuroParT, double quantiteEnT) {
