@@ -94,7 +94,8 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 			echeancierActuel = listeEcheancier.get(listeEcheancier.size()-1);
 		}
 		for (int step = echeancierActuel.getStepDebut(); step<=echeancierActuel.getStepFin() ; step++){
-			for (int i = 0; i< step; i++){
+			
+			for (int i = 0; i <= step; i++){
 				valeurtotale += echeancierActuel.getQuantite(i);
 			}
 
