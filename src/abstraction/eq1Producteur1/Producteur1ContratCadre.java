@@ -41,29 +41,30 @@ public class Producteur1ContratCadre extends Producteur1Acteur implements IVende
         double masseTotale = echeancierPropose.getQuantiteTotale();
         int duree = echeancierPropose.getStepFin() - echeancierPropose.getStepDebut() + 1;
 
-        if (masseTotale < 100 || duree < 8) {
-            journal.ajouter("Refus de l'échéancier : ne respecte pas les conditions minimales (masse ou durée).");
+        if (masseTotale < 100 || duree < 1) {
+            journal.ajouter("Refus de l'échéancier : masse totale < 100T ou durée < 1");
             return null;
         }
 
         double quantiteMinParStep = masseTotale / (10.0 * duree);
 
         if (masseTotale > quantiteMax) {
-            // Répartir au mieux les quantités sans descendre sous le minimum par step
             double nouvelleMasse = quantiteMax;
             double quantiteParStep = Math.max(nouvelleMasse / duree, quantiteMinParStep);
 
-            // Adapter la nouvelle masse à cette quantité par step
-            Echeancier contreProp = new Echeancier(echeancierPropose.getStepDebut(),duree,quantiteParStep);
-            for (int i = 0; i < duree; i++) {
-                contreProp.ajouter(quantiteParStep);
+            try {
+                Echeancier contreProp = new Echeancier(echeancierPropose.getStepDebut(), duree, quantiteParStep);
+                for (int i = 1; i < duree; i++) {
+                    contreProp.ajouter(quantiteParStep);
+                }
+                journal.ajouter("Contre-proposition envoyée : " + contreProp);
+                return contreProp;
+            } catch (IllegalArgumentException e) {
+                journal.ajouter("Erreur à la création de l’échéancier : " + e.getMessage());
+                return null;
             }
-
-            journal.ajouter("Contre-proposition envoyée : " + contreProp);
-            return contreProp;
         }
 
-        // Masse acceptable, mais vérifier si l’échéancier respecte les minimums
         for (int step = echeancierPropose.getStepDebut(); step <= echeancierPropose.getStepFin(); step++) {
             if (echeancierPropose.getQuantite(step) < quantiteMinParStep) {
                 journal.ajouter("Refus : quantité trop faible à l'étape " + step);
@@ -102,10 +103,23 @@ public class Producteur1ContratCadre extends Producteur1Acteur implements IVende
 
     @Override
     public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
-        double quantiteLivree = Math.min(quantite, stock.getStock((Feve) produit));
-        stock.retirer(produit, quantiteLivree);
-        journal.ajouter("Livraison de " + quantiteLivree + " de " + produit + " pour le contrat " + contrat);
-        return quantiteLivree;
+        double quantiteEnStock = stock.getStock((Feve) produit);
+        double quantiteLivree = Math.min(quantite, quantiteEnStock);
+
+        if (quantiteLivree <= 0) {
+            journal.ajouter("Échec de livraison : stock vide pour " + produit);
+            return 0.0;
+        }
+
+        boolean retraitOk = stock.retirer(produit, quantiteLivree);
+
+        if (retraitOk) {
+            journal.ajouter("Livraison de " + quantiteLivree + " de " + produit + " pour le contrat " + contrat);
+            return quantiteLivree;
+        } else {
+            journal.ajouter("Erreur de retrait lors de la livraison de " + produit);
+            return 0.0;
+        }
     }
 
     @Override
@@ -114,4 +128,4 @@ public class Producteur1ContratCadre extends Producteur1Acteur implements IVende
         res.add(journal);
         return res;
     }
-}
+} 
