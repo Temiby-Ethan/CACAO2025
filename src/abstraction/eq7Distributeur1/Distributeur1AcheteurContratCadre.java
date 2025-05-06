@@ -82,6 +82,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat){
 		List<Echeancier> listeEcheancier = contrat.getEcheanciers();
 		int tour = 0;
+		double valeurtotale = 0;
 		ChocolatDeMarque chocolat = (ChocolatDeMarque) contrat.getProduit();
 		Echeancier echeancierActuel;
 		if (listeEcheancier.isEmpty()){
@@ -93,18 +94,22 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 			echeancierActuel = listeEcheancier.get(listeEcheancier.size()-1);
 		}
 		for (int step = echeancierActuel.getStepDebut(); step<=echeancierActuel.getStepFin() ; step++){
+			for (int i = 0; i< step; i++){
+				valeurtotale += echeancierActuel.getQuantite(i);
+			}
+
 			double quantiteDemandee = echeancierActuel.getQuantite(step);
 			double quantiteVoulue = requiredQuantities.get(cdmToInt(chocolat))/predictionsVentesPourcentage.get(echeancierActuel.getStepDebut()%24)*predictionsVentesPourcentage.get(step%24);
 			if (quantiteDemandee > quantiteVoulue*(1+0.1*tour)){
-				echeancierActuel.set(step, Math.max(100,quantiteVoulue*(1+0.1*tour)));
+				echeancierActuel.set(step, Math.max(Math.max(100,quantiteVoulue*(1+0.1*tour)), valeurtotale/(10*step)));
 			}
 			if (quantiteDemandee < quantiteVoulue*(1-0.1*tour)){
-				echeancierActuel.set(step, Math.max(100,quantiteVoulue*(1-0.1*tour)));
-			
+				echeancierActuel.set(step, Math.max(Math.max(100,quantiteVoulue*(1-0.1*tour)), valeurtotale/(10*step)));
 			}
 			if (quantiteDemandee < 100){
-				echeancierActuel.set(step, 100);
+				echeancierActuel.set(step, Math.max(100,valeurtotale/(10*step)));
 			}
+			valeurtotale = 0;
 		}
 		return(echeancierActuel);
 	}
