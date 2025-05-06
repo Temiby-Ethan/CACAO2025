@@ -55,8 +55,7 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
             //on remet alors à jour capacite_vente_max
             capacite_vente_max.replace(choco,capacite_vente_max.get(choco)-a);
         }
-
-        //on crée un contrat cadre
+        //on crée un nouveau nom plus simple pour le superviseur de contrats cadres
         SuperviseurVentesContratCadre supCCadre = (SuperviseurVentesContratCadre) Filiere.LA_FILIERE.getActeur("Sup.CCadre");
         //on parcourt tous les types de chocolat
         for(IProduit choco : super.lesChocolats){
