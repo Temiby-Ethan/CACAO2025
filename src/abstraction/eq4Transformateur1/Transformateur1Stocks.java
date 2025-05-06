@@ -169,10 +169,12 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
         this.journalCouts.ajouter("Le cout unitaire moyen est "+coutProd);
 		this.journalCouts.ajouter("\n");
 
-		if (transfo >0) {
-			for (Feve  f : lesFeves) {
-				for (Chocolat c : lesChocolats) {
-
+		
+		for (Feve  f : lesFeves) {
+			for (Chocolat c : lesChocolats) {
+				if (this.getQuantiteEnStock(f, this.cryptogramme) > 0. && this.pourcentageTransfo.get(f).get(c) != null) {
+					transfo = Math.min(this.getQuantiteEnStock(f, this.cryptogramme), this.prodMax.getValeur() * this.repartitionTransfo.get(c).getValeur() / this.pourcentageTransfo.get(f).get(c));
+					if (transfo > 0.) {
 					    double pourcentageMarque = 1.0;  //Modifiable
 						// La Pourcentage ainsi definie sera stockee sous forme de marquee, la quantité restante sera alors stockee comme non marquee
 
@@ -207,6 +209,7 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 								this.prix_Limdt_HQ_BE.setValeur(this, nouveauPrix);
 							}
 						}
+					}
 				}
 			}
 		}
