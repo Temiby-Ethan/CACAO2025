@@ -215,10 +215,9 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 		}
 	}
 
-
-
 	/**
 	 * @author MURY Julien
+	 * @author YAOU Reda
 	 * Une méthode qui permet de déterminer la quantitié de fèves entrant dans le stock à la période actuelle selon les contrats négociés et achats en bourse
 	 * Les résultats sont stockés dans la HashMap qttEntrantes
 	 * @param None
@@ -226,50 +225,94 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 	 */
 	public void determinerQttEntrantFeves(){
 
+		//Réinitialisation des qttEntrantes
+		for(Feve f : this.lesFeves){
+			this.qttEntrantesFeve.put(f, 0.);
+		}
+
 		//Quantité entrante de fèves f par contrat cadre
 		for (Feve f : pourcentageTransfo.keySet()){
 			for (ExemplaireContratCadre cc : mesContratEnTantQuAcheteur){
 				if (cc.getProduit() == f){
 					if (this.qttEntrantesFeve.containsKey(f)){
-						this.qttEntrantesFeve.put(f, cc.getPrix()+qttEntrantesFeve.get(f));
+						this.qttEntrantesFeve.put(f, cc.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape()) +qttEntrantesFeve.get(f));
 					}
 					else {
-						this.qttEntrantesFeve.put(f, cc.getPrix());
+						this.qttEntrantesFeve.put(f, cc.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape()));
 					}
 				}
 			}
 		}
+
+
 		//Quantité entrante de fèves par achat en bourse
-		qttEntrantesFeve.put(Feve.F_MQ, qttFevesAcheteesBourse.getValeur());
+		if (qttEntrantesFeve.containsKey(Feve.F_MQ)){
+			double ancienneValeur = this.qttEntrantesFeve.get(Feve.F_MQ);
+			this.qttEntrantesFeve.put(Feve.F_MQ, ancienneValeur + qttFevesAcheteesBourse.getValeur());
+		} else {
+			this.qttEntrantesFeve.put(Feve.F_MQ, qttFevesAcheteesBourse.getValeur());
+		}
 	}
 
+	/**
+	 * @author MURY Julien
+	 * Cette méthode retourne la quantité entrante de fève f à un step donné
+	 * @param step
+	 * @param f
+	 * @return quantité de fève f qui entre dans nos stocks
+	 */
+	public double determinerQttEntrantFevesAuStep(int step, Feve f){
 
+		double qttEntrante = 0.;
 
+		//Quantité entrante de fèves f par contrat cadre
+		for (ExemplaireContratCadre cc : mesContratEnTantQuAcheteur){
+			if (cc.getProduit() == f){
+				qttEntrante+= cc.getEcheancier().getQuantite(step);
+			}
+		}
+	
+		//Quantité entrante de fèves par achat en bourse (On approxime par le fait que la quantité de feve achetée en bourse est constante pour les autres step)
+		qttEntrante += qttFevesAcheteesBourse.getValeur();
 
-/**
- * @author MURY Julien
- */
+		return qttEntrante;
+	}
+
+   /**
+    * @author MURY Julien
+	* @author YAOU Reda
+    */
 	public void determinerQttSortantChoco(){
+
+		//Réinitialisation des qttSortantes
+		for (Chocolat c : lesChocolats){
+			this.qttSortantesChoco.put(c, 0.);
+		}
+
 		//Qtt sortante par contrat cadre
 		for (Chocolat c : lesChocolats){
 			for (ExemplaireContratCadre cc : mesContratEnTantQueVendeur){
 				if (cc.getProduit().equals(c) || ((ChocolatDeMarque)cc.getProduit()).getChocolat().equals(c)){
 					if (this.qttSortantesChoco.containsKey(c)){
-						this.qttSortantesChoco.put(c, cc.getPrix()+qttSortantesChoco.get(c));
+						this.qttSortantesChoco.put(c, cc.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape())+qttSortantesChoco.get(c));
 					}
 					else {
-						this.qttSortantesChoco.put(c, cc.getPrix());
+						this.qttSortantesChoco.put(c, cc.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape()));
 					}
 				}
 			}
 		}
 
-		//Quantité sortante par enchère
-		
-
-		//Quantité sortante par appel d'offre
+		//Qtt sortante par vente en transaction (enchéres + AO)
+		for (Chocolat c : lesChocolats){
+			if (this.qttSortantesChoco.containsKey(c)){
+				this.qttSortantesChoco.put(c, this.qttSortantesTransactions.get(c) +this.qttSortantesChoco.get(c));
+			}
+			else {
+				this.qttSortantesChoco.put(c, this.qttSortantesTransactions.get(c));
+			}
+		}
 	}
-
 
 	/**
 	 * @author MURY Julien
@@ -289,7 +332,6 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 		
 		return qttSortant;
 	}
-
 
 
 	/**
@@ -318,9 +360,8 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 			//On calcule le prix pour les ajouts par bourse
 			if (f == Feve.F_MQ){
 				BourseCacao bourse = (BourseCacao) Filiere.LA_FILIERE.getActeur("BourseCacao");	
-				if (qttEntrantesFeve.get(f) != 0.) prix += bourse.getCours(f).getValeur() * (80. / qttEntrantesFeve.get(f));
+				if (qttEntrantesFeve.get(f) != 0.) prix += bourse.getCours(f).getValeur() * (this.qttFevesAcheteesBourse.getValeur() / qttEntrantesFeve.get(f));
 			}
-
 
 			//Calcul du nouveau prix des fèves en stock
 			double ancienPrixPondere = 0.;
@@ -333,43 +374,10 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 				else {
 					ancienPrixPondere = 0.;
 				}
-
 				prixTFeveStockee.put(f, ancienPrixPondere + prix*(qttEntrantesFeve.get(f)/(qttEntrantesFeve.get(f)+getQuantiteEnStock(f, this.cryptogramme))));
 			}
-			
 		}
 	}
-
-
-
-		/**
-	 * @author MURY Julien
-	 * Cette méthode retourne la quantité entrante de fève f à un step donné
-	 * @param step
-	 * @param f
-	 * @return quantité de fève f qui entre dans nos stocks
-	 */
-	public double determinerQttEntrantFevesAuStep(int step, Feve f){
-
-		double qttEntrante = 0.;
-
-		//Quantité entrante de fèves f par contrat cadre
-		for (ExemplaireContratCadre cc : mesContratEnTantQuAcheteur){
-			if (cc.getProduit() == f){
-				qttEntrante+= cc.getEcheancier().getQuantite(step);
-			}
-		}
-	
-		//Quantité entrante de fèves par achat en bourse (On approxime par le fait que la quantité de feve achetée en bourse est constante pour les autres step)
-		qttEntrante += qttFevesAcheteesBourse.getValeur();
-
-		return qttEntrante;
-	}
-
-
-
-
-
 
 
 	////////////////////////////////////////////////////////
