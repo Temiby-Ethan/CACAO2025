@@ -15,6 +15,7 @@ import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.appelDOffre.IAcheteurAO;
 import abstraction.eqXRomu.clients.ClientFinal;
+
 import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.IAcheteurContratCadre;
 import abstraction.eqXRomu.contratsCadres.IVendeurContratCadre;
@@ -60,20 +61,28 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 	@Override
 	public void initialiser() // par Alexiho
 	{
-		this.chocolats= Filiere.LA_FILIERE.getChocolatsProduits();
+		this.chocolats = Filiere.LA_FILIERE.getChocolatsProduits();
 
-		for (int i=0; i<this.chocolats.size(); i++) {
-			this.stocksChocolats.put(chocolats.get(i), new Variable("Stock"+chocolats.get(i).getNom(), this, 0.0));
-			successedSell.add(0);
-			priceProduct.add(1000.0);
-			requiredQuantities.add(0.0);
-			this.prix.add(10.0);
-			this.capaciteDeVente.add(0.0);}
+    // Initialize stocksChocolats map and other lists
+    for (int i = 0; i < this.chocolats.size(); i++) {
+        ChocolatDeMarque chocolat = chocolats.get(i);
 
-		for (int i = 0; i < this.chocolats.size(); i++) {
-			this.stocksChocolats.put(chocolats.get(i), new Variable(this.getNom()+"Stock"+chocolats.get(i).getNom(), this, 0.0));
-			this.capaciteDeVente.set(i, stocksChocolats.get(chocolats.get(i)).getValeur()/1.1);
-		}
+        // Initialize stocksChocolats with a default stock value
+        this.stocksChocolats.put(chocolat, new Variable(this.getNom() + "Stock" + chocolat.getNom(), this, 1000.0));
+
+        // Initialize other lists
+        this.prix.add(10.0); // Default price
+        this.capaciteDeVente.add(900.0); // Default sales capacity
+        this.successedSell.add(0); // Default successful sales count
+        this.priceProduct.add(1000.0); // Default product price
+        this.requiredQuantities.add(1000.0); // Default required quantity
+    }
+
+    // Update sales capacity based on stock values
+    for (int i = 0; i < this.chocolats.size(); i++) {
+        ChocolatDeMarque chocolat = chocolats.get(i);
+        this.capaciteDeVente.set(i, this.stocksChocolats.get(chocolat).getValeur());
+    }
 	}
 
 	@Override
@@ -84,7 +93,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 			return 99999999.0;
 		} else {
 			//return prix.get(pos);
-			double price = 5*this.priceProduct.get(pos) ;
+			double price = 3*this.priceProduct.get(pos) + 0.5*(this.stocksChocolats.get(choco).getValeur()/1000) + 0.5*(this.successedSell.get(pos)/1000) + 0.5*(this.capaciteDeVente.get(pos)/1000);
 			return price;
 		}
 	}
@@ -95,15 +104,18 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 		//List<Double> requiredQuantities = new ArrayList<>();
 		//Distributeur1Stock acteurStock = new Distributeur1Stock();
 		int step = Filiere.LA_FILIERE.getEtape(); // Récupération du numéro de l'étape
-		for (int i=0; i<chocolats.size(); i++){
-			requiredQuantities.set(i, this.VolumetoBuy(chocolats.get(i),this.cryptogramme)*0.95);
+		for (int i=0; i< this.chocolats.size(); i++){
+			if (this.stocksChocolats.get(chocolats.get(i)).getValeur() < 27000) {
+			requiredQuantities.set(i, this.VolumetoBuy(chocolats.get(i), this.cryptogramme)*1.6);
+		} else {
+			requiredQuantities.set(i, 0.0);
 		}
+	}
 		
 		if (step%8==0){
-			//IAcheteurContratCadre acheteurContratCadre = new Distributeur1AcheteurContratCadre();
 			this.next_cc();
 			for (int i = 0 ; i<chocolats.size() ; i++){
-				requiredQuantities.set(i, Math.max(requiredQuantities.get(i)/19,5));
+				requiredQuantities.set(i, Math.max(requiredQuantities.get(i)/5,5));
 			}}
 		
 		//IAcheteurAO acheteurAppelOffre = new Distributeur1AcheteurAppelOffre();
@@ -113,20 +125,15 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 		for (int i = 0; i < this.chocolats.size(); i++) {
 			if (stocksChocolats.get(chocolats.get(i)).getNom().contains("BQ_E")) {
 				this.stock_C_BQ_E.ajouter(this, stocksChocolats.get(chocolats.get(i)).getValeur(), cryptogramme);
-			}
-			if (stocksChocolats.get(chocolats.get(i)).getNom().contains("BQ") && (!stocksChocolats.get(chocolats.get(i)).getNom().contains("BQ_E"))) {
+			} else if (stocksChocolats.get(chocolats.get(i)).getNom().contains("BQ") && (!stocksChocolats.get(chocolats.get(i)).getNom().contains("BQ_E"))) {
 				this.stock_C_BQ.ajouter(this, stocksChocolats.get(chocolats.get(i)).getValeur(), cryptogramme);
-			}
-			if (stocksChocolats.get(chocolats.get(i)).getNom().contains("MQ_E")) {
+			} else if (stocksChocolats.get(chocolats.get(i)).getNom().contains("MQ_E")) {
 				this.stock_C_MQ_E.ajouter(this, stocksChocolats.get(chocolats.get(i)).getValeur(), cryptogramme);
-			}
-			if (stocksChocolats.get(chocolats.get(i)).getNom().contains("MQ") && (!stocksChocolats.get(chocolats.get(i)).getNom().contains("MQ_E"))) {
+			} else if (stocksChocolats.get(chocolats.get(i)).getNom().contains("MQ") && (!stocksChocolats.get(chocolats.get(i)).getNom().contains("MQ_E"))) {
 				this.stock_C_MQ.ajouter(this, stocksChocolats.get(chocolats.get(i)).getValeur(), cryptogramme);
-			}
-			if (stocksChocolats.get(chocolats.get(i)).getNom().contains("HQ_E")) {
+			} else if (stocksChocolats.get(chocolats.get(i)).getNom().contains("HQ_E")) {
 				this.stock_C_HQ_E.ajouter(this, stocksChocolats.get(chocolats.get(i)).getValeur(), cryptogramme);
-			}
-			if (stocksChocolats.get(chocolats.get(i)).getNom().contains("HQ_BE")) {
+			} else if (stocksChocolats.get(chocolats.get(i)).getNom().contains("HQ_BE")) {
 				this.stock_C_HQ_BE.ajouter(this, stocksChocolats.get(chocolats.get(i)).getValeur(), cryptogramme);
 			}
 		}
@@ -174,7 +181,8 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 			if (pos<0) {
 				return 0.0;
 			} else {
-				return Math.min(capaciteDeVente.get(pos), this.getStock(choco).getValeur());
+				//System.out.println("capaciteDeVente : " + capaciteDeVente.get(pos) + "; stock : " + this.getStock(choco).getValeur());
+				return Math.max(capaciteDeVente.get(pos), this.getStock(choco).getValeur());
 			}
 		}
 	}
