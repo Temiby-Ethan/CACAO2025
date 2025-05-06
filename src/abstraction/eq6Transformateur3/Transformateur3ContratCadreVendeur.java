@@ -14,7 +14,6 @@ import abstraction.eqXRomu.produits.IProduit;
 // @author Henri Roth & Eric Schiltz
 public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquant implements IVendeurContratCadre {
     //des attributs
-    protected LinkedList<ExemplaireContratCadre> ContratsVendeur;
     protected HashMap<IProduit, Double> chocoLivreThisStep;
     //des constructeurs
     //on utilise à chaque fois des instances de cette classe quand on fait des contrats cadres

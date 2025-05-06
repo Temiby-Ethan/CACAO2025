@@ -9,7 +9,7 @@ import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class Transformateur3 extends Transformateur3StratPrix{
+public class Transformateur3 extends Transformateur3AO{
 
 	public Transformateur3() {
 	}

@@ -17,7 +17,6 @@ import abstraction.eqXRomu.produits.Feve;
 // @author Eric SCHILTZ & Henri Roth & Florian Malveau
 
 public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratCadreVendeur implements IAcheteurContratCadre{
-	protected List<ExemplaireContratCadre> ContratsAcheteur;
 	protected List<ExemplaireContratCadre> contratsObsoletes;
     protected HashMap<IProduit, Double> coutMoyFeves; //estimation du cout de chaque fèves
 	protected HashMap<IProduit, Double> fevesReceptionneesThisStep; //estimation du cout de chaque fèves
@@ -153,7 +152,7 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratC
 	journalCC.ajouter("Nouveau contrat cadre Acheteur : Produit =>" +(contrat.getProduit()).toString());
 	// Trie des contrats cadres en fonction du produit
 	if(super.lesFeves.contains(contrat.getProduit())) {
-		this.ContratsAcheteur.add(contrat);
+		super.ContratsAcheteur.add(contrat);
 	} else if(super.lesChocolats.contains(contrat.getProduit())) {
 		super.ContratsVendeur.add(contrat);
 	} else {
