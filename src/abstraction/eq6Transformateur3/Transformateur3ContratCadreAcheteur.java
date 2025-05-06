@@ -115,6 +115,10 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratC
 
 		// @author Eric Schiltz
 		//on parcourt toutes les fèves
+		demande_vente.put(Feve.F_BQ,(productionMax*0.9)/3);
+        demande_vente.put(Feve.F_BQ_E,(productionMax*0.9)/6);
+        demande_vente.put(Feve.F_MQ,(productionMax*0.9)/6);
+        demande_vente.put(Feve.F_HQ_E,(productionMax*0.9)/3);-
 		for(IProduit feve : super.fevesUtiles){
 			//on parcourt tous les chocolats et on va regarder pour tous les chocolats que l'on vend
 			//et pour chaque on va noter combien de notre fève il faut produire pour remplir la 
@@ -140,6 +144,7 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratC
 				if (choco==bollo && feve == Feve.F_BQ_E){
 					b+= a*((15500)/52000);
 				}
+				
 				if (choco==fraud && feve == Feve.F_BQ){
 					b+= a*((15500)/52000);
 				}
