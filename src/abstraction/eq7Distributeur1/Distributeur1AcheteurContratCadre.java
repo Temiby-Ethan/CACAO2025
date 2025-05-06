@@ -225,6 +225,12 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 	@Override
 	public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat){
 		this.getStock((ChocolatDeMarque) p).ajouter(this, quantiteEnTonnes);
-		//System.out.println("APAGNAN QUOICOUBEH EXIT 0" + quantiteEnTonnes);
+
+		
+		ChocolatDeMarque chocolat = (ChocolatDeMarque) contrat.getProduit();
+		
+		String str_journal_CC = "";
+		str_journal_CC = "Achat en contrat cadre de " + this.stocksChocolats.get(chocolat).getNom()+ " = " + quantiteEnTonnes + " tonne(s);" ;
+		journalCC.ajouter(str_journal_CC);
 	}
 }
