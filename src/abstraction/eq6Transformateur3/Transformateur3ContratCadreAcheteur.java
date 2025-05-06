@@ -118,7 +118,7 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratC
 		demande_vente.put(Feve.F_BQ,(productionMax*0.9)/3);
         demande_vente.put(Feve.F_BQ_E,(productionMax*0.9)/6);
         demande_vente.put(Feve.F_MQ,(productionMax*0.9)/6);
-        demande_vente.put(Feve.F_HQ_E,(productionMax*0.9)/3);-
+        demande_vente.put(Feve.F_HQ_E,(productionMax*0.9)/3);
 		for(IProduit feve : super.fevesUtiles){
 			//on parcourt tous les chocolats et on va regarder pour tous les chocolats que l'on vend
 			//et pour chaque on va noter combien de notre fève il faut produire pour remplir la 
