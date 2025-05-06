@@ -95,17 +95,17 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 		}
 		for (int step = echeancierActuel.getStepDebut(); step<=echeancierActuel.getStepFin() ; step++){
 
-			for (int i = 0; i < step; i++){
+			for (int i = echeancierActuel.getStepDebut(); i <= echeancierActuel.getStepFin(); i++){
 				valeurtotale += echeancierActuel.getQuantite(i);
 			}
 			
 			double quantiteDemandee = echeancierActuel.getQuantite(step);
 			double quantiteVoulue = requiredQuantities.get(cdmToInt(chocolat))/predictionsVentesPourcentage.get(echeancierActuel.getStepDebut()%24)*predictionsVentesPourcentage.get(step%24);
-			if (quantiteDemandee > quantiteVoulue*(1+0.02*step)){
-				echeancierActuel.set(step, Math.max(Math.max(100,quantiteVoulue*(1+0.02*step)), valeurtotale/(10*step)));
+			if (quantiteDemandee > quantiteVoulue*(1+0.02*tour)){
+				echeancierActuel.set(step, Math.max(Math.max(100,quantiteVoulue*(1+0.02*tour)), valeurtotale/(10*step)));
 			}
-			if (quantiteDemandee < quantiteVoulue*(1-0.02*step)){
-				echeancierActuel.set(step, Math.max(Math.max(100,quantiteVoulue*(1-0.02*step)), valeurtotale/(10*step)));
+			if (quantiteDemandee < quantiteVoulue*(1-0.02*tour)){
+				echeancierActuel.set(step, Math.max(Math.max(100,quantiteVoulue*(1-0.02*tour)), valeurtotale/(10*step)));
 			}
 			if (quantiteDemandee < 100){
 				echeancierActuel.set(step, Math.max(100, 100 + valeurtotale/(10*step)));
