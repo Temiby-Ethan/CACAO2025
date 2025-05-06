@@ -21,30 +21,17 @@ public class Transformateur1VendeurAppelDoffre extends Transformateur1AcheteurBo
 	protected double qttVendueAOC_BQ_E;
 	protected double qttVendueAOC_HQ_BE;
 
-
-	protected double prix_MQ;
-	protected double prix_MQ_E;
-	protected double prix_BQ_E;
-	protected double prix_HQ_BE;
-
     public Transformateur1VendeurAppelDoffre() {
 		super();
 	}
 
-
 	public void initialiser(){
 		super.initialiser();
-
-		this.prix_MQ = prixTChocoBase.get(Chocolat.C_MQ);
-		this.prix_BQ_E = prixTChocoBase.get(Chocolat.C_BQ_E);
-		this.prix_MQ_E = prixTChocoBase.get(Chocolat.C_MQ_E);
-		this.prix_HQ_BE = prixTChocoBase.get(Chocolat.C_HQ_BE);
 	}
-
 
 	@Override
 	public OffreVente proposerVente(AppelDOffre offre) {
-		//System.err.println(offre.toString());
+;
 		double prixT = 0;
 
 		if (chocolatsLimDt.contains(offre.getProduit())) {
@@ -69,54 +56,35 @@ public class Transformateur1VendeurAppelDoffre extends Transformateur1AcheteurBo
 				this.journalTransactions.ajouter(Color.white, Color.RED, "AO: Je propose " + offre.getQuantiteT() + " tonnes de " + offre.getProduit() + " au prix de " + prixT + " euros par tonne.");
 
 				return new OffreVente(offre, this, offre.getProduit(), prixT);
-			}
 			
-			//A MODIFIER
-			//Utiliser des switch case plutot que des if else
-            if (((ChocolatDeMarque) offre.getProduit()).getChocolat() == Chocolat.C_MQ) {
-				prixT = prixTChocoBase.get(Chocolat.C_MQ);
-			} else if (((ChocolatDeMarque) offre.getProduit()).getChocolat() == Chocolat.C_BQ_E) {
-				prixT = prixTChocoBase.get(Chocolat.C_BQ_E);
-			} else if (((ChocolatDeMarque) offre.getProduit()).getChocolat() == Chocolat.C_MQ_E) {
-				prixT = prixTChocoBase.get(Chocolat.C_MQ_E);
-			} else if (((ChocolatDeMarque) offre.getProduit()).getChocolat() == Chocolat.C_HQ_BE) {
-				prixT = prixTChocoBase.get(Chocolat.C_HQ_BE);
+		    } else {
+			    journalTransactions.ajouter(Color.pink, Color.RED, "--> AO "+ offre.getProduit() +" : Je ne peux pas proposer " + offre.getQuantiteT() + " tonnes.");
+				journalTransactions.ajouter("\n");
+			    return null;
 			}
-
-			if (prixT == 0) {
-				return null;
-			}
-			
-			this.journalTransactions.ajouter(Romu.COLOR_LLGRAY, Color.RED, "AO: Je propose " + offre.getQuantiteT() + " tonnes de " + offre.getProduit() + " au cours de " + prixT + " euros par tonne.");
-			return new OffreVente(offre, this, offre.getProduit(), prixT);
-		} 
-		else {
-			return null;	
+		} else {
+			return null;
 		}
 	}
 
 	@Override
 	public void notifierVenteAO(OffreVente propositionRetenue) {
-		//System.out.println("Votre proposition de vente a été retenue");
-		this.journalTransactions.ajouter(Romu.COLOR_LLGRAY, Color.RED, "AO: J'ai vendu " + propositionRetenue.getQuantiteT() + " tonnes de " + propositionRetenue.getProduit() + " au prix par T de " + propositionRetenue.getPrixT() + " euros par tonne.");
-	 
-		//Mettre à jour les autres variables
-		ChocolatDeMarque chocoMarqueAO = (ChocolatDeMarque) propositionRetenue.getProduit();
 
-
-		this.retirerDuStock(chocoMarqueAO, propositionRetenue.getQuantiteT(), this.cryptogramme);
-
-
-		this.journalTransactions.ajouter(Romu.COLOR_LLGRAY, Color.RED, "AO: J'ai maintenant " + this.getQuantiteEnStock(propositionRetenue.getProduit(), this.cryptogramme) + " tonnes de " + propositionRetenue.getProduit() + " en stock.");
+		this.journalTransactions.ajouter(Romu.COLOR_LLGRAY, Color.RED, "-->AO "+ propositionRetenue.getProduit() +" : J'ai vendu " +propositionRetenue.getQuantiteT()+ " tonnes au prix de " + propositionRetenue.getPrixT() + " euros par tonne.");
 		this.journalTransactions.ajouter("\n");
+	 
+		//Mettre à jour le stock et la qtt sortante par transaction
+		ChocolatDeMarque chocoMarqueAO = (ChocolatDeMarque) propositionRetenue.getProduit();
+		this.retirerDuStock(chocoMarqueAO, propositionRetenue.getQuantiteT(), this.cryptogramme);
+		this.qttSortantesTransactions.put(chocoMarqueAO.getChocolat(), this.qttSortantesTransactions.get(chocoMarqueAO.getChocolat()) + propositionRetenue.getQuantiteT());
 	}
 	
 
 	@Override
 	public void notifierPropositionNonRetenueAO(OffreVente propositionRefusee) {
-		this.journalTransactions.ajouter(Color.pink, Color.RED, "AO: Vente non retenue.");
+
+		this.journalTransactions.ajouter(Color.pink, Color.RED, "--> AO "+propositionRefusee.getProduit()+" : Vente non retenue.");
 		this.journalTransactions.ajouter("\n");
+
 	}
 }
-
-
