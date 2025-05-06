@@ -37,6 +37,8 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 
 	protected int cryptogramme;
 
+	protected Variable qttProduiteChoco; // quantité de chocolat produite durant cette step: devrait être égale à ProdMax
+
 	//Stock de fèves
 	protected Variable stock_F_MQ;
 	protected Variable stock_F_BQ_E;
@@ -184,6 +186,8 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 		this.stocksChocoVar.put(Chocolat.C_HQ_BE, stock_C_HQ_BE);
 
 		this.stocksMarqueVar = new HashMap<ChocolatDeMarque, Variable>();
+
+		this.qttProduiteChoco = new Variable("Qtt produite chocolat", this, 0., 10000000000., 0.);
 
 		this.pourcentageTransfo = new HashMap<Feve, HashMap<Chocolat, Double>>();
 

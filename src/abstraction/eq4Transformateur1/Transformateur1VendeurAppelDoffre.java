@@ -37,16 +37,16 @@ public class Transformateur1VendeurAppelDoffre extends Transformateur1AcheteurBo
 		if (chocolatsLimDt.contains(offre.getProduit())) {
 			if (offre.getQuantiteT() <= 0.4*this.getQuantiteEnStock(offre.getProduit(), this.cryptogramme)) {
 				if (((ChocolatDeMarque) offre.getProduit()).getChocolat() == Chocolat.C_MQ) {
-					prixT = (prixTChocoBase.get(Chocolat.C_MQ) + coutProdChoco.get(Chocolat.C_MQ) + this.coutStockage) * 1.3;
+					prixT = (prixTChocoBase.get(Chocolat.C_MQ) + coutProd + this.coutStockage) * 1.3;
 				} 
 				else if (((ChocolatDeMarque) offre.getProduit()).getChocolat() == Chocolat.C_BQ_E) {
-					prixT = (prixTChocoBase.get(Chocolat.C_BQ_E)+ coutProdChoco.get(Chocolat.C_BQ_E) + this.coutStockage) *1.1;
+					prixT = (prixTChocoBase.get(Chocolat.C_BQ_E)+ coutProd + this.coutStockage) *1.1;
 				} 
 				else if (((ChocolatDeMarque) offre.getProduit()).getChocolat() == Chocolat.C_MQ_E) {
-					prixT =(prixTChocoBase.get(Chocolat.C_MQ_E)+ coutProdChoco.get(Chocolat.C_MQ_E) + this.coutStockage) *1.1;
+					prixT =(prixTChocoBase.get(Chocolat.C_MQ_E)+ coutProd + this.coutStockage) *1.1;
 				} 
 				else if (((ChocolatDeMarque) offre.getProduit()).getChocolat() == Chocolat.C_HQ_BE) {
-					prixT = (prixTChocoBase.get(Chocolat.C_HQ_BE)+ coutProdChoco.get(Chocolat.C_HQ_BE) + this.coutStockage) * 1.2;
+					prixT = (prixTChocoBase.get(Chocolat.C_HQ_BE)+ coutProd + this.coutStockage) * 1.2;
 				}
 	
 				if (prixT == 0) {

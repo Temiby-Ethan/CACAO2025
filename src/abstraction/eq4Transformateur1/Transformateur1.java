@@ -43,7 +43,7 @@ public class Transformateur1 extends Transformateur1AcheteurAppelDOffre {
             this.repartitionTransfo.get(secondLargestKey).setValeur(this, repartitionTransfo.get(secondLargestKey).getValeur() - 0.05);
         } 
 
-        //on réinitialise cout prod
+        //on réinitialise coutProd
         this.coutProd = 0;
     }
 }
