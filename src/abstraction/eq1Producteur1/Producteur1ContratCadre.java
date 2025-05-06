@@ -21,13 +21,13 @@ public class Producteur1ContratCadre extends Producteur1Acteur implements IVende
 
     @Override
     public boolean vend(IProduit produit) {
-        return produit instanceof Feve;
+        return false;//produit instanceof Feve;
     }
 
     @Override
     public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
         IProduit produit = contrat.getProduit();
-
+return null;/* 
         if (!(produit instanceof Feve)) {
             journal.ajouter("Erreur : Produit non reconnu pour la contre-proposition.");
             return null;
@@ -73,7 +73,7 @@ public class Producteur1ContratCadre extends Producteur1Acteur implements IVende
         }
 
         journal.ajouter("Échéancier proposé accepté : " + echeancierPropose);
-        return echeancierPropose;
+        return echeancierPropose; // */
     }
 
     @Override
