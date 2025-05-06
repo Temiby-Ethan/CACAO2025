@@ -288,10 +288,10 @@ public void setPrix(ChocolatDeMarque choco) {
 				
 				// Ajustement en fonction des ventes
 				if (this.aVendu.getOrDefault(cm, false) == false) {
-					System.out.println("étape:"+Filiere.LA_FILIERE.getEtape()+" changement prix du chocolat "+cm+ "dû à aucune vente");
-					System.out.println("ancien prix : "+prixActuel);
+					//System.out.println("étape:"+Filiere.LA_FILIERE.getEtape()+" changement prix du chocolat "+cm+ "dû à aucune vente");
+					//System.out.println("ancien prix : "+prixActuel);
 					prixActuel = prixOriginal * 0.95; // -5%
-					System.out.println("nouveau prix : "+prixActuel); 
+					//System.out.println("nouveau prix : "+prixActuel); 
 					prixModifie = true;
 					
 					raisonModification = "aucune vente au step précédent";
