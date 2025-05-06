@@ -13,9 +13,10 @@ import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.produits.IProduit;
 // @author Henri Roth & Eric Schiltz
 public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquant implements IVendeurContratCadre {
-    //des attributs
-    protected LinkedList<ExemplaireContratCadre> ContratsVendeur;
-    protected HashMap<IProduit, Double> chocoLivreThisStep;
+    
+    //Capacité de vente de chocolat
+    protected HashMap<IProduit, Double> capacite_vente_max;
+    
     //des constructeurs
     //on utilise à chaque fois des instances de cette classe quand on fait des contrats cadres
     public Transformateur3ContratCadreVendeur() {
@@ -25,11 +26,6 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
     // @author Florin Malveau
     public void initialiser() {
         super.initialiser();
-        //on initialise les attributs
-        this.chocoLivreThisStep = new HashMap<IProduit, Double>();
-        for(IProduit choco : super.lesChocolats){
-            this.chocoLivreThisStep.put(choco,0.0);
-        }
     }
     //des méthodes
     //à chaque next on va proposer des contrats cadres pour vendre du chocolat
@@ -59,7 +55,7 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
             //on remet alors à jour capacite_vente_max
             capacite_vente_max.replace(choco,capacite_vente_max.get(choco)-a);
         }
-        //on crée un contrat cadre
+        //on crée un nouveau nom plus simple pour le superviseur de contrats cadres
         SuperviseurVentesContratCadre supCCadre = (SuperviseurVentesContratCadre) Filiere.LA_FILIERE.getActeur("Sup.CCadre");
         //on parcourt tous les types de chocolat
         for(IProduit choco : super.lesChocolats){
@@ -92,19 +88,6 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
                     } 
                 }
             }
-        }
-        
-        // On affiche les quantités de chocolat livrées pour ce step
-        jdb.ajouter("");
-		jdb.ajouter("-- CHOCO LIVRE --");
-		for(IProduit choco : chocoLivreThisStep.keySet()){
-			//if(fevesReceptionneesThisStep.get(feve) == 0.0){
-			jdb.ajouter("- "+choco+" : "+chocoLivreThisStep.get(choco));
-			//}
-		}
-        //on remet à 0 les quantités de chocolat livrées pour ce step
-        for(IProduit choco : super.lesChocolats){
-            this.chocoLivreThisStep.replace(choco,0.0);
         }
     }
 
@@ -158,7 +141,7 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
                     return null;
                 }
                 //sinon on refait l'échéancier avec ce que l'on a; 
-                if(capa >100 && capa<1000){
+                else{
                     //et on met à jour nos capacités de vente max
                     int nb = e.getNbEcheances();
                     return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, nb, capa);
@@ -209,9 +192,7 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
         double stockActuel = stockChoco.getQuantityOf(produit);
 		double aLivre = Math.min(quantite, stockActuel);
 		journalCC.ajouter("   Livraison de "+aLivre+" T de "+produit+" sur "+quantite+" exigees pour contrat "+contrat.getNumero());
-		stockChoco.remove(produit, aLivre);
-        //on met à jour le stock de chocolat livré pour ce step
-        this.chocoLivreThisStep.replace(produit, this.chocoLivreThisStep.get(produit)+aLivre);
+        stockChoco.remove(produit, aLivre);
 		return aLivre;
 	}
     

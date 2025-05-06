@@ -6,16 +6,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import abstraction.eqXRomu.produits.ChocolatDeMarque;
-import abstraction.eqXRomu.produits.Feve;
-import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
-import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
-import abstraction.eqXRomu.filiere.IFabricantChocolatDeMarque;
 import abstraction.eqXRomu.general.Journal;
-import abstraction.eqXRomu.general.Variable;
 
 public class Transformateur3StratPrix extends Transformateur3AO {
 
@@ -23,7 +17,7 @@ public class Transformateur3StratPrix extends Transformateur3AO {
     protected List<Long> contratTraite;
 
     // Quantitée de chaque type de fèves reçue au prochain step
-    // pour chaque fève, in dispose d'un échéancier sur la quantité total de fèves
+    // pour chaque fève, on dispose d'un échéancier sur la quantité total de fèves
 	//protected HashMap<IProduit, List<Double>> quantityFevesEcheancier;
     // Quantitée de chaque type de choco vendu au prochain step
     //protected HashMap<IProduit, List<Double>> quantityChocoEcheancier;
