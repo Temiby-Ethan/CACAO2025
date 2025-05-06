@@ -51,7 +51,7 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurEncher
 		IProduit product = propositions.get(0).getProduit();
 		if (product instanceof ChocolatDeMarque) {
         	ChocolatDeMarque chocolat = (ChocolatDeMarque) product;
-			System.err.println("Chocolat : " + chocolat.toString());
+			//System.err.println("Chocolat : " + chocolat.toString());
 			if(chocolat.toString().equals("C_BQ_Fraudolat")){
 				return null;
 			} else{
