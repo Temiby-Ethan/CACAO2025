@@ -286,7 +286,10 @@ public class SuperviseurVentesContratCadre implements IActeur, IAssermente {
 					return null;// arret des negociations
 				}
 				if (!contrePropositionA.echeancierAcceptable()) {
-					throw new SecurityException(" appel de contrePropositionDeLAcheteur(...) sur "+acheteur.getNom()+" retourne un echeancier qui ne respecte pas les conditions du document des distributeurs : "+contrePropositionA);
+					System.out.println(" appel de contrePropositionDeLAcheteur(...) sur "+acheteur.getNom()+" retourne un echeancier qui ne respecte pas les conditions du document des distributeurs : "+contrePropositionA);
+					System.out.println(" mise en faillite de "+acheteur.getNom());
+					Filiere.LA_FILIERE.getBanque().faireFaillite(acheteur, this, cryptos.get(this));
+					//throw new SecurityException(" appel de contrePropositionDeLAcheteur(...) sur "+acheteur.getNom()+" retourne un echeancier qui ne respecte pas les conditions du document des distributeurs : "+contrePropositionA);
 				}				
 				contrat.ajouterEcheancier(contrePropositionA);
 				if (!contrat.accordSurEcheancier()) {

@@ -210,8 +210,9 @@ public class Producteur2VenteCC extends Producteur2couts implements IVendeurBour
 			JournalEQ2CC.ajouter("2      contrePropose le prix demande : "+contrat.getPrix());
 			return contrat.getPrix();
 		} else {
-			int percent = (int)(1000* Math.pow((contrat.getPrix()/prix.get(0)), prix.size()));
+			int percent = (int)(100* Math.pow((contrat.getPrix()/prix.get(0)), prix.size()/2));
 			int alea = Filiere.random.nextInt(100);
+			JournalEQ2CC.ajouter(" le pourcentage de négo du contrat: "+percent);
 			if (alea< percent) { // d'autant moins de chance d'accepter que le prix est loin de ce qu'on proposait
 				if (Filiere.random.nextInt(100)<5) { // 1 fois sur 20 on accepte
 					JournalEQ2CC.ajouter("3      contrePropose le prix demande : "+contrat.getPrix());
