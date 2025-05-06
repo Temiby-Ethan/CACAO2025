@@ -85,7 +85,7 @@ public class Distributeur3Distributeur extends Distributeur3Acteur implements ID
                 this.journalActeur.ajouter("Mise en rayon de 100 tonnes de "+choco.getNom());
                 //System.out.println("demande quantite vente "+choco.getNom()+" tonnes :"+100);
                 return 100;
-            }else{
+            }else {
                 //System.out.println("demande quantite vente "+choco.getNom()+" tonnes :"+this.stockChocoMarque.get(choco));
                 this.journalActeur.ajouter("Mise en rayon de "+this.stockChocoMarque.get(choco)+" (max) de "+choco.getNom());
                 return this.stockChocoMarque.get(choco);
