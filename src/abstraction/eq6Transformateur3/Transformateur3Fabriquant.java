@@ -36,7 +36,7 @@ public class Transformateur3Fabriquant extends Transformateur3Marques implements
     private double quantiteTotaleProduite = 0;
 
     //Production maximale : 128 000 T x2 = 256 000 T
-    protected double productionMax = nbMachine*capacite_machine*2;
+    protected double productionMax = nbMachine*capacite_machine*1.3; // 166 000 T
 
     //Demande de production
     protected HashMap<IProduit, Double> DemandeProdChoco; //Demande pour chaque choco en tonnes
@@ -97,7 +97,7 @@ public class Transformateur3Fabriquant extends Transformateur3Marques implements
         
         this.coutTotalProd = 0;
         this.quantiteTotaleProduite = 0;
-        this.productionMax = nbMachine*capacite_machine;
+        //this.productionMax = nbMachine*capacite_machine; on considère productionMax constante
         
         //On limite la demande de production à la capacité des machines/ouvriers
         this.limitProduction();
@@ -208,7 +208,7 @@ public class Transformateur3Fabriquant extends Transformateur3Marques implements
 
                 //Si le stock de fève est vide
                 if(quantityFeve==0.0){
-                    super.jdb.ajouter("Pas de production de "+choco.getNom()+" (Stock vide : "+feveUtilisee.toString()+")");
+                    super.journalProduction.ajouter("Pas de production de "+choco.getNom()+" (Stock vide : "+feveUtilisee.toString()+")");
                 }
 
                 //Si on dispose d'assez de fèves en stock => on produit
@@ -220,7 +220,7 @@ public class Transformateur3Fabriquant extends Transformateur3Marques implements
                     super.stockChoco.addToStock(choco, quantityToProduce);
                     this.quantiteTotaleProduite += quantityToProduce;
 
-                    super.jdb.ajouter("Production de "+choco.getNom()+" : "+(int)quantityToProduce+" ("+feveUtilisee.toString()+")");
+                    super.journalProduction.ajouter("Production de "+choco.getNom()+" : "+(int)quantityToProduce+" t ("+feveUtilisee.toString()+")");
                 }
                 else{
 
@@ -236,7 +236,7 @@ public class Transformateur3Fabriquant extends Transformateur3Marques implements
                     //Calcul la quantité qui reste à produire
                     quantityToProduce -= newQuantityToProduce;
 
-                    super.jdb.ajouter("Production de "+choco.getNom()+" : "+(int)newQuantityToProduce+" t ("+feveUtilisee.toString()+") "+"[Demande disproportionnée]");
+                    super.journalProduction.ajouter("Production de "+choco.getNom()+" : "+(int)newQuantityToProduce+" t ("+feveUtilisee.toString()+") "+"[Demande disproportionnée]");
                     //+"=> ERROR : demande de fève > stock fève");
                 }
 
