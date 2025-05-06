@@ -23,7 +23,7 @@ public class Producteur3GestionDesCoûts extends Producteur3Employés{
         return calculCoutStock() + getMasseSalariale();
     }
 
-    public double getCoutUnitaire(Feve feve) {//Donne le cout unitaire d'un type de fève
+    public double getCoutUnitaire(Feve feve) {
         if (getNouveauStockParticulier(feve) == 0) {
             return 7.5;
         }
@@ -33,7 +33,7 @@ public class Producteur3GestionDesCoûts extends Producteur3Employés{
         
     }
 
-    public double getCump(Feve feve) {//Donne le CUMP d'un type de fève
+    public double getCump(Feve feve) {
         double nouveauStock = getNouveauStockParticulier(feve);
         double totalStock = calculTotalStockParticulier(feve);
         double ancienStock = totalStock - nouveauStock;
