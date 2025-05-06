@@ -233,6 +233,7 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 		this.getStock((ChocolatDeMarque) p).ajouter(this, quantiteEnTonnes);
 
 		
+		// journal Alexiho :
 		ChocolatDeMarque chocolat = (ChocolatDeMarque) contrat.getProduit();
 		
 		String str_journal_CC = "";

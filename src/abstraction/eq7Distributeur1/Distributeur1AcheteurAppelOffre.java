@@ -67,6 +67,13 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurEncher
 			return(null);
 		}
 		this.getStock((ChocolatDeMarque) propositions.get(indice).getProduit()).ajouter(this, propositions.get(indice).getQuantiteT());
+
+		// journal Alexiho :
+
+		String str_journal_AO = "";
+		str_journal_AO = "Achat en appel d'offre de " + this.stocksChocolats.get((ChocolatDeMarque) propositions.get(indice).getProduit()).getNom()+ " = " + propositions.get(indice).getQuantiteT() + " tonne(s);";
+		journalAO.ajouter(str_journal_AO);
+
 		return(propositions.get(indice));
 		}
 	

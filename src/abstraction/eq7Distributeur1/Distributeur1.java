@@ -133,16 +133,10 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 		}
 		//par Ethan
 		String str_journal_stock = "";
-		String str_journal_E = "";
-		String str_journal_AO = "";
 
 		for (int i = 0 ; i<chocolats.size() ; i++){
 			str_journal_stock = this.stocksChocolats.get(chocolats.get(i)).getNom() + " = " + this.stocksChocolats.get(chocolats.get(i)).getValeur() + ";";
 			journal.ajouter(str_journal_stock);
-			str_journal_E ="Achat en enchère de " + this.stocksChocolats.get(chocolats.get(i)).getNom()+ " = " + this.successedSell.get(i) + " tonne(s); ";
-			journalE.ajouter(str_journal_E);
-			str_journal_AO = "Achat en appel d'offre de " + this.stocksChocolats.get(chocolats.get(i)).getNom()+ " = " + "0" + " tonne(s);";
-			journalAO.ajouter(str_journal_AO);
 		}
 
 		// définition des capacités de ventes
