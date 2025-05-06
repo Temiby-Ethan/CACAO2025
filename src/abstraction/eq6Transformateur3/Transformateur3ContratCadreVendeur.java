@@ -13,6 +13,10 @@ import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.produits.IProduit;
 // @author Henri Roth & Eric Schiltz
 public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquant implements IVendeurContratCadre {
+    
+    //Capacité de vente de chocolat
+    protected HashMap<IProduit, Double> capacite_vente_max;
+    
     //des constructeurs
     //on utilise à chaque fois des instances de cette classe quand on fait des contrats cadres
     public Transformateur3ContratCadreVendeur() {
