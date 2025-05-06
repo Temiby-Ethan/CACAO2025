@@ -82,9 +82,19 @@ public class Distributeur3ContratCadre extends Distributeur3Charges implements I
         //double fourchetteLimiteNegociation  = 1500;
 
         // a enlever, on laisse juste ça pour pouvoir négocier avec les autres
-        double fourchetteLimiteNegociation  = prixMoyen-(chargesTotal()/getVentesByStep(Filiere.LA_FILIERE.getEtape()))*0.3;
-        double fourchetteLimiteRenta = prixMoyen-(chargesTotal()/getVentesByStep(Filiere.LA_FILIERE.getEtape()));
-        double fourchetteLimiteAchat = fourchetteLimiteRenta*0.95;
+        double fourchetteLimiteAchat;
+        double fourchetteLimiteRenta;
+        double fourchetteLimiteNegociation;
+
+        if(Filiere.LA_FILIERE.getEtape()==0) {
+            fourchetteLimiteNegociation  = prixMoyen;
+            fourchetteLimiteRenta = prixMoyen;
+            fourchetteLimiteAchat = fourchetteLimiteRenta*0.95;
+        }else {
+            fourchetteLimiteNegociation = prixMoyen - (chargesTotal() / getVentesByStep(Filiere.LA_FILIERE.getEtape() - 1)) * 0.3;
+            fourchetteLimiteRenta = prixMoyen - (chargesTotal() / getVentesByStep(Filiere.LA_FILIERE.getEtape() - 1));
+            fourchetteLimiteAchat = fourchetteLimiteRenta * 0.95;
+        }
         journalContrats.ajouter("prix Moyen : "+prixMoyen);
         journalContrats.ajouter("fourchette limite nego : "+fourchetteLimiteNegociation);
         journalContrats.ajouter("fourchette limite de renta "+fourchetteLimiteRenta);

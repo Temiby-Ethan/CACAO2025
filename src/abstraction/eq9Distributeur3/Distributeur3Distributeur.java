@@ -133,6 +133,13 @@ public class Distributeur3Distributeur extends Distributeur3Acteur implements ID
     }
 
     public double getVentesByStep(int step){
+        journalDeVente.ajouter("ventes");
+        for(Integer i : this.ventes.keySet()){
+            for (ChocolatDeMarque choco : this.ventes.get(i).keySet()) {
+                journalDeVente.ajouter("step :"+i+" chocolat "+ choco.toString()+" "+this.ventes.get(i).get(choco));
+            }
+        }
+        journalDeVente.ajouter("fin ventes");
         double total = 0;
         for (ChocolatDeMarque choco : this.ventes.get(step).keySet()){
             if(ventes.containsKey(step)) {
@@ -187,6 +194,7 @@ public class Distributeur3Distributeur extends Distributeur3Acteur implements ID
         this.journalStocks.ajouter("Stock Total avant  : "+this.stockTotal.getValeur(this.cryptogramme));
         super.next();
         this.journalStocks.ajouter("Stock Total après : "+this.stockTotal.getValeur(this.cryptogramme));
+        ventes.put(Filiere.LA_FILIERE.getEtape()+1,new HashMap<>());
 //        for (ChocolatDeMarque cm : this.stockChocoMarque.keySet()) {
 //            if (cm.getGamme().equals(Gamme.BQ)) {
 //                if(cm.getChocolat().isEquitable()){
