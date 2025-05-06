@@ -26,11 +26,12 @@ public class Distributeur2AcheteurAppelOffre extends Distributeur2AcheteurContra
 	private SuperviseurVentesAO supAO;
 	protected Journal journalAO;
 	protected HashMap<Integer,OffreVente> choix;
+    private Journal journalStock;
     
     public Distributeur2AcheteurAppelOffre(){
         super();
         this.journalAO = new Journal(this.getNom() +"Journal AO", this);
-        
+        journalStock = new Journal(this.getNom() + " journal stock", this);
     }
 
     //@author pebinoh
@@ -41,7 +42,8 @@ public class Distributeur2AcheteurAppelOffre extends Distributeur2AcheteurContra
         this.prixRetenus = new HashMap<ChocolatDeMarque, List<Double>>();
 		for (ChocolatDeMarque cm : this.stock_Choco.keySet()) {
 			this.prixRetenus.put(cm, new LinkedList<Double>());
-		}		
+		}
+        		
 	}
 
     
@@ -113,6 +115,16 @@ public class Distributeur2AcheteurAppelOffre extends Distributeur2AcheteurContra
 		}
 		this.journal.ajouter("");
 
+        for (Chocolat choc : Chocolat.values()) {
+            journalStock.ajouter("=== Stock pour la qualité de chocolat : " + choc + " ===");
+            for (ChocolatDeMarque cm : this.stock_Choco.keySet()) {
+            if (cm.getChocolat().equals(choc)) {
+                journalStock.ajouter("Stock de " + cm + " : " + this.stock_Choco.get(cm));
+            }
+            }
+        }
+        journalStock.ajouter("Stock total : " + this.stockTotal.getValeur(cryptogramme));
+        journalStock.ajouter("====================================================");
         
     }
 
@@ -121,6 +133,7 @@ public class Distributeur2AcheteurAppelOffre extends Distributeur2AcheteurContra
 		
 		List<Journal> jour = super.getJournaux();
 		jour.add(this.journalAO);
+        jour.add(this.journalStock);
 		return jour;
 	}
 

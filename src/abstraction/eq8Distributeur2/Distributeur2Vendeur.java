@@ -211,9 +211,6 @@ public void setPrix(ChocolatDeMarque choco) {
 			journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE,"prix de vente pour le chocolats "+choco+" est de : "+String.format("%.2f", this.prix(choco)));
 		}
 		
-		for (int i=0;i<this.ListPrix.size(); i++) {
-			this.setPrix(chocolats.get(i));
-		}
 
 		ajusterPrix();
 		
@@ -222,6 +219,22 @@ public void setPrix(ChocolatDeMarque choco) {
 		}	
 		else {
 			capaciteDeVente = 120000;
+		}
+
+		for (ChocolatDeMarque choco : chocolats) {
+			if (choco.getChocolat() == Chocolat.C_HQ_E || choco.getChocolat() == Chocolat.C_HQ_BE || choco.getChocolat() == Chocolat.C_MQ_E){	
+				if (aVendu.get(choco) == true) {
+					journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_GREEN,"J'ai vendu du "+choco);
+				}
+				else {
+					journalVente.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN,"Je n'ai pas vendu de "+choco);
+				}
+				journalVente.ajouter("");
+			}
+		}
+		// Réinitialisation de la variable aVendu pour le prochain step
+		for (ChocolatDeMarque choco : chocolats) {
+			this.aVendu.replace(choco, false);
 		}
 
 		
