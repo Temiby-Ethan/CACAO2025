@@ -82,24 +82,6 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 		this.marges.put(Chocolat.C_MQ_E, 1.16);
 		this.marges.put(Chocolat.C_HQ_BE, 1.3);
 
-
-		//Initialisation des pourcentage de conversion fèves vers chocolat
-		this.pourcentageTransfo.put(Feve.F_HQ_BE, new HashMap<Chocolat, Double>());
-		double conversion = 1.0 + (100.0 - Filiere.LA_FILIERE.getParametre("pourcentage min cacao HQ").getValeur())/100.0;
-		this.pourcentageTransfo.get(Feve.F_HQ_BE).put(Chocolat.C_HQ_BE, conversion);// la masse de chocolat obtenue est plus importante que la masse de feve vue l'ajout d'autres ingredients
-
-		this.pourcentageTransfo.put(Feve.F_MQ_E, new HashMap<Chocolat, Double>());
-		conversion = 1.0 + (100.0 - Filiere.LA_FILIERE.getParametre("pourcentage min cacao MQ").getValeur())/100.0;
-		this.pourcentageTransfo.get(Feve.F_MQ_E).put(Chocolat.C_MQ_E, conversion);
-
-		this.pourcentageTransfo.put(Feve.F_MQ, new HashMap<Chocolat, Double>());
-		conversion = 1.0 + (100.0 - Filiere.LA_FILIERE.getParametre("pourcentage min cacao BQ").getValeur())/100.0;
-		this.pourcentageTransfo.get(Feve.F_MQ).put(Chocolat.C_MQ, conversion);
-
-		this.pourcentageTransfo.put(Feve.F_BQ_E, new HashMap<Chocolat, Double>());
-		this.pourcentageTransfo.get(Feve.F_BQ_E).put(Chocolat.C_BQ_E, conversion);
-
-
 		this.journalStock.ajouter(Romu.COLOR_LLGRAY, Color.PINK, "Stock initial chocolat de marque : ");
 
 		this.journalCC.ajouter(Color.orange, Color.BLACK, "Les achats seront en marron;");
@@ -242,7 +224,7 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 			}
 		}
 		//Quantité entrante de fèves par achat en bourse
-		qttEntrantesFeve.put(Feve.F_BQ, 80.);
+		qttEntrantesFeve.put(Feve.F_MQ, qttFevesAcheteesBourse.getValeur());
 	}
 
 
@@ -318,7 +300,7 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 				}
 			}
 			//On calcule le prix pour les ajouts par bourse
-			if (f == Feve.F_BQ){
+			if (f == Feve.F_MQ){
 				BourseCacao bourse = (BourseCacao) Filiere.LA_FILIERE.getActeur("BourseCacao");	
 				if (qttEntrantesFeve.get(f) != 0.) prix += bourse.getCours(f).getValeur() * (80. / qttEntrantesFeve.get(f));
 			}

@@ -268,8 +268,8 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 	public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
 		IProduit produit = contrat.getProduit();
 
-		//Si le produit vendu est un chocolat BQ, on négocie de manière à avoir de très grandes marges
-		if (produit.equals(Chocolat.C_BQ) || (produit.getType()=="ChocolatDeMarque" && ((ChocolatDeMarque)produit).getChocolat().equals(Chocolat.C_BQ))){
+		//Si le produit vendu est un chocolat MQ, on négocie de manière à avoir de très grandes marges
+		if (produit.equals(Chocolat.C_MQ) || (produit.getType()=="ChocolatDeMarque" && ((ChocolatDeMarque)produit).getChocolat().equals(Chocolat.C_MQ))){
 			//Si le prix proposé est plus élevé que celui que l'on a calculé, on accepte le contrat
 
 			if (contrat.getPrix() > (prixTChocoBase.get(Chocolat.C_MQ) + coutProdChoco.get(Chocolat.C_MQ) + this.coutStockage)* marges.get(Chocolat.C_MQ)){
