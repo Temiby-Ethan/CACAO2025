@@ -27,12 +27,14 @@ public class Transformateur3StratQuantity extends Transformateur3Acteur {
 
     protected HashMap<IProduit, Double> coutMoyFeves; //estimation du cout de chaque fèves
     protected List<Long> contratTraite;
+    protected HashMap<IProduit, Double> proportionFeves; //proportion de feves dans le chocolat
 
-    // Quantitée de chaque type de fèves reçue au prochain step
-    // pour chaque fève, in dispose d'un échéancier sur la quantité total de fèves
-	//protected HashMap<IProduit, List<Double>> quantityFevesEcheancier;
+    //Quantitée de chaque type de fèves reçue au prochain step
+    //pour chaque fève, in dispose d'un échéancier sur la quantité total de fèves
+	protected HashMap<IProduit, List<Double>> quantityFevesEcheancier;
     // Quantitée de chaque type de choco vendu au prochain step
-    //protected HashMap<IProduit, List<Double>> quantityChocoEcheancier;
+    protected HashMap<IProduit, List<Double>> quantityChocoEcheancier;
+    protected HashMap<IProduit, List<Double>> besoinFeveEcheancier;
 
     public Transformateur3StratQuantity(){
 
@@ -44,10 +46,17 @@ public class Transformateur3StratQuantity extends Transformateur3Acteur {
         super.quantityFevesEcheancier = new HashMap<IProduit, List<Double>>();
         super.quantityChocoEcheancier = new HashMap<IProduit, List<Double>>();
         this.contratTraite = new ArrayList<Long>();
+        this.proportionFeves = new HashMap<IProduit, Double>();
     }
 
     public void initialiser() {
         super.initialiser();
+
+        //Initialisation proportions de fèves
+        proportionFeves.put(Feve.F_BQ, 0.3);
+        proportionFeves.put(Feve.F_BQ_E, 0.3);
+        proportionFeves.put(Feve.F_MQ, 0.5);
+        proportionFeves.put(Feve.F_HQ_E, 1.0);
         
         // Initialisation des échéanciers de fèves et chocolats
         for(IProduit feve : super.lesFeves){
@@ -108,13 +117,13 @@ public class Transformateur3StratQuantity extends Transformateur3Acteur {
             if(!this.contratTraite.contains(contrat.getNumero())){
 
                 this.contratTraite.add(contrat.getNumero());
-                super.journalStrat.ajouter("----- Traitement du contrat " + contrat.getNumero()+" -----");
+                //super.journalStrat.ajouter("----- Traitement du contrat " + contrat.getNumero()+" -----");
                 // On ajoute la quantité de fèves reçue au stock
                 IProduit prod = contrat.getProduit();
                 Echeancier echeancier = contrat.getEcheancier();
                 int debutCC = echeancier.getStepDebut(); // On récupère le step de début de l'échéancier
                 int t = debutCC-currentStep; // Translation à appliquer à l'échéancier pour le ramener au step actuel
-                super.journalStrat.ajouter("Produit : " + prod.toString());
+                //super.journalStrat.ajouter("Produit : " + prod.toString());
                 //super.journalStrat.ajouter("Echéancier : " + echeancier.toString());
                 for (int i = t; i <= echeancier.getNbEcheances()+t; i++) {
                     // Si la liste d'échéance n'est pas assez grande, on l'agrandi
@@ -147,13 +156,13 @@ public class Transformateur3StratQuantity extends Transformateur3Acteur {
             }
 
             this.contratTraite.add(contrat.getNumero());
-            super.journalStrat.ajouter("----- Traitement du contrat " + contrat.getNumero()+" -----");
+            //super.journalStrat.ajouter("----- Traitement du contrat " + contrat.getNumero()+" -----");
             // On ajoute la quantité de fèves reçue au stock
             
             Echeancier echeancier = contrat.getEcheancier();
             int debutCC = echeancier.getStepDebut(); // On récupère le step de début de l'échéancier
             int t = debutCC-currentStep; // Translation à appliquer à l'échéancier pour le ramener au step actuel
-            super.journalStrat.ajouter("Produit : " + prod.toString());
+            //super.journalStrat.ajouter("Produit : " + prod.toString());
             //super.journalStrat.ajouter("Echéancier : " + echeancier.toString());
             for (int i = t; i <= echeancier.getNbEcheances()+t; i++) {
                 // Si la liste d'échéance n'est pas assez grande, on l'agrandi

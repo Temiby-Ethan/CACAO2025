@@ -13,8 +13,6 @@ import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.produits.IProduit;
 // @author Henri Roth & Eric Schiltz
 public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquant implements IVendeurContratCadre {
-    //des attributs
-    protected HashMap<IProduit, Double> chocoLivreThisStep;
     //des constructeurs
     //on utilise à chaque fois des instances de cette classe quand on fait des contrats cadres
     public Transformateur3ContratCadreVendeur() {
@@ -24,11 +22,6 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
     // @author Florin Malveau
     public void initialiser() {
         super.initialiser();
-        //on initialise les attributs
-        this.chocoLivreThisStep = new HashMap<IProduit, Double>();
-        for(IProduit choco : super.lesChocolats){
-            this.chocoLivreThisStep.put(choco,0.0);
-        }
     }
     //des méthodes
     //à chaque next on va proposer des contrats cadres pour vendre du chocolat
@@ -91,19 +84,6 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
                     } 
                 }
             }
-        }
-        
-        // On affiche les quantités de chocolat livrées pour ce step
-        jdb.ajouter("");
-		jdb.ajouter("-- CHOCO LIVRE --");
-		for(IProduit choco : chocoLivreThisStep.keySet()){
-			//if(fevesReceptionneesThisStep.get(feve) == 0.0){
-			jdb.ajouter("- "+choco+" : "+chocoLivreThisStep.get(choco));
-			//}
-		}
-        //on remet à 0 les quantités de chocolat livrées pour ce step
-        for(IProduit choco : super.lesChocolats){
-            this.chocoLivreThisStep.replace(choco,0.0);
         }
     }
 
@@ -208,9 +188,7 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
         double stockActuel = stockChoco.getQuantityOf(produit);
 		double aLivre = Math.min(quantite, stockActuel);
 		journalCC.ajouter("   Livraison de "+aLivre+" T de "+produit+" sur "+quantite+" exigees pour contrat "+contrat.getNumero());
-		stockChoco.remove(produit, aLivre);
-        //on met à jour le stock de chocolat livré pour ce step
-        this.chocoLivreThisStep.replace(produit, this.chocoLivreThisStep.get(produit)+aLivre);
+        stockChoco.remove(produit, aLivre);
 		return aLivre;
 	}
     
