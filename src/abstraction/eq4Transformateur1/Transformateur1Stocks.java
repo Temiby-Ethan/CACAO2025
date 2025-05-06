@@ -377,6 +377,7 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 
 
 
+		this.journalStock.ajouter("\n");
 		this.journalPeremptionLimdt.ajouter("\n");
 		this.journalPeremptionFeves.ajouter("\n");
 
@@ -491,10 +492,7 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 			totalStocks += this.getQuantiteEnStock(cm, this.cryptogramme);
 		}
 
-
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", (totalStocks*this.coutStockage));
-
-		//System.out.println("Voici nos prix : " + prixTChocoBase);
 	}
 
 
@@ -529,8 +527,6 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 		for (Chocolat c : lesChocolats){
 			res.add(this.repartitionTransfo.get(c));
 		}
-		
-
 		return res;
 	}
 
@@ -556,9 +552,6 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 		}
 		return this.chocosProduits;
 	}
-
-
-
 
     /**
      * @author MURY Julien
@@ -749,8 +742,8 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 	private void pertePeremption(double[] peremptionArray, IProduit p, Color color, Journal journalPer) {
 		int n = peremptionArray.length - 1;
 		if (peremptionArray[n] > 0) {
-			this.retirerDuStock(p, peremptionArray[n], this.cryptogramme);
 			journalPer.ajouter(Color.pink, color, "Péremption: On retire "+peremptionArray[n]+ " tonnes de "+p+" de notre stock");
+			this.retirerDuStock(p, peremptionArray[n], this.cryptogramme);
 		}
 
 		for (int i=n; i>=1; i--) {

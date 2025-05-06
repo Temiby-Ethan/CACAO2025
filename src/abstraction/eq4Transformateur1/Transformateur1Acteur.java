@@ -183,7 +183,6 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 		this.stocksChocoVar.put(Chocolat.C_MQ_E, stock_C_MQ_E);
 		this.stocksChocoVar.put(Chocolat.C_HQ_BE, stock_C_HQ_BE);
 
-
 		this.stocksMarqueVar = new HashMap<ChocolatDeMarque, Variable>();
 
 		this.pourcentageTransfo = new HashMap<Feve, HashMap<Chocolat, Double>>();
@@ -215,7 +214,6 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 		this.qttFevesAcheteesBourse = new Variable("Qtt Feves Achetees Bourse", "<html>Quantité de fèves achetées en bourse</html>", this, 0., 1000000., 0.);
 
 		this.marges = new HashMap<Chocolat, Double>();
-
 	}
 
 	public void initialiser() {
@@ -228,7 +226,6 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 			ChocolatDeMarque cm= new ChocolatDeMarque(c, "LimDt", pourcentageCacao);
 			this.chocolatsLimDt.add(cm);
 			this.qttSortantesTransactions.put(c, 0.);
-
 		}
 
 
@@ -239,7 +236,6 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 				case C_MQ : 
 					stocksMarqueVar.put(cm, stock_C_MQ_Limdt);
 					initialiserPeremption(peremption_C_MQ_Limdt, stock_C_MQ_Limdt);
-
 					break;
 
 				case C_BQ_E : 
@@ -258,9 +254,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 					break;
 
 				default : 
-
 					journalStock.ajouter(Color.pink, Color.BLACK,"Le chocolat " + cm + " ne devrait pas être présent dans notre gammme");
-
 					break;
 			}
 			this.journalStock.ajouter(Romu.COLOR_LLGRAY, Color.BLACK," stock("+cm+")->"+this.stocksMarqueVar.get(cm).getValeur());
@@ -311,7 +305,6 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 		conversion = 1.0 + (100.0 - Filiere.LA_FILIERE.getParametre("pourcentage min cacao BQ").getValeur())/100.0;
 		this.pourcentageTransfo.get(Feve.F_BQ_E).put(Chocolat.C_BQ_E, conversion);
 
-
 		this.journalStock.ajouter(Romu.COLOR_LLGRAY, Color.PINK, "Stock initial chocolat de marque : ");
 
 		this.journalCC.ajouter(Color.orange, Color.BLACK, "Les achats seront en marron;");
@@ -329,7 +322,6 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 		this.qttEntrantesFeve.put(Feve.F_BQ_E, 0.);
 		this.qttEntrantesFeve.put(Feve.F_HQ_BE, 0.);
 		this.qttEntrantesFeve.put(Feve.F_MQ_E, 0.);
-
 	}
 
 
@@ -508,13 +500,12 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 
 	/**
 	 * @author YAOU Reda
-	 * Cette période initialise les tableaux de péremption de nos produits
+	 * Cette méthode initialise les tableaux de péremption de nos produits
 	 */
 	public void initialiserPeremption(double[] peremptionArray, Variable stock) {
 		peremptionArray[0] = stock.getValeur();
 		for (int i=1; i<peremptionArray.length; i++){
 			peremptionArray[i] = 0.0;
-
 		}
 	}
 }
