@@ -116,6 +116,12 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 		this.next_ao();
 		
 		//Ethan - Indicateurs de stocks
+		this.stock_C_BQ_E.setValeur(this, 0, cryptogramme);
+		this.stock_C_BQ.setValeur(this, 0, cryptogramme);
+		this.stock_C_MQ_E.setValeur(this, 0, cryptogramme);
+		this.stock_C_MQ.setValeur(this, 0, cryptogramme);
+		this.stock_C_HQ_E.setValeur(this, 0, cryptogramme);
+		this.stock_C_HQ_BE.setValeur(this, 0, cryptogramme);
 		for (int i = 0; i < this.chocolats.size(); i++) {
 			if (stocksChocolats.get(chocolats.get(i)).getNom().contains("BQ_E")) {
 				this.stock_C_BQ_E.ajouter(this, stocksChocolats.get(chocolats.get(i)).getValeur(), cryptogramme);
