@@ -358,7 +358,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 		this.journalStock.ajouter("Stock de chocolat de marque : " + this.totalStocksChocoMarque.getValeur(this.cryptogramme));
 		this.journalStock.ajouter("\n");
 		*/
-		totalSortant.setValeur(this, 0.);
+
 
 		this.journal.ajouter("Solde : " + this.getSolde());
 		this.journal.ajouter("\n");

@@ -44,6 +44,8 @@ public class Transformateur1 extends Transformateur1AcheteurAppelDOffre {
         } 
 
         this.determinerQttSortantChoco();
+        
+        totalSortant.setValeur(this, 0.);
         for (Chocolat c : lesChocolats){
             totalSortant.ajouter(this, qttSortantesChoco.get(c));
         }
