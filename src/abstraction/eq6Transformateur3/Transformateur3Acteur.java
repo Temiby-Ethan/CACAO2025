@@ -43,9 +43,9 @@ public class Transformateur3Acteur implements IActeur {
 
 	// Quantitée de chaque type de fèves reçue au prochain step
     // pour chaque fève, in dispose d'un échéancier sur la quantité total de fèves
-	protected HashMap<IProduit, List<Double>> quantityFevesEcheancier;
+	//protected HashMap<IProduit, List<Double>> quantityFevesEcheancier;
     // Quantitée de chaque type de choco vendu au prochain step
-    protected HashMap<IProduit, List<Double>> quantityChocoEcheancier;
+    //protected HashMap<IProduit, List<Double>> quantityChocoEcheancier;
 
 	protected Variable eq6_Q_MQ_0;
 	protected Variable eq6_Q_MQ_1;
