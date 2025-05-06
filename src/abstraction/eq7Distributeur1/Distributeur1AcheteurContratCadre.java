@@ -85,17 +85,19 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 		double valeurtotale = 0;
 		ChocolatDeMarque chocolat = (ChocolatDeMarque) contrat.getProduit();
 		Echeancier echeancierActuel;
-		if(getQuantiteEnStock(chocolat, cryptogramme)>35000.0){
+		
+		if(chocolat.toString().equals("C_BQ_Fraudolat")){
 			return null;
 		}
+		
 		if (listeEcheancier.isEmpty()){
 			tour = 0;
 			echeancierActuel = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, requiredQuantities.get(cdmToInt(chocolat)));
-		}
-		else {
+		} else {
 			tour = listeEcheancier.size();
 			echeancierActuel = listeEcheancier.get(listeEcheancier.size()-1);
 		}
+		
 		for (int step = echeancierActuel.getStepDebut(); step<=echeancierActuel.getStepFin() ; step++){
 
 			for (int i = echeancierActuel.getStepDebut(); i <= echeancierActuel.getStepFin(); i++){
