@@ -55,14 +55,9 @@ public class Transformateur1Usine extends Transformateur1Acteur {
 		// On ajoute le salaire des ouvriers
 		this.totalCoutsUsineStep += this.nbOuvriers.getValeur() * salaireOuvrier;
 
-		// On ajoute le coût de stockage des fèves et chocolats limdt en stock
-		double quantitéTabletteTonne = 0;
-		for (IProduit p : chocolatsLimDt) {
-			quantitéTabletteTonne += this.getQuantiteEnStock(p, this.cryptogramme);
-		}
-
+		//On ajoute les couts additionnels de l'usine
 		this.totalCoutsUsineStep += coutAdditionnelFixe; 
-		this.totalCoutsUsineStep += coutAddditonnelUnitaire * quantitéTabletteTonne;
+		this.totalCoutsUsineStep += coutAddditonnelUnitaire * qttProduiteChoco.getValeur();
 
 		//On paie le coût de l'usine
 		Filiere.LA_FILIERE.getBanque().payerCout(this, super.cryptogramme, "Coûts Usine", totalCoutsUsineStep);
