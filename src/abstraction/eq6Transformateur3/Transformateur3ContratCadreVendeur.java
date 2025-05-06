@@ -137,7 +137,7 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
                     return null;
                 }
                 //sinon on refait l'échéancier avec ce que l'on a; 
-                if(capa >100 && capa<1000){
+                else{
                     //et on met à jour nos capacités de vente max
                     int nb = e.getNbEcheances();
                     return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, nb, capa);
