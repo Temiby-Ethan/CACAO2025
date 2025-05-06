@@ -18,10 +18,9 @@ import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.produits.Chocolat;
 
 
-
 public class Distributeur2AcheteurAppelOffre extends Distributeur2AcheteurContratCadre implements IAcheteurAO {
     
-    
+
     private static final double PRIX_MAX_TONNE = 50000.0;
     private HashMap<ChocolatDeMarque, List<Double>> prixRetenus;
 	private SuperviseurVentesAO supAO;
@@ -34,6 +33,7 @@ public class Distributeur2AcheteurAppelOffre extends Distributeur2AcheteurContra
         
     }
 
+    //@author pebinoh
     public void initialiser() {
 		super.initialiser();
 		this.supAO = (SuperviseurVentesAO)(Filiere.LA_FILIERE.getActeur("Sup.AO"));
@@ -67,7 +67,7 @@ public class Distributeur2AcheteurAppelOffre extends Distributeur2AcheteurContra
         return meilleureOffre; 
     }
 
-
+    //@author tidzzz
     public void next() {
 		super.next();
 		this.journalAO.ajouter("=== Étape "+Filiere.LA_FILIERE.getEtape()+" ====================");
@@ -116,6 +116,7 @@ public class Distributeur2AcheteurAppelOffre extends Distributeur2AcheteurContra
         
     }
 
+    //@author pebinoh
     public List<Journal> getJournaux() {
 		
 		List<Journal> jour = super.getJournaux();

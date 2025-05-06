@@ -23,7 +23,7 @@ import abstraction.eqXRomu.general.Journal;
 
 
 
-
+//@author tidzzz
 public class Distributeur2Vendeur extends Distributeur2Acteur implements IDistributeurChocolatDeMarque {
     
     
@@ -40,7 +40,7 @@ public class Distributeur2Vendeur extends Distributeur2Acteur implements IDistri
 	
 	protected HashMap<ChocolatDeMarque,Boolean> aVendu;
 
-
+	//@author pebinoh
 	public Distributeur2Vendeur() {
 		super();
 		this.capaciteDeVente=120000.0;  //capacite de vente par step
@@ -275,10 +275,10 @@ public void setPrix(ChocolatDeMarque choco) {
 				
 				// Ajustement en fonction des ventes
 				if (this.aVendu.getOrDefault(cm, false) == false) {
-					/* System.out.println("étape:"+Filiere.LA_FILIERE.getEtape()+" changement prix du chocolat "+cm+ "dû à aucune vente");
-					System.out.println("ancien prix : "+prixActuel); */
+					System.out.println("étape:"+Filiere.LA_FILIERE.getEtape()+" changement prix du chocolat "+cm+ "dû à aucune vente");
+					System.out.println("ancien prix : "+prixActuel);
 					prixActuel = prixOriginal * 0.95; // -5%
-					/* System.out.println("nouveau prix : "+prixActuel); */
+					System.out.println("nouveau prix : "+prixActuel); 
 					prixModifie = true;
 					
 					raisonModification = "aucune vente au step précédent";
@@ -310,7 +310,7 @@ public void setPrix(ChocolatDeMarque choco) {
                 // Journalisation avec calcul précis du pourcentage
                 if (prixModifie) {
                     String evolution = prixActuel > prixOriginal ? "augmenté" : "baissé";
-                    // Calcul correct du pourcentage
+                    
                     double pourcentage = Math.abs(((prixActuel - prixOriginal) / prixOriginal) * 100);
                     
                     
@@ -332,7 +332,7 @@ public void setPrix(ChocolatDeMarque choco) {
 
 	private double prix_minimum(ChocolatDeMarque choco, double min) {
 		double minimum = min;
-		LinkedList<IDistributeurChocolatDeMarque> distributeurs = new LinkedList<>();
+		
 		for (IActeur distributeur : Filiere.LA_FILIERE.getActeurs()) {
 			
 			// Vérification avant le cast

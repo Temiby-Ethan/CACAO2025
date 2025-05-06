@@ -37,7 +37,7 @@ public class Distributeur2Acteur implements IActeur {
 	protected HashMap<Chocolat,Integer> nombreMarquesParType;
 	
 	
-
+	//@author ArmandCHANANE
 	public Distributeur2Acteur() {
 		
 		this.journal= new Journal(this.getNom()+" journal", this);
@@ -55,7 +55,8 @@ public class Distributeur2Acteur implements IActeur {
 		return stockTotal;
 	}
 
-    public void initialiser() {
+    //@author tidzzz
+	public void initialiser() {
 		
 		this.stock_Choco=new HashMap<ChocolatDeMarque,Double>();
 		this.nombreMarquesParType=new HashMap<Chocolat,Integer>();
