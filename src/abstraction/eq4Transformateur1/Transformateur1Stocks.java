@@ -444,7 +444,7 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 				    pertePeremption(peremption_C_MQ_Limdt, cm, Color.black, journalPeremptionLimdt);
 
 
-					if ((prixTChocoBase.get(Chocolat.C_MQ) + coutProd) + this.coutStockage)*marges.get(Chocolat.C_MQ)< PRIX_MAX){
+					if ((prixTChocoBase.get(Chocolat.C_MQ) + coutProd + this.coutStockage)*marges.get(Chocolat.C_MQ)< PRIX_MAX){
 						prix_Limdt_MQ.setValeur(this, (prixTChocoBase.get(Chocolat.C_MQ) + coutProd + this.coutStockage)*marges.get(Chocolat.C_MQ));
 					}
 					else {
