@@ -362,6 +362,7 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 				}
 			}
 		}
+		
 
 		//Si le produit vendu est HQ_BE, on peut se permettre de prendre des marges plus grandes car un acheteur de haut de gamme sera peu regardant sur le prix, cherchant principalement à se faire plaisir
 		if (produit.equals(Chocolat.C_HQ_BE) || (produit.getType()=="ChocolatDeMarque" && ((ChocolatDeMarque)produit).getChocolat().equals(Chocolat.C_HQ_BE))){

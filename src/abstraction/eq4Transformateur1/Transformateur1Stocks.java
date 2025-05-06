@@ -376,12 +376,6 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 		}*/
 
 
-		this.journalStock.ajouter("\n");
-		this.journalStock.ajouter(Color.yellow, Romu.COLOR_LBLUE, "N° Etape " + Filiere.LA_FILIERE.getEtape());
-
-		this.journalCC.ajouter(Color.yellow, Romu.COLOR_LBLUE, "N° Etape " + Filiere.LA_FILIERE.getEtape());
-
-		this.journalTransactions.ajouter(Color.yellow, Romu.COLOR_LBLUE, "N° Etape " + Filiere.LA_FILIERE.getEtape());
 
 		this.journalPeremptionLimdt.ajouter("\n");
 		this.journalPeremptionFeves.ajouter("\n");
@@ -433,19 +427,22 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 
 				case C_MQ : 
 				    pertePeremption(peremption_C_MQ_Limdt, cm, Color.black, journalPeremptionLimdt);
-
+					prix_Limdt_MQ.setValeur(this, (prixTChocoBase.get(Chocolat.C_MQ) + coutProdChoco.get(Chocolat.C_MQ) + this.coutStockage)*marges.get(Chocolat.C_MQ));
 					break;
 
 				case C_BQ_E : 
 				    pertePeremption(peremption_C_BQ_E_Limdt, cm, Romu.COLOR_GREEN, journalPeremptionLimdt);
+					prix_Limdt_BQ_E.setValeur(this, (prixTChocoBase.get(Chocolat.C_BQ_E) + coutProdChoco.get(Chocolat.C_BQ_E) + this.coutStockage)*marges.get(Chocolat.C_BQ_E));
 					break;
 
 				case C_MQ_E : 
 				    pertePeremption(peremption_C_MQ_E_Limdt, cm, Color.blue, journalPeremptionLimdt);
+					prix_Limdt_MQ_E.setValeur(this, (prixTChocoBase.get(Chocolat.C_MQ_E) + coutProdChoco.get(Chocolat.C_MQ_E) + this.coutStockage)*marges.get(Chocolat.C_MQ_E));
 					break;
 
 				case C_HQ_BE :
 				    pertePeremption(peremption_C_HQ_BE_Limdt, cm, Color.red, journalPeremptionLimdt);
+					prix_Limdt_HQ_BE.setValeur(this, (prixTChocoBase.get(Chocolat.C_HQ_BE) + coutProdChoco.get(Chocolat.C_HQ_BE) + this.coutStockage)*marges.get(Chocolat.C_HQ_BE));
 					break;
 
 				default : 
