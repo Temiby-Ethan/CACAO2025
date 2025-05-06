@@ -100,7 +100,7 @@ public class FenetrePrincipale extends JFrame {
 					System.out.println("Aucune equipe ne propose la filiere \""+filiereChoisie+"\"");
 					System.out.println("Les filieres proposees sont : ");
 					for (IActeur eq : equipes) {
-						System.out.println("equipe "+eq.getNom()+" : "+eq.getNomsFilieresProposees());
+						System.out.println("equipe "+eq.getNom()+" : " +eq.getNomsFilieresProposees());
 					}
 					System.exit(0);
 				}

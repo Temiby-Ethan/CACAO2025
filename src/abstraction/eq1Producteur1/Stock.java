@@ -72,8 +72,11 @@ public class Stock  {
 
     // Obtenir le stock d'une fève donnée
     public double getStock(Feve feve) {
-        return stocks.getOrDefault(feve, 0.0);
+        double stock = Producteur1arbres().getnombre_feves_total(feve);
+        return stock;
     }
+
+
 
     // Ajouter des quantités pour chaque type de fève
     public void ajouterStock(double quantiteFMQ, double quantiteFBQ, double quantiteFHQ) {

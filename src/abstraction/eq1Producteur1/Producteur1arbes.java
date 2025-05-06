@@ -10,7 +10,7 @@ import abstraction.eqXRomu.produits.Feve;
 
 // AMAL MONCER
 
-public class Producteur1arbes extends Producteur1 {
+public class Producteur1arbres extends Producteur1 {
 
 
     private int nb_arbres_total;
@@ -32,7 +32,7 @@ public class Producteur1arbes extends Producteur1 {
     protected Feve typeFeve;
 
 
-    public Producteur1arbes(Feve typeFeve) {
+    public Producteur1arbres(Feve typeFeve) {
         this.typeFeve = typeFeve; // Initialisation par défaut
         this.journal = new Journal(getNom() + " - Journal arbres", this);
         this.nb_arbres_total= nb_arbres_total();
@@ -95,6 +95,24 @@ public class Producteur1arbes extends Producteur1 {
 
 
     }
+
+    public double getnombre_feves_total(Feve typeFeve){
+        HashMap<Feve, Integer> arbre = getNombre_arbes();
+        switch(typeFeve){
+            case F_BQ:
+            Integer nombreArbres_BQ = arbre.get(Feve.F_BQ);
+            return nombreArbres_BQ * this.production_par_arbre * this.nb_feves_par_cabosse;
+            case F_MQ:
+            Integer nombreArbres_MQ = arbre.get(Feve.F_MQ);
+            return nombreArbres_MQ * this.production_par_arbre * this.nb_feves_par_cabosse;
+            case F_HQ_E:
+            Integer nombreArbres_HQ_E = arbre.get(Feve.F_HQ_E);
+            return nombreArbres_HQ_E * this.production_par_arbre * this.nb_feves_par_cabosse;
+            default:
+                throw new IllegalArgumentException("Nous ne possédons pas de " + typeFeve);
+
+    }
+}
 
     public double getSolde() {
         return Filiere.LA_FILIERE.getBanque().getSolde(this, cryptogramme);
@@ -221,7 +239,7 @@ public class Producteur1arbes extends Producteur1 {
             case F_BQ:
                 if (nb_arbres_voulu <= mort_arbre()){
                     this.journal.ajouter("Replantation de la parcelle de type " + Feve.F_BQ);
-                    HashMap<Feve, Integer> nombreArbres = getNombre_arbes();
+                    HashMap<Feve,Integer> nombreArbres = getNombre_arbes();
                     nombreArbres.put(Feve.F_BQ, nombreArbres.get(Feve.F_BQ) + nb_arbres_voulu);
 
                 }
@@ -368,5 +386,3 @@ public class Producteur1arbes extends Producteur1 {
     }
 
 }
-
-
