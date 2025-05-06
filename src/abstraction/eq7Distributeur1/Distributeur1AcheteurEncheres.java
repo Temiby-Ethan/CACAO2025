@@ -73,6 +73,11 @@ public class Distributeur1AcheteurEncheres extends Distributeur1AcheteurContratC
 			ChocolatDeMarque chocolat = (ChocolatDeMarque) product;
 		this.successedSell.set(cdmToInt(chocolat),this.successedSell.get(cdmToInt(chocolat))+1);
 		this.getStock(chocolat).ajouter(this, enchereRetenue.getQuantiteT());
+
+		// journal Alexiho
+		String str_journal_E = "";
+		str_journal_E ="Achat en enchère de " + this.stocksChocolats.get(chocolat).getNom()+ " = " + enchereRetenue.getQuantiteT() + " tonne(s); ";
+		journalE.ajouter(str_journal_E);
 		}
 	}
 

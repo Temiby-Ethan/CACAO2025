@@ -24,6 +24,7 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 	protected double coutStockage; // cout de stockage par tonne et par step
 	protected double coutProd; // cout de production unitaire du chocolat produit durant cette step, censé contenir salaires, ingrédients secondaires, et autres couts fixes
 	protected double STOCK_MAX_TOTAL_FEVES = 1000000;
+	protected double PRIX_MAX = 200000;
 
 	//Listes regroupant les contrats cadres actifs
 	protected List<ExemplaireContratCadre> mesContratEnTantQuAcheteur;
@@ -435,27 +436,60 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 
 
 		// Respect de la règle de péremption des choco marque après 6 mois soit 12 nexts: on retire du stock ce qui est périmé
+		//On met également à jour les prix par rapport à la nouvelle production. Si celui-ci est excessif, on le limite à PRIX_MAX
 		for (ChocolatDeMarque cm : chocolatsLimDt){
 			switch (cm.getChocolat()){
 
 				case C_MQ : 
 				    pertePeremption(peremption_C_MQ_Limdt, cm, Color.black, journalPeremptionLimdt);
-					prix_Limdt_MQ.setValeur(this, (prixTChocoBase.get(Chocolat.C_MQ) + coutProd + this.coutStockage)*marges.get(Chocolat.C_MQ));
+
+
+					if ((prixTChocoBase.get(Chocolat.C_MQ) + coutProd) + this.coutStockage)*marges.get(Chocolat.C_MQ)< PRIX_MAX){
+						prix_Limdt_MQ.setValeur(this, (prixTChocoBase.get(Chocolat.C_MQ) + coutProd + this.coutStockage)*marges.get(Chocolat.C_MQ));
+					}
+					else {
+						prix_Limdt_MQ.setValeur(this, PRIX_MAX);
+					}
+
+
 					break;
 
 				case C_BQ_E : 
 				    pertePeremption(peremption_C_BQ_E_Limdt, cm, Romu.COLOR_GREEN, journalPeremptionLimdt);
-					prix_Limdt_BQ_E.setValeur(this, (prixTChocoBase.get(Chocolat.C_BQ_E) + coutProd + this.coutStockage)*marges.get(Chocolat.C_BQ_E));
+
+
+					if ((prixTChocoBase.get(Chocolat.C_BQ_E) + coutProd + this.coutStockage)*marges.get(Chocolat.C_BQ_E) < PRIX_MAX){
+						prix_Limdt_BQ_E.setValeur(this, (prixTChocoBase.get(Chocolat.C_BQ_E) + coutProd + this.coutStockage)*marges.get(Chocolat.C_BQ_E));
+					}
+					else {
+						prix_Limdt_BQ_E.setValeur(this, PRIX_MAX);
+					}
+
 					break;
 
 				case C_MQ_E : 
 				    pertePeremption(peremption_C_MQ_E_Limdt, cm, Color.blue, journalPeremptionLimdt);
-					prix_Limdt_MQ_E.setValeur(this, (prixTChocoBase.get(Chocolat.C_MQ_E) + coutProd + this.coutStockage)*marges.get(Chocolat.C_MQ_E));
+
+					if ((prixTChocoBase.get(Chocolat.C_MQ_E) + coutProd + this.coutStockage)*marges.get(Chocolat.C_MQ_E) < PRIX_MAX){
+						prix_Limdt_MQ_E.setValeur(this, (prixTChocoBase.get(Chocolat.C_MQ_E) + coutProd + this.coutStockage)*marges.get(Chocolat.C_MQ_E));
+					}
+					else {
+						prix_Limdt_MQ_E.setValeur(this, PRIX_MAX);
+					}
+
 					break;
 
 				case C_HQ_BE :
 				    pertePeremption(peremption_C_HQ_BE_Limdt, cm, Color.red, journalPeremptionLimdt);
-					prix_Limdt_HQ_BE.setValeur(this, (prixTChocoBase.get(Chocolat.C_HQ_BE) + coutProd + this.coutStockage)*marges.get(Chocolat.C_HQ_BE));
+
+
+					if ((prixTChocoBase.get(Chocolat.C_HQ_BE) + coutProd + this.coutStockage)*marges.get(Chocolat.C_HQ_BE) < PRIX_MAX){
+						prix_Limdt_HQ_BE.setValeur(this, (prixTChocoBase.get(Chocolat.C_HQ_BE) + coutProd + this.coutStockage)*marges.get(Chocolat.C_HQ_BE));
+					}
+					else {
+						prix_Limdt_HQ_BE.setValeur(this, PRIX_MAX);
+					}
+
 					break;
 
 				default : 
