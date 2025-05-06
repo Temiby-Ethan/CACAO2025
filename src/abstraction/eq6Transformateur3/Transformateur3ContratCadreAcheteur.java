@@ -50,6 +50,8 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratC
 		super.next();
 		SuperviseurVentesContratCadre supCCadre = (SuperviseurVentesContratCadre) Filiere.LA_FILIERE.getActeur("Sup.CCadre");
 
+
+		//gestion de la suppression des contrats obsolètes
 		journalCC.ajouter("======= Contrats cadres finis période"+Filiere.LA_FILIERE.getEtape()+"=======");
 		// On enleve les contrats obsolete (nous pourrions vouloir les conserver pour "archive"...)
 		for (ExemplaireContratCadre contrat : this.ContratsAcheteur) {
@@ -65,9 +67,10 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratC
 		}
 		this.ContratsVendeur.removeAll(contratsObsoletes);
 		journalCC.ajouter("======================");
+
 		
 		// Proposition d'un nouveau contrat a tous les vendeurs possibles
-		IProduit produit = Feve.F_BQ;
+		for(IProduit choco : super.feve){
 		for (IActeur acteur : Filiere.LA_FILIERE.getActeurs()) {
 			if (acteur!=this && acteur instanceof IVendeurContratCadre && ((IVendeurContratCadre)acteur).vend(produit)) {
 				supCCadre.demandeAcheteur((IAcheteurContratCadre)this, ((IVendeurContratCadre)acteur), produit, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10, 100.0), cryptogramme, false);
