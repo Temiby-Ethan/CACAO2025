@@ -85,32 +85,38 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 		double valeurtotale = 0;
 		ChocolatDeMarque chocolat = (ChocolatDeMarque) contrat.getProduit();
 		Echeancier echeancierActuel;
+		
+		if(chocolat.toString().equals("C_BQ_Fraudolat")){
+			return null;
+		}
+		
 		if (listeEcheancier.isEmpty()){
 			tour = 0;
 			echeancierActuel = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, requiredQuantities.get(cdmToInt(chocolat)));
-		}
-		else {
+		} else {
 			tour = listeEcheancier.size();
 			echeancierActuel = listeEcheancier.get(listeEcheancier.size()-1);
 		}
+		
 		for (int step = echeancierActuel.getStepDebut(); step<=echeancierActuel.getStepFin() ; step++){
 
-			for (int i = 0; i < step; i++){
+			for (int i = echeancierActuel.getStepDebut(); i <= echeancierActuel.getStepFin(); i++){
 				valeurtotale += echeancierActuel.getQuantite(i);
 			}
-			
+			int nbSteps = echeancierActuel.getStepFin() - echeancierActuel.getStepDebut() + 1;
 			double quantiteDemandee = echeancierActuel.getQuantite(step);
 			double quantiteVoulue = requiredQuantities.get(cdmToInt(chocolat))/predictionsVentesPourcentage.get(echeancierActuel.getStepDebut()%24)*predictionsVentesPourcentage.get(step%24);
-			if (quantiteDemandee > quantiteVoulue*(1+0.02*step)){
-				echeancierActuel.set(step, Math.max(Math.max(100,quantiteVoulue*(1+0.02*step)), valeurtotale/(10*step)));
+			if (quantiteDemandee > quantiteVoulue*(1+0.02*tour)){
+				echeancierActuel.set(step, Math.max(Math.max(100,quantiteVoulue*(1+0.02*tour)), valeurtotale/(10*nbSteps)));
 			}
-			if (quantiteDemandee < quantiteVoulue*(1-0.02*step)){
-				echeancierActuel.set(step, Math.max(Math.max(100,quantiteVoulue*(1-0.02*step)), valeurtotale/(10*step)));
+			if (quantiteDemandee < quantiteVoulue*(1-0.02*tour)){
+				echeancierActuel.set(step, Math.max(Math.max(100,quantiteVoulue*(1-0.02*tour)), valeurtotale/(10*nbSteps)));
 			}
 			if (quantiteDemandee < 100){
-				echeancierActuel.set(step, Math.max(100, 100 + valeurtotale/(10*step)));
+				echeancierActuel.set(step, Math.max(100, 100 + valeurtotale/(10*nbSteps)));
 			}
 			valeurtotale = 0;
+			
 		}
 		return(echeancierActuel);
 	}
