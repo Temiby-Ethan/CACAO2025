@@ -26,9 +26,6 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 	
 	// défi 1 et 2 par Alexiho
 	protected Journal journal; // Déclaration du journal
-	protected Journal journalE;  // Déclaration du journal
-	protected Journal journalCC; // Déclaration du journal
-	protected Journal journalAO; // Déclaration du journal
 	// protected Map<ChocolatDeMarque, Variable> stocksChocolats; // Table de hachage pour stocker les quantités de chocolat
 	//protected List<ChocolatDeMarque> chocolats;
 	protected List<Double> prix;
@@ -47,9 +44,6 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 		super();
         
         this.journal = new Journal("Journal stock de EQ7", this); // Initialisation du journal
-		this.journalE = new Journal("Journal d'enchères de EQ7", this); // Initialisation du journal
-		this.journalCC = new Journal("Journal contrat cadre de EQ7", this);
-		this.journalAO = new Journal("Journal appel d'offre de EQ7", this);
 
 		
 		predictionsVentesPourcentage = Arrays.asList(3.6 , 3.6 , 5.0 , 3.6 , 3.6 , 3.6 , 3.6 , 7.0 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 13.0);
@@ -139,19 +133,10 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 		}
 		//par Ethan
 		String str_journal_stock = "";
-		String str_journal_E = "";
-		String str_journal_CC = "";
-		String str_journal_AO = "";
 
 		for (int i = 0 ; i<chocolats.size() ; i++){
 			str_journal_stock = this.stocksChocolats.get(chocolats.get(i)).getNom() + " = " + this.stocksChocolats.get(chocolats.get(i)).getValeur() + ";";
 			journal.ajouter(str_journal_stock);
-			str_journal_E ="Achat en enchère de " + this.stocksChocolats.get(chocolats.get(i)).getNom()+ " = " + this.successedSell.get(i) + " tonne(s); ";
-			journalE.ajouter(str_journal_E);
-			str_journal_CC = "Achat en contrat cadre de " + this.stocksChocolats.get(chocolats.get(i)).getNom()+ " = " + "0" + " tonne(s);" ;
-			journalCC.ajouter(str_journal_CC);
-			str_journal_AO = "Achat en appel d'offre de " + this.stocksChocolats.get(chocolats.get(i)).getNom()+ " = " + "0" + " tonne(s);";
-			journalAO.ajouter(str_journal_AO);
 		}
 
 		// définition des capacités de ventes
@@ -181,8 +166,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 			if (pos<0) {
 				return 0.0;
 			} else {
-				//System.out.println("capaciteDeVente : " + capaciteDeVente.get(pos) + "; stock : " + this.getStock(choco).getValeur());
-				return Math.max(capaciteDeVente.get(pos), this.getStock(choco).getValeur());
+				return Math.min(capaciteDeVente.get(pos), this.getStock(choco).getValeur());
 			}
 		}
 	}

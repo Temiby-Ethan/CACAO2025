@@ -13,16 +13,24 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.produits.IProduit;
 import java.lang.reflect.Array;
+import abstraction.eqXRomu.general.Journal;
 
 public class Distributeur1Stock extends Distributeur1Acteur{
     protected Map<ChocolatDeMarque, Variable> stocksChocolats;
     protected List<ChocolatDeMarque> chocolats;
+	protected Journal journalE;  // Déclaration du journal
+	protected Journal journalCC; // Déclaration du journal
+	protected Journal journalAO; // Déclaration du journal
 
     public Distributeur1Stock() // Alexiho
     {
         this.stocksChocolats = new HashMap<>();
 
         this.chocolats = new ArrayList<ChocolatDeMarque>();
+
+		this.journalE = new Journal("Journal d'enchères de EQ7", this); // Initialisation du journal
+		this.journalCC = new Journal("Journal contrat cadre de EQ7", this);
+		this.journalAO = new Journal("Journal appel d'offre de EQ7", this);
     }
 
 	public int cdmToInt(ChocolatDeMarque c){ // par Alexiho
