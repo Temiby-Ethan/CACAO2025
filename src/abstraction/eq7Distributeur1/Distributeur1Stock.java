@@ -13,16 +13,24 @@ import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.produits.IProduit;
 import java.lang.reflect.Array;
+import abstraction.eqXRomu.general.Journal;
 
 public class Distributeur1Stock extends Distributeur1Acteur{
     protected Map<ChocolatDeMarque, Variable> stocksChocolats;
     protected List<ChocolatDeMarque> chocolats;
+	protected Journal journalE;  // Déclaration du journal
+	protected Journal journalCC; // Déclaration du journal
+	protected Journal journalAO; // Déclaration du journal
 
     public Distributeur1Stock() // Alexiho
     {
         this.stocksChocolats = new HashMap<>();
 
         this.chocolats = new ArrayList<ChocolatDeMarque>();
+
+		this.journalE = new Journal("Journal d'enchères de EQ7", this); // Initialisation du journal
+		this.journalCC = new Journal("Journal contrat cadre de EQ7", this);
+		this.journalAO = new Journal("Journal appel d'offre de EQ7", this);
     }
 
 	public int cdmToInt(ChocolatDeMarque c){ // par Alexiho
@@ -53,13 +61,18 @@ public class Distributeur1Stock extends Distributeur1Acteur{
 		else{
 		ancient_value_mid = Filiere.LA_FILIERE.getVentes(choco, etape-24) ;
 		}
-		val_demand = 1.05*ancient_value_mid - getQuantiteEnStock(choco, crypto);
-		if (val_demand > 100.0){
-			return val_demand;
+		if(getQuantiteEnStock(choco, cryptogramme)>25000.0){
+			return 0.0;
 		}
 		else{
-			return 100.0;
-		}
+			val_demand = 1.05*ancient_value_mid - getQuantiteEnStock(choco, crypto);
+			if (val_demand > 100.0){
+				return Math.min(val_demand, 9000.0);
+			}
+			else{
+				return 100.0;
+			}
+	}
 	}
 
 	public Map<ChocolatDeMarque, Variable> getStocksChocolats() { // par Alexiho
