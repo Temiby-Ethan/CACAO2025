@@ -76,14 +76,14 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratC
 		this.ContratsVendeur.removeAll(contratsObsoletes);
 		journalCC.ajouter("======================");
 
-		
+		// Pour tous les types de fèves
 		// Proposition d'un nouveau contrat a tous les vendeurs possibles
 		// Fève utilisée : BQ / BQ_E / MQ / HQ_E
-		IProduit produit = Feve.F_BQ;
-		for(IProduit choco : super.feve){
-		for (IActeur acteur : Filiere.LA_FILIERE.getActeurs()) {
-			if (acteur!=this && acteur instanceof IVendeurContratCadre && ((IVendeurContratCadre)acteur).vend(produit)) {
-				supCCadre.demandeAcheteur((IAcheteurContratCadre)this, ((IVendeurContratCadre)acteur), produit, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10, 100.0), cryptogramme, false);
+		for(IProduit feve : super.fevesUtiles){
+			for (IActeur acteur : Filiere.LA_FILIERE.getActeurs()) {
+				if (acteur!=this && acteur instanceof IVendeurContratCadre && ((IVendeurContratCadre)acteur).vend(feve)) {
+					supCCadre.demandeAcheteur((IAcheteurContratCadre)this, ((IVendeurContratCadre)acteur), feve, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10, 100.0), cryptogramme, false);
+				}
 			}
 		}
 
@@ -119,7 +119,7 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratC
 		}
 
 		for(IProduit feve : fevesReceptionneesThisStep.keySet()){
-			this.fevesReceptionneesThisStep.replace(produit,0.0);
+			this.fevesReceptionneesThisStep.replace(feve,0.0);
 		}
 	}
 
