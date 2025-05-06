@@ -204,6 +204,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 		if (pos>=0) {
 			this.getStock(choco).retirer(this, quantite);
 		}
+		journal.ajouter("vente" + quantite + choco.getNom());
 	}
 	@Override
 	public Variable getStock(ChocolatDeMarque c) { // par Alexiho
