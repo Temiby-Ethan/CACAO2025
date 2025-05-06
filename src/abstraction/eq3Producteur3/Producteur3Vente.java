@@ -268,7 +268,12 @@ public class Producteur3Vente extends Producteur3GestionDesCoûts implements IVe
                 return echeancier;
             }
             else{
-                return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, nbStep, stockPotentiel*0.3/nbStep);
+                if (stockPotentiel*0.3/nbStep > 100){
+                    return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, nbStep, stockPotentiel*0.3/nbStep);
+                }
+                else{
+                    return null;
+                }
             }
         }
         
