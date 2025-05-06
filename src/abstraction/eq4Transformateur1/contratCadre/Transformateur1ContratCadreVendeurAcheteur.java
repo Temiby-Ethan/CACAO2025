@@ -46,9 +46,9 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 
 			//Si la qtt proposée est cohérente avec la quantité que nous voulions initialement, on accepte l'echeancier
 			if (Math.abs((this.qttInitialementVoulue - contrat.getEcheancier().getQuantiteTotale())/this.qttInitialementVoulue) <= epsilon){
-
 				return contrat.getEcheancier();
 			}
+
 			//Sinon on négocie
 			else{
 
@@ -59,17 +59,37 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 					for (int step = contrat.getEcheancier().getStepDebut() ; step <= contrat.getEcheancier().getStepFin() ; step++){
 
 						Feve prod = (Feve)contrat.getProduit();
+						ChocolatDeMarque cmAssocie;
+						int pourcentageCacao;
 
 						//Calcul du manque de la quantité de fève nécessaire pour chacun des steps
 						if(prod.getGamme().equals(Gamme.MQ)){
-								if (prod.isEquitable()) qttSortant = determinerQttSortantChocoAuStep(step, Chocolat.C_MQ_E) - determinerQttEntrantFevesAuStep(step, prod);
-								else qttSortant = determinerQttSortantChocoAuStep(step, Chocolat.C_MQ) - determinerQttEntrantFevesAuStep(step, prod);
+							if (prod.isEquitable()) {
+								pourcentageCacao = (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+ Gamme.MQ).getValeur());
+								cmAssocie = new ChocolatDeMarque(Chocolat.C_MQ_E, "LimDt", pourcentageCacao);
+								qttSortant = Math.min(this.prodMax.getValeur() * this.repartitionTransfo.get(Chocolat.C_MQ_E).getValeur() / this.pourcentageTransfo.get(prod).get(Chocolat.C_MQ_E), determinerQttSortantChocoAuStep(step, cmAssocie));
+								qttSortant += peremption_C_MQ_E_Limdt[11] + peremption_C_MQ_E_Limdt[10] - determinerQttEntrantFevesAuStep(step, prod);
+							}
+							else {
+								pourcentageCacao = (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+ Gamme.MQ).getValeur());
+								cmAssocie = new ChocolatDeMarque(Chocolat.C_MQ, "LimDt", pourcentageCacao);
+								qttSortant = Math.min(this.prodMax.getValeur() * this.repartitionTransfo.get(Chocolat.C_MQ).getValeur() / this.pourcentageTransfo.get(prod).get(Chocolat.C_MQ), determinerQttSortantChocoAuStep(step, cmAssocie));
+								qttSortant +=  peremption_C_MQ_Limdt[11] + peremption_C_MQ_Limdt[10] - determinerQttEntrantFevesAuStep(step, prod);
+							}
 						}
+
 						else if (prod.getGamme().equals(Gamme.BQ)){
-								qttSortant = determinerQttSortantChocoAuStep(step, Chocolat.C_BQ_E) - determinerQttEntrantFevesAuStep(step, prod);
+							pourcentageCacao = (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+ Gamme.BQ).getValeur());
+							cmAssocie = new ChocolatDeMarque(Chocolat.C_BQ_E, "LimDt", pourcentageCacao);
+							qttSortant = Math.min(this.prodMax.getValeur() * this.repartitionTransfo.get(Chocolat.C_BQ_E).getValeur() / this.pourcentageTransfo.get(prod).get(Chocolat.C_BQ_E), determinerQttSortantChocoAuStep(step, cmAssocie));
+							qttSortant += peremption_C_BQ_E_Limdt[11] + peremption_C_BQ_E_Limdt[10] - determinerQttEntrantFevesAuStep(step, prod);
 						}
+
 						else if (prod.getGamme().equals(Gamme.HQ)){
-								qttSortant = determinerQttSortantChocoAuStep(step, Chocolat.C_HQ_BE) - determinerQttEntrantFevesAuStep(step, prod);
+							pourcentageCacao = (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+ Gamme.HQ).getValeur());
+							cmAssocie = new ChocolatDeMarque(Chocolat.C_HQ_BE, "LimDt", pourcentageCacao);
+							qttSortant = Math.min(this.prodMax.getValeur() * this.repartitionTransfo.get(Chocolat.C_HQ_BE).getValeur() / this.pourcentageTransfo.get(prod).get(Chocolat.C_HQ_BE), determinerQttSortantChocoAuStep(step, cmAssocie));
+							qttSortant += peremption_C_HQ_BE_Limdt[11] + peremption_C_HQ_BE_Limdt[10] - determinerQttEntrantFevesAuStep(step, prod);
 						}
 
 
@@ -77,21 +97,21 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 						/* Mise à jour de l'échéancier selon nos exigeances */
 						
 						//si qtt sortante est très négatif, c'est que l'on achète plus de fève que l'on ne vent de chocolat, on annule donc le contrat
-						if (qttSortant < -5000.){
+						if (qttSortant < -10000.){
 							return null;
 						}
 						//Sinon, si on vend suffisamment de chocolat à chaque step et que la proposition est proche de ce que l'on souhaite, on met la qtt sortante à condition qu'elle soit positive
 						//Mais il nous faut malgré tout des fèves et on va pour cela ajouter une certaine quantité de fève de secours au cas où on signerait un contrat en tant que vendeur 
-						else if (Math.abs(1.3*qttSortant - e.getQuantite(step))/qttSortant < 0.5 && qttSortant>0. ){
-							e.set(step, 1.3*qttSortant*0.75 + 0.25*e.getQuantite(step));
+						else if (Math.abs(1.1*qttSortant - e.getQuantite(step))/(1.5*qttSortant) < 0.1 && qttSortant>0. ){
+							e.set(step, 1.5*qttSortant*0.95 + 0.05*e.getQuantite(step));
 						}
 						//si la qtt entrante est faible, on vérifie quand meme que celle ci respecte les spécifications sur les CC
-						else if (Math.abs(1.3*qttSortant)< 10000. && 1.3*qttSortant > e.getQuantiteTotale()/(10*e.getNbEcheances())){
-							e.set(step, 1.3*qttSortant);
+						else if (Math.abs(1.1*qttSortant)< 10000. && 1.1*qttSortant > e.getQuantiteTotale()/(10*e.getNbEcheances())){
+							e.set(step, 1.1*qttSortant);
 						}
-						//Sinon, on met le double du minimum pour le step
-						else {
-							e.set(step, e.getQuantiteTotale()/(5*e.getNbEcheances()));
+						//Sinon, on met directement qtt sortant
+						else if (qttSortant > 10000. && qttSortant > e.getQuantiteTotale()/(10*e.getNbEcheances())){
+							e.set(step, qttSortant);
 						}
 
 					}
@@ -103,7 +123,9 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 					//Recherche du maximum de l'échancier
 					double qttMax = 0.;
 					double qttMin = e.getQuantite(e.getStepDebut()+1);
-					for (int s =e.getStepDebut() ; s< e.getStepFin() ; s++){
+
+
+					for(int s = e.getStepDebut() ; s <= e.getStepFin() ; s++){
 						if (e.getQuantite(s) > qttMax){
 							qttMax = e.getQuantite(s);
 						}
@@ -112,9 +134,21 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 						}
 					}
 
+
+					//On vérifie si l'échéancier nécessite des modifications, c'est le cas si l'une des étapes ne vérifie pas la conditions des distributeurs
+					boolean modifNecessaires = false;
+					for (int s =e.getStepDebut() ; s<= e.getStepFin() ; s++){
+						if (e.getQuantite(s)< e.getQuantiteTotale()/(10*e.getNbEcheances())){
+							modifNecessaires = true;
+						}
+
+					}
+
 					//Si un des steps est inférieur à la quantité minimale, on met tous les steps à la quantité moyenne
-					for (int s = e.getStepDebut() ; s <= e.getStepFin() ; s++){
-						e.set(s, (qttMax + qttMin)/2);
+					if (modifNecessaires){
+						for (int s = e.getStepDebut() ; s <= e.getStepFin() ; s++){
+							e.set(s, (qttMax + qttMin)/2);
+						}
 					}
 
 					//Si la quantité totale est trop faible, on va se mettre au minimum sur tout le contrat 
@@ -139,14 +173,18 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 					
 					/*Renvoie de l'échéancier modifié */
 
-					this.qttInitialementVoulue = e.getQuantiteTotale();
+					this.qttInitialementVoulue = e.getQuantiteTotale();	//On actualise la quantité initialement voulue à la quantité que l'on vient de négocier pour adapter la prochaine offre
 					return e;
 
 				}
 
 
-				//Si on n'a pas suffisamment de contrats actifs, on accepte le contrat proposé
+				//Si on n'a pas suffisamment de contrats actifs, on accepte le contrat proposé seulement si la quantité moyenne par step est assez grande
 				else {
+					if(contrat.getEcheancier().getQuantiteTotale()/contrat.getEcheancier().getNbEcheances()< 100.){
+						return null;
+					}
+
 					return contrat.getEcheancier();
 				}
 
@@ -232,76 +270,218 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 
 		//On essaie pour chacune des fèves dont on a besoin de négocier un contrat cadre avec tout les vendeurs de cette fève
 		for(IProduit produit : this.lesFeves){
-			if(qttEntrantesFeve.get((Feve)produit)< 0.1*STOCK_MAX_TOTAL_FEVES){
+
+
+			//Détermination du nombre de contrat cadre : 
+			int nbContratA = 0;
+			for (ExemplaireContratCadre cc : mesContratEnTantQuAcheteur){
+				if (cc.getProduit().equals(produit)) nbContratA++;
+			}
+
+
+			//On estime la quantité sortant que si on a suffisamment de contrat en tant qu'acheteur
+			if(nbContratA > 3 ){
+				//Détermination des carences en approvisionnement de fève
+				ChocolatDeMarque cmAssocie;
+				int pourcentageCacao;
+				Feve prod = (Feve)produit;
+				double qttSortant = 0.;
+				int step = Filiere.LA_FILIERE.getEtape();
+
+				//Calcul du manque de la quantité de fève nécessaire pour chacun des steps
+				if(prod.getGamme().equals(Gamme.MQ)){
+					if (prod.isEquitable()) {
+						pourcentageCacao = (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+ Gamme.MQ).getValeur());
+						cmAssocie = new ChocolatDeMarque(Chocolat.C_MQ_E, "LimDt", pourcentageCacao);
+						qttSortant = Math.min(this.prodMax.getValeur() * this.repartitionTransfo.get(Chocolat.C_MQ_E).getValeur(), qttSortantesChoco.get(cmAssocie.getChocolat())) / this.pourcentageTransfo.get(prod).get(Chocolat.C_MQ_E);
+						qttSortant += - qttEntrantesFeve.get(Feve.F_MQ_E);
+					}
+					else {
+						pourcentageCacao = (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+ Gamme.MQ).getValeur());
+						cmAssocie = new ChocolatDeMarque(Chocolat.C_MQ, "LimDt", pourcentageCacao);
+						qttSortant = Math.min(this.prodMax.getValeur() * this.repartitionTransfo.get(Chocolat.C_MQ).getValeur() , qttSortantesChoco.get(cmAssocie.getChocolat()))/ this.pourcentageTransfo.get(prod).get(Chocolat.C_MQ);
+						qttSortant += - qttEntrantesFeve.get(Feve.F_MQ);
+					}
+				}
+
+				else if (prod.getGamme().equals(Gamme.BQ)){
+					pourcentageCacao = (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+ Gamme.BQ).getValeur());
+					cmAssocie = new ChocolatDeMarque(Chocolat.C_BQ_E, "LimDt", pourcentageCacao);
+					qttSortant = Math.min(this.prodMax.getValeur() * this.repartitionTransfo.get(Chocolat.C_BQ_E).getValeur(), qttSortantesChoco.get(cmAssocie.getChocolat()))/ this.pourcentageTransfo.get(prod).get(Chocolat.C_BQ_E);
+					qttSortant += - qttEntrantesFeve.get(Feve.F_BQ_E);
+				}
+
+				else if (prod.getGamme().equals(Gamme.HQ)){
+					pourcentageCacao = (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+ Gamme.HQ).getValeur());
+					cmAssocie = new ChocolatDeMarque(Chocolat.C_HQ_BE, "LimDt", pourcentageCacao);
+					qttSortant = Math.min(this.prodMax.getValeur() * this.repartitionTransfo.get(Chocolat.C_HQ_BE).getValeur(), qttSortantesChoco.get(cmAssocie.getChocolat()))  / this.pourcentageTransfo.get(prod).get(Chocolat.C_HQ_BE);
+					qttSortant += - qttEntrantesFeve.get(Feve.F_HQ_BE);
+				}
+			
+
+
+
+				if(qttSortant > 0.){
+					journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN, "Recherche d'un vendeur aupres de qui acheter " + produit);
+
+					List<IVendeurContratCadre> vendeurs = supCCadre.getVendeurs(produit);
+					if (vendeurs.contains(this)) {
+						vendeurs.remove(this);
+					}
+
+					if (vendeurs.size()==0) {
+						journalCC.ajouter(Color.pink, Romu.COLOR_BROWN, "-->Pas de vendeur potentiel");
+						journalCC.ajouter("\n");
+					} else {
+						journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN, "Voici les vendeurs potentiels : " + vendeurs);
+						journalCC.ajouter("\n");
+					}
+
+					for (IVendeurContratCadre vendeur : vendeurs){
+						if (vendeur!=null) {
+							journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN, "Demande au superviseur de debuter les negociations pour un contrat cadre de "+produit+" avec le vendeur "+vendeur);
+							this.qttInitialementVoulue = STOCK_MAX_TOTAL_FEVES;
+							ExemplaireContratCadre cc = supCCadre.demandeAcheteur((IAcheteurContratCadre)this, vendeur, produit, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 30,1.1*qttSortant), cryptogramme,false);
+							if (cc!=null) {
+								journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN, "-->aboutit au contrat "+cc);
+								journalCC.ajouter("\n");
+								this.mesContratEnTantQuAcheteur.add(cc);
+							}
+							else {
+								journalCC.ajouter(Color.pink, Romu.COLOR_BROWN, "-->Le contrat n'a pas pu aboutir");
+								journalCC.ajouter("\n");
+							}
+						}
+					}
+				}
+			}
+
+			//Sinon, on va initier des contrats à forte quantité
+			else {
 				journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN, "Recherche d'un vendeur aupres de qui acheter " + produit);
 
-				List<IVendeurContratCadre> vendeurs = supCCadre.getVendeurs(produit);
-				if (vendeurs.contains(this)) {
-					vendeurs.remove(this);
-				}
+					List<IVendeurContratCadre> vendeurs = supCCadre.getVendeurs(produit);
+					if (vendeurs.contains(this)) {
+						vendeurs.remove(this);
+					}
 
-                if (vendeurs.size()==0) {
-					journalCC.ajouter(Color.pink, Romu.COLOR_BROWN, "-->Pas de vendeur potentiel");
-					journalCC.ajouter("\n");
-				} else {
-				    journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN, "Voici les vendeurs potentiels : " + vendeurs);
-				    journalCC.ajouter("\n");
-				}
+					if (vendeurs.size()==0) {
+						journalCC.ajouter(Color.pink, Romu.COLOR_BROWN, "-->Pas de vendeur potentiel");
+						journalCC.ajouter("\n");
+					} else {
+						journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN, "Voici les vendeurs potentiels : " + vendeurs);
+						journalCC.ajouter("\n");
+					}
 
-				for (IVendeurContratCadre vendeur : vendeurs){
-					if (vendeur!=null) {
-						journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN, "Demande au superviseur de debuter les negociations pour un contrat cadre de "+produit+" avec le vendeur "+vendeur);
-						this.qttInitialementVoulue = STOCK_MAX_TOTAL_FEVES;
-						ExemplaireContratCadre cc = supCCadre.demandeAcheteur((IAcheteurContratCadre)this, vendeur, produit, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 30, STOCK_MAX_TOTAL_FEVES/30), cryptogramme,false);
-						if (cc!=null) {
-							journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN, "-->aboutit au contrat "+cc);
-							journalCC.ajouter("\n");
-							this.mesContratEnTantQuAcheteur.add(cc);
-						}
-						else {
-							journalCC.ajouter(Color.pink, Romu.COLOR_BROWN, "-->Le contrat n'a pas pu aboutir");
-							journalCC.ajouter("\n");
+					for (IVendeurContratCadre vendeur : vendeurs){
+						if (vendeur!=null) {
+							journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN, "Demande au superviseur de debuter les negociations pour un contrat cadre de "+produit+" avec le vendeur "+vendeur);
+							this.qttInitialementVoulue = STOCK_MAX_TOTAL_FEVES;
+							ExemplaireContratCadre cc = supCCadre.demandeAcheteur((IAcheteurContratCadre)this, vendeur, produit, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 30,STOCK_MAX_TOTAL_FEVES/30.), cryptogramme,false);
+							if (cc!=null) {
+								journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN, "-->aboutit au contrat "+cc);
+								journalCC.ajouter("\n");
+								this.mesContratEnTantQuAcheteur.add(cc);
+							}
+							else {
+								journalCC.ajouter(Color.pink, Romu.COLOR_BROWN, "-->Le contrat n'a pas pu aboutir");
+								journalCC.ajouter("\n");
+							}
 						}
 					}
-				}
 			}
 		}
+
+
+
+
+
+		
 		// Recherche d'acheteurs de chocolat de marque
 		for(ChocolatDeMarque produit : chocolatsLimDt){
-			journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE, "Recherche d'un acheteur aupres de qui vendre LimDt " + produit);
 
-			List<IAcheteurContratCadre> acheteurs = supCCadre.getAcheteurs(produit);
-			if (acheteurs.contains(this)) {
-			    acheteurs.remove(this);
+			Feve feveAssociee = Feve.F_BQ_E;
+
+			switch(produit.getChocolat()){
+				case C_MQ : 
+					feveAssociee = Feve.F_MQ;
+					break;
+				
+				case C_MQ_E : 
+					feveAssociee = Feve.F_MQ_E;
+					break;
+
+				case C_BQ_E : 
+					feveAssociee = Feve.F_BQ_E;
+					break;
+
+				case C_HQ_BE : 
+					feveAssociee = Feve.F_HQ_BE;
+					break;
+
+				default : 
+					System.out.println("Ce chocolat ne devrait pas faire partie de la gamme : " + produit);
+					break;
 			}
 
-			if (acheteurs.size()==0) {
-				journalCC.ajouter(Color.pink, Romu.COLOR_PURPLE, "-->Pas d'acheteur potentiel");
-				journalCC.ajouter("\n");
-			} else {
-			    journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE, "Voici les acheteurs potentiels pour LimDt : " + acheteurs);
-			    journalCC.ajouter("\n");
-			}
 
-			for(IAcheteurContratCadre acheteur : acheteurs){
-				if (acheteur!=null) {
-					journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE, "Demande au superviseur de debuter les negociations pour un contrat cadre de "+produit+" avec l'acheteur "+acheteur);
-					if (0.3*this.getQuantiteEnStock(produit, this.cryptogramme) > 100.){
-						ExemplaireContratCadre cc = supCCadre.demandeVendeur(acheteur, (IVendeurContratCadre)this, produit, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 25, (0.3*this.getQuantiteEnStock(produit, this.cryptogramme)+10)/25), cryptogramme,false);
-						if (cc!=null) {
-							journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE, "-->aboutit au contrat "+cc);
-							journalCC.ajouter("\n");
-							this.mesContratEnTantQueVendeur.add(cc);
-						}
-						else {
-							journalCC.ajouter(Color.pink, Romu.COLOR_PURPLE, "-->Le contrat n'a pas pu aboutir");
-							journalCC.ajouter("\n");
+			//On calcule la quantité de chocolat qu'il est possible de vendre au step suivant : on extrapole cette quantité à tous les futurs steps
+			double qttEntrant = Math.min(qttEntrantesFeve.get(feveAssociee) * pourcentageTransfo.get(feveAssociee).get(produit.getChocolat()), this.prodMax.getValeur() * this.repartitionTransfo.get(produit.getChocolat()).getValeur());
+			qttEntrant -= qttSortantesChoco.get(produit.getChocolat());
+
+			//On ne cherche des contrats cadres que si l'on a de la matière à vendre 
+			if (0.2*qttEntrant > 1000.){
+				//détermination du nombre de contrat pour ce produit : 
+				int nbContrat = 0;
+				for (ExemplaireContratCadre cc : mesContratEnTantQueVendeur){
+					if (((ChocolatDeMarque)cc.getProduit()).equals(produit)){
+						nbContrat++;
+					}
+				}
+				if (nbContrat<5){
+					journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE, "Recherche d'un acheteur aupres de qui vendre LimDt " + produit);
+
+					List<IAcheteurContratCadre> acheteurs = supCCadre.getAcheteurs(produit);
+					if (acheteurs.contains(this)) {
+						acheteurs.remove(this);
+					}
+
+					if (acheteurs.size()==0) {
+						journalCC.ajouter(Color.pink, Romu.COLOR_PURPLE, "-->Pas d'acheteur potentiel");
+						journalCC.ajouter("\n");
+					} else {
+						journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE, "Voici les acheteurs potentiels pour LimDt : " + acheteurs);
+						journalCC.ajouter("\n");
+					}
+
+					for(IAcheteurContratCadre acheteur : acheteurs){
+						if (acheteur!=null) {
+							journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE, "Demande au superviseur de debuter les negociations pour un contrat cadre de "+produit+" avec l'acheteur "+acheteur);
+
+							if (0.3*this.getQuantiteEnStock(produit, this.cryptogramme) > 100.){
+
+								ExemplaireContratCadre cc = supCCadre.demandeVendeur(acheteur, (IVendeurContratCadre)this, produit, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 25, 0.2*qttEntrant), cryptogramme, false);
+								
+								if (cc!=null) {
+									journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE, "-->aboutit au contrat "+cc);
+									journalCC.ajouter("\n");
+									this.mesContratEnTantQueVendeur.add(cc);
+								}
+
+								else {
+									journalCC.ajouter(Color.pink, Romu.COLOR_PURPLE, "-->Le contrat n'a pas pu aboutir");
+									journalCC.ajouter("\n");
+								}
+							}
+							
 						}
 					}
-					
 				}
 			}
 		}
+
+
+
 
 		//Recherche d'acheteurs de chocolat non marqué
 		for(Chocolat produit : lesChocolats){
@@ -374,7 +554,7 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 		ajouterAuStock(produit, quantiteEnTonnes, this.cryptogramme);
 		
         journalStock.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN, "Achat CC :");
-		journalStock.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN, "Reception de " + quantiteEnTonnes +"feves " + ((Feve)produit).getGamme() + "(CC avec" + contrat.getVendeur() + ")");
+		journalStock.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN, "Reception de " + quantiteEnTonnes + "de "+ produit + "(CC avec" + contrat.getVendeur() + ")");
 		journalStock.ajouter("\n");
 	}
 
