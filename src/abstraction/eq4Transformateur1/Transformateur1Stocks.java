@@ -738,8 +738,8 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 	private void pertePeremption(double[] peremptionArray, IProduit p, Color color, Journal journalPer) {
 		int n = peremptionArray.length - 1;
 		if (peremptionArray[n] > 0) {
-			this.retirerDuStock(p, peremptionArray[n], this.cryptogramme);
 			journalPer.ajouter(Color.pink, color, "Péremption: On retire "+peremptionArray[n]+ " tonnes de "+p+" de notre stock");
+			this.retirerDuStock(p, peremptionArray[n], this.cryptogramme);
 		}
 
 		for (int i=n; i>=1; i--) {
