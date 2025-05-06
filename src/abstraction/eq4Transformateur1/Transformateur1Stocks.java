@@ -255,19 +255,20 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 			for (ExemplaireContratCadre cc : mesContratEnTantQueVendeur){
 				if (cc.getProduit().equals(c) || ((ChocolatDeMarque)cc.getProduit()).getChocolat().equals(c)){
 					if (this.qttSortantesChoco.containsKey(c)){
-						this.qttSortantesChoco.put(c, cc.getPrix()+qttSortantesChoco.get(c));
+						this.qttSortantesChoco.put(c, qttSortantesChoco.get(c));
 					}
 					else {
-						this.qttSortantesChoco.put(c, cc.getPrix());
+						this.qttSortantesChoco.put(c, qttSortantesChoco.get(c));
 					}
 				}
 			}
-		}
-
-		//Quantité sortante par enchère
 		
 
+		//Quantité sortante par enchère
+			this.qttSortantesChoco.put(c, qttSortantesTransactions.get(c) + qttSortantesChoco.get(c));
+
 		//Quantité sortante par appel d'offre
+		}
 	}
 
 
@@ -574,6 +575,7 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 		res.add(this.nbOuvriers);
 		res.add(this.prodMax);
 		res.add(this.qttProduiteChoco);
+		res.add(this.totalSortant);
 		for (Chocolat c : lesChocolats){
 			res.add(this.repartitionTransfo.get(c));
 		}

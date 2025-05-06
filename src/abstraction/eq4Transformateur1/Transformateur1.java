@@ -43,6 +43,11 @@ public class Transformateur1 extends Transformateur1AcheteurAppelDOffre {
             this.repartitionTransfo.get(secondLargestKey).setValeur(this, repartitionTransfo.get(secondLargestKey).getValeur() - 0.05);
         } 
 
+        this.determinerQttSortantChoco();
+        for (Chocolat c : lesChocolats){
+            totalSortant.ajouter(this, qttSortantesChoco.get(c));
+        }
+
         //on réinitialise coutProd
         this.coutProd = 0;
     }

@@ -28,8 +28,8 @@ public class Transformateur1Usine extends Transformateur1Acteur {
 
 	public Transformateur1Usine() {
 		super();
-		this.nbOuvriers = new Variable("Nombre d'ouvriers", this, 0, 1e7, 85333);
-		this.nbMachines = new Variable("Nombre de machines", this, 0, 1e7, 128);
+		this.nbOuvriers = new Variable("Nombre d'ouvriers", this, 0, 1e7, 33333);
+		this.nbMachines = new Variable("Nombre de machines", this, 0, 1e7, 50);
 		this.prodMax = new Variable("Production max", this, 0, 1e7, this.getProdMax());
 		this.totalCoutsUsineStep = 0;
 	}

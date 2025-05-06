@@ -51,7 +51,7 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 
 		//A MODIFIER 
 		//On cherche à vendre une partie de la quantité de chocolat correspondant à la qtt de fèves entrantes
-		double qttVoulue = 0.1*this.getQuantiteEnStock(contrat.getProduit(), this.cryptogramme) * contrat.getEcheancier().getNbEcheances();
+		double qttVoulue = (0.1*this.getQuantiteEnStock(contrat.getProduit(), this.cryptogramme) * contrat.getEcheancier().getNbEcheances() + contrat.getEcheancier().getQuantiteTotale())/2;
 
 		Chocolat chocoVendu = ((ChocolatDeMarque)contrat.getProduit()).getChocolat();
 
@@ -90,8 +90,8 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 
 				Echeancier e = contrat.getEcheancier(); //Récupération de l'échéancier actuel
 
-				//Cas d'acceptation : la quantité totale est légale et proche de la quantité que l'on souhaite vendre à 30% près
-				if(e.getNbEcheances()> 8 && e.getQuantiteTotale()> 100. &&( Math.abs(e.getQuantiteTotale()-qttVoulue)/qttVoulue <= 0.1 || Math.abs(e.getQuantiteTotale()-qttVoulue)/e.getQuantiteTotale() <= 0.1)){
+				//Cas d'acceptation : la quantité totale est légale et proche de la quantité que l'on souhaite vendre à 20% près
+				if(e.getNbEcheances()> 8 && e.getQuantiteTotale()> 100. &&( Math.abs(e.getQuantiteTotale()-qttVoulue)/qttVoulue <= 0.2 || Math.abs(e.getQuantiteTotale()-qttVoulue)/e.getQuantiteTotale() <= 0.2)){
 
 					return e;
 				}
@@ -127,7 +127,7 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 						
 						//Selon la valeur de qttEntrant, on va agir différemment sur le contrat		
 						//si qtt entrant est très négatif, c'est que l'on vend plus de chocolat que l'on ne recoit de fèves, on annule donc le contrat
-						if (0.2*qttEntrant < -1000.){
+						if (0.2*qttEntrant < -10000.){
 							return null;
 						}
 						//Sinon, si on a suffisamment de fève qui entrent en stock à chaque step et que la proposition est proche de ce que l'on souhaite, on accepte la proposition sur ce step
@@ -460,36 +460,8 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 			return lesChocolats.contains(produit);
 		}
 		else if (produit.getType() == "ChocolatDeMarque"){
-			Feve feveAssociee;
-			ChocolatDeMarque prod = (ChocolatDeMarque)produit;
 
-			switch(prod.getGamme()){
-				case BQ : 
-					feveAssociee = Feve.F_BQ_E;
-					break;
-
-				case MQ : 
-					if (prod.isEquitable()){
-						feveAssociee = Feve.F_MQ_E;
-					}
-					else {
-						feveAssociee = Feve.F_MQ;
-					}
-					break;
-
-				case HQ : 
-					feveAssociee = Feve.F_HQ_BE;
-					break;
-
-				default :
-					feveAssociee = null;
-
-			}
-
-
-			List<IVendeurContratCadre> approvisionneurs = supCCadre.getVendeurs(feveAssociee);
-
-			return ((ChocolatDeMarque)produit).getMarque() == "LimDt" && chocolatsLimDt.contains(produit) && approvisionneurs.size()>0;
+			return ((ChocolatDeMarque)produit).getMarque() == "LimDt" && chocolatsLimDt.contains(produit) ;
 		}
 		else{
 			return false;

@@ -98,6 +98,10 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 	protected Variable prix_Limdt_HQ_BE;
 
 
+	//Quantité vendues par step
+	protected Variable totalSortant ;
+
+
 
 	/**
 	 * Cette classe est la plus haute dans l'arbre d'héritage du transformateur 1
@@ -217,6 +221,8 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 		this.qttSortantesTransactions = new HashMap<Chocolat, Double>();
 		this.qttFevesAcheteesBourse = new Variable("Qtt Feves Achetees Bourse", "<html>Quantité de fèves achetées en bourse</html>", this, 0., 1000000., 0.);
 
+		this.totalSortant = new Variable("Quantité vendue au step", this, 0., 1000000, 0.);
+
 		this.marges = new HashMap<Chocolat, Double>();
 	}
 
@@ -326,6 +332,9 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 		this.qttEntrantesFeve.put(Feve.F_BQ_E, 0.);
 		this.qttEntrantesFeve.put(Feve.F_HQ_BE, 0.);
 		this.qttEntrantesFeve.put(Feve.F_MQ_E, 0.);
+
+
+
 	}
 
 
@@ -349,6 +358,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 		this.journalStock.ajouter("Stock de chocolat de marque : " + this.totalStocksChocoMarque.getValeur(this.cryptogramme));
 		this.journalStock.ajouter("\n");
 		*/
+		totalSortant.setValeur(this, 0.);
 
 		this.journal.ajouter("Solde : " + this.getSolde());
 		this.journal.ajouter("\n");
