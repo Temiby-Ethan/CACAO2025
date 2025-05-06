@@ -135,8 +135,10 @@ public class Distributeur3Distributeur extends Distributeur3Acteur implements ID
     public double getVentesByStep(int step){
         double total = 0;
         for (ChocolatDeMarque choco : this.ventes.get(step).keySet()){
-            if(ventes.containsKey(step) && ventes.get(step).containsKey(choco)) {
-                total += this.ventes.get(step).get(choco);
+            if(ventes.containsKey(step)) {
+                if(ventes.get(step).containsKey(choco)) {
+                    total += this.ventes.get(step).get(choco);
+                }
             }
         }return total;
     }
