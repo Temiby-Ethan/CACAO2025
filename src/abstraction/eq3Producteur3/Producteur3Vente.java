@@ -234,10 +234,20 @@ public class Producteur3Vente extends Producteur3GestionDesCoûts implements IVe
                 return echeancier;
             }
             if (stockActuel*0.5 <= contrat.getQuantiteTotale()){
-                return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, nbStep, stockActuel*0.5/nbStep);
+                if (stockActuel*0.5/nbStep > 100){
+                    return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, nbStep, stockActuel*0.5/nbStep);
+                }
+                else{
+                    return null;
+                }
             }
             if (stockActuel*0.05 >= contrat.getQuantiteTotale() || contrat.getQuantiteTotale()/nbStep < 100){
-                return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, nbStep, stockActuel*0.3/nbStep);
+                if (stockActuel*0.3/nbStep > 100){
+                    return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, nbStep, stockActuel*0.3/nbStep);
+                }
+                else{
+                    return null;
+                }
             }
             else{
                 return null;
