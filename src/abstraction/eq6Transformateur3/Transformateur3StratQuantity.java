@@ -7,17 +7,12 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import abstraction.eqXRomu.produits.ChocolatDeMarque;
-import abstraction.eqXRomu.produits.Feve;
-import abstraction.eqXRomu.produits.Gamme;
 import abstraction.eqXRomu.produits.IProduit;
-import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
-import abstraction.eqXRomu.filiere.IFabricantChocolatDeMarque;
 import abstraction.eqXRomu.general.Journal;
-import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.filiere.Filiere;
+import abstraction.eqXRomu.produits.Feve;
 
 public class Transformateur3StratQuantity extends Transformateur3Acteur {
 
@@ -27,12 +22,14 @@ public class Transformateur3StratQuantity extends Transformateur3Acteur {
 
     protected HashMap<IProduit, Double> coutMoyFeves; //estimation du cout de chaque fèves
     protected List<Long> contratTraite;
+    protected HashMap<IProduit, Double> proportionFeves; //proportion de feves dans le chocolat
 
-    // Quantitée de chaque type de fèves reçue au prochain step
-    // pour chaque fève, in dispose d'un échéancier sur la quantité total de fèves
-	//protected HashMap<IProduit, List<Double>> quantityFevesEcheancier;
+    //Quantitée de chaque type de fèves reçue au prochain step
+    //pour chaque fève, in dispose d'un échéancier sur la quantité total de fèves
+	protected HashMap<IProduit, List<Double>> quantityFevesEcheancier;
     // Quantitée de chaque type de choco vendu au prochain step
-    //protected HashMap<IProduit, List<Double>> quantityChocoEcheancier;
+    protected HashMap<IProduit, List<Double>> quantityChocoEcheancier;
+    protected HashMap<IProduit, List<Double>> besoinFeveEcheancier;
 
     public Transformateur3StratQuantity(){
 
@@ -41,8 +38,9 @@ public class Transformateur3StratQuantity extends Transformateur3Acteur {
         this.ContratsVendeur=new LinkedList<ExemplaireContratCadre>();
 
         //Initialisation des échanciers de fèves et chocolats
-        super.quantityFevesEcheancier = new HashMap<IProduit, List<Double>>();
-        super.quantityChocoEcheancier = new HashMap<IProduit, List<Double>>();
+        this.quantityFevesEcheancier = new HashMap<IProduit, List<Double>>();
+        this.quantityChocoEcheancier = new HashMap<IProduit, List<Double>>();
+        this.besoinFeveEcheancier = new HashMap<IProduit, List<Double>>();
         this.contratTraite = new ArrayList<Long>();
     }
 
@@ -51,18 +49,26 @@ public class Transformateur3StratQuantity extends Transformateur3Acteur {
         
         // Initialisation des échéanciers de fèves et chocolats
         for(IProduit feve : super.lesFeves){
-            super.quantityFevesEcheancier.put(feve, new ArrayList<Double>());
-            super.quantityFevesEcheancier.get(feve).add(0.0);
-            super.quantityFevesEcheancier.get(feve).add(0.0);
-            super.quantityFevesEcheancier.get(feve).add(0.0);
-            super.quantityFevesEcheancier.get(feve).add(0.0);
+            this.quantityFevesEcheancier.put(feve, new ArrayList<Double>());
+            this.quantityFevesEcheancier.get(feve).add(0.0);
+            this.quantityFevesEcheancier.get(feve).add(0.0);
+            this.quantityFevesEcheancier.get(feve).add(0.0);
+            this.quantityFevesEcheancier.get(feve).add(0.0);
         }
+
+        for(IProduit feve : super.fevesUtiles){
+            this.besoinFeveEcheancier.put(feve, new ArrayList<Double>());
+            this.besoinFeveEcheancier.get(feve).add(0.0);
+            this.besoinFeveEcheancier.get(feve).add(0.0);
+            this.besoinFeveEcheancier.get(feve).add(0.0);
+        }
+
         for(IProduit choco : super.lesChocolats){
-            super.quantityChocoEcheancier.put(choco, new ArrayList<Double>());
-            super.quantityChocoEcheancier.get(choco).add(0.0);
-            super.quantityChocoEcheancier.get(choco).add(0.0);
-            super.quantityChocoEcheancier.get(choco).add(0.0);
-            super.quantityChocoEcheancier.get(choco).add(0.0);
+            this.quantityChocoEcheancier.put(choco, new ArrayList<Double>());
+            this.quantityChocoEcheancier.get(choco).add(0.0);
+            this.quantityChocoEcheancier.get(choco).add(0.0);
+            this.quantityChocoEcheancier.get(choco).add(0.0);
+            this.quantityChocoEcheancier.get(choco).add(0.0);
         }
     }
 
@@ -75,26 +81,54 @@ public class Transformateur3StratQuantity extends Transformateur3Acteur {
         miseAJourEcheanciers();
 
         // Traitement nouveaux contrats pour actualiser les échéanciers de fèves et chocolats
-        super.quantityFevesEcheancier = traiterContrats(this.ContratsAcheteur, super.quantityFevesEcheancier);
-        super.quantityChocoEcheancier = traiterContrats(this.ContratsVendeur, super.quantityChocoEcheancier);
+        this.quantityFevesEcheancier = traiterContrats(this.ContratsAcheteur, this.quantityFevesEcheancier);
+        this.quantityChocoEcheancier = traiterContrats(this.ContratsVendeur, this.quantityChocoEcheancier);
+
+        miseAJourEcheanciersBesoins();
 
         // Affichage des échéanciers de fèves et chocolats
-        displayEcheancier("Echéancier de fèves", super.quantityFevesEcheancier, super.fevesUtiles);
-        displayEcheancier("Echéancier de chocolats", super.quantityChocoEcheancier, super.lesChocolats);
+        
+        displayEcheancier("Echéancier de chocolats", this.quantityChocoEcheancier, super.lesChocolats);
+        displayEcheancier("Echéancier besoin de fèves", this.besoinFeveEcheancier, super.fevesUtiles);
+        displayEcheancier("Echéancier de fèves", this.quantityFevesEcheancier, super.fevesUtiles);
         }
 
     public void miseAJourEcheanciers(){
         //On supprime la ligne du next actuel
         for(IProduit feve : super.lesFeves){
-            super.quantityFevesEcheancier.get(feve).remove(0);
-            if(super.quantityFevesEcheancier.get(feve).size() <= 2){
-                super.quantityFevesEcheancier.get(feve).add(0.0);
+            this.quantityFevesEcheancier.get(feve).remove(0);
+            if(this.quantityFevesEcheancier.get(feve).size() <= 2){
+                this.quantityFevesEcheancier.get(feve).add(0.0);
             }
         }
         for(IProduit choco : super.lesChocolats){
-            super.quantityChocoEcheancier.get(choco).remove(0);
-            if(super.quantityChocoEcheancier.get(choco).size() <= 2){
-                super.quantityChocoEcheancier.get(choco).add(0.0);
+            this.quantityChocoEcheancier.get(choco).remove(0);
+            if(this.quantityChocoEcheancier.get(choco).size() <= 2){
+                this.quantityChocoEcheancier.get(choco).add(0.0);
+            }
+        }
+    }
+
+    public void miseAJourEcheanciersBesoins(){
+        for(IProduit feve : super.fevesUtiles){
+            double proportion = 0.0;
+            IProduit choco = null;
+            if(feve == Feve.F_BQ){
+                proportion = 0.3;
+                choco = super.lesChocolats.get(0);
+            }else if(feve == Feve.F_BQ_E){
+                proportion = 0.3;
+                choco = super.lesChocolats.get(1);
+            }else if(feve == Feve.F_MQ){
+                proportion = 0.5;
+                choco = super.lesChocolats.get(2);
+            }else if(feve == Feve.F_HQ_E){
+                proportion = 1.0;
+                choco = super.lesChocolats.get(3);
+            }
+            for(int i=0; i<3; i++){
+                double quantite = this.quantityChocoEcheancier.get(choco).get(i) * proportion;
+                this.besoinFeveEcheancier.get(feve).set(i, quantite);
             }
         }
     }
@@ -108,13 +142,13 @@ public class Transformateur3StratQuantity extends Transformateur3Acteur {
             if(!this.contratTraite.contains(contrat.getNumero())){
 
                 this.contratTraite.add(contrat.getNumero());
-                super.journalStrat.ajouter("----- Traitement du contrat " + contrat.getNumero()+" -----");
+                //super.journalStrat.ajouter("----- Traitement du contrat " + contrat.getNumero()+" -----");
                 // On ajoute la quantité de fèves reçue au stock
                 IProduit prod = contrat.getProduit();
                 Echeancier echeancier = contrat.getEcheancier();
                 int debutCC = echeancier.getStepDebut(); // On récupère le step de début de l'échéancier
                 int t = debutCC-currentStep; // Translation à appliquer à l'échéancier pour le ramener au step actuel
-                super.journalStrat.ajouter("Produit : " + prod.toString());
+                //super.journalStrat.ajouter("Produit : " + prod.toString());
                 //super.journalStrat.ajouter("Echéancier : " + echeancier.toString());
                 for (int i = t; i <= echeancier.getNbEcheances()+t; i++) {
                     // Si la liste d'échéance n'est pas assez grande, on l'agrandi
@@ -141,19 +175,19 @@ public class Transformateur3StratQuantity extends Transformateur3Acteur {
             IProduit prod = contrat.getProduit();
 
             if(super.lesFeves.contains(prod)){
-                EcheancierParProduit = super.quantityFevesEcheancier;
+                EcheancierParProduit = this.quantityFevesEcheancier;
             }else{
-                EcheancierParProduit = super.quantityChocoEcheancier;
+                EcheancierParProduit = this.quantityChocoEcheancier;
             }
 
             this.contratTraite.add(contrat.getNumero());
-            super.journalStrat.ajouter("----- Traitement du contrat " + contrat.getNumero()+" -----");
+            //super.journalStrat.ajouter("----- Traitement du contrat " + contrat.getNumero()+" -----");
             // On ajoute la quantité de fèves reçue au stock
             
             Echeancier echeancier = contrat.getEcheancier();
             int debutCC = echeancier.getStepDebut(); // On récupère le step de début de l'échéancier
             int t = debutCC-currentStep; // Translation à appliquer à l'échéancier pour le ramener au step actuel
-            super.journalStrat.ajouter("Produit : " + prod.toString());
+            //super.journalStrat.ajouter("Produit : " + prod.toString());
             //super.journalStrat.ajouter("Echéancier : " + echeancier.toString());
             for (int i = t; i <= echeancier.getNbEcheances()+t; i++) {
                 // Si la liste d'échéance n'est pas assez grande, on l'agrandi
@@ -168,9 +202,9 @@ public class Transformateur3StratQuantity extends Transformateur3Acteur {
         
             // On sauvegarde les infos
             if(super.lesFeves.contains(prod)){
-                super.quantityFevesEcheancier = EcheancierParProduit;
+                this.quantityFevesEcheancier = EcheancierParProduit;
             }else{
-                super.quantityChocoEcheancier = EcheancierParProduit;
+                this.quantityChocoEcheancier = EcheancierParProduit;
             }
         }
     }

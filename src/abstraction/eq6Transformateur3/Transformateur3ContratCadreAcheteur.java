@@ -87,12 +87,6 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratC
 		for(IProduit feve : super.stockFeves.getListProduitSorted()){
 			this.coutMoyFeves.put(feve,0.0);
 		}
-
-		//Initialisation estimation coûts de fèves
-		this.fevesReceptionneesThisStep = new HashMap<IProduit, Double>();
-		for(IProduit feve : super.stockFeves.getListProduitSorted()){
-			this.fevesReceptionneesThisStep.put(feve,0.0);
-		}
 	}
 
 	
@@ -207,24 +201,12 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratC
 		for(IProduit feve : coutMoyFeves.keySet()){
 			jdb.ajouter("- "+feve+" : "+coutMoyFeves.get(feve));
 		}
-		jdb.ajouter("");
-		jdb.ajouter("-- FEVES RECUES --");
-		for(IProduit feve : fevesReceptionneesThisStep.keySet()){
-			//if(fevesReceptionneesThisStep.get(feve) == 0.0){
-			jdb.ajouter("- "+feve+" : "+fevesReceptionneesThisStep.get(feve));
-			//}
-		}
-
-		for(IProduit feve : fevesReceptionneesThisStep.keySet()){
-			this.fevesReceptionneesThisStep.replace(feve,0.0);
-		}
 	}
 
 	//@author Henri Roth
 	public void receptionner(IProduit produit, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
 		journalCC.ajouter("Reception de "+quantiteEnTonnes+" de T de " + produit + " en provenance du contrat "+contrat.getNumero());
 		super.stockFeves.addToStock(produit, quantiteEnTonnes);
-		this.fevesReceptionneesThisStep.replace(produit,fevesReceptionneesThisStep.get(produit)+quantiteEnTonnes);
 	}
 	//@author Henri Roth
 	public boolean achete(IProduit produit) {
@@ -250,7 +232,8 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratC
 
 	@Override //@author Henri Roth
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
-	journalCC.ajouter("Nouveau contrat cadre Acheteur : Produit =>" +(contrat.getProduit()).toString());
+	journalCC.ajouter("Nouveau contrat cadre Acheteur : " +contrat);
+	journalCC.ajouter("Prix (€/t) : " +contrat.getPrix());
 	// Trie des contrats cadres en fonction du produit
 	if(super.lesFeves.contains(contrat.getProduit())) {
 		super.ContratsAcheteur.add(contrat);
