@@ -1,3 +1,5 @@
+// Adrien BUECHER
+
 package abstraction.eq1Producteur1;
 
 import abstraction.eqXRomu.general.Journal;
