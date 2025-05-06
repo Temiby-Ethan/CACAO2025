@@ -71,31 +71,39 @@ public class Distributeur3ContratCadre extends Distributeur3Charges implements I
 
         int prixMoyen=0;
         if(Filiere.LA_FILIERE.getEtape()==0) {
-            prixMoyen = 1500;
+            prixMoyen = 200000;
         }else{
             prixMoyen = (int) Filiere.LA_FILIERE.prixMoyen((ChocolatDeMarque) contrat.getProduit(), Filiere.LA_FILIERE.getEtape()-1);
             //System.out.println(" le prix moyen de "+((ChocolatDeMarque) contrat.getProduit()).getNom()+" est : "+prixMoyen);
         }
 
-
+        journalContrats.ajouter("proposition équipe en face a "+contrat.getPrix()+" euros");
 
         //double fourchetteLimiteNegociation  = 1500;
 
         // a enlever, on laisse juste ça pour pouvoir négocier avec les autres
-        double fourchetteLimiteNegociation  = prixMoyen-(chargesTotal()/getVentesByStep(Filiere.LA_FILIERE.getEtape()));
-        double fourchetteLimiteAchat = fourchetteLimiteNegociation*0.95;
+        double fourchetteLimiteNegociation  = prixMoyen-(chargesTotal()/getVentesByStep(Filiere.LA_FILIERE.getEtape()))*0.3;
+        double fourchetteLimiteRenta = prixMoyen-(chargesTotal()/getVentesByStep(Filiere.LA_FILIERE.getEtape()));
+        double fourchetteLimiteAchat = fourchetteLimiteRenta*0.95;
+        journalContrats.ajouter("prix Moyen : "+prixMoyen);
+        journalContrats.ajouter("fourchette limite nego : "+fourchetteLimiteNegociation);
+        journalContrats.ajouter("fourchette limite de renta "+fourchetteLimiteRenta);
+        journalContrats.ajouter("fourchette limite achat : "+fourchetteLimiteAchat);
+
 
 
         if(contrat.getPrix()<fourchetteLimiteNegociation){
             if(contrat.getPrix()<fourchetteLimiteAchat){
+                journalContrats.ajouter("accepte le contrat");
                 return contrat.getPrix();
             }else{
+                journalContrats.ajouter("continue les négociations");
                 return fourchetteLimiteNegociation*0.85;
             }
         }else{
+            journalContrats.ajouter("refus des négociations");
             return -1;
         }
-
     }
 
     @Override
@@ -127,6 +135,6 @@ public class Distributeur3ContratCadre extends Distributeur3Charges implements I
 //            }
 //
 //            this.prix.put((ChocolatDeMarque) p,4000.0F);
-//        }
-    }
+        }
+    
 }

@@ -48,17 +48,17 @@ public class Distributeur3Distributeur extends Distributeur3Acteur implements ID
                     if(Filiere.LA_FILIERE.getEtape()!=0 && Filiere.LA_FILIERE.prixMoyen(cm,Filiere.LA_FILIERE.getEtape())!=0){
                         this.prix.put(cm,(float) (Filiere.LA_FILIERE.prixMoyen(cm,Filiere.LA_FILIERE.getEtape())*0.97));
                     }else {
-                        this.prix.put(cm, 2500.0F);
+                        this.prix.put(cm, 3000.0F);
                     }
                 }else{
                     stockBQ.ajouter(this,quantiteinit,this.cryptogramme);
                     if(Filiere.LA_FILIERE.getEtape()!=0 && Filiere.LA_FILIERE.prixMoyen(cm,Filiere.LA_FILIERE.getEtape())!=0){
                         this.prix.put(cm,(float) (Filiere.LA_FILIERE.prixMoyen(cm,Filiere.LA_FILIERE.getEtape())*0.97));
                     }else {
-                        this.prix.put(cm, 3000.0F);
+                        this.prix.put(cm, 3500.0F);
                     }
 
-                    this.prix.put(cm,4000.0F);
+                    this.prix.put(cm,4500.0F);
                 }
             }
         }
