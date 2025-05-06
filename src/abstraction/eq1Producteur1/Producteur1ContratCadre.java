@@ -27,7 +27,7 @@ public class Producteur1ContratCadre extends Producteur1Acteur implements IVende
     @Override
     public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
         IProduit produit = contrat.getProduit();
-return null;/* 
+return null;   /* 
         if (!(produit instanceof Feve)) {
             journal.ajouter("Erreur : Produit non reconnu pour la contre-proposition.");
             return null;
