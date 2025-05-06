@@ -20,7 +20,6 @@ public class Producteur2stock extends Producteur2sechage {
 
     protected HashMap<Feve,Double> prodParStep;
 	protected HashMap<Feve,Queue<Stock>> stock;
-    //protected HashMap<Feve,Variable> stockvar;
     protected HashMap<Feve,Double> seuil_stock;
 	protected Variable stockTotal;
     protected Journal JournalStock;
@@ -48,7 +47,7 @@ public class Producteur2stock extends Producteur2sechage {
 
         double totalInitialStock = 0.0;
 
-        for(Feve f : Feve.values()){ // On initialise la prod de chaque fève à 0 car on a rien de séché au step 1
+        for(Feve f : Feve.values()){ // On initialise la prod de chaque fève à 0 car on a rien de séché au step 1 ???
             SetProdParStep(f,0); 
 
         }
