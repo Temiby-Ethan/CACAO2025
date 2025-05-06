@@ -4,36 +4,25 @@ package abstraction.eq6Transformateur3;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 
 import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 import abstraction.eqXRomu.general.Journal;
-import abstraction.eqXRomu.filiere.Filiere;
 
-public class Transformateur3StratQuantity extends Transformateur3Acteur {
-
-    // Création des contrats acheteur et vendeur (pour les rendres accessibles dans la classe)
-    protected List<ExemplaireContratCadre> ContratsAcheteur;
-    protected List<ExemplaireContratCadre> ContratsVendeur;
+public class Transformateur3StratPrix extends Transformateur3AO {
 
     protected HashMap<IProduit, Double> coutMoyFeves; //estimation du cout de chaque fèves
     protected List<Long> contratTraite;
 
     // Quantitée de chaque type de fèves reçue au prochain step
-    // pour chaque fève, in dispose d'un échéancier sur la quantité total de fèves
+    // pour chaque fève, on dispose d'un échéancier sur la quantité total de fèves
 	//protected HashMap<IProduit, List<Double>> quantityFevesEcheancier;
     // Quantitée de chaque type de choco vendu au prochain step
     //protected HashMap<IProduit, List<Double>> quantityChocoEcheancier;
 
-    public Transformateur3StratQuantity(){
-
-        //Initialisation des listes de contrats acheteur et vendeur
-        this.ContratsAcheteur=new LinkedList<ExemplaireContratCadre>();
-        this.ContratsVendeur=new LinkedList<ExemplaireContratCadre>();
-
+    public Transformateur3StratPrix(){
         //Initialisation des échanciers de fèves et chocolats
         super.quantityFevesEcheancier = new HashMap<IProduit, List<Double>>();
         super.quantityChocoEcheancier = new HashMap<IProduit, List<Double>>();
@@ -62,19 +51,21 @@ public class Transformateur3StratQuantity extends Transformateur3Acteur {
 
     public void next(){
 		super.next();
-		super.jdb.ajouter("NEXT - STRATQUANTITY");
-        super.journalStrat.ajouter("");
-        super.journalStrat.ajouter("NEXT - STRATQUANTITY");
+		super.jdb.ajouter("NEXT - STRATPRIX");
+        super.journalStrat.ajouter("NEXT - STRATPRIX");
 
         miseAJourEcheanciers();
 
         // Traitement nouveaux contrats pour actualiser les échéanciers de fèves et chocolats
-        super.quantityFevesEcheancier = traiterContrats(this.ContratsAcheteur, super.quantityFevesEcheancier);
-        super.quantityChocoEcheancier = traiterContrats(this.ContratsVendeur, super.quantityChocoEcheancier);
+        super.quantityFevesEcheancier = traiterContrat(super.ContratsAcheteur, super.quantityFevesEcheancier);
+        super.quantityChocoEcheancier = traiterContrat(super.ContratsVendeur, super.quantityChocoEcheancier);
 
         // Affichage des échéanciers de fèves et chocolats
         displayEcheancier("Echéancier de fèves", super.quantityFevesEcheancier, super.fevesUtiles);
         displayEcheancier("Echéancier de chocolats", super.quantityChocoEcheancier, super.lesChocolats);
+
+
+
         }
 
     public void miseAJourEcheanciers(){
@@ -93,24 +84,20 @@ public class Transformateur3StratQuantity extends Transformateur3Acteur {
         }
     }
 
-    public HashMap<IProduit, List<Double>> traiterContrats(List<ExemplaireContratCadre> contratsList, HashMap<IProduit, List<Double>> EcheancierParProduit){
+    public HashMap<IProduit, List<Double>> traiterContrat(List<ExemplaireContratCadre> contratsList, HashMap<IProduit, List<Double>> EcheancierParProduit) {
         
-        int currentStep = Filiere.LA_FILIERE.getEtape(); // On récupère le step actuel
-
         for(ExemplaireContratCadre contrat : contratsList){
             // On traite le contrat s'il n'a pas déjà été traité
             if(!this.contratTraite.contains(contrat.getNumero())){
 
                 this.contratTraite.add(contrat.getNumero());
-                super.journalStrat.ajouter("----- Traitement du contrat " + contrat.getNumero()+" -----");
+                //super.journalStrat.ajouter("----- Traitement du contrat " + contrat.getNumero()+" -----");
                 // On ajoute la quantité de fèves reçue au stock
                 IProduit prod = contrat.getProduit();
                 Echeancier echeancier = contrat.getEcheancier();
-                int debutCC = echeancier.getStepDebut(); // On récupère le step de début de l'échéancier
-                int t = debutCC-currentStep; // Translation à appliquer à l'échéancier pour le ramener au step actuel
-                super.journalStrat.ajouter("Produit : " + prod.toString());
+                //super.journalStrat.ajouter("Produit : " + prod.toString());
                 //super.journalStrat.ajouter("Echéancier : " + echeancier.toString());
-                for (int i = t; i <= echeancier.getNbEcheances()+t; i++) {
+                for (int i = 1; i <= echeancier.getNbEcheances(); i++) {
                     // Si la liste d'échéance n'est pas assez grande, on l'agrandi
                     double quantite = echeancier.getQuantite(echeancier.getStepDebut()); // Quantité de fèves reçue
                     if(EcheancierParProduit.get(prod).size() <= i){
@@ -123,50 +110,7 @@ public class Transformateur3StratQuantity extends Transformateur3Acteur {
             }
         }
         return EcheancierParProduit;
-    }
 
-    public void traiterContratStat(ExemplaireContratCadre contrat){
-        
-        int currentStep = Filiere.LA_FILIERE.getEtape(); // On récupère le step actuel
-        HashMap<IProduit, List<Double>> EcheancierParProduit;
-
-        // On traite le contrat s'il n'a pas déjà été traité
-        if(!this.contratTraite.contains(contrat.getNumero())){
-            IProduit prod = contrat.getProduit();
-
-            if(super.lesFeves.contains(prod)){
-                EcheancierParProduit = super.quantityFevesEcheancier;
-            }else{
-                EcheancierParProduit = super.quantityChocoEcheancier;
-            }
-
-            this.contratTraite.add(contrat.getNumero());
-            super.journalStrat.ajouter("----- Traitement du contrat " + contrat.getNumero()+" -----");
-            // On ajoute la quantité de fèves reçue au stock
-            
-            Echeancier echeancier = contrat.getEcheancier();
-            int debutCC = echeancier.getStepDebut(); // On récupère le step de début de l'échéancier
-            int t = debutCC-currentStep; // Translation à appliquer à l'échéancier pour le ramener au step actuel
-            super.journalStrat.ajouter("Produit : " + prod.toString());
-            //super.journalStrat.ajouter("Echéancier : " + echeancier.toString());
-            for (int i = t; i <= echeancier.getNbEcheances()+t; i++) {
-                // Si la liste d'échéance n'est pas assez grande, on l'agrandi
-                double quantite = echeancier.getQuantite(echeancier.getStepDebut()); // Quantité de fèves reçue
-                if(EcheancierParProduit.get(prod).size() <= i){
-                    EcheancierParProduit.get(prod).add(quantite);
-                }else{
-                    quantite += EcheancierParProduit.get(prod).get(i);
-                    EcheancierParProduit.get(prod).set(i, quantite);
-                }
-            }
-        
-            // On sauvegarde les infos
-            if(super.lesFeves.contains(prod)){
-                super.quantityFevesEcheancier = EcheancierParProduit;
-            }else{
-                super.quantityChocoEcheancier = EcheancierParProduit;
-            }
-        }
     }
 
     public void displayEcheancier(String title, HashMap<IProduit, List<Double>>Echeancier, List<IProduit> prodList){
