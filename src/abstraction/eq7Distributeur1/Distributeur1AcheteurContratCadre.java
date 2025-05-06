@@ -85,6 +85,9 @@ public class Distributeur1AcheteurContratCadre extends Distributeur1Stock implem
 		double valeurtotale = 0;
 		ChocolatDeMarque chocolat = (ChocolatDeMarque) contrat.getProduit();
 		Echeancier echeancierActuel;
+		if(getQuantiteEnStock(chocolat, cryptogramme)>35000.0){
+			return null;
+		}
 		if (listeEcheancier.isEmpty()){
 			tour = 0;
 			echeancierActuel = new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 12, requiredQuantities.get(cdmToInt(chocolat)));
