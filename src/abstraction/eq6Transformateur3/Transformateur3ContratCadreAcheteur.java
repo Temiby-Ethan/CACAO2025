@@ -14,12 +14,12 @@ import abstraction.eqXRomu.contratsCadres.IAcheteurContratCadre;
 import abstraction.eqXRomu.contratsCadres.SuperviseurVentesContratCadre;
 import abstraction.eqXRomu.produits.Feve;
 
-// @author Eric SCHILTZ & Henri Roth
+// @author Eric SCHILTZ & Henri Roth & Florian Malveau
 
 public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratCadreVendeur implements IAcheteurContratCadre{
-	protected List<ExemplaireContratCadre> ContratsAcheteur;
 	protected List<ExemplaireContratCadre> contratsObsoletes;
     protected HashMap<IProduit, Double> coutMoyFeves; //estimation du cout de chaque fèves
+	protected HashMap<IProduit, Double> fevesReceptionneesThisStep; //estimation du cout de chaque fèves
 
 	public Transformateur3ContratCadreAcheteur() {
 		this.ContratsAcheteur=new LinkedList<ExemplaireContratCadre>();
@@ -31,6 +31,7 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratC
 	}
 	//@author Henri Roth
 	public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat) {
+		//journalCC.ajouter("## NEGOCIATION "+contrat.getNumero()+" - Prix proposé : "+contrat.getPrix());
 		return contrat.getPrix()*1.2;
 	}
 
@@ -42,6 +43,12 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratC
 		this.coutMoyFeves = new HashMap<IProduit, Double>();
 		for(IProduit feve : super.stockFeves.getListProduitSorted()){
 			this.coutMoyFeves.put(feve,0.0);
+		}
+
+		//Initialisation estimation coûts de fèves
+		this.fevesReceptionneesThisStep = new HashMap<IProduit, Double>();
+		for(IProduit feve : super.stockFeves.getListProduitSorted()){
+			this.fevesReceptionneesThisStep.put(feve,0.0);
 		}
 	}
 
@@ -57,6 +64,7 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratC
 		for (ExemplaireContratCadre contrat : this.ContratsAcheteur) {
 			if (contrat.getQuantiteRestantALivrer()==0.0 && contrat.getMontantRestantARegler()==0.0) {
 				contratsObsoletes.add(contrat);
+				journalCC.ajouter("CONTRAT n°"+contrat.getNumero()+" SUPPRIME");
 			}
 		}
 		this.ContratsAcheteur.removeAll(contratsObsoletes);
@@ -70,6 +78,8 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratC
 
 		
 		// Proposition d'un nouveau contrat a tous les vendeurs possibles
+		// Fève utilisée : BQ / BQ_E / MQ / HQ_E
+		IProduit produit = Feve.F_BQ;
 		for(IProduit choco : super.feve){
 		for (IActeur acteur : Filiere.LA_FILIERE.getActeurs()) {
 			if (acteur!=this && acteur instanceof IVendeurContratCadre && ((IVendeurContratCadre)acteur).vend(produit)) {
@@ -86,21 +96,38 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratC
 				if(contrat.getProduit() == feve){
 					quantityXprix += contrat.getQuantiteTotale()*contrat.getPrix();
 					quantitytotale += contrat.getQuantiteTotale();
+					journalCC.ajouter(feve+"("+contrat.getNumero()+") : "+contrat.getQuantiteALivrerAuStep());
 				}
+
 			this.coutMoyFeves.replace(feve, quantityXprix/quantitytotale);
 			}
 		}
 
+		//Statistique sur les achats de fèves
+		jdb.ajouter("");
 		jdb.ajouter("########################################");
-		jdb.ajouter("######## Coût estimé ###################");
+		jdb.ajouter("-- COUT ESTIME --");
 		for(IProduit feve : coutMoyFeves.keySet()){
 			jdb.ajouter("- "+feve+" : "+coutMoyFeves.get(feve));
 		}
+		jdb.ajouter("");
+		jdb.ajouter("-- FEVES RECUES --");
+		for(IProduit feve : fevesReceptionneesThisStep.keySet()){
+			//if(fevesReceptionneesThisStep.get(feve) == 0.0){
+			jdb.ajouter("- "+feve+" : "+fevesReceptionneesThisStep.get(feve));
+			//}
+		}
+
+		for(IProduit feve : fevesReceptionneesThisStep.keySet()){
+			this.fevesReceptionneesThisStep.replace(produit,0.0);
+		}
 	}
+
 	//@author Henri Roth
 	public void receptionner(IProduit produit, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
 		journalCC.ajouter("Reception de "+quantiteEnTonnes+" de T de " + produit + " en provenance du contrat "+contrat.getNumero());
 		super.stockFeves.addToStock(produit, quantiteEnTonnes);
+		this.fevesReceptionneesThisStep.replace(produit,fevesReceptionneesThisStep.get(produit)+quantiteEnTonnes);
 	}
 	//@author Henri Roth
 	public boolean achete(IProduit produit) {
@@ -126,7 +153,16 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratC
 
 	@Override //@author Henri Roth
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
-		journalCC.ajouter("Nouveau contrat cadre" +contrat);
-		ContratsAcheteur.add(contrat);
+	journalCC.ajouter("Nouveau contrat cadre Acheteur : Produit =>" +(contrat.getProduit()).toString());
+	// Trie des contrats cadres en fonction du produit
+	if(super.lesFeves.contains(contrat.getProduit())) {
+		super.ContratsAcheteur.add(contrat);
+	} else if(super.lesChocolats.contains(contrat.getProduit())) {
+		super.ContratsVendeur.add(contrat);
+	} else {
+		jdb.ajouter("#### ATTENTION : ON ACHETE N'IMPORTE QUOI ####");
+	}
+
+	//ContratsAcheteur.add(contrat);
 	}
 }
