@@ -188,19 +188,18 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 	}
 
 	@Override
-	// On met 10% de ce tout ce qu'on met en vente (on pourrait mettre l'accente sur
+	// On met 10% de ce tout ce qu'on met en vente (on pourrait mettre l'accent sur
 	// un produit a promouvoir mais il s'agit ici d'un exemple simpliste
 	public double quantiteEnVenteTG(ChocolatDeMarque choco, int crypto) { // par Alexiho
 		if (crypto!=this.cryptogramme) {
 			journal.ajouter("Quelqu'un essaye de me pirater !");
 			return 0.0;
 		} else {
-			//ChocolatDeMarque chocoM = new ChocolatDeMarque(choco.getChocolat(), "Villors", 90);
 			int pos= (chocolats.indexOf(choco));
 			if (pos<0) {
 				return 0.0;
 			} else {
-				return Math.min(capaciteDeVente.get(pos), this.getStock(choco).getValeur())/10.0;
+				return Math.min(0,Math.min(capaciteDeVente.get(pos), this.getStock(choco).getValeur()))/10.0;
 			}
 		}
 	}
