@@ -71,7 +71,7 @@ public class Distributeur3ContratCadre extends Distributeur3Charges implements I
 
         int prixMoyen=0;
         if(Filiere.LA_FILIERE.getEtape()==0) {
-            prixMoyen = 1500;
+            prixMoyen = 200000;
         }else{
             prixMoyen = (int) Filiere.LA_FILIERE.prixMoyen((ChocolatDeMarque) contrat.getProduit(), Filiere.LA_FILIERE.getEtape()-1);
             //System.out.println(" le prix moyen de "+((ChocolatDeMarque) contrat.getProduit()).getNom()+" est : "+prixMoyen);
