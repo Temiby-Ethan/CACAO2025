@@ -205,7 +205,7 @@ public class Distributeur2Acteur implements IActeur {
 			}
 		} 
 		
-		System.out.println("Cet acteur n'est pas assermenté");
+		//System.out.println("Cet acteur n'est pas assermenté");
 		return 0; // Les acteurs non assermentes n'ont pas a connaitre notre stock
 	}
 
