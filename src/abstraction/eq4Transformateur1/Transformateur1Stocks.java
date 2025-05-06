@@ -377,12 +377,6 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 
 
 		this.journalStock.ajouter("\n");
-		this.journalStock.ajouter(Color.yellow, Romu.COLOR_LBLUE, "N° Etape " + Filiere.LA_FILIERE.getEtape());
-
-		this.journalCC.ajouter(Color.yellow, Romu.COLOR_LBLUE, "N° Etape " + Filiere.LA_FILIERE.getEtape());
-
-		this.journalTransactions.ajouter(Color.yellow, Romu.COLOR_LBLUE, "N° Etape " + Filiere.LA_FILIERE.getEtape());
-
 		this.journalPeremptionLimdt.ajouter("\n");
 		this.journalPeremptionFeves.ajouter("\n");
 
@@ -494,10 +488,7 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 			totalStocks += this.getQuantiteEnStock(cm, this.cryptogramme);
 		}
 
-
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", (totalStocks*this.coutStockage));
-
-		//System.out.println("Voici nos prix : " + prixTChocoBase);
 	}
 
 
@@ -532,8 +523,6 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 		for (Chocolat c : lesChocolats){
 			res.add(this.repartitionTransfo.get(c));
 		}
-		
-
 		return res;
 	}
 
@@ -559,9 +548,6 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 		}
 		return this.chocosProduits;
 	}
-
-
-
 
     /**
      * @author MURY Julien
