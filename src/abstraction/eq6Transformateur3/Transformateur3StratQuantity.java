@@ -88,9 +88,9 @@ public class Transformateur3StratQuantity extends Transformateur3Acteur {
 
         // Affichage des échéanciers de fèves et chocolats
         
-        displayEcheancier("Echéancier de chocolats", this.quantityChocoEcheancier, super.lesChocolats);
-        displayEcheancier("Echéancier besoin de fèves", this.besoinFeveEcheancier, super.fevesUtiles);
-        displayEcheancier("Echéancier de fèves", this.quantityFevesEcheancier, super.fevesUtiles);
+        //displayEcheancier("Echéancier de chocolats", this.quantityChocoEcheancier, super.lesChocolats);
+        //displayEcheancier("Echéancier besoin de fèves", this.besoinFeveEcheancier, super.fevesUtiles);
+        //displayEcheancier("Echéancier de fèves", this.quantityFevesEcheancier, super.fevesUtiles);
         }
 
     public void miseAJourEcheanciers(){
@@ -107,6 +107,11 @@ public class Transformateur3StratQuantity extends Transformateur3Acteur {
                 this.quantityChocoEcheancier.get(choco).add(0.0);
             }
         }
+    }
+
+    public void actualiserEcheanciers(){
+        this.quantityFevesEcheancier = traiterContrats(this.ContratsAcheteur, this.quantityFevesEcheancier);
+        this.quantityChocoEcheancier = traiterContrats(this.ContratsVendeur, this.quantityChocoEcheancier);
     }
 
     public void miseAJourEcheanciersBesoins(){
@@ -224,6 +229,13 @@ public class Transformateur3StratQuantity extends Transformateur3Acteur {
             //this.journalStrat.ajouter(Journal.doubleSur(123456789.124, 0));
         
         }
+    }
+
+    public void displayAllStratQuantityData(){
+        displayEcheancier("Echéancier de chocolats", this.quantityChocoEcheancier, super.lesChocolats);
+        displayEcheancier("Echéancier besoin de fèves", this.besoinFeveEcheancier, super.fevesUtiles);
+        displayEcheancier("Echéancier de fèves", this.quantityFevesEcheancier, super.fevesUtiles);
+        
     }
 
     public String miseEnForme(String str, int size, Boolean left){

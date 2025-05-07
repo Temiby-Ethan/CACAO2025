@@ -18,22 +18,23 @@ import abstraction.eqXRomu.produits.Feve;
 
 public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratCadreVendeur implements IAcheteurContratCadre{
 	protected List<ExemplaireContratCadre> contratsObsoletes;
-    protected HashMap<IProduit, Double> coutMoyFeves; //estimation du cout de chaque fèves
-	protected HashMap<IProduit, Double> fevesReceptionneesThisStep; //estimation du cout de chaque fèves
-	protected HashMap<IProduit, Double> demande_vente;
+    //protected HashMap<IProduit, Double> coutMoyFeves; //estimation du cout de chaque fèves
+	protected HashMap<IProduit, Double> demandeAchatFeve;
+	
 	public Transformateur3ContratCadreAcheteur() {
 		this.ContratsAcheteur=new LinkedList<ExemplaireContratCadre>();
 		this.contratsObsoletes =new LinkedList<ExemplaireContratCadre>();
 		//on crée la variable/tableau demande_vente qui répertorie les demandes de la ventes 
 		//en les différentes fèves pour le step d'après
 		//on va commander pour satisfaire cette commande en ventes c'est notre stratégie actuelle.
-		demande_vente = new HashMap<IProduit, Double>();
+		demandeAchatFeve = new HashMap<IProduit, Double>();
 		//on initialise juste pour les différentes fèves on s'en fout de la valeur initiale
-		demande_vente.put(Feve.F_BQ,(productionMax*0.9)/3);
-        demande_vente.put(Feve.F_BQ_E,(productionMax*0.9)/6);
-        demande_vente.put(Feve.F_MQ,(productionMax*0.9)/6);
-        demande_vente.put(Feve.F_HQ_E,(productionMax*0.9)/3);
+		demandeAchatFeve.put(Feve.F_BQ,0.0);
+        demandeAchatFeve.put(Feve.F_BQ_E,0.0);
+        demandeAchatFeve.put(Feve.F_MQ,0.0);
+        demandeAchatFeve.put(Feve.F_HQ_E,0.0);
 	}
+	
 	//@author Henri Roth
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {
 		//on regarde quel produit est concerné par le contrat
@@ -42,7 +43,7 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratC
         if(super.fevesUtiles.contains(p)){
             // si oui on calcule de la quantite par step de chocolat que l'on veut livrer
             //on regarde quelle est notre demande de vente du produit 
-            double vente = demande_vente.get(p);
+            double vente = demandeAchatFeve.get(p);
             //on récupère l'échéancier
             Echeancier e = contrat.getEcheancier();
             //on récupère le premier step
@@ -72,7 +73,7 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratC
         return null;
     }
 	
-	//@author Henri Roth
+	//@author Henri Roth & Florian Malveau
 	public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat) {
 		//journalCC.ajouter("## NEGOCIATION "+contrat.getNumero()+" - Prix proposé : "+contrat.getPrix());
 		double prixBourse = 3000.0;
@@ -83,23 +84,26 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratC
 			prixBourse = bourse.getCours((Feve)contrat.getProduit()).getValeur();
 		}
 
+		double prixPropose = 0.75*prixBourse;
+
 		if(prixList.size() > 2){
-			prixBourse = prixList.get(prixList.size()-2);
+			prixPropose = prixList.get(prixList.size()-2);
 		}
 
-		jdb.ajouter("#########"+contrat.getNumero()+"######## Prix Bourse"+contrat.getProduit()+" : "+prixBourse);
+		//jdb.ajouter("#########"+contrat.getNumero()+"######## Prix Bourse"+contrat.getProduit()+" : "+prixBourse);
 		
-		double prixPropose = contrat.getPrix();
-		if(prixPropose > prixBourse+500){
+		double prixVendeur = contrat.getPrix();
+		if(prixVendeur > prixPropose+500){
 			//journalCC.ajouter("## PRIX PROPOSE : "+prixPropose+" - PRIX BOURSE : "+prixBourse*1.2);
-			return (prixBourse*1.5+prixPropose*0.5)/2;
+			return (prixPropose*1.5+prixVendeur*0.5)/2;
 		}
 		else{
-			return prixPropose;
+			return prixVendeur;
 		}
 		
 	}
 
+	/*
 	//@author Florian Malveau
 	public void initialiser(){
 		super.initialiser();
@@ -110,14 +114,12 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratC
 			this.coutMoyFeves.put(feve,0.0);
 		}
 	}
+	*/
 
-	
-	public void next() {
-		super.next();
-		SuperviseurVentesContratCadre supCCadre = (SuperviseurVentesContratCadre) Filiere.LA_FILIERE.getActeur("Sup.CCadre");
-
-
-		//gestion de la suppression des contrats obsolètes
+	//@author Florian Malveau
+	//gestion de la suppression des contrats obsolètes
+	public void supprCCObsoletes() {
+		
 		journalCC.ajouter("======= Contrats cadres finis période"+Filiere.LA_FILIERE.getEtape()+"=======");
 		// On enleve les contrats obsolete (nous pourrions vouloir les conserver pour "archive"...)
 		for (ExemplaireContratCadre contrat : this.ContratsAcheteur) {
@@ -134,9 +136,64 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratC
 		}
 		this.ContratsVendeur.removeAll(contratsObsoletes);
 		journalCC.ajouter("======================");
+	}
+
+	//@author Florian Malveau
+	public void initialiserAchatFeve(){
+
+		//On utilise les données de StratQuantity
+		// Maj des infos de Strat Quantity
+		super.actualiserEcheanciers();
+		super.miseAJourEcheanciersBesoins();
+		
+		for(IProduit feve : super.fevesUtiles){
+			// Quantité de fève nécessaire pour la production de chocolat
+			double besoinEnFeve = super.besoinFeveEcheancier.get(feve).get(1);
+			// Quantité de fève déjà contractée
+			double approvisionnementFeve = super.quantityFevesEcheancier.get(feve).get(1);
+			// Quantité de fève à acheter
+			double quantiteAchatFeve = Math.max(0,besoinEnFeve - approvisionnementFeve);
+
+			demandeAchatFeve.replace(feve, quantiteAchatFeve);
+			jdb.ajouter("Demande de "+feve+" : "+demandeAchatFeve.get(feve));
+		}
+
+	}
+
+	//@author Florian Malveau
+	public boolean demanderUnContratCadreAcheteur(IActeur acteur, IProduit produit, double quantite) {
+
+        SuperviseurVentesContratCadre supCCadre = (SuperviseurVentesContratCadre) Filiere.LA_FILIERE.getActeur("Sup.CCadre");
+
+		ExemplaireContratCadre contrat = supCCadre.demandeAcheteur((IAcheteurContratCadre)this, ((IVendeurContratCadre)acteur), produit, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10, quantite), cryptogramme, false);
+					
+		// Si un contrat a été créé, on l'ajoute à la liste des contrats du vendeur
+        if(contrat != null){
+            notificationNouveauContratCadre(contrat);
+            jdb.ajouter("Nouveau contrat cadre Acheteur" +contrat.getProduit());
+            //Mettre à jour la capacité de vente max
+            initialiserAchatFeve();
+            return true;
+        }
+        return false;
+    }
+
+
+	public void next() {
+		super.next();
+
+		//on supprime les contrats obsolètes
+		supprCCObsoletes();
+
+		//on initialise la demande d'achat de fèves
+		initialiserAchatFeve();
+		
+		SuperviseurVentesContratCadre supCCadre = (SuperviseurVentesContratCadre) Filiere.LA_FILIERE.getActeur("Sup.CCadre");
 
 		// @author Eric Schiltz
 		//on parcourt toutes les fèves
+		
+		/*
 		demande_vente.put(Feve.F_BQ,(productionMax*0.9)/3);
         demande_vente.put(Feve.F_BQ_E,(productionMax*0.9)/6);
         demande_vente.put(Feve.F_MQ,(productionMax*0.9)/6);
@@ -179,32 +236,29 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratC
 			//on met alors à jour demande_vente
 			demande_vente.replace(feve,b);
 			}
-		}
+		}*/
 
-
-	//maintenant on fait des propositions de contrat cadre
-		//on parcourt tous les types de chocolat
+		//maintenant on fait des propositions de contrat cadre
         for(IProduit feve : super.fevesUtiles){
             //on parcourt les acteurs de la filière
-			// Pour tous les types de fèves
 			// Proposition d'un nouveau contrat a tous les vendeurs possibles
 			// Fève utilisée : BQ / BQ_E / MQ / HQ_E
             for (IActeur acteur : Filiere.LA_FILIERE.getActeurs()) {
                 //si l'acteur n'est pas nous et si l'acteur achète des contrats cadres et s'il achète
-                //du chocolat par contrat cadre
+                //des fèves par contrat cadre
                 if (acteur!=this && acteur instanceof IVendeurContratCadre && ((IVendeurContratCadre)acteur).vend(feve)) {
-                    //on propose un contrat cadre à l'acteur en question qui démarre à l'étape
-                    //suivante de la filière, qui dure 10 step 
-					double demande = demande_vente.get(feve);
+                    //Contrat cadre de 10 step au prochain step
+					double demande = demandeAchatFeve.get(feve);
+					//jdb.ajouter("Demande de "+feve+" : "+demande);
 					//besoin de vérifier que la demande est bien strictement supérieur à 0
-					if(demande != 0){
-                    	supCCadre.demandeAcheteur((IAcheteurContratCadre)this, ((IVendeurContratCadre)acteur), feve, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10, demande), cryptogramme, false);
+					if(demande > 100){
+                    	demanderUnContratCadreAcheteur(acteur, feve, demande);
 					}
                 }
             }
         }
 
-
+		/*/
 		//@author Florian Malveau
 		//A partir des données des contrats on estime coûts fèves
 		for(IProduit feve : coutMoyFeves.keySet()){
@@ -214,8 +268,7 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratC
 				if(contrat.getProduit() == feve){
 					quantityXprix += contrat.getQuantiteTotale()*contrat.getPrix();
 					quantitytotale += contrat.getQuantiteTotale();
-					journalCC.ajouter(feve+"("+contrat.getNumero()+") : "+contrat.getQuantiteALivrerAuStep());
-				}
+		}
 
 			this.coutMoyFeves.replace(feve, quantityXprix/quantitytotale);
 			}
@@ -228,6 +281,7 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratC
 		for(IProduit feve : coutMoyFeves.keySet()){
 			jdb.ajouter("- "+feve+" : "+coutMoyFeves.get(feve));
 		}
+		*/
 	}
 
 	//@author Henri Roth
@@ -259,16 +313,16 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratC
 
 	@Override //@author Henri Roth
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
-	journalCC.ajouter("Nouveau contrat cadre Acheteur : " +contrat);
-	journalCC.ajouter("Prix (€/t) : " +contrat.getPrix());
-	// Trie des contrats cadres en fonction du produit
-	if(super.lesFeves.contains(contrat.getProduit())) {
-		super.ContratsAcheteur.add(contrat);
-	} else if(super.lesChocolats.contains(contrat.getProduit())) {
-		super.ContratsVendeur.add(contrat);
-	} else {
-		jdb.ajouter("#### ATTENTION : ON ACHETE N'IMPORTE QUOI ####");
-	}
+		journalCC.ajouter("Nouveau contrat cadre Acheteur : " +contrat);
+		journalCC.ajouter("Prix (€/t) : " +contrat.getPrix());
+		// Trie des contrats cadres en fonction du produit
+		if(super.lesFeves.contains(contrat.getProduit())) {
+			super.ContratsAcheteur.add(contrat);
+		} else if(super.lesChocolats.contains(contrat.getProduit())) {
+			super.ContratsVendeur.add(contrat);
+		} else {
+			jdb.ajouter("#### ATTENTION : ON ACHETE N'IMPORTE QUOI ####");
+		}
 
 	//ContratsAcheteur.add(contrat);
 	}
