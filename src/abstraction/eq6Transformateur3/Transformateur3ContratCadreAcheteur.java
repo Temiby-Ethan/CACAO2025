@@ -187,8 +187,6 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratC
 
 		//on initialise la demande d'achat de fèves
 		initialiserAchatFeve();
-		
-		SuperviseurVentesContratCadre supCCadre = (SuperviseurVentesContratCadre) Filiere.LA_FILIERE.getActeur("Sup.CCadre");
 
 		// @author Eric Schiltz
 		//on parcourt toutes les fèves
