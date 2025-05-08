@@ -47,7 +47,7 @@ public class Distributeur2AcheteurAppelOffre extends Distributeur2AcheteurContra
 	}
 
     
-    
+    //@author ArmandChanane
     public OffreVente choisirOV(List<OffreVente> propositions) {
         if (propositions == null || propositions.isEmpty()) {
             return null;
@@ -83,7 +83,7 @@ public class Distributeur2AcheteurAppelOffre extends Distributeur2AcheteurContra
 				
                 journalAO.ajouter("Je lance un appel d'offre de "+quantite+"T de "+cm);
 				if (ov!=null) { 
-                    journalAO.ajouter("AO finalise : on ajoute "+quantite+"T de "+cm+" au stock");
+                    journalAO.ajouter(Romu.COLOR_LLGRAY,Romu.COLOR_GREEN,"AO finalise : on ajoute "+quantite+"T de "+cm+" au stock");
 					stock_Choco.put(cm, stock_Choco.get(cm)+quantite);
 					
 					prixRetenus.get(cm).add(ov.getPrixT());
