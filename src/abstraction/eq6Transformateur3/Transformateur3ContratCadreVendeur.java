@@ -51,7 +51,7 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
             }
             //on remet alors à jour capacite_vente_max
             capacite_vente_max.replace(choco,capacite_vente_max.get(choco)-quantityDejaVendu);
-            jdb.ajouter("Capacité de vente max de "+choco+" : "+capacite_vente_max.get(choco));
+            //jdb.ajouter("Capacité de vente max de "+choco+" : "+capacite_vente_max.get(choco));
         }
     }
 
@@ -63,7 +63,7 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
         // Si un contrat a été créé, on l'ajoute à la liste des contrats du vendeur
         if(contrat != null){
             notificationNouveauContratCadre(contrat);
-            jdb.ajouter("Nouveau contrat cadre Vendeur" +contrat.getProduit());
+            //jdb.ajouter("Nouveau contrat cadre Vendeur" +contrat.getProduit());
             //Mettre à jour la capacité de vente max
             initialiserCapaVente();
             return true;

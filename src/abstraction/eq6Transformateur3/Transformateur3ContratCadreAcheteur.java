@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import abstraction.eqXRomu.filiere.*;
+import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.IProduit;
 import abstraction.eqXRomu.bourseCacao.BourseCacao;
 import abstraction.eqXRomu.contratsCadres.Echeancier;
@@ -120,7 +121,7 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratC
 	//gestion de la suppression des contrats obsolètes
 	public void supprCCObsoletes() {
 		
-		journalCC.ajouter("======= Contrats cadres finis période"+Filiere.LA_FILIERE.getEtape()+"=======");
+		journalCC.ajouter("======= Contrats cadres finis période n°"+Filiere.LA_FILIERE.getEtape()+"=======");
 		// On enleve les contrats obsolete (nous pourrions vouloir les conserver pour "archive"...)
 		for (ExemplaireContratCadre contrat : this.ContratsAcheteur) {
 			if (contrat.getQuantiteRestantALivrer()==0.0 && contrat.getMontantRestantARegler()==0.0) {
@@ -155,7 +156,7 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratC
 			double quantiteAchatFeve = Math.max(0,besoinEnFeve - approvisionnementFeve);
 
 			demandeAchatFeve.replace(feve, quantiteAchatFeve);
-			jdb.ajouter("Demande de "+feve+" : "+demandeAchatFeve.get(feve));
+			//jdb.ajouter("Demande de "+feve+" : "+demandeAchatFeve.get(feve));
 		}
 
 	}
@@ -170,7 +171,7 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratC
 		// Si un contrat a été créé, on l'ajoute à la liste des contrats du vendeur
         if(contrat != null){
             notificationNouveauContratCadre(contrat);
-            jdb.ajouter("Nouveau contrat cadre Acheteur" +contrat.getProduit());
+            //jdb.ajouter("Nouveau contrat cadre Acheteur" +contrat.getProduit());
             //Mettre à jour la capacité de vente max
             initialiserAchatFeve();
             return true;
@@ -181,6 +182,10 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratC
 
 	public void next() {
 		super.next();
+
+		super.jdb.ajouter("NEXT - CONTRAT CADRE");
+		super.journalCC.ajouter("");
+        super.journalCC.ajouter("NEXT - CONTRAT CADRE");
 
 		//on supprime les contrats obsolètes
 		supprCCObsoletes();
@@ -256,6 +261,8 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratC
             }
         }
 
+		super.journalCC.ajouter("================ FIN NEXT =====================");
+
 		/*/
 		//@author Florian Malveau
 		//A partir des données des contrats on estime coûts fèves
@@ -311,13 +318,26 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratC
 
 	@Override //@author Henri Roth
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
-		journalCC.ajouter("Nouveau contrat cadre Acheteur : " +contrat);
-		journalCC.ajouter("Prix (€/t) : " +contrat.getPrix());
 		// Trie des contrats cadres en fonction du produit
 		if(super.lesFeves.contains(contrat.getProduit())) {
 			super.ContratsAcheteur.add(contrat);
+			// Récupération des infos du contrat
+			IActeur vendeur = contrat.getVendeur();
+			Echeancier e = contrat.getEcheancier();
+			double quantite = e.getQuantite(e.getStepDebut());
+			journalCC.ajouter(Journal.texteColore(vendeur, vendeur.getNom())+" - New CC Achat "+contrat.getProduit());
+			journalCC.ajouter("--> [Prix : "+Math.round(contrat.getPrix())+" € | Quantitee par step : "+quantite+" t | Nb step : "+e.getNbEcheances()+"]");
+		
 		} else if(super.lesChocolats.contains(contrat.getProduit())) {
 			super.ContratsVendeur.add(contrat);
+
+			// Récupération des infos du contrat
+			IActeur acheteur = contrat.getAcheteur();
+			Echeancier e = contrat.getEcheancier();
+			double quantite = e.getQuantite(e.getStepDebut());
+			journalCC.ajouter(Journal.texteColore(acheteur, acheteur.getNom())+" - New CC Vente "+contrat.getProduit());
+			journalCC.ajouter("--> [Prix : "+Math.round(contrat.getPrix())+" € | Quantitee par step : "+quantite+" t | Nb step : "+e.getNbEcheances()+"]");
+		
 		} else {
 			jdb.ajouter("#### ATTENTION : ON ACHETE N'IMPORTE QUOI ####");
 		}

@@ -22,14 +22,28 @@ public class Transformateur3StratQuantity extends Transformateur3Acteur {
 
     protected HashMap<IProduit, Double> coutMoyFeves; //estimation du cout de chaque fèves
     protected List<Long> contratTraite;
-    protected HashMap<IProduit, Double> proportionFeves; //proportion de feves dans le chocolat
 
     //Quantitée de chaque type de fèves reçue au prochain step
-    //pour chaque fève, in dispose d'un échéancier sur la quantité total de fèves
+    //pour chaque fève, on dispose d'un échéancier sur la quantité total de fèves
 	protected HashMap<IProduit, List<Double>> quantityFevesEcheancier;
     // Quantitée de chaque type de choco vendu au prochain step
     protected HashMap<IProduit, List<Double>> quantityChocoEcheancier;
     protected HashMap<IProduit, List<Double>> besoinFeveEcheancier;
+
+    // Analyse des receptions de fèves et livraisons de choco
+
+
+    //Les chocolats produits
+    protected IProduit fraudStrat;
+    protected IProduit hypoStrat;
+    protected IProduit arnaStrat;
+    protected IProduit bolloStrat;
+
+    //Demande de production
+    protected double productionMaxStrat = 150000; //Production max de chocolat par step
+    protected HashMap<IProduit, Double> DemandeProdChoco; //Demande pour chaque choco en tonnes
+    protected HashMap<IProduit, Double> besoinFeveNextStep; //Demande max pour chaque choco en tonnes
+
 
     public Transformateur3StratQuantity(){
 
@@ -42,6 +56,10 @@ public class Transformateur3StratQuantity extends Transformateur3Acteur {
         this.quantityChocoEcheancier = new HashMap<IProduit, List<Double>>();
         this.besoinFeveEcheancier = new HashMap<IProduit, List<Double>>();
         this.contratTraite = new ArrayList<Long>();
+
+        //Initialisation de la demande de production
+        this.DemandeProdChoco = new HashMap<IProduit, Double>();
+        this.besoinFeveNextStep = new HashMap<IProduit, Double>();
     }
 
     public void initialiser() {
@@ -61,6 +79,8 @@ public class Transformateur3StratQuantity extends Transformateur3Acteur {
             this.besoinFeveEcheancier.get(feve).add(0.0);
             this.besoinFeveEcheancier.get(feve).add(0.0);
             this.besoinFeveEcheancier.get(feve).add(0.0);
+
+            besoinFeveNextStep.put(feve, 0.0);
         }
 
         for(IProduit choco : super.lesChocolats){
@@ -70,6 +90,17 @@ public class Transformateur3StratQuantity extends Transformateur3Acteur {
             this.quantityChocoEcheancier.get(choco).add(0.0);
             this.quantityChocoEcheancier.get(choco).add(0.0);
         }
+
+        fraudStrat = super.lesChocolats.get(0);
+        bolloStrat = super.lesChocolats.get(1);
+        arnaStrat = super.lesChocolats.get(2);
+        hypoStrat = super.lesChocolats.get(3);
+
+        this.DemandeProdChoco.put(fraudStrat,productionMaxStrat/3);
+        this.DemandeProdChoco.put(hypoStrat,productionMaxStrat/6);
+        this.DemandeProdChoco.put(arnaStrat,productionMaxStrat/6);
+        this.DemandeProdChoco.put(bolloStrat,productionMaxStrat/3);
+
     }
 
     public void next(){
@@ -131,9 +162,14 @@ public class Transformateur3StratQuantity extends Transformateur3Acteur {
                 proportion = 1.0;
                 choco = super.lesChocolats.get(3);
             }
+            // On construit les stats sur le besoin en fèves
             for(int i=0; i<3; i++){
                 double quantite = this.quantityChocoEcheancier.get(choco).get(i) * proportion;
                 this.besoinFeveEcheancier.get(feve).set(i, quantite);
+                // Ajout au besoin du prochain step
+                if(i==0){
+                    besoinFeveNextStep.replace(feve,quantite);
+                }
             }
         }
     }
@@ -214,27 +250,49 @@ public class Transformateur3StratQuantity extends Transformateur3Acteur {
         }
     }
 
-    public void displayEcheancier(String title, HashMap<IProduit, List<Double>>Echeancier, List<IProduit> prodList){
+    public void displayEcheancier(String title, HashMap<IProduit, List<Double>>Echeancier, List<IProduit> prodList, HashMap<IProduit,Double> refData){
 
         super.journalStrat.ajouter("");
         super.journalStrat.ajouter(title);
-        super.journalStrat.ajouter(".................... | .Step +0. | .Step +1.   | .Step +2. |");
+        super.journalStrat.ajouter(".................... | .Step +0. | .Step +1.   | .Step +2. | Objectif. .(%). |");
         for(IProduit prod : prodList){
+
+            int pourcentage = (int)Math.round(Echeancier.get(prod).get(0) / refData.get(prod) * 100);
 
             String prodName = miseEnForme(prod.toString(), 20, true);
             String str1 = miseEnForme(Journal.doubleSur(Echeancier.get(prod).get(0).intValue(),1),9, false);
             String str2 = miseEnForme(Journal.doubleSur(Echeancier.get(prod).get(1).intValue(),1),9, false);
             String str3 = miseEnForme(Journal.doubleSur(Echeancier.get(prod).get(2).intValue(),1),9, false);
-			this.journalStrat.ajouter(prodName+" | "+str1+" | "+str2+" | "+str3+" |");
+			String str4 = miseEnForme(Journal.doubleSur(refData.get(prod).intValue(),1),9, false);
+            String str5 = miseEnForme(pourcentage+"",2, false);
+            this.journalStrat.ajouter(prodName+" | "+str1+" | "+str2+" | "+str3+" | "+str4+" ("+str5+"%) |");
             //this.journalStrat.ajouter(Journal.doubleSur(123456789.124, 0));
         
         }
     }
 
+    public void displayEcheancier(String title, HashMap<IProduit, List<Double>>Echeancier, List<IProduit> prodList){
+
+            super.journalStrat.ajouter("");
+            super.journalStrat.ajouter(title);
+            super.journalStrat.ajouter(".................... | .Step +0. | .Step +1.   | .Step +2. |");
+            for(IProduit prod : prodList){
+
+                String prodName = miseEnForme(prod.toString(), 20, true);
+                String str1 = miseEnForme(Journal.doubleSur(Echeancier.get(prod).get(0).intValue(),1),9, false);
+                String str2 = miseEnForme(Journal.doubleSur(Echeancier.get(prod).get(1).intValue(),1),9, false);
+                String str3 = miseEnForme(Journal.doubleSur(Echeancier.get(prod).get(2).intValue(),1),9, false);
+                this.journalStrat.ajouter(prodName+" | "+str1+" | "+str2+" | "+str3+" |");
+                //this.journalStrat.ajouter(Journal.doubleSur(123456789.124, 0));
+            
+            }
+        }
+
+
     public void displayAllStratQuantityData(){
-        displayEcheancier("Echéancier de chocolats", this.quantityChocoEcheancier, super.lesChocolats);
+        displayEcheancier("Echéancier de chocolats", this.quantityChocoEcheancier, super.lesChocolats, this.DemandeProdChoco);
         displayEcheancier("Echéancier besoin de fèves", this.besoinFeveEcheancier, super.fevesUtiles);
-        displayEcheancier("Echéancier de fèves", this.quantityFevesEcheancier, super.fevesUtiles);
+        displayEcheancier("Echéancier de fèves", this.quantityFevesEcheancier, super.fevesUtiles, this.besoinFeveNextStep);
         
     }
 
