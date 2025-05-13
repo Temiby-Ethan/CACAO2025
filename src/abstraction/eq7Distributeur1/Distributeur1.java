@@ -98,6 +98,8 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 		int step = Filiere.LA_FILIERE.getEtape(); // Récupération du numéro de l'étape
 		journal.ajouter(" ==============  Etape : " + step +  " ====================");
 		journalV.ajouter(" ==============  Etape : " + step +  " ====================");
+		journalE.ajouter(" ==============  Etape : " + step +  " ====================");
+		journalCC.ajouter(" ==============  Etape : " + step +  " ====================");
 		for (int i=0; i< this.chocolats.size(); i++){
 			if ("Fraudolat".equals(this.stocksChocolats.get(chocolats.get(i)).getNom())){
 				requiredQuantities.set(i,500.0);
