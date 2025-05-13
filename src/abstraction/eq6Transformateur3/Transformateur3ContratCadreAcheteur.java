@@ -316,7 +316,7 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratC
 		return 5;
 	}
 
-	@Override //@author Henri Roth
+	@Override //@author Henri Roth & Florian Malveau
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
 		// Trie des contrats cadres en fonction du produit
 		if(super.lesFeves.contains(contrat.getProduit())) {
