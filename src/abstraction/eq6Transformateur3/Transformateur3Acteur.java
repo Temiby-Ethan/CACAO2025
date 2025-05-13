@@ -17,7 +17,7 @@ import abstraction.eqXRomu.produits.IProduit;
 public class Transformateur3Acteur implements IActeur {
 	
 	protected int cryptogramme;
-	protected int etape;
+	protected int currentStep;
 	protected double coutStockage;
 
 	//Récupération des entitées utiles
@@ -38,6 +38,12 @@ public class Transformateur3Acteur implements IActeur {
 	protected HashMap<IProduit, Variable> dicoIndicateurFeves;
 	protected Transformateur3Stock stockFeves;
 	protected Transformateur3Stock stockChoco;
+
+	//Prix
+	protected HashMap<Feve, List<Double>> prixFeve;
+	protected HashMap<IProduit, List<Double>> prixChoco;
+
+	protected Transformateur3StratPrix StratPrix;
 
 	//Stratégie
 
@@ -125,8 +131,8 @@ public class Transformateur3Acteur implements IActeur {
 
 	public void next() {
 		this.jdb.ajouter("NEXT - TRANSFORMATEUR3ACTEUR");
-		etape = Filiere.LA_FILIERE.getEtape();
-		jdb.ajouter("Accteur Etape " + etape);
+		currentStep = Filiere.LA_FILIERE.getEtape();
+		jdb.ajouter("Acteur Etape " + currentStep);
 	}
 
 	public Color getColor() {// NE PAS MODIFIER
