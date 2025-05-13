@@ -52,9 +52,7 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurEncher
 		if (product instanceof ChocolatDeMarque) {
         	ChocolatDeMarque chocolat = (ChocolatDeMarque) product;
 			//System.err.println("Chocolat : " + chocolat.toString());
-			if(chocolat.toString().equals("C_BQ_Fraudolat")){
-				return null;
-			} else{
+			
 			int idProduct = cdmToInt(chocolat);
 			double price = 1.5*this.priceProduct.get(idProduct) ;
 			for (int i=0; i<propositions.size(); i++){
@@ -71,7 +69,7 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurEncher
 			return(null);
 		}
 		this.getStock((ChocolatDeMarque) propositions.get(indice).getProduit()).ajouter(this, propositions.get(indice).getQuantiteT());
-		}}
+		}
 		// journal Alexiho :
 
 		String str_journal_AO = "";
