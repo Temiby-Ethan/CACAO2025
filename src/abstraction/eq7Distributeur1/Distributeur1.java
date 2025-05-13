@@ -100,6 +100,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 		journalV.ajouter(" ==============  Etape : " + step +  " ====================");
 		journalE.ajouter(" ==============  Etape : " + step +  " ====================");
 		journalCC.ajouter(" ==============  Etape : " + step +  " ====================");
+		journalAO.ajouter(" ==============  Etape : " + step +  " ====================");
 		for (int i=0; i< this.chocolats.size(); i++){
 			if ("Fraudolat".equals(this.stocksChocolats.get(chocolats.get(i)).getNom())){
 				requiredQuantities.set(i,500.0);
