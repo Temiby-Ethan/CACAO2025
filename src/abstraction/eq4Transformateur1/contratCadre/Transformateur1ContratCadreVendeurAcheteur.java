@@ -41,7 +41,8 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {
 
-        
+        this.qttInitialementVoulue =  (qttInitialementVoulue + contrat.getEcheancier().getQuantiteTotale())/2;
+		
 		if (contrat.getEcheancier().getQuantiteTotale()>SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER){
 
 			//Si la qtt proposée est cohérente avec la quantité que nous voulions initialement, on accepte l'echeancier
@@ -341,7 +342,7 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 						if (vendeur!=null) {
 							journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN, "Demande au superviseur de debuter les negociations pour un contrat cadre de "+produit+" avec le vendeur "+vendeur);
 							this.qttInitialementVoulue = STOCK_MAX_TOTAL_FEVES;
-							ExemplaireContratCadre cc = supCCadre.demandeAcheteur((IAcheteurContratCadre)this, vendeur, produit, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 30,1.1*qttSortant), cryptogramme,false);
+							ExemplaireContratCadre cc = supCCadre.demandeAcheteur((IAcheteurContratCadre)this, vendeur, produit, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 30,1.5*qttSortant), cryptogramme,false);
 							if (cc!=null) {
 								journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN, "-->aboutit au contrat "+cc);
 								journalCC.ajouter("\n");
@@ -430,7 +431,7 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 			qttEntrant -= qttSortantesChoco.get(produit.getChocolat());
 
 			//On ne cherche des contrats cadres que si l'on a de la matière à vendre 
-			if (0.2*qttEntrant > 1000.){
+			if (0.4*qttEntrant > 1000.){
 				//détermination du nombre de contrat pour ce produit : 
 				int nbContrat = 0;
 				for (ExemplaireContratCadre cc : mesContratEnTantQueVendeur){
@@ -458,7 +459,7 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 						if (acheteur!=null) {
 							journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_PURPLE, "Demande au superviseur de debuter les negociations pour un contrat cadre de "+produit+" avec l'acheteur "+acheteur);
 
-							if (0.3*this.getQuantiteEnStock(produit, this.cryptogramme) > 100.){
+							if (0.2*qttEntrant > 100.){
 
 								ExemplaireContratCadre cc = supCCadre.demandeVendeur(acheteur, (IVendeurContratCadre)this, produit, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 25, 0.2*qttEntrant), cryptogramme, false);
 								
@@ -506,6 +507,7 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 					journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_GREEN, "Demande au superviseur de debuter les negociations pour un contrat cadre de "+produit+" avec l'acheteur "+acheteur);
 					ExemplaireContratCadre cc = supCCadre.demandeVendeur(acheteur, (IVendeurContratCadre)this, produit, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10, (SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER+10.0)/10), cryptogramme,false);
 					if (cc!=null) {
+						this.mesContratEnTantQueVendeur.add(cc);
 					    journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_GREEN, "-->aboutit au contrat "+cc);
 					    journalCC.ajouter("\n");
 					}
