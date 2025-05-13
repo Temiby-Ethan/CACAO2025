@@ -17,9 +17,6 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
     //Capacité de vente de chocolat
     protected HashMap<IProduit, Double> capacite_vente_max;
 
-    //nb de step pour la connaissance des livraisons à ce step
-    protected int nb_step; 
-
     //total des livraisons à faire pour ce step
     protected double qtté_livraison_bollo;
     protected double qtté_livraison_fraudau;
