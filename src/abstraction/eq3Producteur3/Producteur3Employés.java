@@ -12,7 +12,7 @@ public class Producteur3Employés extends Producteur3Stock {
     }
     
     // Paul
-    double getMasseSalariale(){//Donne la masse salariale totale de l'entreprise
+    double getMasseSalariale(){
         double masseSalariale = 0;
         double[] salaires = {2,5,12.5};
         for (int i = 0; i < 3; i++){
@@ -21,7 +21,7 @@ public class Producteur3Employés extends Producteur3Stock {
         return masseSalariale;
         }
     
-    double getMasseSalarialeParticulier(Feve feve){//Donne la masse salariale pour un type de fève
+    double getMasseSalarialeParticulier(Feve feve){
         if(feve.getGamme().equals(Gamme.BQ)){
             if(feve.isEquitable()){
                 double masseSalariale = 100*nbParcellesBQ_E*8*12.5;
