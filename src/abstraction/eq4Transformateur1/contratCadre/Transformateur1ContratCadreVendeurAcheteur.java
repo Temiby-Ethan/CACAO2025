@@ -41,7 +41,13 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 
 	public Echeancier contrePropositionDeLAcheteur(ExemplaireContratCadre contrat) {
 
-        this.qttInitialementVoulue =  (qttInitialementVoulue + contrat.getEcheancier().getQuantiteTotale())/2;
+        this.qttInitialementVoulue =  (this.qttInitialementVoulue + contrat.getEcheancier().getQuantiteTotale())/2;
+
+		//Détermination du nombre de contrat cadre : 
+		int nbContratA = 0;
+		for (ExemplaireContratCadre cc : mesContratEnTantQuAcheteur){
+			if (cc.getProduit().equals(contrat.getProduit())) nbContratA++;
+		}
 		
 		if (contrat.getEcheancier().getQuantiteTotale()>SuperviseurVentesContratCadre.QUANTITE_MIN_ECHEANCIER){
 
@@ -54,7 +60,7 @@ public class Transformateur1ContratCadreVendeurAcheteur extends Transformateur1C
 			else{
 
 				//Si Le nombre de contrat cadre est suffisant, on négocie la quantité des autres contrats via la quantité entrante et sortante à chaque step
-				if(this.mesContratEnTantQuAcheteur.size() + this.mesContratEnTantQueVendeur.size() >=10){
+				if(nbContratA > 3 ){
 					double qttSortant = 0.;
 					Echeancier e = contrat.getEcheancier();
 					for (int step = contrat.getEcheancier().getStepDebut() ; step <= contrat.getEcheancier().getStepFin() ; step++){
