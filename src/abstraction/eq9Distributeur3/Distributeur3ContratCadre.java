@@ -12,9 +12,9 @@ import java.util.List;
 
 public class Distributeur3ContratCadre extends Distributeur3Charges implements IAcheteurContratCadre{
 
-@Override
-
-    // Implémentée par tout le monde
+    @Override
+    // Implémentée par Héloise et Jeanne
+    public void next() {
 
 
         super.next();
@@ -24,7 +24,7 @@ public class Distributeur3ContratCadre extends Distributeur3Charges implements I
         transfo.add(Filiere.LA_FILIERE. getActeur("EQ4"));
         transfo.add(Filiere.LA_FILIERE. getActeur("EQ5"));
         transfo.add(Filiere.LA_FILIERE. getActeur("EQ6"));
-        for(ChocolatDeMarque choco :  Filiere.LA_FILIERE.getChocolatsProduits()){
+       for(ChocolatDeMarque choco :  Filiere.LA_FILIERE.getChocolatsProduits()){
            if(choco.getGamme()== Gamme.BQ){
                listeChcocolatPertinents.add(choco);
            }
