@@ -165,9 +165,9 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratC
 	public boolean demanderUnContratCadreAcheteur(IActeur acteur, IProduit produit, double quantite) {
 
         SuperviseurVentesContratCadre supCCadre = (SuperviseurVentesContratCadre) Filiere.LA_FILIERE.getActeur("Sup.CCadre");
-
-		ExemplaireContratCadre contrat = supCCadre.demandeAcheteur((IAcheteurContratCadre)this, ((IVendeurContratCadre)acteur), produit, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10, quantite), cryptogramme, false);
-					
+		double a = Filiere.random.nextDouble();
+        int b = (int) a;
+		ExemplaireContratCadre contrat = supCCadre.demandeAcheteur((IAcheteurContratCadre)this, ((IVendeurContratCadre)acteur), produit, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10+(b*5), quantite), cryptogramme, false);
 		// Si un contrat a été créé, on l'ajoute à la liste des contrats du vendeur
         if(contrat != null){
             notificationNouveauContratCadre(contrat);
