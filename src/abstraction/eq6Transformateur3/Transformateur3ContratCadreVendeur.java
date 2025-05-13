@@ -16,9 +16,22 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
     
     //Capacité de vente de chocolat
     protected HashMap<IProduit, Double> capacite_vente_max;
+
+    //nb de step pour la connaissance des livraisons à ce step
+    protected int nb_step; 
+
+    //total des livraisons à faire pour ce step
+    protected double qtté_livraison_bollo;
+    protected double qtté_livraison_fraudau;
+    protected double qtté_livraison_hypo;
+    protected double qtté_livraison_arna;
     
     public Transformateur3ContratCadreVendeur() {
         this.ContratsVendeur=new LinkedList<ExemplaireContratCadre>();
+        this.qtté_livraison_arna= 0; 
+        this.qtté_livraison_bollo= 0; 
+        this.qtté_livraison_fraudau= 0; 
+        this.qtté_livraison_hypo= 0; 
 	}
 
     // @author Florin Malveau
@@ -76,6 +89,18 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
     @Override //@author Henri Roth & Eric SCHILTZ
     public void next(){
         super.next();
+
+        //on affiche la quantité livrée durant le step jusque là 
+        journalCC.ajouter("quantité livrée à ce step en arna en CC"+qtté_livraison_arna);
+        journalCC.ajouter("quantité livrée à ce step en bollo en CC"+qtté_livraison_bollo);
+        journalCC.ajouter("quantité livrée à ce step en fraudau en CC"+qtté_livraison_fraudau);
+        journalCC.ajouter("quantité livrée à ce step en hypo en CC"+qtté_livraison_hypo);
+        //on remet la quantité livrée à chaque step à 0 au début de chaque step
+        this.qtté_livraison_arna= 0; 
+        this.qtté_livraison_bollo= 0; 
+        this.qtté_livraison_fraudau= 0; 
+        this.qtté_livraison_hypo= 0;
+
 
         //Initialisation de la capacité de vente max
         initialiserCapaVente();
@@ -215,6 +240,18 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
     public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
         double stockActuel = stockChoco.getQuantityOf(produit);
 		double aLivre = Math.min(quantite, stockActuel);
+        if(produit == bollo) {
+            this.qtté_livraison_bollo += aLivre;
+        }
+        if(produit == fraud) {
+            this.qtté_livraison_fraudau += aLivre;
+        }
+        if(produit == hypo) {
+            this.qtté_livraison_hypo += aLivre;
+        }
+        if(produit == arna) {
+            this.qtté_livraison_arna += aLivre;
+        }
 		journalCC.ajouter("   Livraison de "+aLivre+" T de "+produit+" sur "+quantite+" exigees pour contrat "+contrat.getNumero());
         stockChoco.remove(produit, aLivre);
 		return aLivre;
