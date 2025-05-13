@@ -20,6 +20,7 @@ public class Distributeur3Distributeur extends Distributeur3Acteur implements ID
     private HashMap<Integer,HashMap<ChocolatDeMarque,Double>> ventes;
 
     // Implémentée par Héloïse
+    //Test
     public Distributeur3Distributeur() {
         super();
         this.stockChocoMarque = new HashMap<>();
@@ -58,7 +59,7 @@ public class Distributeur3Distributeur extends Distributeur3Acteur implements ID
                         this.prix.put(cm, 3500.0F);
                     }
 
-                    this.prix.put(cm,4500.0F);
+                    //this.prix.put(cm,4500.0F);
                 }
             }
         }
