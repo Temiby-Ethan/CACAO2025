@@ -32,10 +32,19 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
         // On initialise la capacité de vente max à 90% de la production max de chocolat
         double f = 0.9;
         capacite_vente_max = new HashMap<IProduit, Double>();
+
+        
+        for(IProduit choco : super.lesChocolats){
+            // On initialise la capacité de vente max à 90% de la production max de chocolat
+            capacite_vente_max.put(choco, super.DemandeProdChoco.get(choco)*f);
+        }
+        /*
         capacite_vente_max.put(fraud,(productionMax*f)/3);
         capacite_vente_max.put(hypo,(productionMax*f)/6);
         capacite_vente_max.put(arna,(productionMax*f)/6);
         capacite_vente_max.put(bollo,(productionMax*f)/3);
+        */
+        
 
         // Enlève la quantité de choco déjà livrée pour le step suivant dans les CC existants
         for(IProduit choco : super.lesChocolats){

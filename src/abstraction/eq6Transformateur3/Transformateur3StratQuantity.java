@@ -95,10 +95,10 @@ public class Transformateur3StratQuantity extends Transformateur3Acteur {
         arnaStrat = super.lesChocolats.get(2);
         hypoStrat = super.lesChocolats.get(3);
 
-        this.DemandeProdChoco.put(fraudStrat,productionMaxStrat/3);
-        this.DemandeProdChoco.put(hypoStrat,productionMaxStrat/6);
-        this.DemandeProdChoco.put(arnaStrat,productionMaxStrat/6);
-        this.DemandeProdChoco.put(bolloStrat,productionMaxStrat/3);
+        this.DemandeProdChoco.put(fraudStrat,40000.0);//productionMaxStrat/3);
+        this.DemandeProdChoco.put(bolloStrat,1000.0);//productionMaxStrat/3);
+        this.DemandeProdChoco.put(arnaStrat,3000.0);//productionMaxStrat/6);
+        this.DemandeProdChoco.put(hypoStrat,300.0);//productionMaxStrat/6);
 
     }
 
@@ -115,6 +115,10 @@ public class Transformateur3StratQuantity extends Transformateur3Acteur {
         this.quantityChocoEcheancier = traiterContrats(this.ContratsVendeur, this.quantityChocoEcheancier);
 
         miseAJourEcheanciersBesoins();
+
+        if(super.currentStep%4 == 3){
+            evaluateDemandeProdChoco();
+        }
 
         // Affichage des échéanciers de fèves et chocolats
         
@@ -302,10 +306,36 @@ public class Transformateur3StratQuantity extends Transformateur3Acteur {
     public void evaluateDemandeProdChoco(){
         // On évalue la demande de production de chocolat
         for(IProduit choco : super.lesChocolats){
-            double quantite = this.quantityChocoEcheancier.get(choco).get(0);
-            if(quantite > 0){
-                this.DemandeProdChoco.replace(choco, quantite);
+            double quantiteStep1Choc = this.quantityChocoEcheancier.get(choco).get(1);
+            double quantiteDemandeChoc = this.DemandeProdChoco.get(choco);
+            double increment = 0.0;
+            IProduit feve = null;
+
+            if(choco == fraudStrat){
+                feve = Feve.F_BQ;
+                increment = 5000.0;
+            }else if(choco == bolloStrat){
+                feve = Feve.F_BQ_E;
+                increment = 500.0;
+            }else if(choco == arnaStrat){
+                feve = Feve.F_MQ;
+                increment = 500.0;
+            }else if(choco == hypoStrat){
+                feve = Feve.F_HQ_E;
+                increment = 100.0;
             }
+
+            double quantiteStep1Feve = this.quantityFevesEcheancier.get(feve).get(1);
+            double quantiteDemandeFeve = this.besoinFeveEcheancier.get(feve).get(1);
+            
+            if(quantiteStep1Feve < quantiteDemandeFeve*0.8){
+                this.DemandeProdChoco.replace(choco, quantiteDemandeChoc-increment);
+            }else if(quantiteStep1Choc >= quantiteDemandeChoc*0.9){
+                this.DemandeProdChoco.replace(choco, quantiteDemandeChoc+increment);
+            }
+
+
+
         }
     }
     
