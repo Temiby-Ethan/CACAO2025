@@ -290,8 +290,8 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 				return contrat.getPrix();
 			}
 			//Si le prix est trop faible, on reste sur le prix minimum auquel on veut vendre
-			if (contrat.getPrix()< prix_Limdt_MQ.getValeur()*0.75){
-				return prix_Limdt_MQ.getValeur()*0.75;
+			if (contrat.getPrix()< prix_Limdt_MQ.getValeur()/marges.get(Chocolat.C_MQ)){
+				return prix_Limdt_MQ.getValeur()/marges.get(Chocolat.C_MQ);
 
 			}
 
@@ -305,10 +305,10 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 			}
 			//Sinon on cherche à négocier le prix, vers le bas par dichotomie en notre faveur à 90%
 			else{
-				double nouveauPrix = contrat.getPrix() * 0.1 + notrePrix * 0.9;
+				double nouveauPrix = contrat.getPrix() * 0.2 + notrePrix * 0.8;
 
-				if (nouveauPrix < prix_Limdt_MQ.getValeur()*0.75){
-					return prix_Limdt_MQ.getValeur()*0.75;
+				if (nouveauPrix < prix_Limdt_MQ.getValeur()/marges.get(Chocolat.C_MQ)){
+					return prix_Limdt_MQ.getValeur()/marges.get(Chocolat.C_MQ);
 
 				}
 				else{
@@ -325,8 +325,8 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 				return contrat.getPrix();
 			}
 			//Si le prix est trop faible, on reste sur le prix minimum auquel on veut vendre
-			if (contrat.getPrix()< prix_Limdt_BQ_E.getValeur()*0.93){
-				return prix_Limdt_BQ_E.getValeur()*0.93;
+			if (contrat.getPrix()< prix_Limdt_BQ_E.getValeur()/marges.get(Chocolat.C_BQ_E)){
+				return prix_Limdt_BQ_E.getValeur()/marges.get(Chocolat.C_BQ_E);
 			}
 			//Si le prix du contrat est à un epsilon près de notre prix, on accepte
 			double notrePrix = prix_Limdt_BQ_E.getValeur();
@@ -336,9 +336,9 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 			}
 			//Sinon on cherche à négocier le prix, vers le bas par dichotomie en notre faveur à 90%
 			else{
-				double nouveauPrix = contrat.getPrix() * 0.1 + notrePrix * 0.9;
-				if (nouveauPrix < prix_Limdt_BQ_E.getValeur()*0.93){
-					return prix_Limdt_BQ_E.getValeur()*0.93;
+				double nouveauPrix = contrat.getPrix() * 0.2 + notrePrix * 0.8;
+				if (nouveauPrix < prix_Limdt_BQ_E.getValeur()/marges.get(Chocolat.C_BQ_E)){
+					return prix_Limdt_BQ_E.getValeur()/marges.get(Chocolat.C_BQ_E);
 				}
 				else{
 					notrePrix = nouveauPrix;
@@ -355,8 +355,8 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 				return contrat.getPrix();
 			}
 			//Si le prix est trop faible, on reste sur le prix minimum auquel on veut vendre
-			if (contrat.getPrix()< prix_Limdt_MQ_E.getValeur()*0.93){
-				return prix_Limdt_MQ_E.getValeur()*0.93;
+			if (contrat.getPrix()< prix_Limdt_MQ_E.getValeur()/marges.get(Chocolat.C_MQ_E)){
+				return prix_Limdt_MQ_E.getValeur()/marges.get(Chocolat.C_MQ_E);
 			}
 			//Si le prix du contrat est à un epsilon près de notre prix, on accepte
 			double notrePrix = prix_Limdt_MQ_E.getValeur();
@@ -366,9 +366,9 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 			}
 			//Sinon on cherche à négocier le prix, vers le bas par dichotomie en notre faveur à 90%
 			else{
-				double nouveauPrix = contrat.getPrix() * 0.1 + notrePrix * 0.9;
-				if (nouveauPrix < prix_Limdt_MQ_E.getValeur()*0.93){
-					return prix_Limdt_MQ_E.getValeur()*0.93;
+				double nouveauPrix = contrat.getPrix() * 0.2 + notrePrix * 0.8;
+				if (nouveauPrix < prix_Limdt_MQ_E.getValeur()/marges.get(Chocolat.C_MQ_E)){
+					return prix_Limdt_MQ_E.getValeur()/marges.get(Chocolat.C_MQ_E);
 				}
 				else{
 					notrePrix = nouveauPrix;
@@ -385,8 +385,8 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 				return contrat.getPrix();
 			}
 			//Si le prix est trop faible, on reste sur le prix minimum auquel on veut vendre
-			if (contrat.getPrix()< prix_Limdt_HQ_BE.getValeur()*0.78){
-				return prix_Limdt_HQ_BE.getValeur()*0.78;
+			if (contrat.getPrix()< prix_Limdt_HQ_BE.getValeur()/marges.get(Chocolat.C_HQ_BE)){
+				return prix_Limdt_HQ_BE.getValeur()/marges.get(Chocolat.C_HQ_BE);
 			}
 			//Si le prix du contrat est à un epsilon près de notre prix, on accepte
 			double notrePrix = prix_Limdt_HQ_BE.getValeur();
@@ -396,9 +396,9 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 			}
 			//Sinon on cherche à négocier le prix, vers le bas par dichotomie en notre faveur à 90%
 			else{
-				double nouveauPrix = contrat.getPrix() * 0.1 + notrePrix * 0.9;
-				if (nouveauPrix < prix_Limdt_HQ_BE.getValeur()*0.78){
-					return prix_Limdt_HQ_BE.getValeur()*0.78;
+				double nouveauPrix = contrat.getPrix() * 0.2 + notrePrix * 0.8;
+				if (nouveauPrix < prix_Limdt_HQ_BE.getValeur()/marges.get(Chocolat.C_HQ_BE)){
+					return prix_Limdt_HQ_BE.getValeur()/marges.get(Chocolat.C_HQ_BE);
 				}
 				else{
 					notrePrix = nouveauPrix;

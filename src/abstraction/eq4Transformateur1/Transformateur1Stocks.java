@@ -24,7 +24,7 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 	protected double coutStockage; // cout de stockage par tonne et par step
 	protected double coutProd; // cout de production unitaire du chocolat produit durant cette step, censé contenir salaires, ingrédients secondaires, et autres couts fixes
 	protected double STOCK_MAX_TOTAL_FEVES = 1000000;
-	protected double PRIX_MAX = 200000;
+	protected double PRIX_MAX = 1000000;
 
 	//Listes regroupant les contrats cadres actifs
 	protected List<ExemplaireContratCadre> mesContratEnTantQuAcheteur;
