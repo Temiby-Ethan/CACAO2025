@@ -53,28 +53,6 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 	public void initialiser() {
 		super.initialiser();
 
-		//Initialisation des prix de nos stocks de fève
-		this.prixTFeveStockee.put(Feve.F_MQ, 2000.);
-		this.prixTFeveStockee.put(Feve.F_BQ_E, 2000.);
-		this.prixTFeveStockee.put(Feve.F_MQ_E, 2000.);
-		this.prixTFeveStockee.put(Feve.F_HQ_BE, 2000.);
-
-		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*4;
-
-		this.coutProd = 0; //il s'agit du cout de la production d'une tonne de chocolat, valeur arbitraire censée contenir salaires, ingrédients secondaires, et autres couts fixes
-
-		//Initialisation des prix de base des chocolats que l'on veut produire
-		this.prixTChocoBase.put(Chocolat.C_MQ, 2000.);
-		this.prixTChocoBase.put(Chocolat.C_BQ_E, 2000.);
-		this.prixTChocoBase.put(Chocolat.C_HQ_BE, 2000.);
-		this.prixTChocoBase.put(Chocolat.C_MQ_E, 2000.);
-		
-
-		//Initialisation des marges que l'on va faire sur les différents produits
-		this.marges.put(Chocolat.C_MQ, 1.5);
-		this.marges.put(Chocolat.C_BQ_E, 1.16);
-		this.marges.put(Chocolat.C_MQ_E, 1.16);
-		this.marges.put(Chocolat.C_HQ_BE, 1.3);
 
 		this.journalStock.ajouter(Romu.COLOR_LLGRAY, Color.PINK, "Stock initial chocolat de marque : ");
 
