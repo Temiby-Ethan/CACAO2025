@@ -5,8 +5,7 @@ package abstraction.eq2Producteur2;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.LinkedList;
-import java.util.Queue;
+
 
 
 import abstraction.eqXRomu.filiere.Filiere;
@@ -213,7 +212,7 @@ public class Producteur2stock extends Producteur2sechage {
                     step_a_delete.add(step);
                     stockvar.get(f).retirer(this,tonnes,cryptogramme);
                     this.stockTotal.retirer(this,tonnes,cryptogramme);
-                    JournalStock.ajouter(Filiere.LA_FILIERE.getEtape()+"Suppresion de "+tonnes+"T de "+f+" car date de stockage dépassées");
+                    JournalStock.ajouter(Filiere.LA_FILIERE.getEtape()+": Suppresion de "+tonnes+"T de "+f+" car date de stockage dépassées");
 
                 }
             }
@@ -261,7 +260,7 @@ public class Producteur2stock extends Producteur2sechage {
         }
 
         stockvar.get(f).retirer(this, prod, cryptogramme);
-        stockvar.get(f).ajouter(this, prod, cryptogramme);
+        stockvar.get(Feve.F_MQ).ajouter(this, prod, cryptogramme);
         JournalStock.ajouter(Filiere.LA_FILIERE.getEtape()+" : On échange "+ prod+" T de "+ f +"contre du "+Feve.F_MQ);
     }
 
@@ -300,7 +299,7 @@ public class Producteur2stock extends Producteur2sechage {
         }
 
         stockvar.get(f).retirer(this, prod, cryptogramme);
-        stockvar.get(f).ajouter(this, prod, cryptogramme);
+        stockvar.get(Feve.F_MQ).ajouter(this, prod, cryptogramme);
         JournalStock.ajouter(Filiere.LA_FILIERE.getEtape()+" : On échange "+ prod+" T de "+ f +"contre du "+Feve.F_MQ);
     }
 
