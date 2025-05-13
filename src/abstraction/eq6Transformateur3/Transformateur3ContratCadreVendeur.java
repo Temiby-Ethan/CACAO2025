@@ -72,7 +72,9 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
                     if (choco==hypo){
                         double capa = capacite_vente_max.get(hypo);
                         if(capa > 0){// A CORRIGER POUR QUE CA NE SOIT PAS UN BUG
-                            supCCadre.demandeVendeur((IAcheteurContratCadre)acteur, (IVendeurContratCadre)this,(IProduit) choco, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10, capa), cryptogramme, false);
+                            double a = Filiere.random.nextDouble()*5;
+                            int b = (int) a;
+                            supCCadre.demandeVendeur((IAcheteurContratCadre)acteur, (IVendeurContratCadre)this,(IProduit) choco, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10+b*5 , capa), cryptogramme, false);
                         }
                     }
                     //pour tous les autres chocolats on les demande en tête de gondole 
@@ -82,8 +84,12 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
                     else {
                         double capa = capacite_vente_max.get(choco);
                         if(capa > 0){// A CORRIGER POUR QUE CA NE SOIT PAS UN BUG
-                            supCCadre.demandeVendeur((IAcheteurContratCadre)acteur, (IVendeurContratCadre)this,(IProduit) choco, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10, capa), cryptogramme, true);
-                            supCCadre.demandeVendeur((IAcheteurContratCadre)acteur, (IVendeurContratCadre)this,(IProduit) choco, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10, capa), cryptogramme, false);
+                            double a = Filiere.random.nextDouble()*5;
+                            int b = (int) a;
+                            supCCadre.demandeVendeur((IAcheteurContratCadre)acteur, (IVendeurContratCadre)this,(IProduit) choco, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10+b*5, capa), cryptogramme, true);
+                            double a = Filiere.random.nextDouble()*5;
+                            int b = (int) a;
+                            supCCadre.demandeVendeur((IAcheteurContratCadre)acteur, (IVendeurContratCadre)this,(IProduit) choco, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10+b*5, capa), cryptogramme, false);
                         }
                     } 
                 }
