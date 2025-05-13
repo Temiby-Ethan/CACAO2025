@@ -17,7 +17,7 @@ import abstraction.eqXRomu.produits.IProduit;
 public class Transformateur3Acteur implements IActeur {
 	
 	protected int cryptogramme;
-	protected int etape;
+	protected int currentStep;
 	protected double coutStockage;
 
 	//Récupération des entitées utiles
@@ -49,9 +49,9 @@ public class Transformateur3Acteur implements IActeur {
 
 	// Quantitée de chaque type de fèves reçue au prochain step
     // pour chaque fève, in dispose d'un échéancier sur la quantité total de fèves
-	protected HashMap<IProduit, List<Double>> quantityFevesEcheancier;
+	//protected HashMap<IProduit, List<Double>> quantityFevesEcheancier;
     // Quantitée de chaque type de choco vendu au prochain step
-    protected HashMap<IProduit, List<Double>> quantityChocoEcheancier;
+    //protected HashMap<IProduit, List<Double>> quantityChocoEcheancier;
 
 	protected Variable eq6_Q_MQ_0;
 	protected Variable eq6_Q_MQ_1;
@@ -131,8 +131,8 @@ public class Transformateur3Acteur implements IActeur {
 
 	public void next() {
 		this.jdb.ajouter("NEXT - TRANSFORMATEUR3ACTEUR");
-		etape = Filiere.LA_FILIERE.getEtape();
-		jdb.ajouter("Accteur Etape " + etape);
+		currentStep = Filiere.LA_FILIERE.getEtape();
+		jdb.ajouter("Acteur Etape " + currentStep);
 	}
 
 	public Color getColor() {// NE PAS MODIFIER

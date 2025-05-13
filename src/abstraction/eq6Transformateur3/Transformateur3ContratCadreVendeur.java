@@ -13,10 +13,10 @@ import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.produits.IProduit;
 // @author Henri Roth & Eric Schiltz
 public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquant implements IVendeurContratCadre {
-    //des attributs
-    protected HashMap<IProduit, Double> chocoLivreThisStep;
-    //des constructeurs
-    //on utilise à chaque fois des instances de cette classe quand on fait des contrats cadres
+    
+    //Capacité de vente de chocolat
+    protected HashMap<IProduit, Double> capacite_vente_max;
+    
     public Transformateur3ContratCadreVendeur() {
         this.ContratsVendeur=new LinkedList<ExemplaireContratCadre>();
 	}
@@ -24,42 +24,61 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
     // @author Florin Malveau
     public void initialiser() {
         super.initialiser();
-        //on initialise les attributs
-        this.chocoLivreThisStep = new HashMap<IProduit, Double>();
-        for(IProduit choco : super.lesChocolats){
-            this.chocoLivreThisStep.put(choco,0.0);
-        }
     }
-    //des méthodes
-    //à chaque next on va proposer des contrats cadres pour vendre du chocolat
-    @Override //@author Henri Roth & Eric SCHILTZ
-    public void next(){
-        //on récupère le next de tous les pères
-        super.next();
-        //on remet capacité_vente_max à 0 
+
+    // @author Florin Malveau
+    //Initialisation de la capacité de vente max pour chaque chocolat
+    public void initialiserCapaVente() {
+        // On initialise la capacité de vente max à 90% de la production max de chocolat
+        double f = 0.9;
         capacite_vente_max = new HashMap<IProduit, Double>();
-        capacite_vente_max.put(fraud,(productionMax*0.9)/3);
-        capacite_vente_max.put(hypo,(productionMax*0.9)/6);
-        capacite_vente_max.put(arna,(productionMax*0.9)/6);
-        capacite_vente_max.put(bollo,(productionMax*0.9)/3);
-        //on lui enlève tous les contrats cadres en cours  
-        //on parcourt tous les chocolats
+        capacite_vente_max.put(fraud,(productionMax*f)/3);
+        capacite_vente_max.put(hypo,(productionMax*f)/6);
+        capacite_vente_max.put(arna,(productionMax*f)/6);
+        capacite_vente_max.put(bollo,(productionMax*f)/3);
+
+        // Enlève la quantité de choco déjà livrée pour le step suivant dans les CC existants
         for(IProduit choco : super.lesChocolats){
-            //somme pour ce chocolat de ce que l'on doit pour l'instant livrer au step suivant
-            double a = 0;
+            double quantityDejaVendu = 0;
             //on parcourt tous les contrats cadres
             for (ExemplaireContratCadre contrat : ContratsVendeur){
                 //pour chaque contrat on regarde si il concerne ce produit 
                 if (contrat.getProduit()==choco){
                     //si oui on additionne ce que l'on doit pour l'instant livrer au step suivant 
-                    a += contrat.getQuantiteALivrerAuStep();
+                    Echeancier e = contrat.getEcheancier();
+                    quantityDejaVendu += e.getQuantite(currentStep+1);//getQuantiteALivrerAuStep();
                 }
             }
             //on remet alors à jour capacite_vente_max
-            capacite_vente_max.replace(choco,capacite_vente_max.get(choco)-a);
+            capacite_vente_max.replace(choco,capacite_vente_max.get(choco)-quantityDejaVendu);
+            //jdb.ajouter("Capacité de vente max de "+choco+" : "+capacite_vente_max.get(choco));
         }
-        //on crée un contrat cadre
+    }
+
+    public boolean demanderUnContratCadreVendeur(IActeur acteur, IProduit produit, double quantite, boolean teteGondole) {
+
         SuperviseurVentesContratCadre supCCadre = (SuperviseurVentesContratCadre) Filiere.LA_FILIERE.getActeur("Sup.CCadre");
+
+        ExemplaireContratCadre contrat = supCCadre.demandeVendeur((IAcheteurContratCadre)acteur, (IVendeurContratCadre)this,(IProduit) produit, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10, quantite), cryptogramme, teteGondole);
+        // Si un contrat a été créé, on l'ajoute à la liste des contrats du vendeur
+        if(contrat != null){
+            notificationNouveauContratCadre(contrat);
+            //jdb.ajouter("Nouveau contrat cadre Vendeur" +contrat.getProduit());
+            //Mettre à jour la capacité de vente max
+            initialiserCapaVente();
+            return true;
+        }
+        return false;
+    }
+
+    //à chaque next on va proposer des contrats cadres pour vendre du chocolat
+    @Override //@author Henri Roth & Eric SCHILTZ
+    public void next(){
+        super.next();
+
+        //Initialisation de la capacité de vente max
+        initialiserCapaVente();
+
         //on parcourt tous les types de chocolat
         for(IProduit choco : super.lesChocolats){
             //on parcourt les acteurs de la filière
@@ -67,43 +86,30 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
                 //si l'acteur n'est pas nous et si l'acteur achète des contrats cadres et s'il achète
                 //du chocolat par contrat cadre
                 if (acteur!=this && acteur instanceof IAcheteurContratCadre && ((IAcheteurContratCadre)acteur).achete(choco)) {
-                    //on propose un contrat cadre à l'acteur en question qui démarre à l'étape
-                    //suivante de la filière, qui dure 10 step avec une quantité livrée de notre 
-                    //capacité de production restante
-                    //par step et avec ou non tête de gondole ici en fonction du chocolat
-                    // pour hypocritolat on le demande pas 
-                    if (choco==hypo){
-                        double capa = capacite_vente_max.get(hypo);
-                        if(capa > 0){// A CORRIGER POUR QUE CA NE SOIT PAS UN BUG
-                            supCCadre.demandeVendeur((IAcheteurContratCadre)acteur, (IVendeurContratCadre)this,(IProduit) choco, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10, capa), cryptogramme, false);
+                    /*
+                    Contrat cadre de 10 step, quantité /step = capacité de production restante 
+                    Sans tête de gondole pour hypocritolat
+                    et avec tête de gondole pour les autres chocolats
+                    */
+                    boolean teteGondole = !(choco==hypo);
+                    double capa = capacite_vente_max.get(choco);
+
+                    if(capa>100){
+                        // Contrat avec tête de gondole
+                        if(teteGondole){
+                            // 1ere tentative avec tête de gondole
+                            boolean marcheConclu = demanderUnContratCadreVendeur(acteur, choco, capa, true);
+                            if(!marcheConclu){
+                                // 2ème tentative sans tête de gondole
+                                demanderUnContratCadreVendeur(acteur, choco, capa, false);
+                            }
+                        // Contrat sans tête de gondole
+                        }else{
+                            demanderUnContratCadreVendeur(acteur, choco, capa, false);
                         }
                     }
-                    //pour tous les autres chocolats on les demande en tête de gondole 
-                    //et il faut aussi demander pour les mêmes chocolats en non tête de gondole 
-                    //car on nous le refusera dans 90% des cas et donc il faut aussi le demander 
-                    //sans tête de gondole
-                    else {
-                        double capa = capacite_vente_max.get(choco);
-                        if(capa > 0){// A CORRIGER POUR QUE CA NE SOIT PAS UN BUG
-                            supCCadre.demandeVendeur((IAcheteurContratCadre)acteur, (IVendeurContratCadre)this,(IProduit) choco, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10, capa), cryptogramme, true);
-                            supCCadre.demandeVendeur((IAcheteurContratCadre)acteur, (IVendeurContratCadre)this,(IProduit) choco, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10, capa), cryptogramme, false);
-                        }
-                    } 
                 }
             }
-        }
-        
-        // On affiche les quantités de chocolat livrées pour ce step
-        jdb.ajouter("");
-		jdb.ajouter("-- CHOCO LIVRE --");
-		for(IProduit choco : chocoLivreThisStep.keySet()){
-			//if(fevesReceptionneesThisStep.get(feve) == 0.0){
-			jdb.ajouter("- "+choco+" : "+chocoLivreThisStep.get(choco));
-			//}
-		}
-        //on remet à 0 les quantités de chocolat livrées pour ce step
-        for(IProduit choco : super.lesChocolats){
-            this.chocoLivreThisStep.replace(choco,0.0);
         }
     }
 
@@ -157,7 +163,7 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
                     return null;
                 }
                 //sinon on refait l'échéancier avec ce que l'on a; 
-                if(capa >100 && capa<1000){
+                else{
                     //et on met à jour nos capacités de vente max
                     int nb = e.getNbEcheances();
                     return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, nb, capa);
@@ -189,10 +195,11 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
     @Override //@author Henri Roth
     public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
         //à chaque fois on propose 1.2 fois le prix proposé par l'acheteur
-        return contrat.getPrix()*1.2;
+        return contrat.getPrix();//*1.2;
     }
 
     @Override //@author Henri Roth
+    // ### CETTE METHODE N'EST PAS UTILISEE DANS LE CODE ###
     public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
         journalCC.ajouter("Nouveau contrat cadre Vendeur" +contrat);
         ContratsVendeur.add(contrat);
@@ -208,9 +215,7 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
         double stockActuel = stockChoco.getQuantityOf(produit);
 		double aLivre = Math.min(quantite, stockActuel);
 		journalCC.ajouter("   Livraison de "+aLivre+" T de "+produit+" sur "+quantite+" exigees pour contrat "+contrat.getNumero());
-		stockChoco.remove(produit, aLivre);
-        //on met à jour le stock de chocolat livré pour ce step
-        this.chocoLivreThisStep.replace(produit, this.chocoLivreThisStep.get(produit)+aLivre);
+        stockChoco.remove(produit, aLivre);
 		return aLivre;
 	}
     
