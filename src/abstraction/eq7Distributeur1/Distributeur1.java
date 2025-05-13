@@ -98,6 +98,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 		//List<Double> requiredQuantities = new ArrayList<>();
 		//Distributeur1Stock acteurStock = new Distributeur1Stock();
 		int step = Filiere.LA_FILIERE.getEtape(); // Récupération du numéro de l'étape
+		journal.ajouter("==============\n" + "Etape : " + step + "\n" + "====================");
 		for (int i=0; i< this.chocolats.size(); i++){
 			if ("Fraudolat".equals(this.stocksChocolats.get(chocolats.get(i)).getNom())){
 				requiredQuantities.set(i,500.0);
