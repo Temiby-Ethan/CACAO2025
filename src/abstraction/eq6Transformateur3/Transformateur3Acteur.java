@@ -39,6 +39,12 @@ public class Transformateur3Acteur implements IActeur {
 	protected Transformateur3Stock stockFeves;
 	protected Transformateur3Stock stockChoco;
 
+	//Prix
+	protected HashMap<Feve, List<Double>> prixFeve;
+	protected HashMap<IProduit, List<Double>> prixChoco;
+
+	protected Transformateur3StratPrix StratPrix;
+
 	//Stratégie
 
 	// Quantitée de chaque type de fèves reçue au prochain step
