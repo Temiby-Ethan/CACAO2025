@@ -228,14 +228,27 @@ public class Transformateur1ContratCadreVendeur extends TransformateurContratCad
 
 
 	public double propositionPrix(ExemplaireContratCadre contrat) {
-		double prixBase;
+		double prixBase = 6000.;
 		if (contrat.getProduit().getType() ==  "ChocolatDeMarque"){
-			IProduit prod = ((ChocolatDeMarque)contrat.getProduit()).getChocolat();
+			Chocolat prod = ((ChocolatDeMarque)contrat.getProduit()).getChocolat();
 			if (prixTChocoBase.get(prod) ==  null){
 				return 6000;
 			}
 			else{
-				prixBase = (prixTChocoBase.get(prod) + coutProd + this.coutStockage)*marges.get(prod);
+				switch (prod){
+					case C_BQ_E : 
+						prixBase = prix_Limdt_BQ_E.getValeur();
+						break;
+					case C_MQ : 
+						prixBase = prix_Limdt_MQ.getValeur();
+						break;
+					case C_MQ_E : 
+						prixBase = prix_Limdt_MQ_E.getValeur();
+						break;
+					case C_HQ_BE : 
+						prixBase = prix_Limdt_HQ_BE.getValeur();
+
+				}
 				if(contrat.getQuantiteTotale() < 2000){
 					return prixBase*(1 - 0.05*contrat.getQuantiteTotale()/2000);
 				}
