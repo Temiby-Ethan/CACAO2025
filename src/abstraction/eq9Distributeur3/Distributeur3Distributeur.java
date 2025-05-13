@@ -48,17 +48,17 @@ public class Distributeur3Distributeur extends Distributeur3Acteur implements ID
                     if(Filiere.LA_FILIERE.getEtape()!=0 && Filiere.LA_FILIERE.prixMoyen(cm,Filiere.LA_FILIERE.getEtape())!=0){
                         this.prix.put(cm,(float) (Filiere.LA_FILIERE.prixMoyen(cm,Filiere.LA_FILIERE.getEtape())*0.97));
                     }else {
-                        this.prix.put(cm, 2500.0F);
+                        this.prix.put(cm, 3000.0F);
                     }
                 }else{
                     stockBQ.ajouter(this,quantiteinit,this.cryptogramme);
                     if(Filiere.LA_FILIERE.getEtape()!=0 && Filiere.LA_FILIERE.prixMoyen(cm,Filiere.LA_FILIERE.getEtape())!=0){
                         this.prix.put(cm,(float) (Filiere.LA_FILIERE.prixMoyen(cm,Filiere.LA_FILIERE.getEtape())*0.97));
                     }else {
-                        this.prix.put(cm, 3000.0F);
+                        this.prix.put(cm, 3500.0F);
                     }
 
-                    this.prix.put(cm,4000.0F);
+                    this.prix.put(cm,4500.0F);
                 }
             }
         }
@@ -85,7 +85,7 @@ public class Distributeur3Distributeur extends Distributeur3Acteur implements ID
                 this.journalActeur.ajouter("Mise en rayon de 100 tonnes de "+choco.getNom());
                 //System.out.println("demande quantite vente "+choco.getNom()+" tonnes :"+100);
                 return 100;
-            }else{
+            }else {
                 //System.out.println("demande quantite vente "+choco.getNom()+" tonnes :"+this.stockChocoMarque.get(choco));
                 this.journalActeur.ajouter("Mise en rayon de "+this.stockChocoMarque.get(choco)+" (max) de "+choco.getNom());
                 return this.stockChocoMarque.get(choco);
@@ -109,7 +109,7 @@ public class Distributeur3Distributeur extends Distributeur3Acteur implements ID
         if(crypto==this.cryptogramme){
             stockChocoMarque.put(choco,Double.valueOf(this.stockChocoMarque.get(choco)-quantite));
             this.MAJStocks();
-            System.out.println("quantité du chocolat vendu : "+choco.toString()+" "+this.stockChocoMarque.get(choco));
+            //System.out.println("quantité du chocolat vendu : "+choco.toString()+" "+this.stockChocoMarque.get(choco));
             journalDeVente.ajouter("Vente de "+quantite+" tonnes de "+choco.toString()+" à "+client.getNom()+" pour "+montant+" euros");
             if(this.ventes.containsKey(Filiere.LA_FILIERE.getEtape())){
                 if(ventes.get(Filiere.LA_FILIERE.getEtape()).containsKey(choco)){
@@ -126,14 +126,27 @@ public class Distributeur3Distributeur extends Distributeur3Acteur implements ID
 
     public double getVentesChocoStep(int step, ChocolatDeMarque choco, int crypto) {
         if(crypto==this.cryptogramme){
-            return this.ventes.get(Filiere.LA_FILIERE.getEtape()).get(choco);
+            if(ventes.containsKey(step) && ventes.get(step).containsKey(choco)) {
+                return this.ventes.get(Filiere.LA_FILIERE.getEtape()).get(choco);
+            }
         }return -1000;
     }
 
     public double getVentesByStep(int step){
+        journalDeVente.ajouter("ventes");
+        for(Integer i : this.ventes.keySet()){
+            for (ChocolatDeMarque choco : this.ventes.get(i).keySet()) {
+                journalDeVente.ajouter("step :"+i+" chocolat "+ choco.toString()+" "+this.ventes.get(i).get(choco));
+            }
+        }
+        journalDeVente.ajouter("fin ventes");
         double total = 0;
         for (ChocolatDeMarque choco : this.ventes.get(step).keySet()){
-            total += this.ventes.get(step).get(choco);
+            if(ventes.containsKey(step)) {
+                if(ventes.get(step).containsKey(choco)) {
+                    total += this.ventes.get(step).get(choco);
+                }
+            }
         }return total;
     }
 
@@ -181,6 +194,7 @@ public class Distributeur3Distributeur extends Distributeur3Acteur implements ID
         this.journalStocks.ajouter("Stock Total avant  : "+this.stockTotal.getValeur(this.cryptogramme));
         super.next();
         this.journalStocks.ajouter("Stock Total après : "+this.stockTotal.getValeur(this.cryptogramme));
+        ventes.put(Filiere.LA_FILIERE.getEtape()+1,new HashMap<>());
 //        for (ChocolatDeMarque cm : this.stockChocoMarque.keySet()) {
 //            if (cm.getGamme().equals(Gamme.BQ)) {
 //                if(cm.getChocolat().isEquitable()){

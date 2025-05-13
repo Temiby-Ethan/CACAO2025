@@ -34,9 +34,9 @@ public class Transformateur1AcheteurAppelDOffre extends Transformateur1VendeurEn
 	public void next() {
 		super.next();
 		this.journalTransactions.ajouter("=== STEP "+Filiere.LA_FILIERE.getEtape()+" ====================");
-		for (Feve f : this.stocksFevesVar.keySet()) {
-			if (this.stocksFevesVar.get(f).getValeur()<95000) {
-				int quantite = 5000 ; 
+		for (Feve f : lesFeves) {
+			if (this.getQuantiteEnStock(f, this.cryptogramme)<9500) {
+				int quantite = 10000 ; 
 				OffreVente ov = supAO.acheterParAO(this,  cryptogramme, f, quantite);
 				journalTransactions.ajouter("   Je lance un appel d'offre de "+quantite+" T de "+f);
 				if (ov!=null) { // on a retenu l'une des offres de vente
@@ -51,7 +51,7 @@ public class Transformateur1AcheteurAppelDOffre extends Transformateur1VendeurEn
 	}
 
 	public OffreVente choisirOV(List<OffreVente> propositions) {
-		// TODO Auto-generated method stub
+
 		double cours = prixTFeveStockee.get((Feve) (propositions.get(0).getProduit()));
 		if (propositions.size() == 0) {
 			journalTransactions.ajouter("Je ne choisis pas l'offre car il n'y a pas d'offre");

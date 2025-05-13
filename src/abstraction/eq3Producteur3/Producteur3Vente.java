@@ -26,10 +26,102 @@ public class Producteur3Vente extends Producteur3GestionDesCoûts implements IVe
 
     // VENTE EN BOURSE //
 
-    
+    public void degraderfeve(Feve feve) {
+        int contrat_en_cours = 0;
+        for (ExemplaireContratCadre c : this.mesContratCadres){
+            if (c.getProduit().equals((IProduit)feve)){
+                contrat_en_cours++;
+            }
+        }
+        if (contrat_en_cours == 0){
+            double stock = calculTotalStockParticulier(feve);
+            if (feve.getGamme().equals(Gamme.HQ)){
+                if (feve.isBio()){
+                    retirerStockHQ_B(feve, 0.25*stock);
+                    ajouterStockMQFin(feve, 0.25*stock);
+                }else{
+                    retirerStockHQ(feve, getPerimeParticulier(feve));
+                    ajouterStockMQFin(feve, getPerimeParticulier(feve));
+                }
+            }else if (feve.getGamme().equals(Gamme.MQ)){
+                if (feve.isEquitable()){
+                    retirerStockMQ_E(feve, 0.25*stock);
+                    ajouterStockMQFin(feve, 0.25*stock);
+                }
+            }else{
+                if (feve.isEquitable()){
+                    retirerStockBQ_E(feve, 0.25*stock);
+                    ajouterStockBQFin(feve, 0.25*stock);
+                }
+            }
+        }else{
+            int a_livrer = 0;
+                for (ExemplaireContratCadre c : this.mesContratCadres){
+                    if (c.getProduit().equals((IProduit)feve)){
+                        a_livrer += c.getQuantiteRestantALivrer();
+                    }
+                }
+            double va_Perime = getPerimeParticulier(feve);
+            if (va_Perime > a_livrer){
+                double surplus = va_Perime - a_livrer;
+                if (feve.getGamme().equals(Gamme.HQ)){
+                    if (feve.isBio()){
+                        retirerStockHQ_B(feve, surplus);
+                        ajouterStockMQ(feve, surplus);
+                    }else{
+                        retirerStockHQ(feve, surplus);
+                        ajouterStockMQ(feve, surplus);
+                    }
+                }else if (feve.getGamme().equals(Gamme.MQ)){
+                    if (feve.isEquitable()){
+                        retirerStockMQ_E(feve, surplus);
+                        ajouterStockMQ(feve, surplus);
+                    }
+                }else{
+                    if (feve.isEquitable()){
+                        retirerStockBQ_E(feve, surplus);
+                        ajouterStockBQ(feve, surplus);
+                    }
+                }
+            }
+        }
+                
+        
+    }
+
     @Override
     public double offre(Feve feve, double cours) {
-       double stock = calculTotalStockParticulier(feve);
+        /* 
+        int contrat_en_cours = 0;
+        for (ExemplaireContratCadre c : this.mesContratCadres){
+            if (c.getProduit().equals((IProduit)feve)){
+                contrat_en_cours++;
+            }
+        }
+        if (contrat_en_cours == 0){
+            return getDerniere2periodeParticulier(feve);
+        */
+
+        if (feve.getGamme().equals(Gamme.MQ)){
+            return calculTotalStockMQ();
+        }
+        else{
+            int a_livrer = 0;
+            for (ExemplaireContratCadre c : this.mesContratCadres){
+                if (c.getProduit().equals((IProduit)feve)){
+                    a_livrer += c.getQuantiteRestantALivrer();
+                }
+            }
+            double va_Perime = getPerimeParticulier(feve);
+            if (va_Perime > a_livrer){
+                return va_Perime - a_livrer;
+            }else{
+                return 0.0;
+            }
+        }
+    }
+        /* 
+        double stock = calculTotalStockParticulier(feve);
         if (stock > 0){
             BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
             double pourcentage = (bourse.getCours(feve).getValeur()-bourse.getCours(feve).getMin())/(bourse.getCours(feve).getMax()-bourse.getCours(feve).getMin());
@@ -37,9 +129,9 @@ public class Producteur3Vente extends Producteur3GestionDesCoûts implements IVe
 
         }else{
             return 0.0;
-        }
+        }*/
        
-    }
+    
 
     @Override
     public double notificationVente(Feve f, double coursEnEuroParT, double quantiteEnT) {
@@ -83,22 +175,39 @@ public class Producteur3Vente extends Producteur3GestionDesCoûts implements IVe
 
     @Override
     public boolean vend(IProduit produit) {
-        
+        double date = Filiere.LA_FILIERE.getEtape();
         if (produit instanceof Feve) {
 
             Feve feve = (Feve)produit;
             double stockActuel = calculTotalStockParticulier(feve);
             double stockNouveau = getNouveauStockParticulier(feve);
-            double stockPotentiel = stockActuel + stockNouveau*12;
-            double aLivrer = 0;
+            double aLivrer_mi = 0;
+            double aLivrer_ma = 0;
+            int mi = 1000;
+            int ma = 0;
             for (ExemplaireContratCadre c : this.mesContratCadres){
                 if (c.getProduit().equals(feve)){
-                    aLivrer += c.getQuantiteRestantALivrer();
+                    if (c.getEcheancier().getStepFin() > mi + Filiere.LA_FILIERE.getEtape()){
+                        mi = Math.abs(c.getEcheancier().getStepFin() - Filiere.LA_FILIERE.getEtape());
+                    }
+                    if (c.getEcheancier().getStepFin() < ma + Filiere.LA_FILIERE.getEtape()){
+                        ma = Math.abs(c.getEcheancier().getStepFin() - Filiere.LA_FILIERE.getEtape());
+                    }
                 }
             }
-            boolean A = feve.getGamme().equals(Gamme.MQ) && feve.isEquitable() && calculTotalStockParticulier(feve) >= 0 && stockPotentiel*0.7 >= aLivrer;
-            boolean B = feve.getGamme().equals(Gamme.BQ) && !feve.isEquitable()&& calculTotalStockParticulier(feve) >= 0 && stockPotentiel*0.7 >= aLivrer;
-            boolean C = feve.getGamme().equals(Gamme.HQ) && feve.isBio()&& calculTotalStockParticulier(feve) >= 0 && stockPotentiel*0.7 >= aLivrer;
+            for (ExemplaireContratCadre c : this.mesContratCadres){
+                if (c.getProduit().equals(feve)){
+                    aLivrer_mi += c.getQuantiteALivrerAuStep()*mi;
+                    aLivrer_ma += c.getQuantiteRestantALivrer();
+                }
+            }
+            double stockPotentiel_mi = stockActuel + stockNouveau*mi;
+            double stockPotentiel_ma = stockActuel + stockNouveau*ma;
+            boolean Mi = stockPotentiel_mi*0.5 >= aLivrer_mi;
+            boolean Ma = stockPotentiel_ma*0.5 >= aLivrer_ma;
+            boolean A = feve.getGamme().equals(Gamme.MQ) && feve.isEquitable() && calculTotalStockParticulier(feve) >= 0 && Mi && Ma;
+            boolean B = feve.getGamme().equals(Gamme.BQ) && !feve.isEquitable() && calculTotalStockParticulier(feve) >= 0 && Mi && Ma;
+            boolean C = feve.getGamme().equals(Gamme.HQ) && feve.isBio() && calculTotalStockParticulier(feve) >= 0 && date != 0 && Mi && Ma;
             return A || B || C;
         }
         return false;
@@ -113,16 +222,35 @@ public class Producteur3Vente extends Producteur3GestionDesCoûts implements IVe
         int stepDebut = contrat.getEcheancier().getStepDebut();
         int stepFin = contrat.getEcheancier().getStepFin();
         int nbStep = stepFin - stepDebut + 1;
-        if (this.mesContratCadres.size() == 0){
+        int contrat_en_cours = 0;
+        for (ExemplaireContratCadre c : this.mesContratCadres){
+            if (c.getProduit().equals(contrat.getProduit())){
+                contrat_en_cours++;
+            }
+        }
+        
+        if (contrat_en_cours == 0){
             if ( stockActuel*0.5 >= contrat.getQuantiteTotale() && stockActuel*0.05 <= contrat.getQuantiteTotale() && contrat.getQuantiteTotale()/nbStep >= 100){
                 return echeancier;
             }
-            double contreQuantite = (contrat.getQuantiteTotale()+stockActuel*0.5)/2;
-            if (contreQuantite < nbStep*101){
-                return null;
+            if (stockActuel*0.5 <= contrat.getQuantiteTotale()){
+                if (stockActuel*0.5/nbStep > 100){
+                    return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, nbStep, stockActuel*0.5/nbStep);
+                }
+                else{
+                    return null;
+                }
+            }
+            if (stockActuel*0.05 >= contrat.getQuantiteTotale() || contrat.getQuantiteTotale()/nbStep < 100){
+                if (stockActuel*0.3/nbStep > 100){
+                    return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, nbStep, stockActuel*0.3/nbStep);
+                }
+                else{
+                    return null;
+                }
             }
             else{
-                return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, nbStep, contreQuantite/nbStep);
+                return null;
             }
         }
         else {
@@ -136,23 +264,13 @@ public class Producteur3Vente extends Producteur3GestionDesCoûts implements IVe
                 }
             
             }
-            if (aLivrer <= stockPotentiel*0.7 && parStep >= 100){
+            if (aLivrer <= stockPotentiel*0.5 && parStep >= 100){
                 return echeancier;
             }
             else{
-                return null;
+                return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, nbStep, stockPotentiel*0.3/nbStep);
             }
         }
-            /* 
-            double surplus = ;
-            double contreQuantite = (contrat.getQuantiteTotale() - surplus)*0.8;
-            if (contreQuantite < nbStep*101){
-                return null;
-            }
-            else{
-                return new Echeancier(Filiere.LA_FILIERE.getEtape()+1, nbStep, contreQuantite/nbStep);
-            } 
-        }*/
         
     }
 
@@ -162,17 +280,17 @@ public class Producteur3Vente extends Producteur3GestionDesCoûts implements IVe
         Feve feve = (Feve)contrat.getProduit();
         double Cump = getCump(feve);
         Gamme gamme = feve.getGamme();
-        if (gamme.equals(Gamme.HQ)){
-            return Cump*1.2;
+        if (gamme.equals(Gamme.HQ) ) {
+            return Cump*1.1;
         }
         else{
             BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
             double cours = bourse.getCours(Feve.get(gamme,false,false)).getValeur();
-            if (Cump*1.2 >= cours*1.5) {
-                return Cump*1.2;
+            if (Cump*1.1 >= cours*1.2) {
+                return Cump*1.1;
             }
             else{
-                return cours*1.5;
+                return cours*1.2;
             }
         }
         
@@ -185,9 +303,12 @@ public class Producteur3Vente extends Producteur3GestionDesCoûts implements IVe
         Feve feve = (Feve)contrat.getProduit();
         double Cump = getCump(feve);
         double ancienneOffre = contrat.getListePrix().get(contrat.getListePrix().size()-2);
-        double nouvelleOffre = (ancienneOffre + prixProp)/2;
-        if (Cump*1.1 >= nouvelleOffre) {
-            return Cump*1.1;
+        if (prixProp >= ancienneOffre){
+            return prixProp;
+        }
+        double nouvelleOffre = ((ancienneOffre + prixProp)/2);
+        if (Cump >= nouvelleOffre) {
+            return Cump;
         }
         else{
             return nouvelleOffre;}
