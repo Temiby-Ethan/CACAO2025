@@ -26,15 +26,19 @@ class ContratCadreAcheteur extends ContratCadreVendeur implements IAcheteurContr
 	 */
 	public boolean achete(IProduit produit){
 		if (produit == Feve.F_MQ){
+			this.journal.ajouter("acheteur accepte le contrat cadre pour " + produit);
 			return true;
 		}
 		if (produit == Feve.F_MQ_E){
+			this.journal.ajouter("acheteur accepte le contrat cadre pour " + produit);
 			return true;
 		}
 		if (produit == Feve.F_HQ_E){
+			this.journal.ajouter("acheteur accepte le contrat cadre pour " + produit);
 			return true;
 		}
 		if (produit == Feve.F_HQ_BE){
+			this.journal.ajouter("acheteur accepte le contrat cadre pour " + produit);
 			return true;
 		}
 
@@ -63,7 +67,7 @@ class ContratCadreAcheteur extends ContratCadreVendeur implements IAcheteurContr
 		double quantiteTotale = original.getQuantiteTotale();
 
 		Feve f = (Feve) contrat.getProduit();
-		double prodTotale = this.getProductionTotale();
+		double prodTotale = this.getProductionTotale(); // en tonnes
 		double proportion = this.getProportion(f);
 
 		double quantiteMin = prodTotale * proportion * 0.1;

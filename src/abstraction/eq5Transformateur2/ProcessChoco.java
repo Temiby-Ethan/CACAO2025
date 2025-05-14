@@ -1,4 +1,4 @@
-//Nils
+//Nils Rossignol
 package abstraction.eq5Transformateur2;
 
 import abstraction.eqXRomu.filiere.Filiere;
@@ -26,6 +26,7 @@ public class ProcessChoco extends FraisAditionnel {
     }
     
     public void fabriquerChocolat(Chocolat chocolat,Feve feve, double quantite) {
+        // On met à jour les stocks et les comptes bancaires 
         if (quantite >0) { 
             this.ajouterStock(this, chocolat, quantite*10000, super.cryptogramme);    // *10000 pour passer de tonne à unité de tablette de chocolat
             this.retirerStock(this, feve, quantite, super.cryptogramme);
