@@ -48,6 +48,7 @@ public class Transformateur2Acteur implements IActeur {
     }
 
     public List<Variable> getIndicateurs() {
+        // On met à jour les indicateurs à chaque étape
         List<Variable> res = new ArrayList<>();
         return res;
     }
@@ -57,6 +58,7 @@ public class Transformateur2Acteur implements IActeur {
     }
 
     public List<Journal> getJournaux() {
+        // On met à jour le journal à chaque étape
         List<Journal> res = new ArrayList<>();
         res.add(journal);
         return res;

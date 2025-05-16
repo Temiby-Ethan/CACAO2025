@@ -51,6 +51,8 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurEncher
 		IProduit product = propositions.get(0).getProduit();
 		if (product instanceof ChocolatDeMarque) {
         	ChocolatDeMarque chocolat = (ChocolatDeMarque) product;
+			//System.err.println("Chocolat : " + chocolat.toString());
+			
 			int idProduct = cdmToInt(chocolat);
 			double price = 1.5*this.priceProduct.get(idProduct) ;
 			for (int i=0; i<propositions.size(); i++){
@@ -61,21 +63,24 @@ public class Distributeur1AcheteurAppelOffre extends Distributeur1AcheteurEncher
 					}
 				}
 				this.priceProduct.set(idProduct,price);
-			}
+			
 		
 		if (indice == -1){
 			return(null);
 		}
 		this.getStock((ChocolatDeMarque) propositions.get(indice).getProduit()).ajouter(this, propositions.get(indice).getQuantiteT());
-
+		}
 		// journal Alexiho :
 
 		String str_journal_AO = "";
 		str_journal_AO = "Achat en appel d'offre de " + this.stocksChocolats.get((ChocolatDeMarque) propositions.get(indice).getProduit()).getNom()+ " = " + propositions.get(indice).getQuantiteT() + " tonne(s);";
+		str_journal_AO = str_journal_AO.replace("EQ7StockC_", " ");
 		journalAO.ajouter(str_journal_AO);
 
 		return(propositions.get(indice));
 		}
+	
+	
 	
 
 	@Override
