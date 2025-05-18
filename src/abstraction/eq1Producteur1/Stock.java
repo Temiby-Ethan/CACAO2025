@@ -5,6 +5,8 @@ import java.util.Map;
 
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
+import abstraction.eqXRomu.general.Variable;
+import abstraction.eqXRomu.general.VariableReadOnly;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
@@ -12,16 +14,28 @@ public class Stock {
 
     private Map<Feve, Double> stocks; // Map pour gérer les stocks de fèves
     private Journal journalStock; // Journal pour enregistrer les opérations
+    private Producteur1ContratCadre producteur1; // Référence au Producteur1
+    private int cryptogramme; // Cryptogramme associé à l'acteur
+    private Producteur1Parcelle parcelleBQ; // Référence à la parcelle de fèves basse qualité
+    private Producteur1Parcelle parcelleMQ; // Référence à la parcelle de fèves moyenne qualité
+    private Producteur1Parcelle parcelleHQ_E; // Référence à la parcelle de fèves haute qualité
 
-    public Stock(IActeur a) {
+    public Stock(IActeur acteur, int cryptogramme) {
         this.stocks = new HashMap<>();
-        
-        // Initialisation des stocks pour chaque type de fève
-        this.stocks.put(Feve.F_BQ, 2 * 50000.0);
-        this.stocks.put(Feve.F_MQ, 2 * 30000.0);
-        this.stocks.put(Feve.F_HQ_E, 2 * 20000.0);
+        this.producteur1 = (Producteur1ContratCadre) acteur;
+        this.cryptogramme = cryptogramme;
+        this.stocks.put(Feve.F_BQ, parcelleBQ.getnombre_feves_total());
+        this.stocks.put(Feve.F_MQ, parcelleMQ.getnombre_feves_total());
+        this.stocks.put(Feve.F_HQ_E, parcelleHQ_E.getnombre_feves_total());
+        this.journalStock = new Journal("Journal de Stock", producteur1);
+    }
 
-        this.journalStock = new Journal("Journal de Stock", a);
+    public int getCryptogramme() {
+        return cryptogramme;
+    }
+
+    public void setCryptogramme(int cryptogramme) {
+        this.cryptogramme = cryptogramme;
     }
 
     public Journal getJournal() {
@@ -29,7 +43,11 @@ public class Stock {
     }
 
     // Ajouter une quantité pour une fève donnée
-    public void ajouter(IProduit produit, double quantite) {
+    public void ajouter(IProduit produit, double quantite, int cryptogramme) {
+        if (this.cryptogramme != cryptogramme) {
+            journalStock.ajouter("Erreur : Cryptogramme invalide pour ajout de stock.");
+            return;
+        }
         if (produit instanceof Feve) {
             if (quantite < 0) {
                 journalStock.ajouter("Erreur : Quantité négative pour " + produit);
@@ -42,8 +60,12 @@ public class Stock {
         }
     }
 
-    // Retirer une quantité si possible
-    public boolean retirer(IProduit produit, double quantite) {
+    // Retirer une quantité si possible, retourne true si réussi
+    public boolean retirer(IProduit produit, double quantite, int cryptogramme) {
+        if (this.cryptogramme != cryptogramme) {
+            journalStock.ajouter("Erreur : Cryptogramme invalide pour retrait de stock.");
+            return false;
+        }
         if (produit instanceof Feve) {
             Feve feve = (Feve) produit;
             double actuel = stocks.getOrDefault(feve, 0.0);
@@ -55,7 +77,7 @@ public class Stock {
                 return false;
             } else {
                 stocks.put(feve, actuel - quantite);
-                journalStock.ajouter("Retrait de " + quantite + " du stock de " + feve + " → Reste : " + (actuel - quantite));
+                journalStock.ajouter("Retiré " + quantite + " du stock de " + feve + ". Nouveau stock : " + (actuel - quantite));
                 return true;
             }
         }
@@ -64,18 +86,46 @@ public class Stock {
 
     // Obtenir le stock d'une fève
     public double getStock(Feve feve) {
-        return stocks.getOrDefault(feve, 0.0);
+        if (feve == null) {
+            throw new IllegalArgumentException("La fève spécifiée est nulle.");
+        }
+
+        double stock = 0.0;
+
+        // Vérifie si le producteur est une instance de Producteur1arbres
+        if (producteur1 instanceof Producteur1arbres) {
+            Producteur1arbres producteurArbres = (Producteur1arbres) producteur1;
+
+            // Récupère les parcelles et additionne les stocks pour la fève donnée
+            if (feve == Feve.F_BQ && producteurArbres.parcelleBQ != null) {
+                stock = producteurArbres.parcelleBQ.getnombre_feves_total();
+            } else if (feve == Feve.F_MQ && producteurArbres.parcelleMQ != null) {
+                stock = producteurArbres.parcelleMQ.getnombre_feves_total();
+            } else if (feve == Feve.F_HQ_E && producteurArbres.parcelleHQ_E != null) {
+                stock = producteurArbres.parcelleHQ_E.getnombre_feves_total();
+            } else {
+                return 0.0;
+            }
+
+            return stock;
+        } else {
+            throw new IllegalStateException("Le producteur n'est pas une instance de Producteur1arbres.");
+        }
     }
 
-    // Obtenir le stock total
+    // Ajouter des quantités pour chaque type de fève
+    public void ajouterStock(double quantiteFMQ, double quantiteFBQ, double quantiteFHQ) {
+        ajouter(Feve.F_MQ, quantiteFMQ,cryptogramme); // Ajoute au stock de fèves moyenne qualité
+        ajouter(Feve.F_BQ, quantiteFBQ,cryptogramme); // Ajoute au stock de fèves basse qualité
+        ajouter(Feve.F_HQ_E, quantiteFHQ, cryptogramme); // Ajoute au stock de fèves haute qualité
+    }
+
+
+    // Obtenir le stock total (toutes fèves confondues)
     public double getStockTotal() {
         return stocks.values().stream().mapToDouble(Double::doubleValue).sum();
     }
 
-    // Ajouter d’un coup plusieurs fèves (optionnel)
-    public void ajouterStock(double quantiteFMQ, double quantiteFBQ, double quantiteFHQ) {
-        ajouter(Feve.F_MQ, quantiteFMQ);
-        ajouter(Feve.F_BQ, quantiteFBQ);
-        ajouter(Feve.F_HQ_E, quantiteFHQ);
-    }
+    
+ 
 }

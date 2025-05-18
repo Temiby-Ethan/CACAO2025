@@ -27,18 +27,20 @@ public class Producteur1Acteur implements IActeur {
     private Variable stockTotal;
     private Variable stockFMQ;
     private Variable stockFBQ;
-    private Variable stockFHQ;
+    private Variable stockFHQ_E;
 
     public Producteur1Acteur() {
         this.journal = new Journal(getNom() + " Journal", this); 
-        this.stock = new Stock(this); // Passe le journal au stock
 
-    
+        this.stock = new Stock(this, cryptogramme); // Passe le journal au stock
+
+        
+
         // Initialisation des indicateurs
-        this.stockTotal = new Variable("Stock Total", this, stock.getStockTotal());
-        this.stockFMQ = new Variable("Stock FMQ", this, stock.getStock(Feve.F_MQ));
-        this.stockFBQ = new Variable("Stock FBQ", this, stock.getStock(Feve.F_BQ));
-        this.stockFHQ = new Variable("Stock FHQ", this, stock.getStock(Feve.F_HQ_E));
+        this.stockTotal = new Variable("Stock Total", this, 2*100000.0);//stock.getStockTotal());
+        this.stockFMQ = new Variable("Stock FMQ", this, 2 * 30000.0);//stock.getStock(Feve.F_MQ));
+        this.stockFBQ = new Variable("Stock FBQ", this,  2 * 50000.0);//stock.getStock(Feve.F_BQ));
+        this.stockFHQ_E = new Variable("Stock FHQ", this, 2 * 20000.0);//stock.getStock(Feve.F_HQ_E));
     }
 
 
@@ -60,15 +62,14 @@ public class Producteur1Acteur implements IActeur {
         int etape = Filiere.LA_FILIERE.getEtape();
         journal.ajouter("Étape " + etape);
 
-        stock.ajouter(Feve.F_BQ, 10); // Production de fèves basse qualité -> ce qu'on doit faire c'est la quantité mettre ce qu'on a pu vendre
-        stock.ajouter(Feve.F_MQ, 10); // Production de fèves moyenne qualité
-        stock.ajouter(Feve.F_HQ_E, 10); // Production de fèves haute qualité
 
         // Mise à jour des indicateurs avec les nouvelles valeurs des stocks
         stockTotal.setValeur(this, stock.getStockTotal());
         stockFMQ.setValeur(this, stock.getStock(Feve.F_MQ));
         stockFBQ.setValeur(this, stock.getStock(Feve.F_BQ));
-        stockFHQ.setValeur(this, stock.getStock(Feve.F_HQ_E));
+        stockFHQ_E.setValeur(this, stock.getStock(Feve.F_HQ_E));
+
+
 
         // Journalisation des stocks
         journal.ajouter("Stock mis à jour :");
@@ -93,7 +94,7 @@ public class Producteur1Acteur implements IActeur {
         res.add(stockTotal); // Indicateur du stock total
         res.add(stockFMQ);   // Indicateur du stock de fèves moyenne qualité
         res.add(stockFBQ);   // Indicateur du stock de fèves basse qualité
-        res.add(stockFHQ);   // Indicateur du stock de fèves haute qualité
+        res.add(stockFHQ_E);   // Indicateur du stock de fèves haute qualité
         return res;
     }
 
@@ -138,6 +139,8 @@ public class Producteur1Acteur implements IActeur {
         }
         return 0.0;
     }
+
+   
 
     public List<Journal> getJournaux() {
 		List<Journal> res=new ArrayList<Journal>();

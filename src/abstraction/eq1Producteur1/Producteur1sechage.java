@@ -29,7 +29,7 @@ public class Producteur1sechage extends Producteur1ContratCadre {
             LotFeves lot = iter.next();
             lot.dureeRestante--;
             if (lot.dureeRestante <= 0) {
-                stock.ajouter(lot.feve, lot.quantite);
+                //stock.ajouterStock(, cryptogramme, cryptogramme);(lot.feve, lot.quantite);
                 journal.ajouter("Fèves prêtes après séchage : " + lot.quantite + " de type " + lot.feve + " ajoutées au stock");
                 iter.remove();
             }

@@ -4,6 +4,7 @@ import java.util.*;
 
 import abstraction.eqXRomu.contratsCadres.*;
 import abstraction.eqXRomu.filiere.Filiere;
+import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
@@ -15,6 +16,7 @@ public class Producteur1ContratCadre extends Producteur1Acteur implements IVende
     private Journal journal;
 
     public Producteur1ContratCadre() {
+
         this.journal = new Journal(getNom() + " - Journal Contrat Cadre", this);
         this.contrats = new ArrayList<>();
     }
@@ -27,7 +29,7 @@ public class Producteur1ContratCadre extends Producteur1Acteur implements IVende
     @Override
     public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
         IProduit produit = contrat.getProduit();
-return null;   /* 
+
         if (!(produit instanceof Feve)) {
             journal.ajouter("Erreur : Produit non reconnu pour la contre-proposition.");
             return null;
@@ -73,7 +75,7 @@ return null;   /*
         }
 
         journal.ajouter("Échéancier proposé accepté : " + echeancierPropose);
-        return echeancierPropose; // */
+        return echeancierPropose;
     }
 
     @Override
@@ -103,23 +105,10 @@ return null;   /*
 
     @Override
     public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
-        double quantiteEnStock = stock.getStock((Feve) produit);
-        double quantiteLivree = Math.min(quantite, quantiteEnStock);
-
-        if (quantiteLivree <= 0) {
-            journal.ajouter("Échec de livraison : stock vide pour " + produit);
-            return 0.0;
-        }
-
-        boolean retraitOk = stock.retirer(produit, quantiteLivree);
-
-        if (retraitOk) {
-            journal.ajouter("Livraison de " + quantiteLivree + " de " + produit + " pour le contrat " + contrat);
-            return quantiteLivree;
-        } else {
-            journal.ajouter("Erreur de retrait lors de la livraison de " + produit);
-            return 0.0;
-        }
+        double quantiteLivree = Math.min(quantite, stock.getStock((Feve) produit));
+        stock.retirer(produit, quantiteLivree, cryptogramme); // faire if c'est possible -> vendre sinon vendre qu'une certaine partie
+        journal.ajouter("Livraison de " + quantiteLivree + " de " + produit + " pour le contrat " + contrat);
+        return quantiteLivree;
     }
 
     @Override
@@ -128,4 +117,4 @@ return null;   /*
         res.add(journal);
         return res;
     }
-} 
+}

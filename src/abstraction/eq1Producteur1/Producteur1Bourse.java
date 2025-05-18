@@ -7,6 +7,7 @@ import java.util.List;
 import abstraction.eqXRomu.bourseCacao.BourseCacao;
 import abstraction.eqXRomu.bourseCacao.IVendeurBourse;
 import abstraction.eqXRomu.filiere.Filiere;
+import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 
@@ -55,7 +56,7 @@ public class Producteur1Bourse extends Producteur1ContratCadre implements IVende
     public double notificationVente(Feve typeFeve, double quantiteVendue, double prixVente) {
         double stockDispo = stock.getStockTotal();
         double quantiteLivree = Math.min(stockDispo, quantiteVendue);
-        stock.retirer(typeFeve, quantiteLivree); // méthode ajoutée dans Stock.java
+        stock.retirer(typeFeve, quantiteLivree, cryptogramme); // méthode ajoutée dans Stock.java
         journalBourse.ajouter("Étape " + Filiere.LA_FILIERE.getEtape() +
             " : VENTE bourse de " + quantiteLivree + " tonnes de " + typeFeve +
             " à " + prixVente + " €/tonne");
@@ -76,7 +77,6 @@ public class Producteur1Bourse extends Producteur1ContratCadre implements IVende
     public List<Journal> getJournaux() {
         List<Journal> res = super.getJournaux();
         res.add(journalBourse);
-        System.out.println("journal : "+stock.getJournal());
         res.add(stock.getJournal());
         return res;
     }
