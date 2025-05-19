@@ -1,11 +1,9 @@
 //Simon
 package abstraction.eq5Transformateur2;
 
-import abstraction.eqXRomu.bourseCacao.BourseCacao;
 import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 import abstraction.eqXRomu.contratsCadres.IAcheteurContratCadre;
-import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 import java.util.ArrayList;
@@ -113,8 +111,6 @@ class ContratCadreAcheteur extends ContratCadreVendeur implements IAcheteurContr
 	public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat){
         Double prixVendeur= contrat.getPrix();
 		Feve f = (Feve) contrat.getProduit();
-		BourseCacao bc =  ((BourseCacao) (Filiere.LA_FILIERE.getActeur("BourseCacao")));
-		Double prixBourse= bc.getCours(f).getValeur();
 		if (prixVendeur <= 5000){  
 			return prixVendeur;
 		}
