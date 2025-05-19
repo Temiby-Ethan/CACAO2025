@@ -178,18 +178,7 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
     public double propositionPrix(ExemplaireContratCadre contrat) {
         // on retourne notre proposition de prix pour chaque 
         IProduit choco = contrat.getProduit();
-        if(choco.equals((IProduit)fraud)){
-            return 150000;
-        }
-        if(choco.equals((IProduit)bollo)){
-            return 200000;
-        }
-        if(choco.equals((IProduit)arna)){
-            return 300000;
-        }
-        else{
-            return 500000;
-        }
+        return StratPrix.PrixChoco(prixChoco, choco, super.coutTotalProd, super.productionMax);
     }
 
     @Override //@author Henri Roth
