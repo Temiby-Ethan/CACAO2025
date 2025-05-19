@@ -21,6 +21,12 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratC
 	protected List<ExemplaireContratCadre> contratsObsoletes;
     //protected HashMap<IProduit, Double> coutMoyFeves; //estimation du cout de chaque fèves
 	protected HashMap<IProduit, Double> demandeAchatFeve;
+
+	//total des réceptions à faire pour ce step
+    protected double qtté_réception_bollo;
+    protected double qtté_réception_fraudau;
+    protected double qtté_réception_hypo;
+    protected double qtté_réception_arna;
 	
 	public Transformateur3ContratCadreAcheteur() {
 		this.ContratsAcheteur=new LinkedList<ExemplaireContratCadre>();
@@ -34,6 +40,10 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratC
         demandeAchatFeve.put(Feve.F_BQ_E,0.0);
         demandeAchatFeve.put(Feve.F_MQ,0.0);
         demandeAchatFeve.put(Feve.F_HQ_E,0.0);
+		this.qtté_réception_arna= 0; 
+        this.qtté_réception_bollo= 0; 
+        this.qtté_réception_fraudau= 0; 
+        this.qtté_réception_hypo= 0;
 	}
 	
 	//@author Henri Roth
@@ -165,9 +175,9 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratC
 	public boolean demanderUnContratCadreAcheteur(IActeur acteur, IProduit produit, double quantite) {
 
         SuperviseurVentesContratCadre supCCadre = (SuperviseurVentesContratCadre) Filiere.LA_FILIERE.getActeur("Sup.CCadre");
-
-		ExemplaireContratCadre contrat = supCCadre.demandeAcheteur((IAcheteurContratCadre)this, ((IVendeurContratCadre)acteur), produit, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10, quantite), cryptogramme, false);
-					
+		double a = Filiere.random.nextDouble();
+        int b = (int) a;
+		ExemplaireContratCadre contrat = supCCadre.demandeAcheteur((IAcheteurContratCadre)this, ((IVendeurContratCadre)acteur), produit, new Echeancier(Filiere.LA_FILIERE.getEtape()+1, 10+(b*5), quantite), cryptogramme, false);
 		// Si un contrat a été créé, on l'ajoute à la liste des contrats du vendeur
         if(contrat != null){
             notificationNouveauContratCadre(contrat);
@@ -186,6 +196,17 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratC
 		super.jdb.ajouter("NEXT - CONTRAT CADRE");
 		super.journalCC.ajouter("");
         super.journalCC.ajouter("NEXT - CONTRAT CADRE");
+
+		//on affiche la quantité livrée durant le step jusque là 
+        journalCC.ajouter("quantité réceptionnée à ce step en arna en CC"+qtté_réception_arna);
+        journalCC.ajouter("quantité réceptionnée à ce step en bollo en CC"+qtté_réception_bollo);
+        journalCC.ajouter("quantité réceptionnée à ce step en fraudau en CC"+qtté_réception_fraudau);
+        journalCC.ajouter("quantité réceptionnée à ce step en hypo en CC"+qtté_réception_hypo);
+        //on remet la quantité livrée à chaque step à 0 au début de chaque step
+        this.qtté_réception_arna= 0; 
+        this.qtté_réception_bollo= 0; 
+        this.qtté_réception_fraudau= 0; 
+        this.qtté_réception_hypo= 0;
 
 		//on supprime les contrats obsolètes
 		supprCCObsoletes();
@@ -293,6 +314,18 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratC
 	public void receptionner(IProduit produit, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
 		journalCC.ajouter("Reception de "+quantiteEnTonnes+" de T de " + produit + " en provenance du contrat "+contrat.getNumero());
 		super.stockFeves.addToStock(produit, quantiteEnTonnes);
+		if(produit == bollo) {
+            this.qtté_réception_bollo += quantiteEnTonnes;
+        }
+        if(produit == fraud) {
+            this.qtté_réception_fraudau += quantiteEnTonnes;
+        }
+        if(produit == hypo) {
+            this.qtté_réception_hypo += quantiteEnTonnes;
+        }
+        if(produit == arna) {
+            this.qtté_réception_arna += quantiteEnTonnes;
+        }
 	}
 	//@author Henri Roth
 	public boolean achete(IProduit produit) {
@@ -316,7 +349,7 @@ public class Transformateur3ContratCadreAcheteur extends Transformateur3ContratC
 		return 5;
 	}
 
-	@Override //@author Henri Roth
+	@Override //@author Henri Roth & Florian Malveau
 	public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
 		// Trie des contrats cadres en fonction du produit
 		if(super.lesFeves.contains(contrat.getProduit())) {

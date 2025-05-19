@@ -32,7 +32,6 @@ public class Transformateur3StratQuantity extends Transformateur3Acteur {
 
     // Analyse des receptions de fèves et livraisons de choco
 
-
     //Les chocolats produits
     protected IProduit fraudStrat;
     protected IProduit hypoStrat;
@@ -96,10 +95,10 @@ public class Transformateur3StratQuantity extends Transformateur3Acteur {
         arnaStrat = super.lesChocolats.get(2);
         hypoStrat = super.lesChocolats.get(3);
 
-        this.DemandeProdChoco.put(fraudStrat,productionMaxStrat/3);
-        this.DemandeProdChoco.put(hypoStrat,productionMaxStrat/6);
-        this.DemandeProdChoco.put(arnaStrat,productionMaxStrat/6);
-        this.DemandeProdChoco.put(bolloStrat,productionMaxStrat/3);
+        this.DemandeProdChoco.put(fraudStrat,40000.0);//productionMaxStrat/3);
+        this.DemandeProdChoco.put(bolloStrat,1000.0);//productionMaxStrat/3);
+        this.DemandeProdChoco.put(arnaStrat,3000.0);//productionMaxStrat/6);
+        this.DemandeProdChoco.put(hypoStrat,300.0);//productionMaxStrat/6);
 
     }
 
@@ -117,6 +116,10 @@ public class Transformateur3StratQuantity extends Transformateur3Acteur {
 
         miseAJourEcheanciersBesoins();
 
+        if(super.currentStep%4 == 3){
+            evaluateDemandeProdChoco();
+        }
+
         // Affichage des échéanciers de fèves et chocolats
         
         //displayEcheancier("Echéancier de chocolats", this.quantityChocoEcheancier, super.lesChocolats);
@@ -124,6 +127,7 @@ public class Transformateur3StratQuantity extends Transformateur3Acteur {
         //displayEcheancier("Echéancier de fèves", this.quantityFevesEcheancier, super.fevesUtiles);
         }
 
+    // On met à jour les échéanciers de fèves et chocolats en supprimant la première ligne
     public void miseAJourEcheanciers(){
         //On supprime la ligne du next actuel
         for(IProduit feve : super.lesFeves){
@@ -140,6 +144,7 @@ public class Transformateur3StratQuantity extends Transformateur3Acteur {
         }
     }
 
+    // On traite les contrats acheteur et vendeur pour actualiser les échéanciers de fèves et chocolats
     public void actualiserEcheanciers(){
         this.quantityFevesEcheancier = traiterContrats(this.ContratsAcheteur, this.quantityFevesEcheancier);
         this.quantityChocoEcheancier = traiterContrats(this.ContratsVendeur, this.quantityChocoEcheancier);
@@ -174,6 +179,7 @@ public class Transformateur3StratQuantity extends Transformateur3Acteur {
         }
     }
 
+    // On traite les contrats acheteur et vendeur pour actualiser les échéanciers de fèves et chocolats
     public HashMap<IProduit, List<Double>> traiterContrats(List<ExemplaireContratCadre> contratsList, HashMap<IProduit, List<Double>> EcheancierParProduit){
         
         int currentStep = Filiere.LA_FILIERE.getEtape(); // On récupère le step actuel
@@ -250,6 +256,7 @@ public class Transformateur3StratQuantity extends Transformateur3Acteur {
         }
     }
 
+    // On affiche les échéanciers de fèves et chocolats
     public void displayEcheancier(String title, HashMap<IProduit, List<Double>>Echeancier, List<IProduit> prodList, HashMap<IProduit,Double> refData){
 
         super.journalStrat.ajouter("");
@@ -288,7 +295,6 @@ public class Transformateur3StratQuantity extends Transformateur3Acteur {
             }
         }
 
-
     public void displayAllStratQuantityData(){
         displayEcheancier("Echéancier de chocolats", this.quantityChocoEcheancier, super.lesChocolats, this.DemandeProdChoco);
         displayEcheancier("Echéancier besoin de fèves", this.besoinFeveEcheancier, super.fevesUtiles);
@@ -296,6 +302,44 @@ public class Transformateur3StratQuantity extends Transformateur3Acteur {
         
     }
 
+    //
+    public void evaluateDemandeProdChoco(){
+        // On évalue la demande de production de chocolat
+        for(IProduit choco : super.lesChocolats){
+            double quantiteStep1Choc = this.quantityChocoEcheancier.get(choco).get(1);
+            double quantiteDemandeChoc = this.DemandeProdChoco.get(choco);
+            double increment = 0.0;
+            IProduit feve = null;
+
+            if(choco == fraudStrat){
+                feve = Feve.F_BQ;
+                increment = 5000.0;
+            }else if(choco == bolloStrat){
+                feve = Feve.F_BQ_E;
+                increment = 500.0;
+            }else if(choco == arnaStrat){
+                feve = Feve.F_MQ;
+                increment = 500.0;
+            }else if(choco == hypoStrat){
+                feve = Feve.F_HQ_E;
+                increment = 100.0;
+            }
+
+            double quantiteStep1Feve = this.quantityFevesEcheancier.get(feve).get(1);
+            double quantiteDemandeFeve = this.besoinFeveEcheancier.get(feve).get(1);
+            
+            if(quantiteStep1Feve < quantiteDemandeFeve*0.8){
+                this.DemandeProdChoco.replace(choco, quantiteDemandeChoc-increment);
+            }else if(quantiteStep1Choc >= quantiteDemandeChoc*0.9){
+                this.DemandeProdChoco.replace(choco, quantiteDemandeChoc+increment);
+            }
+
+
+
+        }
+    }
+    
+    
     public String miseEnForme(String str, int size, Boolean left){
         int nbspace = size-str.length();
         String space = "";
