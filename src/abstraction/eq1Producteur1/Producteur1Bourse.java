@@ -13,16 +13,17 @@ import abstraction.eqXRomu.produits.Feve;
 
 // ADAM SEBIANE
 
-public class Producteur1Bourse extends Producteur1ContratCadre implements IVendeurBourse {
+public class Producteur1Bourse extends Producteur1Couts implements IVendeurBourse {
 
     private Journal journalBourse;
     protected Feve typeFeve; // Type de fève géré par ce producteur
 
 
-    public Producteur1Bourse() {
+    public Producteur1Bourse () {
+        super();
         this.journalBourse = new Journal(getNom() + " - Journal Bourse", this);
     }
-
+ 
     @Override
     public double offre(Feve typeFeve, double prixCourant) {
  
@@ -54,9 +55,9 @@ public class Producteur1Bourse extends Producteur1ContratCadre implements IVende
     
     @Override
     public double notificationVente(Feve typeFeve, double quantiteVendue, double prixVente) {
-        double stockDispo = stock.getStockTotal();
+        double stockDispo = stock.getStock(typeFeve);
         double quantiteLivree = Math.min(stockDispo, quantiteVendue);
-        stock.retirer(typeFeve, quantiteLivree, cryptogramme); // méthode ajoutée dans Stock.java
+        stock.retirer(typeFeve, quantiteLivree, cryptogramme);
         journalBourse.ajouter("Étape " + Filiere.LA_FILIERE.getEtape() +
             " : VENTE bourse de " + quantiteLivree + " tonnes de " + typeFeve +
             " à " + prixVente + " €/tonne");

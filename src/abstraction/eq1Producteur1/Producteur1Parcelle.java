@@ -1,10 +1,8 @@
 package abstraction.eq1Producteur1;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 import abstraction.eqXRomu.filiere.Filiere;
+import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 
@@ -12,8 +10,6 @@ import abstraction.eqXRomu.produits.Feve;
 
 public class Producteur1Parcelle  {
 
-
-    private int nb_arbres_total;
     protected int temps_avant_production; // en steps
     protected int duree_de_vie = 960; // en steps
     protected int besoin_main_doeuvre;
@@ -23,21 +19,27 @@ public class Producteur1Parcelle  {
     protected int temps_de_pousse;
     protected int temps_de_sechage;
     protected double prix_achat;
-    protected int prix_replantation;
+    protected double prix_replantation;
     protected int nombre_hectares;
     protected int nombre_feves;
     protected int nombre_feves_total;
     protected int nombre_arbes;
     protected Feve typeFeve;
     protected Journal journal;
-    protected Producteur1 producteur1;
+    private Producteur1Acteur producteur1; // Référence au Producteur1
+    protected Producteur1arbres arbre;
 
 
-    public Producteur1Parcelle(Feve typeFeve, Producteur1arbres producteur1) {
-    this.typeFeve = typeFeve;
-    this.journal = new Journal( " EQ1 - Journal parcelles", producteur1);
 
-    } 
+   public Producteur1Parcelle(IActeur acteur, Feve feve, Producteur1arbres  arbre) {
+        this.typeFeve = feve;
+        this.arbre = arbre;
+        this.producteur1 = (Producteur1Acteur) acteur;
+        this.journal = new Journal(" EQ1 - Journal parcelles", producteur1);
+    }
+    
+
+
 
     public void production(){
         switch(typeFeve){
@@ -50,8 +52,8 @@ public class Producteur1Parcelle  {
             this.poids_feve_par_cabosse_apres_sechage = 0.753; //en g
             this.temps_de_pousse = 12; // en steps
             this.temps_de_sechage = 2; // en steps
-            this.prix_achat = 2250; // par hectare
-            this.prix_replantation = 800; // par hectare
+            this.prix_achat = 2250/950; // par hectare
+            this.prix_replantation = 800/950; // par hectare -> 800
             this.nombre_hectares = 840; 
             this.nombre_feves = this.nombre_arbes * this.production_par_arbre * this.nb_feves_par_cabosse;
             this.nombre_feves_total = this.nombre_feves * this.nombre_hectares;            
@@ -65,8 +67,8 @@ public class Producteur1Parcelle  {
             this.poids_feve_par_cabosse_apres_sechage = 0.750; //en g
             this.temps_de_pousse = 11; // en steps
             this.temps_de_sechage = 1; // en steps
-            this.prix_achat = 4250;
-            this.prix_replantation = 1400 ; // par hectare
+            this.prix_achat = 4250/750;
+            this.prix_replantation = 1400/750 ; // par hectare 1400
             this.nombre_feves = this.nombre_arbes * this.production_par_arbre * this.nb_feves_par_cabosse;
             this.nombre_hectares = 120000; // en milliers d'hectares
             this.nombre_feves_total = this.nombre_feves * this.nombre_hectares;
@@ -80,8 +82,8 @@ public class Producteur1Parcelle  {
             this.poids_feve_par_cabosse_apres_sechage = 0.765; //en g
             this.temps_de_pousse = 12; // en steps
             this.temps_de_sechage = 1; // en steps
-            this.prix_achat = 7000;
-            this.prix_replantation = 2350;  // par hectare
+            this.prix_achat = 7000/500;
+            this.prix_replantation = 2350/500;  // par hectare 2350
             this.nombre_hectares = 0;
             this.nombre_feves = this.nombre_arbes * this.production_par_arbre * this.nb_feves_par_cabosse;
             this.nombre_feves_total = this.nombre_feves * this.nombre_hectares;
@@ -146,41 +148,22 @@ public class Producteur1Parcelle  {
         
     }
 
-    public int prix_replantation(){
-        switch(typeFeve){
-            case F_BQ:
-                return 800;
-            case F_MQ:
-                return 1400;
-            case F_HQ_E:
-                return 2350;
-            default:
-                throw new IllegalArgumentException("Nous ne possédons pas de " + typeFeve);
-        }
-    }
-
-
-
- // mort_arbre() me donnait le nb d'arbres morts en 1 step 
- // faudrait prendre le nombre d'arbres morts durant mon step et après voir si nb_arbres_voulu est inférieur ou égal à ça
-
-
-// faudrait que ce replanter_arbres ce soit juste genre j'augmente le stock et je replante et que dans Prod1arbres là je fasse les conditions de est ce que je peux ou pas 
-// genre mes deux conditions de replantation
-    
     public void replanter_arbres(int nb_arbres_voulu){
         Integer nombreArbres = getNombre_arbres();
         switch(typeFeve){
             case F_BQ:
                 this.journal.ajouter("Replantation de la parcelle de type " + Feve.F_BQ);
                 nombreArbres+= nb_arbres_voulu;
+                break;
             case F_MQ:
                 this.journal.ajouter("Replantation de la parcelle de type " + Feve.F_MQ);
                 nombreArbres+= nb_arbres_voulu;
+                break;
             case F_HQ_E:
                 this.journal.ajouter("Replantation de la parcelle de type " + Feve.F_HQ_E);
                 nombreArbres+= nb_arbres_voulu;
-        break;
+                break;
+
             default:
                 this.journal.ajouter("Type de fève non reconnu pour la replantation.");
                 break;
@@ -188,6 +171,20 @@ public class Producteur1Parcelle  {
         }
 
     }
+
+    public double cout_replantation(int nb_arbres, double budget){
+        double prix_a_payer = nb_arbres * this.prix_replantation;
+        if (budget >= prix_a_payer){
+            replanter_arbres(nb_arbres);
+            return prix_a_payer;
+        } else {
+            this.journal.ajouter("Budget insuffisant pour la replantation de " + nb_arbres + " arbres.");
+            return 0.0;
+        }
+    }
+
+    
+
 
 
     public int vente_parcelles(int nb_parcelles) {
@@ -206,7 +203,6 @@ public class Producteur1Parcelle  {
     
         // Calcul du prix de vente en fonction du type de fève
         int prixParHectare = 0;
-        int montantVente = nb_parcelles * prixParHectare;
         switch (typeFeve) {
             case F_BQ:
                 prixParHectare = 1450;
@@ -218,8 +214,27 @@ public class Producteur1Parcelle  {
             default:
                 this.journal.ajouter("Type de fève non reconnu pour la vente de parcelles.");
         }
-        return montantVente;
+        return nb_parcelles * prixParHectare;
     
+    }
+
+    public double prix_replantation(){
+        switch (typeFeve) {
+            case F_BQ:
+                this.prix_replantation = 800/950;
+                break;
+            case F_MQ:
+                this.prix_replantation = 1400/750;
+                break;
+            case F_HQ_E:
+                this.prix_replantation = 2350/500;
+                break; 
+            default:
+                return 0.0;
+                
+        }
+        return 0.0;
+
     }
 
   

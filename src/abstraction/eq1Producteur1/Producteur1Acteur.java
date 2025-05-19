@@ -10,9 +10,6 @@ import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
-import abstraction.eq1Producteur1.*;
-
-// ADRIEN BUCHER
 
 public class Producteur1Acteur implements IActeur {
 
@@ -21,31 +18,56 @@ public class Producteur1Acteur implements IActeur {
     protected Journal journal;
     protected Stock stock; 
 
-    
-    // Indicateurs de stock
+    // Parcelles de fèves
+    protected Producteur1Parcelle parcelleBQ;
+    protected Producteur1Parcelle parcelleMQ;
+    protected Producteur1Parcelle parcelleHQ_E;
 
+    // Indicateurs de stock
     private Variable stockTotal;
     private Variable stockFMQ;
     private Variable stockFBQ;
     private Variable stockFHQ_E;
+    private Producteur1arbres arbres;
+
+    // Setter pour le cryptogramme, appelé après création
+    @Override
+    public void setCryptogramme(Integer crypto) {
+        this.cryptogramme = crypto;
+        this.stock = new Stock(this, cryptogramme); // Initialisation du stock
+
+    }
 
     public Producteur1Acteur() {
-        this.journal = new Journal(getNom() + " Journal", this); 
+        this.journal = new Journal(getNom() + " Journal", this);
 
-        this.stock = new Stock(this, cryptogramme); // Passe le journal au stock
-
-        
-
-        // Initialisation des indicateurs
-        this.stockTotal = new Variable("Stock Total", this, 2*100000.0);//stock.getStockTotal());
-        this.stockFMQ = new Variable("Stock FMQ", this, 2 * 30000.0);//stock.getStock(Feve.F_MQ));
-        this.stockFBQ = new Variable("Stock FBQ", this,  2 * 50000.0);//stock.getStock(Feve.F_BQ));
-        this.stockFHQ_E = new Variable("Stock FHQ", this, 2 * 20000.0);//stock.getStock(Feve.F_HQ_E));
+        // On initialise les indicateurs à partir du stock 
+        this.stockTotal = new Variable("Stock Total", this, 0);
+        this.stockFMQ = new Variable("Stock FMQ", this, 0);
+        this.stockFBQ = new Variable("Stock FBQ", this, 0);
+        this.stockFHQ_E = new Variable("Stock FHQ", this, 0);
     }
 
 
-    public void initialiser() {
-        journal.ajouter("Initialisation du producteur");
+
+
+    // Mise à jour des indicateurs à chaque étape
+    public void next() {
+
+        int etape = Filiere.LA_FILIERE.getEtape();
+        journal.ajouter("Étape " + etape);
+
+        // Mise à jour des indicateurs avec les valeurs actuelles du stock
+        stockTotal.setValeur(this, stock.getStockTotal());
+        stockFMQ.setValeur(this, getQuantiteEnStock(Feve.F_MQ,cryptogramme));
+        stockFBQ.setValeur(this, getQuantiteEnStock(Feve.F_BQ,cryptogramme));
+        stockFHQ_E.setValeur(this, getQuantiteEnStock(Feve.F_HQ_E,cryptogramme));
+
+        // Journalisation des niveaux de stock
+        journal.ajouter("Stock mis à jour :");
+        journal.ajouter("→ FMQ : " + stock.getStock(Feve.F_MQ));
+        journal.ajouter("→ FBQ : " + stock.getStock(Feve.F_BQ));
+        journal.ajouter("→ FHQ : " + stock.getStock(Feve.F_HQ_E));
     }
 
     @Override
@@ -56,26 +78,6 @@ public class Producteur1Acteur implements IActeur {
     @Override
     public String toString() {
         return this.getNom();
-    }
-
-    public void next() {
-        int etape = Filiere.LA_FILIERE.getEtape();
-        journal.ajouter("Étape " + etape);
-
-
-        // Mise à jour des indicateurs avec les nouvelles valeurs des stocks
-        stockTotal.setValeur(this, stock.getStockTotal());
-        stockFMQ.setValeur(this, stock.getStock(Feve.F_MQ));
-        stockFBQ.setValeur(this, stock.getStock(Feve.F_BQ));
-        stockFHQ_E.setValeur(this, stock.getStock(Feve.F_HQ_E));
-
-
-
-        // Journalisation des stocks
-        journal.ajouter("Stock mis à jour :");
-        journal.ajouter("→ FMQ : " + stock.getStock(Feve.F_MQ));
-        journal.ajouter("→ FBQ : " + stock.getStock(Feve.F_BQ));
-        journal.ajouter("→ FHQ : " + stock.getStock(Feve.F_HQ_E));
     }
 
     @Override
@@ -91,21 +93,16 @@ public class Producteur1Acteur implements IActeur {
     @Override
     public List<Variable> getIndicateurs() {
         List<Variable> res = new ArrayList<>();
-        res.add(stockTotal); // Indicateur du stock total
-        res.add(stockFMQ);   // Indicateur du stock de fèves moyenne qualité
-        res.add(stockFBQ);   // Indicateur du stock de fèves basse qualité
-        res.add(stockFHQ_E);   // Indicateur du stock de fèves haute qualité
+        res.add(stockTotal);
+        res.add(stockFMQ);
+        res.add(stockFBQ);
+        res.add(stockFHQ_E);
         return res;
     }
 
     @Override
     public List<Variable> getParametres() {
         return new ArrayList<>();
-    }
-
-    @Override
-    public void setCryptogramme(Integer crypto) {
-        this.cryptogramme = crypto;
     }
 
     @Override
@@ -133,21 +130,22 @@ public class Producteur1Acteur implements IActeur {
     }
 
     @Override
-    public double getQuantiteEnStock(IProduit p, int cryptogramme) {
-        if (this.cryptogramme == cryptogramme && p instanceof Feve) {
+    public double getQuantiteEnStock(IProduit p, int crypto) {
+        if (this.cryptogramme == crypto && p instanceof Feve) {
             return stock.getStock((Feve) p);
         }
         return 0.0;
     }
 
-   
-
     public List<Journal> getJournaux() {
-		List<Journal> res=new ArrayList<Journal>();
-		res.add(journal);
-		return res;
+        List<Journal> res = new ArrayList<>();
+        res.add(journal);
+        return res;
+    }
 
-    
-}
+    @Override
+    public void initialiser() {
+		
+	}
 
 }

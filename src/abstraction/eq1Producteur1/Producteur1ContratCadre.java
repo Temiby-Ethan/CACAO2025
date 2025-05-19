@@ -9,14 +9,14 @@ import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class Producteur1ContratCadre extends Producteur1Acteur implements IVendeurContratCadre {
+public class Producteur1ContratCadre extends Producteur1Bourse implements IVendeurContratCadre {
 
     private Producteur1 vendeur;
     private List<ExemplaireContratCadre> contrats;
     private Journal journal;
 
     public Producteur1ContratCadre() {
-
+        super();
         this.journal = new Journal(getNom() + " - Journal Contrat Cadre", this);
         this.contrats = new ArrayList<>();
     }
@@ -106,7 +106,7 @@ public class Producteur1ContratCadre extends Producteur1Acteur implements IVende
     @Override
     public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
         double quantiteLivree = Math.min(quantite, stock.getStock((Feve) produit));
-        stock.retirer(produit, quantiteLivree, cryptogramme); // faire if c'est possible -> vendre sinon vendre qu'une certaine partie
+        stock.retirer(produit, quantiteLivree,cryptogramme); // faire if c'est possible -> vendre sinon vendre qu'une certaine partie
         journal.ajouter("Livraison de " + quantiteLivree + " de " + produit + " pour le contrat " + contrat);
         return quantiteLivree;
     }

@@ -4,10 +4,11 @@ package abstraction.eq1Producteur1;
 
 import java.util.List;
 import abstraction.eqXRomu.filiere.Filiere;
+import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 
-public class Producteur1Couts extends Producteur1Bourse {
+public class Producteur1Couts extends Producteur1sechage {
 
     private Journal journalCouts;
     private Feve feve;
@@ -58,6 +59,19 @@ public class Producteur1Couts extends Producteur1Bourse {
         return cout;
     }
 
+    public double calculerCoutStockage() {
+        double cout = coutStockage(); // Appel direct à la méthode de la classe mère
+        try {
+            Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", cout);
+            journalCouts.ajouter("Coût de stockage payé : " + cout + " € (ligne budgétaire : Stockage)");
+        } 
+        catch (Exception e) {
+            journalCouts.ajouter("Échec du paiement du stockage : " + e.getMessage());
+    }
+    return cout;
+}
+
+
     @Override
     public List<Journal> getJournaux() {
         List<Journal> res = super.getJournaux();
@@ -70,6 +84,7 @@ public class Producteur1Couts extends Producteur1Bourse {
     public void next() {
         super.next();
         calculerCoutEmployes();
+        calculerCoutStockage();
         
     }
 }
