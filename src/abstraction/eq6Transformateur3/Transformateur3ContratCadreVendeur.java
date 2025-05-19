@@ -92,7 +92,7 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
         //on parcourt tous les types de chocolat
         for(IProduit choco : super.lesChocolats){
             //on parcourt les acteurs de la filière
-            for (IActeur acteur : Filiere.LA_FILIERE.getActeurs()) {
+            for (IActeur acteur : Filiere.LA_FILIERE.getActeursSolvables()) {
                 //si l'acteur n'est pas nous et si l'acteur achète des contrats cadres et s'il achète
                 //du chocolat par contrat cadre
                 if (acteur!=this && acteur instanceof IAcheteurContratCadre && ((IAcheteurContratCadre)acteur).achete(choco)) {
