@@ -25,23 +25,24 @@ public class Transformateur3StratPrix {
      * @param feve
      * @return Retourne une estimation du prix à la tonne auquel on pourrait acheter la fève en question
      */
-    public double PrixFeve(HashMap<Feve, List<Double>> prixFeve, Feve feve){
+    public double PrixFeve(HashMap<IProduit, List<Double>> prixFeve, Feve feve){
         List<Double> prix = prixFeve.get(feve);
+        Integer longueur = prix.size();
         Integer step_actuel = Filiere.LA_FILIERE.getEtape();
         double meilleurs_prix_histo = 0;
         // On évite les erreurs dans les premiers step, en prenant en compte que les premières ventes
         // et ensuite on prend en compte les 5 dernières ventes quand l'étape actuelle dépasse 5
-        if(step_actuel != 0){
-            if(step_actuel > 5){
+        if(longueur != 0){
+            if(longueur > 5){
                 for(int i = 0; i < 5; i++){
                     
-                    meilleurs_prix_histo += prix.get(i);
+                    meilleurs_prix_histo += prix.get(longueur - i - 1);
                 }
                 meilleurs_prix_histo = meilleurs_prix_histo/5;
             }
             else{
                 for(int i = 0; i < step_actuel; i++){
-                    meilleurs_prix_histo += prix.get(i);
+                    meilleurs_prix_histo += prix.get(longueur - i - 1);
                 }
                 meilleurs_prix_histo = meilleurs_prix_histo/step_actuel;
             }
@@ -49,23 +50,27 @@ public class Transformateur3StratPrix {
         
         BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
         Variable prix_bourse = bourse.getCours(feve);
-
-        // On compare le prix de nos dernière ventes et le prix de la bourse.
-        if(prix_bourse.getValeur() > meilleurs_prix_histo){
-            // A partir de la, on regarde la tendance de la bourse, si celle-ci est à la hausse,
-            // on propose comme prix de vente celle de la bourse, si elle est à la baisse, on propose
-            // 94% du prix de la bourse. Sinon, on propose 96% du prix de la bourse
-            if(prix_bourse.getValeur() > prix_bourse.getValeur(step_actuel - 1)){
-                if(prix_bourse.getValeur(step_actuel - 1) > prix_bourse.getValeur(step_actuel - 2)){
-                    return prix_bourse.getValeur(step_actuel)*0.98;
+        if(!feve.isEquitable()){
+            // On compare le prix de nos dernière ventes et le prix de la bourse.
+            if(prix_bourse.getValeur() > meilleurs_prix_histo){
+                // A partir de la, on regarde la tendance de la bourse, si celle-ci est à la hausse,
+                // on propose comme prix de vente celle de la bourse, si elle est à la baisse, on propose
+                // 94% du prix de la bourse. Sinon, on propose 96% du prix de la bourse
+                if(prix_bourse.getValeur() > prix_bourse.getValeur(step_actuel - 1)){
+                    if(prix_bourse.getValeur(step_actuel - 1) > prix_bourse.getValeur(step_actuel - 2)){
+                        return prix_bourse.getValeur(step_actuel)*0.98;
+                    }
+                }
+                else{
+                    return prix_bourse.getValeur(step_actuel)*0.96;
+                }
+            }else{ if (prix_bourse.getValeur(step_actuel - 1) < prix_bourse.getValeur(step_actuel - 2)) {
+                return prix_bourse.getValeur(step_actuel)*0.94;
                 }
             }
-            else{
-                return prix_bourse.getValeur(step_actuel)*0.96;
-            }
-        }else{ if (prix_bourse.getValeur(step_actuel - 1) < prix_bourse.getValeur(step_actuel - 2)) {
-            return prix_bourse.getValeur(step_actuel)*0.94;
-            }
+        }
+        else{
+
         }
         // Le prix de nos dernières ventes est plus intéressante que le prix de la bourse
         return meilleurs_prix_histo;
@@ -75,31 +80,42 @@ public class Transformateur3StratPrix {
      * on calcule uniquement avec l'historique des ventes
      * @param prixChoco
      * @param Choco
+     * @param PrixProd
+     * @param CapaProd
      * @return Retourne une estimation du prix à la tonne de choco
      */
-    public double PrixChoco(HashMap<IProduit, List<Double>> prixChoco, IProduit Choco){
+    public double PrixChoco(HashMap<IProduit, List<Double>> prixChoco, IProduit Choco, Double PrixProd, Double CapaProd){
         List<Double> prix = prixChoco.get(Choco);
+        Integer longueur = prix.size();
         Integer step_actuel = Filiere.LA_FILIERE.getEtape();
         double meilleurs_prix_histo = 0;
         // On évite les erreurs dans les premiers step, en prenant en compte que les premières ventes
         // et ensuite on prend en compte les 5 dernières ventes quand l'étape actuelle dépasse 5
-        if(step_actuel != 0){
-            if(step_actuel > 5){
+        if(longueur != 0){
+            if(longueur > 5){
                 for(int i = 0; i < 5; i++){
                     
-                    meilleurs_prix_histo += prix.get(i);
+                    meilleurs_prix_histo += prix.get(longueur - i - 1);
                 }
                 meilleurs_prix_histo = meilleurs_prix_histo/5;
             }
             else{
-                for(int i = 0; i < step_actuel; i++){
+                for(int i = 0; i < longueur; i++){
                     meilleurs_prix_histo += prix.get(i);
                 }
                 meilleurs_prix_histo = meilleurs_prix_histo/step_actuel;
             }
         }
+
+        if(meilleurs_prix_histo == 0){
+            // On calcule le prix de fabrication pour chaque chocolat
+            Double coutprod = PrixProd / CapaProd;
+            if(Choco.equals()
+        }
         //Ici, comme nous n'avons pas de ventes de bourses,
         //on retourne uniquement le prix avec l'historique
         return meilleurs_prix_histo;
     }
+
+    //public double contrePropal(){}
 }
