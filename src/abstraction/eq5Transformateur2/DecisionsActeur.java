@@ -120,6 +120,7 @@ public class DecisionsActeur extends ProcessChoco{
             Chocolat c =correspondChocolat(f);
             double production = Math.min(this.getProductionTotale()*this.getProportion(f), super.getQuantiteStock(f));
             super.fabriquerChocolat(c , f, production);
+            super.journalStock.ajouter("Production de chocolat: Production de " + production + " tablette de " + c + " à partir de " + f);
             }
 
         if(objecifChangementProportion()){
