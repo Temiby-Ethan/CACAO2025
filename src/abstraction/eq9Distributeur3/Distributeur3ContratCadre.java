@@ -12,9 +12,71 @@ import java.util.List;
 
 public class Distributeur3ContratCadre extends Distributeur3Charges implements IAcheteurContratCadre{
 
+    ArrayList<ExemplaireContratCadre> contrats;
+    boolean BQ;
+    boolean BQ_E;
+    boolean MQ;
+
+    public Distributeur3ContratCadre() {
+        super();
+        contrats = new ArrayList<>();
+
+    }
+
     @Override
     // Implémentée par Héloise et Jeanne
     public void next() {
+
+        double ressourcesBQ = this.stockBQ.getValeur(this.cryptogramme);
+        double ressourcesBQ_E = this.stockBQ_E.getValeur(this.cryptogramme);
+        double ressourcesMQ = this.stockMQ.getValeur(this.cryptogramme);
+
+        for(ExemplaireContratCadre contrat : contrats) {
+            journalPrintContrat.ajouter(contrat.getNumero()+" : "+ contrat.getEcheancier().toString());
+            if(contrat.getEcheancier().getStepFin()>=Filiere.LA_FILIERE.getEtape()+3) {
+                ChocolatDeMarque choc = (ChocolatDeMarque) contrat.getProduit();
+                if(choc.getGamme().equals(Gamme.BQ)){
+                    if(choc.isEquitable()){
+                        ressourcesBQ_E = ressourcesBQ_E+contrat.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape())+contrat.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape()+1)+contrat.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape()+2)+contrat.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape()+3);
+                    }else{
+                        ressourcesBQ = ressourcesBQ+contrat.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape())+contrat.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape()+1)+contrat.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape()+2)+contrat.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape()+3);
+                    }
+                }else{
+                    ressourcesMQ = ressourcesMQ+ressourcesBQ_E+contrat.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape())+contrat.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape()+1)+contrat.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape()+2)+contrat.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape()+3);
+                }
+            }
+        }
+
+        double besoinBQ=0.0;
+        double besoinBQ_E=0.0;
+        double besoinMQ=0.0;
+
+        for(ChocolatDeMarque choc : Filiere.LA_FILIERE.getChocolatsProduits()){
+            if(choc.getGamme().equals(Gamme.BQ)){
+                if(choc.isEquitable()){
+                    besoinBQ_E = besoinBQ_E+Filiere.LA_FILIERE.getVentes(choc,Filiere.LA_FILIERE.getEtape()-24);
+                    besoinBQ_E = besoinBQ_E+Filiere.LA_FILIERE.getVentes(choc,Filiere.LA_FILIERE.getEtape()-23);
+                    besoinBQ_E = besoinBQ_E+Filiere.LA_FILIERE.getVentes(choc,Filiere.LA_FILIERE.getEtape()-22);
+                    besoinBQ_E = besoinBQ_E+Filiere.LA_FILIERE.getVentes(choc,Filiere.LA_FILIERE.getEtape()-21);
+                }else{
+                    besoinBQ = besoinBQ+Filiere.LA_FILIERE.getVentes(choc,Filiere.LA_FILIERE.getEtape()-24);
+                    besoinBQ = besoinBQ+Filiere.LA_FILIERE.getVentes(choc,Filiere.LA_FILIERE.getEtape()-23);
+                    besoinBQ = besoinBQ+Filiere.LA_FILIERE.getVentes(choc,Filiere.LA_FILIERE.getEtape()-22);
+                    besoinBQ = besoinBQ+Filiere.LA_FILIERE.getVentes(choc,Filiere.LA_FILIERE.getEtape()-21);
+                }
+            }else{
+                besoinMQ = besoinMQ+Filiere.LA_FILIERE.getVentes(choc,Filiere.LA_FILIERE.getEtape()-24);
+                besoinMQ = besoinMQ+Filiere.LA_FILIERE.getVentes(choc,Filiere.LA_FILIERE.getEtape()-23);
+                besoinMQ = besoinMQ+Filiere.LA_FILIERE.getVentes(choc,Filiere.LA_FILIERE.getEtape()-22);
+                besoinMQ = besoinMQ+Filiere.LA_FILIERE.getVentes(choc,Filiere.LA_FILIERE.getEtape()-21);
+            }
+        }
+
+        BQ = ressourcesBQ<=0.75*besoinBQ;
+        BQ_E = ressourcesBQ_E<=0.75*besoinBQ_E;
+        MQ = ressourcesMQ<=0.75*besoinMQ;
+
+
 
         super.next();
        SuperviseurVentesContratCadre superviseur = (SuperviseurVentesContratCadre) Filiere.LA_FILIERE.getActeur("Sup.CCadre");
@@ -32,9 +94,16 @@ public class Distributeur3ContratCadre extends Distributeur3Charges implements I
        for (IActeur a : transfo){
            if(a instanceof IVendeurContratCadre && Filiere.LA_FILIERE.getActeursSolvables().contains(a)){
                for(ChocolatDeMarque choco : listeChcocolatPertinents) {
-                   if(Filiere.LA_FILIERE.getFabricantsChocolatDeMarque(choco).contains(a)) {
-                       Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape() + 1, 8, 200);
-                       superviseur.demandeAcheteur(this, (IVendeurContratCadre) a, choco, e, this.cryptogramme, false);
+                   if((choco.getGamme()== Gamme.BQ && BQ) || (choco.getGamme()== Gamme.BQ && choco.isEquitable() && BQ_E) || (choco.getGamme().equals(Gamme.MQ) && MQ)) {
+                       if (Filiere.LA_FILIERE.getFabricantsChocolatDeMarque(choco).contains(a)) {
+                           Echeancier e = new Echeancier(Filiere.LA_FILIERE.getEtape() + 1, 8, 200);
+                           ExemplaireContratCadre cc = superviseur.demandeAcheteur(this, (IVendeurContratCadre) a, choco, e, this.cryptogramme, false);
+                           if (cc != null) {
+                               contrats.add(cc);
+                           }
+                       }
+                   }else{
+                       journalPrintContrat.ajouter("conditions non remplis pour passer le contrat");
                    }
                }
            }
@@ -67,6 +136,11 @@ public class Distributeur3ContratCadre extends Distributeur3Charges implements I
     // Implémentée par Héloïse
     public double contrePropositionPrixAcheteur(ExemplaireContratCadre contrat){
         journalContrats.ajouter("negocie le contrat");
+
+        ChocolatDeMarque choco = (ChocolatDeMarque) contrat.getProduit();
+        if(((choco.getGamme()== Gamme.BQ && BQ) || (choco.getGamme()== Gamme.BQ && choco.isEquitable() && BQ_E) || (choco.getGamme().equals(Gamme.MQ) && MQ))){
+            return -1;
+        }
 
         int prixMoyen=0;
         if(Filiere.LA_FILIERE.getEtape()==0) {
@@ -123,6 +197,8 @@ public class Distributeur3ContratCadre extends Distributeur3Charges implements I
     public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
         // System.out.println("Nouveau contrat signé pour l'équipe 9");
         this.journalActeur.ajouter("Nouveau contrat signé n°" + contrat.getNumero() + " : " + contrat.getQuantiteTotale() + " tonnes de " + contrat.getProduit() + " pour" + contrat.getPrix() + "€/tonne");
+        //this.journalPrintContrat.ajouter(contrat.getNumero()+" : "+ contrat.getEcheancier().toString());
+        contrats.add(contrat);
     }
 
     @Override
