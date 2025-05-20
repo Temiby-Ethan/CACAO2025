@@ -64,7 +64,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
         ChocolatDeMarque chocolat = chocolats.get(i);
 
         // Initialize stocksChocolats with a default stock value
-        this.stocksChocolats.put(chocolat, new Variable(this.getNom() + "Stock" + chocolat.getNom(), this, 10000.0));
+        this.stocksChocolats.put(chocolat, new Variable(this.getNom() + "Stock" + chocolat.getNom(), this, 1000));
 
         // Initialize other lists
         this.prix.add(10.0); // Default price
@@ -162,7 +162,13 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 
 		for (int i=0; i<this.chocolats.size(); i++) {
 			this.capaciteDeVente.set(i, stocksChocolats.get(chocolats.get(i)).getValeur()/1.1);
-			Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Mise en rayon", (this.capaciteDeVente.get(i)*Filiere.LA_FILIERE.getParametre("cout mise en rayon").getValeur()));
+			if (this.capaciteDeVente.get(i)*Filiere.LA_FILIERE.getParametre("cout mise en rayon").getValeur()<1){
+				Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Mise en rayon", 1);
+
+			}else{
+				Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Mise en rayon", (this.capaciteDeVente.get(i)*Filiere.LA_FILIERE.getParametre("cout mise en rayon").getValeur()));
+			}
+			
 
 		}
 
