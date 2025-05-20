@@ -56,7 +56,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 	public void initialiser() // par Alexiho
 	{
 		this.chocolats = Filiere.LA_FILIERE.getChocolatsProduits();
-		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage distributeur").getValeur()*2;
+		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*2;
 		this.salairetotal = 2e6;
 
     // Initialize stocksChocolats map and other lists
@@ -162,11 +162,13 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 
 		for (int i=0; i<this.chocolats.size(); i++) {
 			this.capaciteDeVente.set(i, stocksChocolats.get(chocolats.get(i)).getValeur()/1.1);
+			Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Mise en rayon", (this.capaciteDeVente.get(i)*Filiere.LA_FILIERE.getParametre("cout mise en rayon").getValeur()));
 
 		}
 
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", (totalStocks*this.coutStockage));
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Salaires", this.salairetotal);
+		
 
 	}
 
