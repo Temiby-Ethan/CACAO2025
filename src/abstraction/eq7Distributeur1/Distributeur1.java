@@ -57,6 +57,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 	{
 		this.chocolats = Filiere.LA_FILIERE.getChocolatsProduits();
 		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage distributeur").getValeur()*2;
+		this.salairetotal = 2e6;
 
     // Initialize stocksChocolats map and other lists
     for (int i = 0; i < this.chocolats.size(); i++) {
