@@ -3,9 +3,7 @@ package abstraction.eq6Transformateur3;
 import java.util.HashMap;
 import java.util.List;
 
-import abstraction.eqXRomu.bourseCacao.BourseCacao;
 import abstraction.eqXRomu.filiere.Filiere;
-import abstraction.eqXRomu.general.Variable;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
@@ -47,32 +45,6 @@ public class Transformateur3StratPrix {
                 meilleurs_prix_histo = meilleurs_prix_histo/step_actuel;
             }
         }
-        
-        BourseCacao bourse = (BourseCacao)(Filiere.LA_FILIERE.getActeur("BourseCacao"));
-        Variable prix_bourse = bourse.getCours(feve);
-        if(!feve.isEquitable()){
-            // On compare le prix de nos dernière ventes et le prix de la bourse.
-            if(prix_bourse.getValeur() > meilleurs_prix_histo){
-                // A partir de la, on regarde la tendance de la bourse, si celle-ci est à la hausse,
-                // on propose comme prix de vente celle de la bourse, si elle est à la baisse, on propose
-                // 94% du prix de la bourse. Sinon, on propose 96% du prix de la bourse
-                if(prix_bourse.getValeur() > prix_bourse.getValeur(step_actuel - 1)){
-                    if(prix_bourse.getValeur(step_actuel - 1) > prix_bourse.getValeur(step_actuel - 2)){
-                        return prix_bourse.getValeur(step_actuel)*0.98;
-                    }
-                }
-                else{
-                    return prix_bourse.getValeur(step_actuel)*0.96;
-                }
-            }else{ if (prix_bourse.getValeur(step_actuel - 1) < prix_bourse.getValeur(step_actuel - 2)) {
-                return prix_bourse.getValeur(step_actuel)*0.94;
-                }
-            }
-        }
-        else{
-
-        }
-        // Le prix de nos dernières ventes est plus intéressante que le prix de la bourse
         return meilleurs_prix_histo;
     }
     /**
@@ -110,7 +82,8 @@ public class Transformateur3StratPrix {
         if(meilleurs_prix_histo == 0){
             // On calcule le prix de fabrication pour chaque chocolat
             Double coutprod = PrixProd / CapaProd;
-            if(Choco.equals()
+            Double Marge = 0.20;
+            return coutprod * (1+Marge);
         }
         //Ici, comme nous n'avons pas de ventes de bourses,
         //on retourne uniquement le prix avec l'historique

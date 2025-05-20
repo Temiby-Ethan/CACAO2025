@@ -216,7 +216,7 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
     @Override //@author Henri Roth
     public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
         //à chaque fois on propose 1.2 fois le prix proposé par l'acheteur
-        return contrat.getPrix();//*1.2;
+        return contrat.getPrix()*1.2;//;
     }
 
     @Override //@author Henri Roth
