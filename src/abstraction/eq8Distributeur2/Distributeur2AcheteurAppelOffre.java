@@ -139,10 +139,22 @@ public class Distributeur2AcheteurAppelOffre extends Distributeur2AcheteurContra
         int nb_employes = (int) Math.ceil(0.0067 * stockTotal.getValeur(cryptogramme));
         double montant_a_payer_salaire = nb_employes * salaire;
         Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "salaire", montant_a_payer_salaire);
-        
-        journal.ajouter(Romu.COLOR_LPURPLE, Romu.COLOR_LLGRAY, "Montant à payer pour le stockage : " + montant_a_payer_stock);
-        journal.ajouter(Romu.COLOR_LPURPLE, Romu.COLOR_LLGRAY, "Montant à payer pour les employés : " + montant_a_payer_salaire);
 
+        // payer mise en rayon
+        double coutParT = 0.03 * 1000;
+        double coutParTTG = 0.08 * 1000;
+
+        double montant_a_payer_rayon = coutParT * this.quantiteEnVenteTotal() + coutParTTG * this.quantiteEnVenteTGTotal();
+        Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "coutMiseEnRayon", montant_a_payer_rayon);
+
+        
+        journal.ajouter(Romu.COLOR_LPURPLE, Romu.COLOR_LLGRAY, "Montant à payer pour le stockage : " + montant_a_payer_stock + "€");
+        journal.ajouter(Romu.COLOR_LPURPLE, Romu.COLOR_LLGRAY, "Montant à payer pour les employés : " + montant_a_payer_salaire + "€");
+        journal.ajouter(Romu.COLOR_LPURPLE, Romu.COLOR_LLGRAY, "Montant à payer pour la mise en rayon : " + montant_a_payer_rayon + "€");
+        journal.ajouter(Romu.COLOR_LPURPLE, Romu.COLOR_LLGRAY, String.format(
+            "Montant total à payer : %,.2f€",
+            (montant_a_payer_stock + montant_a_payer_salaire + montant_a_payer_rayon)
+        ));
     }
 
     //@author pebinoh
