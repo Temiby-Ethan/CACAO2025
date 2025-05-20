@@ -10,24 +10,27 @@ import abstraction.eqXRomu.produits.IProduit;
 
 public class Producteur1ContratCadre extends Producteur1Acteur implements IVendeurContratCadre {
 
-    private Producteur1 vendeur;
+
     private List<ExemplaireContratCadre> contrats;
     private Journal journal;
 
     public Producteur1ContratCadre() {
+        super();
         this.journal = new Journal(getNom() + " - Journal Contrat Cadre", this);
         this.contrats = new ArrayList<>();
     }
 
     @Override
     public boolean vend(IProduit produit) {
-        return false;//produit instanceof Feve;
+        return produit instanceof Feve; 
     }
+
 
     @Override
     public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
         IProduit produit = contrat.getProduit();
-return null;   /* 
+
+
         if (!(produit instanceof Feve)) {
             journal.ajouter("Erreur : Produit non reconnu pour la contre-proposition.");
             return null;
@@ -73,7 +76,7 @@ return null;   /*
         }
 
         journal.ajouter("Échéancier proposé accepté : " + echeancierPropose);
-        return echeancierPropose; // */
+        return echeancierPropose; 
     }
 
     @Override
@@ -111,7 +114,7 @@ return null;   /*
             return 0.0;
         }
 
-        boolean retraitOk = stock.retirer(produit, quantiteLivree);
+        boolean retraitOk = stock.retirer(produit, quantiteLivree, cryptogramme); 
 
         if (retraitOk) {
             journal.ajouter("Livraison de " + quantiteLivree + " de " + produit + " pour le contrat " + contrat);
@@ -128,4 +131,9 @@ return null;   /*
         res.add(journal);
         return res;
     }
+
+    @Override
+    public void next() {
+        super.next();
+        }
 } 
