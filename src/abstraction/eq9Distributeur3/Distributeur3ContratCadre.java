@@ -16,6 +16,8 @@ public class Distributeur3ContratCadre extends Distributeur3Charges implements I
     // Implémentée par Héloise et Jeanne
     public void next() {
 
+        double ressource = stockBQ
+
 
         super.next();
        SuperviseurVentesContratCadre superviseur = (SuperviseurVentesContratCadre) Filiere.LA_FILIERE.getActeur("Sup.CCadre");

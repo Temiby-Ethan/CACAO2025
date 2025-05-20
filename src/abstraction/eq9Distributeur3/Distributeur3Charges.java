@@ -37,15 +37,16 @@ public class Distributeur3Charges extends Distributeur3Distributeur {
             }
         }
         if(Filiere.LA_FILIERE.getParametre("cout mise en rayon").getValeur()*totalEnRayon>0) {
-            Filiere.LA_FILIERE.getBanque().payerCout(this, this.cryptogramme, "Mise en rayon", Filiere.LA_FILIERE.getParametre("cout mise en rayon").getValeur() * totalEnRayon);
+            Filiere.LA_FILIERE.getBanque().payerCout(this, this.cryptogramme, "Mise en rayon", Filiere.LA_FILIERE.getParametre("cout mise en rayon").getValeur() * totalEnRayon*0.75);
             this.journalCharges.ajouter("paiement mise en rayon " + Filiere.LA_FILIERE.getParametre("cout mise en rayon").getValeur() * totalEnRayon);
             miseEnRayon=Filiere.LA_FILIERE.getParametre("cout mise en rayon").getValeur() * totalEnRayon;
         }
 
 
-        Filiere.LA_FILIERE.getBanque().payerCout(this,this.cryptogramme,"Salaires",salaireEmployes*nbEmployes);
+        //Filiere.LA_FILIERE.getBanque().payerCout(this,this.cryptogramme,"Salaires",salaireEmployes*nbEmployes);
         this.journalCharges.ajouter("Paiement des salaires : "+salaireEmployes*nbEmployes);
         salaires=salaireEmployes*nbEmployes;
+        //Filiere.LA_FILIERE.getBanque().payerCout(this,this.cryptogramme,"Salaire",);
     }
 
     public double chargesTotal(){
