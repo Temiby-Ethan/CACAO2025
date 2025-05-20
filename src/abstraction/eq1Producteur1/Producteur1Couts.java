@@ -17,9 +17,9 @@ public class Producteur1Couts extends Producteur1sechage {
     protected int employesHQ = 4;
     protected int employesPermanents = 2;
 
-    protected double coutEnfant = 2.0;
-    protected double coutAdulteNonForme = 5.0;
-    protected double coutAdulteForme = 12.5;
+    protected double coutEnfant = 2.0*100;
+    protected double coutAdulteNonForme = 5.0*100;
+    protected double coutAdulteForme = 12.5*100;
 
     public Producteur1Couts() {
         super();
@@ -61,9 +61,11 @@ public class Producteur1Couts extends Producteur1sechage {
     public double calculerCoutStockage() {
         double cout = coutStockage(); // Appel direct à la méthode de la classe mère
         try {
+            if (cout >0){
             Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", cout);
             journalCouts.ajouter("Coût de stockage payé : " + cout + " € (ligne budgétaire : Stockage)");
         } 
+    }
         catch (Exception e) {
             journalCouts.ajouter("Échec du paiement du stockage : " + e.getMessage());
     }

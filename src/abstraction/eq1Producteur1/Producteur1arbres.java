@@ -100,12 +100,12 @@ public class Producteur1arbres extends Producteur1Bourse {
         double solde = getSolde();
         double prixUnitaire = getPrixAchatParArbre();
 
-        if (arbresMorts > 0 && solde >= arbresMorts * prixUnitaire) {
+        if (arbresMorts > 0 && solde >= arbresMorts * prixUnitaire && (arbresMorts * prixUnitaire)>0) {
             Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "arbres", arbresMorts * prixUnitaire);
             replanterArbres(arbresMorts);
         } else {
             int nbReplantables = (int) (solde / prixUnitaire);
-            if (nbReplantables > 0) {
+            if (nbReplantables > 0 && ( nbReplantables * prixUnitaire)>0) {
                 Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "replantation partielle", nbReplantables * prixUnitaire);
                 replanterArbres(nbReplantables);
             } else {
