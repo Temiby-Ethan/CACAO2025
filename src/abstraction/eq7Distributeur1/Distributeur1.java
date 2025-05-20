@@ -66,7 +66,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
         this.prix.add(10.0); // Default price
         this.capaciteDeVente.add(900.0); // Default sales capacity
         this.successedSell.add(0); // Default successful sales count
-        this.priceProduct.add(1000.0); // Default product price
+        this.priceProduct.add(10000.0); // Default product price
         this.requiredQuantities.add(1000.0); // Default required quantity
     }
 
