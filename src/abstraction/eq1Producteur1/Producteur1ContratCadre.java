@@ -4,14 +4,13 @@ import java.util.*;
 
 import abstraction.eqXRomu.contratsCadres.*;
 import abstraction.eqXRomu.filiere.Filiere;
-import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
-public class Producteur1ContratCadre extends Producteur1Bourse implements IVendeurContratCadre {
+public class Producteur1ContratCadre extends Producteur1Acteur implements IVendeurContratCadre {
 
-    private Producteur1 vendeur;
+
     private List<ExemplaireContratCadre> contrats;
     private Journal journal;
 
@@ -23,12 +22,14 @@ public class Producteur1ContratCadre extends Producteur1Bourse implements IVende
 
     @Override
     public boolean vend(IProduit produit) {
-        return false;//produit instanceof Feve;
+        return produit instanceof Feve; 
     }
+
 
     @Override
     public Echeancier contrePropositionDuVendeur(ExemplaireContratCadre contrat) {
         IProduit produit = contrat.getProduit();
+
 
         if (!(produit instanceof Feve)) {
             journal.ajouter("Erreur : Produit non reconnu pour la contre-proposition.");
@@ -75,7 +76,7 @@ public class Producteur1ContratCadre extends Producteur1Bourse implements IVende
         }
 
         journal.ajouter("Échéancier proposé accepté : " + echeancierPropose);
-        return echeancierPropose;
+        return echeancierPropose; 
     }
 
     @Override
@@ -105,10 +106,23 @@ public class Producteur1ContratCadre extends Producteur1Bourse implements IVende
 
     @Override
     public double livrer(IProduit produit, double quantite, ExemplaireContratCadre contrat) {
-        double quantiteLivree = Math.min(quantite, stock.getStock((Feve) produit));
-        stock.retirer(produit, quantiteLivree,cryptogramme); // faire if c'est possible -> vendre sinon vendre qu'une certaine partie
-        journal.ajouter("Livraison de " + quantiteLivree + " de " + produit + " pour le contrat " + contrat);
-        return quantiteLivree;
+        double quantiteEnStock = stock.getStock((Feve) produit);
+        double quantiteLivree = Math.min(quantite, quantiteEnStock);
+
+        if (quantiteLivree <= 0) {
+            journal.ajouter("Échec de livraison : stock vide pour " + produit);
+            return 0.0;
+        }
+
+        boolean retraitOk = stock.retirer(produit, quantiteLivree, cryptogramme); 
+
+        if (retraitOk) {
+            journal.ajouter("Livraison de " + quantiteLivree + " de " + produit + " pour le contrat " + contrat);
+            return quantiteLivree;
+        } else {
+            journal.ajouter("Erreur de retrait lors de la livraison de " + produit);
+            return 0.0;
+        }
     }
 
     @Override
@@ -117,4 +131,9 @@ public class Producteur1ContratCadre extends Producteur1Bourse implements IVende
         res.add(journal);
         return res;
     }
-}
+
+    @Override
+    public void next() {
+        super.next();
+        }
+} 

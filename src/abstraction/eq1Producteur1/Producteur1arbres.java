@@ -5,13 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 
 import abstraction.eqXRomu.filiere.Filiere;
-import abstraction.eqXRomu.filiere.IActeur;
+
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 
 // AMAL MONCER
 
-public class Producteur1arbres extends Producteur1Acteur {
+public class Producteur1arbres extends Producteur1Bourse {
 
     protected int nb_arbres_total;
     protected int temps_avant_production; // en steps
@@ -29,39 +29,36 @@ public class Producteur1arbres extends Producteur1Acteur {
     protected Feve typeFeve;
     protected Producteur1 producteur1;
     private HashMap<Integer, Integer> arbreParStep = new HashMap<>();
-    private final int dureeCycle = 40 * 24; // 40 jours en heures
-
+    private final int dureeCycle = 960; // 40 jours en heures
 
     public Producteur1arbres() {
         super();
         this.journal = new Journal(getNom() + " - Journal arbres", this);
 
-        // Initialisation des parcelles AVANT de calculer le nombre d'arbres total
+        // Initialisation des parcelles
         this.parcelleBQ = new Producteur1Parcelle(this, Feve.F_BQ, this);
         this.parcelleMQ = new Producteur1Parcelle(this, Feve.F_MQ, this);
         this.parcelleHQ_E = new Producteur1Parcelle(this, Feve.F_HQ_E, this);
 
-        // (Optionnel) Lancer la production initiale sur chaque parcelle si besoin
+        // Lancer la production initiale sur chaque parcelle si besoin
         this.parcelleBQ.production();
         this.parcelleMQ.production();
         this.parcelleHQ_E.production();
 
         this.nb_arbres_total = calculerNbArbresTotal();
-
-  
     }
 
     public Producteur1Parcelle getParcelle(Feve typeFeve) {
-    if (typeFeve == Feve.F_BQ) {
-        return parcelleBQ;
-    } else if (typeFeve == Feve.F_MQ) {
-        return parcelleMQ;
-    } else if (typeFeve == Feve.F_HQ_E) {
-        return parcelleHQ_E;
-    } else {
-        return null;
+        if (typeFeve == Feve.F_BQ) {
+            return parcelleBQ;
+        } else if (typeFeve == Feve.F_MQ) {
+            return parcelleMQ;
+        } else if (typeFeve == Feve.F_HQ_E) {
+            return parcelleHQ_E;
+        } else {
+            return null;
+        }
     }
-}
 
     public List<Integer> getNombreArbresParParcelle() {
         List<Integer> nombreArbres = new ArrayList<>();
@@ -84,38 +81,33 @@ public class Producteur1arbres extends Producteur1Acteur {
         return total;
     }
 
-   
+    public void replanterArbres(int nbArbres) {
+        parcelleBQ.replanter_arbres(nbArbres);
+    }
 
-public void replanterArbres(int nbArbres) { 
-    // on ne choisit de replanter que des fèves de basse qualité -> car nos feves sont majoritairement de basse qualité
-    // on fait cela dans un 1er temps 
-    parcelleBQ.replanter_arbres(nbArbres);
-}
-    
-
-    public void miseAJourArbres() { 
+    public void miseAJourArbres() {
         int totalArbres = calculerNbArbresTotal();
-        int stepActuel = Filiere.LA_FILIERE.getEtape() % dureeCycle;
+        int stepActuel = Filiere.LA_FILIERE.getEtape();
+        int stepMod = stepActuel % dureeCycle;
 
-        // Mise à jour du nombre d’arbres plantés à cette étape
-        int nbArbresStep = (int)((1.0 / dureeCycle) * totalArbres);  
-        arbreParStep.put(stepActuel, nbArbresStep);
+        int nbArbresStep = (int) ((1.0 / dureeCycle) * totalArbres);
+        arbreParStep.put(stepMod, nbArbresStep);
 
-        // Supposons que les arbres plantés il y a duree_de_vie steps meurent aujourd'hui
-        int stepMort = (stepActuel + 1) % dureeCycle;
+        int stepMort = (stepMod + 1) % dureeCycle;
         int arbresMorts = arbreParStep.getOrDefault(stepMort, 0);
         int arbresVivants = totalArbres - arbresMorts;
 
         double solde = getSolde();
+        double prixUnitaire = getPrixAchatParArbre();
 
-        if (arbresMorts > 0 && solde >= arbresMorts * getPrixAchatParArbre()) {
-            Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "arbres", arbresMorts * getPrixAchatParArbre());
-            replanterArbres(arbresMorts); // tous les arbres morts sont remplaces par des abres BQ
+        if (arbresMorts > 0 && solde >= arbresMorts * prixUnitaire) {
+            Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "arbres", arbresMorts * prixUnitaire);
+            replanterArbres(arbresMorts);
         } else {
-            int nbArbresReplantables = (int)(solde / getPrixAchatParArbre());
-            if (nbArbresReplantables > 0) {
-                Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "on replante un arbre", nbArbresReplantables * getPrixAchatParArbre());
-                replanterArbres(nbArbresReplantables);
+            int nbReplantables = (int) (solde / prixUnitaire);
+            if (nbReplantables > 0) {
+                Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "replantation partielle", nbReplantables * prixUnitaire);
+                replanterArbres(nbReplantables);
             } else {
                 this.journal.ajouter("Replantation impossible : solde insuffisant.");
             }
@@ -138,7 +130,12 @@ public void replanterArbres(int nbArbres) {
     }
 
     private double getPrixAchatParArbre() {
-        return parcelleBQ.prix_replantation(); 
-        
+        return parcelleBQ.prix_replantation();
     }
-}
+
+    public void ajouterAuStock(Feve feve, double quantite) {
+        this.stock.ajouter(feve,quantite,cryptogramme);
+    }
+
+
+} 

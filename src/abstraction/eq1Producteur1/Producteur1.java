@@ -10,19 +10,13 @@ import java.util.List;
 
 // ADRIEN BUCHER
 
-public class Producteur1 extends Producteur1ContratCadre {
+public class Producteur1 extends Producteur1Couts {
 
-
-    private Producteur1ContratCadre contratCadre;
-    private Producteur1Bourse venteBourse;
     protected Feve typeFeve; // Type de fève géré par ce producteur
    // protected Stock stock; // Instance de Stock pour gérer les stocks
 
     public Producteur1() {
         super();
-        this.contratCadre = new Producteur1ContratCadre();
-        this.venteBourse = new Producteur1Bourse();
-        
     }
 
 

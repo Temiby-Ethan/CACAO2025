@@ -3,7 +3,6 @@ package abstraction.eq1Producteur1;
 import java.util.HashMap;
 import java.util.Map;
 
-import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
@@ -13,7 +12,7 @@ public class Stock {
 
     private Map<Feve, Double> stocks; // Stock de fèves
     private Journal journalStock;     // Journal des opérations de stock
-    private Producteur1ContratCadre producteur1; // Référence au producteur
+    private Producteur1arbres producteur1; // Référence au producteur
     private int cryptogramme;
 
     private Producteur1Parcelle parcelleBQ;
@@ -24,7 +23,7 @@ public class Stock {
     private static final double PRIX_STOCKAGE_PAR_STEP = 7.5;
 
     public Stock(IActeur acteur, int cryptogramme) {
-        this.producteur1 = (Producteur1ContratCadre) acteur;
+        this.producteur1 = (Producteur1arbres) acteur;
         this.cryptogramme = cryptogramme;
 
         // Récupérer les parcelles depuis le producteur (qui hérite de Producteur1arbres)
@@ -97,6 +96,19 @@ public class Stock {
 
     public double getStockTotal() {
         return stocks.values().stream().mapToDouble(Double::doubleValue).sum();
+    }
+
+    public void nettoyageStock() {
+        int step = abstraction.eqXRomu.filiere.Filiere.LA_FILIERE.getEtape();
+        for (Feve feve : stocks.keySet()) {
+            double stockActuel = stocks.getOrDefault(feve, 0.0);
+            // Exemple : on considère qu'une partie du stock est perdue chaque DUREE_STOCKAGE_MAX steps
+            if (step % DUREE_STOCKAGE_MAX == 0 && stockActuel > 0 && step >0 ) {
+                double perte = stockActuel * 0.10; // 10% de perte arbitraire
+                stocks.put(feve, stockActuel - perte);
+                journalStock.ajouter("Nettoyage stock : perte de " + perte + "T de " + feve + " (stockage trop long, step " + step + ")");
+            }
+        }
     }
 
 }

@@ -4,14 +4,13 @@ package abstraction.eq1Producteur1;
 
 import java.util.List;
 import abstraction.eqXRomu.filiere.Filiere;
-import abstraction.eqXRomu.filiere.IActeur;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.produits.Feve;
 
 public class Producteur1Couts extends Producteur1sechage {
 
     private Journal journalCouts;
-    private Feve feve;
+
     
     protected int employesBQ = 8; 
     protected int employesMQ = 6;
@@ -85,8 +84,8 @@ public class Producteur1Couts extends Producteur1sechage {
         super.next();
         calculerCoutEmployes();
         calculerCoutStockage();
-        
+        stock.nettoyageStock(); 
     }
 }
 
-// nous n'avons pas reussi à faire la transistion vers une production équitable sans travail infantile 
+// nous n'avons pas reussi à faire la transistion vers une production équitable sans travail infantile

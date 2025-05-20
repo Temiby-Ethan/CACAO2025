@@ -28,7 +28,7 @@ public class Producteur1Acteur implements IActeur {
     private Variable stockFMQ;
     private Variable stockFBQ;
     private Variable stockFHQ_E;
-    private Producteur1arbres arbres;
+
 
     // Setter pour le cryptogramme, appelé après création
     @Override
@@ -56,7 +56,6 @@ public class Producteur1Acteur implements IActeur {
 
         int etape = Filiere.LA_FILIERE.getEtape();
         journal.ajouter("Étape " + etape);
-
         // Mise à jour des indicateurs avec les valeurs actuelles du stock
         stockTotal.setValeur(this, stock.getStockTotal());
         stockFMQ.setValeur(this, getQuantiteEnStock(Feve.F_MQ,cryptogramme));
