@@ -2,6 +2,7 @@ package abstraction.eq6Transformateur3;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 
 import abstraction.eqXRomu.contratsCadres.Echeancier;
 import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
@@ -209,14 +210,65 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
     @Override //@author Henri Roth
     public double propositionPrix(ExemplaireContratCadre contrat) {
         // on retourne notre proposition de prix pour chaque 
-        IProduit choco = contrat.getProduit();
-        return StratPrix.PrixChoco(prixChoco, choco, super.coutTotalProd, super.productionMax);
+        IProduit Choco = contrat.getProduit();
+        List<Double> prix = prixChoco.get(Choco);
+        Integer longueur = prix.size();
+        Integer step_actuel = Filiere.LA_FILIERE.getEtape();
+        double meilleurs_prix_histo = 0;
+        // On évite les erreurs dans les premiers step, en prenant en compte que les premières ventes
+        // et ensuite on prend en compte les 5 dernières ventes quand l'étape actuelle dépasse 5
+        if(longueur != 0){
+            if(longueur > 5){
+                for(int i = 0; i < 5; i++){
+                    
+                    meilleurs_prix_histo += prix.get(longueur - i - 1);
+                }
+                meilleurs_prix_histo = meilleurs_prix_histo/5;
+            }
+            else{
+                for(int i = 0; i < longueur; i++){
+                    meilleurs_prix_histo += prix.get(i);
+                }
+                meilleurs_prix_histo = meilleurs_prix_histo/step_actuel;
+            }
+        }
+        if(meilleurs_prix_histo == 0){
+            Double prixinit = 0.0;
+            if(Choco.equals(fraud)){
+                prixinit = 9000.0;
+            } else if(Choco.equals(bollo)){
+                prixinit = 9500.0;
+            } else if(Choco.equals(arna)){
+                prixinit = 10000.0;
+            }else if(Choco.equals(hypo)){
+                prixinit = 11000.0;
+            }
+            return prixinit;
+        }
+        return meilleurs_prix_histo;
     }
 
     @Override //@author Henri Roth
     public double contrePropositionPrixVendeur(ExemplaireContratCadre contrat) {
         //à chaque fois on propose 1.2 fois le prix proposé par l'acheteur
-        return contrat.getPrix()*1.2;//;
+        Double prixcontrat = contrat.getPrix();
+        IProduit Choco = contrat.getProduit();
+        if(prixcontrat > 8000.0){
+            return prixcontrat;
+        }
+        else{
+            Double propal = 0.0;
+            if(Choco.equals(fraud)){
+                propal = 9000.0;
+            } else if(Choco.equals(bollo)){
+                propal = 9500.0;
+            } else if(Choco.equals(arna)){
+                propal = 10000.0;
+            }else if(Choco.equals(hypo)){
+                propal = 11000.0;
+            }
+            return propal;
+        }
     }
 
     @Override //@author Henri Roth
@@ -229,6 +281,9 @@ public class Transformateur3ContratCadreVendeur extends Transformateur3Fabriquan
         double c_v = capacite_vente_max.get(produit);
         c_v -= QuantiteAuStep;
         capacite_vente_max.replace(produit, c_v);
+        List<Double> listprix =  super.prixChoco.get(produit);
+        listprix.add(contrat.getPrix());
+        prixChoco.replace(produit, listprix);
     }
 
     @Override //@author Henri Roth

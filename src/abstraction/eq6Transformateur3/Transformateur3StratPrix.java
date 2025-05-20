@@ -4,13 +4,23 @@ import java.util.HashMap;
 import java.util.List;
 
 import abstraction.eqXRomu.filiere.Filiere;
+import abstraction.eqXRomu.produits.Chocolat;
+import abstraction.eqXRomu.produits.ChocolatDeMarque;
 import abstraction.eqXRomu.produits.Feve;
 import abstraction.eqXRomu.produits.IProduit;
 
 // @author Henri Roth
 public class Transformateur3StratPrix {
     
+    protected ChocolatDeMarque fraud;
+    protected ChocolatDeMarque hypo;
+    protected ChocolatDeMarque arna;
+    protected ChocolatDeMarque bollo;
     public Transformateur3StratPrix(){
+        this.fraud = new ChocolatDeMarque(Chocolat.C_BQ, "Fraudolat", 30);
+        this.hypo = new ChocolatDeMarque(Chocolat.C_HQ_E, "Hypocritolat", 100);
+        this.arna =  new ChocolatDeMarque(Chocolat.C_MQ, "Arnaquolat", 50);
+        this.bollo = new ChocolatDeMarque(Chocolat.C_BQ_E, "Bollorolat", 30);
     }
 
     /**
@@ -45,6 +55,19 @@ public class Transformateur3StratPrix {
                 meilleurs_prix_histo = meilleurs_prix_histo/step_actuel;
             }
         }
+        if(meilleurs_prix_histo == 0){
+            if(feve.equals(Feve.F_BQ)){
+                return 3000;
+            } else if(feve.equals(Feve.F_BQ_E)){
+                return 3500;
+            } else if(feve.equals(Feve.F_MQ)){
+                return 3500;
+            }else if(feve.equals(Feve.F_MQ_E)){
+                return 4000;
+            } else if(feve.equals(Feve.F_HQ_E)){
+                return 4500;
+            }
+        }
         return meilleurs_prix_histo;
     }
     /**
@@ -56,7 +79,7 @@ public class Transformateur3StratPrix {
      * @param CapaProd
      * @return Retourne une estimation du prix à la tonne de choco
      */
-    public double PrixChoco(HashMap<IProduit, List<Double>> prixChoco, IProduit Choco, Double PrixProd, Double CapaProd){
+    public double PrixChoco(HashMap<IProduit, List<Double>> prixChoco, IProduit Choco, Double CapaProd){
         List<Double> prix = prixChoco.get(Choco);
         Integer longueur = prix.size();
         Integer step_actuel = Filiere.LA_FILIERE.getEtape();
@@ -78,17 +101,21 @@ public class Transformateur3StratPrix {
                 meilleurs_prix_histo = meilleurs_prix_histo/step_actuel;
             }
         }
-
         if(meilleurs_prix_histo == 0){
-            // On calcule le prix de fabrication pour chaque chocolat
-            Double coutprod = PrixProd / CapaProd;
-            Double Marge = 0.20;
-            return coutprod * (1+Marge);
+            Double prixinit = 0.0;
+            if(Choco.equals(fraud)){
+                prixinit = 10000.0;
+            } else if(Choco.equals(bollo)){
+                prixinit = 10500.0;
+            } else if(Choco.equals(arna)){
+                prixinit = 11000.0;
+            }else if(Choco.equals(hypo)){
+                prixinit = 12000.0;
+            }
+            return prixinit;
         }
-        //Ici, comme nous n'avons pas de ventes de bourses,
-        //on retourne uniquement le prix avec l'historique
         return meilleurs_prix_histo;
-    }
 
     //public double contrePropal(){}
+}
 }
