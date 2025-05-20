@@ -97,20 +97,21 @@ public class Producteur1Parcelle  {
     }
 
     public double getnombre_feves_total(){
-        Integer nombre_arbres = getNombre_arbres();
 
         switch(typeFeve){
             case F_BQ:
-            return nombre_arbres * this.production_par_arbre * this.nb_feves_par_cabosse;
+            return nombre_hectares * this.production_par_arbre * this.nb_feves_par_cabosse * this.poids_feve_par_cabosse_apres_sechage* 1e-6;
             case F_MQ:
-            return nombre_arbres * this.production_par_arbre * this.nb_feves_par_cabosse;
+            return nombre_hectares * this.production_par_arbre * this.nb_feves_par_cabosse * this.poids_feve_par_cabosse_apres_sechage* 1e-6;
             case F_HQ_E:
-            return nombre_arbres * this.production_par_arbre * this.nb_feves_par_cabosse;
+            return nombre_hectares * this.production_par_arbre * this.nb_feves_par_cabosse * this.poids_feve_par_cabosse_apres_sechage* 1e-6;
             default:
                 throw new IllegalArgumentException("Nous ne possédons pas de " + typeFeve);
 
     }
 }
+
+ 
 
     public Integer getNombre_arbres() {
         if (typeFeve == null) {
@@ -235,9 +236,9 @@ public class Producteur1Parcelle  {
         }
         return 0.0;
 
-    }
+}
 
-  
+
 
 
 

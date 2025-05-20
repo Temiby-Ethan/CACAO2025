@@ -95,7 +95,7 @@ public class Stock {
     }
 
     public double getStockTotal() {
-        return stocks.values().stream().mapToDouble(Double::doubleValue).sum();
+        return getStock(Feve.F_BQ) + getStock(Feve.F_MQ) + getStock(Feve.F_HQ_E);
     }
 
     public void nettoyageStock() {
@@ -108,7 +108,7 @@ public class Stock {
                 stocks.put(feve, stockActuel - perte);
                 journalStock.ajouter("Nettoyage stock : perte de " + perte + "T de " + feve + " (stockage trop long, step " + step + ")");
             }
-        }
-    }
+}
+}
 
 }
