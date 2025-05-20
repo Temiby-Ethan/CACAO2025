@@ -17,6 +17,7 @@ public class Distributeur3Distributeur extends Distributeur3Acteur implements ID
     protected VariablePrivee stockTotal;
     private VariablePrivee stockBQ;
     private VariablePrivee stockBQ_E;
+    private VariablePrivee stockMQ;
     private HashMap<Integer,HashMap<ChocolatDeMarque,Double>> ventes;
 
     // Implémentée par Héloïse
@@ -28,6 +29,7 @@ public class Distributeur3Distributeur extends Distributeur3Acteur implements ID
         this.stockTotal = new VariablePrivee("équipe 9 stock total",this);
         this.stockBQ = new VariablePrivee("équipe 9 stock BQ",this);
         this.stockBQ_E = new VariablePrivee("équipe 9 stock BQ_E",this);
+        this.stockMQ = new VariablePrivee("équipe 9 stock MQ",this);
         this.ventes = new HashMap<>();
         //System.out.println("crypto constructeur : "+this.cryptogramme);
     }
@@ -37,10 +39,10 @@ public class Distributeur3Distributeur extends Distributeur3Acteur implements ID
     public void initialiser() {
         super.initialiser();
         List<ChocolatDeMarque> produits = Filiere.LA_FILIERE.getChocolatsProduits();
-        double quantiteinit = 300.0;
+        double quantiteinit = 1000.0;
 
         for (ChocolatDeMarque cm : produits) {
-            if (cm.getGamme().equals(Gamme.BQ)) {
+            if (cm.getGamme().equals(Gamme.BQ) ) {
                 this.stockChocoMarque.put(cm, quantiteinit);
                 this.journalActeur.ajouter("stock de base " + quantiteinit + " de " + cm.getNom());
                 stockTotal.ajouter(this,quantiteinit,this.cryptogramme);
@@ -61,6 +63,16 @@ public class Distributeur3Distributeur extends Distributeur3Acteur implements ID
 
                     //this.prix.put(cm,4500.0F);
                 }
+            }else if(cm.getGamme().equals(Gamme.MQ) && !(cm.getChocolat().isEquitable())){
+                this.stockChocoMarque.put(cm, quantiteinit);
+                this.journalActeur.ajouter("stock de base " + quantiteinit + " de " + cm.getNom());
+                stockMQ.ajouter(this,quantiteinit,this.cryptogramme);
+                if(Filiere.LA_FILIERE.getEtape()!=0 && Filiere.LA_FILIERE.prixMoyen(cm,Filiere.LA_FILIERE.getEtape())!=0){
+                    this.prix.put(cm,(float) (Filiere.LA_FILIERE.prixMoyen(cm,Filiere.LA_FILIERE.getEtape())*0.97));
+                }else {
+                    this.prix.put(cm, 3000.0F);
+                }
+                stockTotal.ajouter(this,quantiteinit,this.cryptogramme);
             }
         }
     }
@@ -82,12 +94,22 @@ public class Distributeur3Distributeur extends Distributeur3Acteur implements ID
     public double quantiteEnVente(ChocolatDeMarque choco, int crypto) {
 
         if (this.cryptogramme==crypto && this.stockChocoMarque.containsKey(choco)) {
-            if(this.stockChocoMarque.get(choco)>=200) {
-                this.journalActeur.ajouter("Mise en rayon de 200 tonnes de "+choco.getNom());
+
+            for(int i = -24;i<0;i++){
+                this.journalActeur.ajouter("Demande Etape"+i+" : "+Filiere.LA_FILIERE.getVentes(choco,i));
+            }
+
+            double demande = Filiere.LA_FILIERE.getVentes(choco,Filiere.LA_FILIERE.getEtape()-24);
+            this.journalActeur.ajouter("Demande de "+choco.toString()+ " : "+demande);
+
+
+            if(this.stockChocoMarque.get(choco)>=demande) {
+                this.journalActeur.ajouter("Mise en rayon de "+demande+ "tonnes de "+choco.getNom());
                 //System.out.println("demande quantite vente "+choco.getNom()+" tonnes :"+100);
-                return 200;
+                return demande;
             }else {
                 //System.out.println("demande quantite vente "+choco.getNom()+" tonnes :"+this.stockChocoMarque.get(choco));
+
                 this.journalActeur.ajouter("Mise en rayon de "+this.stockChocoMarque.get(choco)+" (max) de "+choco.getNom());
                 return this.stockChocoMarque.get(choco);
             }
@@ -157,6 +179,7 @@ public class Distributeur3Distributeur extends Distributeur3Acteur implements ID
         double total = 0.0;
         double BQ = 0.0;
         double BQ_E = 0.0;
+        double MQ = 0.0;
         for(ChocolatDeMarque choco : stockChocoMarque.keySet()){
             total+=stockChocoMarque.get(choco);
             if(choco.getGamme().equals(Gamme.BQ)) {
@@ -165,6 +188,8 @@ public class Distributeur3Distributeur extends Distributeur3Acteur implements ID
                 }else{
                     BQ += stockChocoMarque.get(choco);
                 }
+            }else if (choco.getGamme().equals(Gamme.MQ)){
+                MQ += stockChocoMarque.get(choco);
             }
 
 
@@ -172,6 +197,7 @@ public class Distributeur3Distributeur extends Distributeur3Acteur implements ID
         this.stockTotal.setValeur(this,total,this.cryptogramme);
         this.stockBQ.setValeur(this,BQ,this.cryptogramme);
         this.stockBQ_E.setValeur(this,BQ_E,this.cryptogramme);
+        this.stockMQ.setValeur(this,MQ,this.cryptogramme);
     }
 
     // Modifiée par Jeanne
@@ -179,6 +205,7 @@ public class Distributeur3Distributeur extends Distributeur3Acteur implements ID
         List<Variable> res = super.getIndicateurs();
         res.add(this.stockBQ);
         res.add(this.stockBQ_E);
+        res.add(this.stockMQ);
         res.add(this.stockTotal);
         return res;
     }
