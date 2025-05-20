@@ -31,6 +31,8 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 	protected Journal journalV;
 	protected List<Double> prix;
 	protected List<Double> capaciteDeVente;
+	protected double coutStockage;
+	protected double salairetotal;
 	protected IAcheteurAO identity;
 	protected int step = 0;
 	protected String name = "HexaFridge";
@@ -54,6 +56,8 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 	public void initialiser() // par Alexiho
 	{
 		this.chocolats = Filiere.LA_FILIERE.getChocolatsProduits();
+		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*2;
+		this.salairetotal = 2e6;
 
     // Initialize stocksChocolats map and other lists
     for (int i = 0; i < this.chocolats.size(); i++) {
@@ -66,7 +70,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
         this.prix.add(10.0); // Default price
         this.capaciteDeVente.add(900.0); // Default sales capacity
         this.successedSell.add(0); // Default successful sales count
-        this.priceProduct.add(1000.0); // Default product price
+        this.priceProduct.add(10000.0); // Default product price
         this.requiredQuantities.add(1000.0); // Default required quantity
     }
 
@@ -95,12 +99,14 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 	{
 		//List<Double> requiredQuantities = new ArrayList<>();
 		//Distributeur1Stock acteurStock = new Distributeur1Stock();
+		int totalStocks = 0;
 		int step = Filiere.LA_FILIERE.getEtape(); // Récupération du numéro de l'étape
 		journal.ajouter(" ==============  Etape : " + step +  " ====================");
 		journalV.ajouter(" ==============  Etape : " + step +  " ====================");
 		journalCC.ajouter(" ==============  Etape : " + step +  " ====================");
 		journalAO.ajouter(" ==============  Etape : " + step +  " ====================");
 		for (int i=0; i< this.chocolats.size(); i++){
+			totalStocks += this.stocksChocolats.get(chocolats.get(i)).getValeur();
 			if ("Fraudolat".equals(this.stocksChocolats.get(chocolats.get(i)).getNom())){
 				requiredQuantities.set(i,500.0);
 			} else{
@@ -156,7 +162,13 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 
 		for (int i=0; i<this.chocolats.size(); i++) {
 			this.capaciteDeVente.set(i, stocksChocolats.get(chocolats.get(i)).getValeur()/1.1);
+			Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Mise en rayon", (this.capaciteDeVente.get(i)*Filiere.LA_FILIERE.getParametre("cout mise en rayon").getValeur()));
+
 		}
+
+		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", (totalStocks*this.coutStockage));
+		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Salaires", this.salairetotal);
+		
 
 	}
 

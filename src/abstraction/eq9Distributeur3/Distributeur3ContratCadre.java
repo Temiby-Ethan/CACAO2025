@@ -86,13 +86,16 @@ public class Distributeur3ContratCadre extends Distributeur3Charges implements I
         double fourchetteLimiteRenta;
         double fourchetteLimiteNegociation;
 
+        this.valeurMoyennes.ajouter("etape "+Filiere.LA_FILIERE.getEtape()+"\n"+contrat.getProduit().toString()+ "  "+prixMoyen);
+        double total = contrat.getQuantiteTotale();
+
         if(Filiere.LA_FILIERE.getEtape()==0) {
             fourchetteLimiteNegociation  = prixMoyen;
             fourchetteLimiteRenta = prixMoyen;
             fourchetteLimiteAchat = fourchetteLimiteRenta*0.95;
         }else {
-            fourchetteLimiteNegociation = prixMoyen - (chargesTotal() / getVentesByStep(Filiere.LA_FILIERE.getEtape() - 1)) * 0.3;
-            fourchetteLimiteRenta = prixMoyen - (chargesTotal() / getVentesByStep(Filiere.LA_FILIERE.getEtape() - 1));
+            fourchetteLimiteNegociation = prixMoyen*total - (chargesTotal() / getVentesByStep(Filiere.LA_FILIERE.getEtape() - 1)) * 0;
+            fourchetteLimiteRenta = prixMoyen*total - (chargesTotal() / getVentesByStep(Filiere.LA_FILIERE.getEtape() - 1));
             fourchetteLimiteAchat = fourchetteLimiteRenta * 0.95;
         }
         journalContrats.ajouter("prix Moyen : "+prixMoyen);
@@ -102,8 +105,8 @@ public class Distributeur3ContratCadre extends Distributeur3Charges implements I
 
 
 
-        if(contrat.getPrix()<fourchetteLimiteNegociation){
-            if(contrat.getPrix()<fourchetteLimiteAchat){
+        if(contrat.getPrix()<=fourchetteLimiteNegociation){
+            if(contrat.getPrix()<=fourchetteLimiteAchat){
                 journalContrats.ajouter("accepte le contrat");
                 return contrat.getPrix();
             }else{

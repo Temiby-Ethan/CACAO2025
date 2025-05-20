@@ -82,10 +82,10 @@ public class Distributeur3Distributeur extends Distributeur3Acteur implements ID
     public double quantiteEnVente(ChocolatDeMarque choco, int crypto) {
 
         if (this.cryptogramme==crypto && this.stockChocoMarque.containsKey(choco)) {
-            if(this.stockChocoMarque.get(choco)>=100) {
-                this.journalActeur.ajouter("Mise en rayon de 100 tonnes de "+choco.getNom());
+            if(this.stockChocoMarque.get(choco)>=200) {
+                this.journalActeur.ajouter("Mise en rayon de 200 tonnes de "+choco.getNom());
                 //System.out.println("demande quantite vente "+choco.getNom()+" tonnes :"+100);
-                return 100;
+                return 200;
             }else {
                 //System.out.println("demande quantite vente "+choco.getNom()+" tonnes :"+this.stockChocoMarque.get(choco));
                 this.journalActeur.ajouter("Mise en rayon de "+this.stockChocoMarque.get(choco)+" (max) de "+choco.getNom());

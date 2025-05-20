@@ -22,7 +22,7 @@ public class Transformateur1Usine extends Transformateur1Acteur {
 	protected double salaireOuvrier = 860; // À modifier selon les règles transformateurs
 	protected double coutLicenciement = 10000;
 	protected double prixAchatMachine = 10000; // À modifier selon les règles transformateurs
-    protected double coutAdditionnelFixe = 2e8; // cout additionnel fixe de l'usine selon les règles transformateurs
+    protected double coutAdditionnelFixe = 0;//2e8; // cout additionnel fixe de l'usine selon les règles transformateurs
 	protected double coutAddditonnelUnitaire= 0.30*1e4; // 0.3€ pour 100g et on le considère par tonne
 
 
