@@ -44,7 +44,7 @@ public class Distributeur3Charges extends Distributeur3Distributeur {
 
 
         //Filiere.LA_FILIERE.getBanque().payerCout(this,this.cryptogramme,"Salaires",salaireEmployes*nbEmployes);
-        this.journalCharges.ajouter("Paiement des salaire : "+salaireEmployes*nbEmployes);
+        this.journalCharges.ajouter("Paiement des salaires : "+salaireEmployes*nbEmployes);
         salaires=salaireEmployes*nbEmployes;
     }
 
