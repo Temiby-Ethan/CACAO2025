@@ -22,9 +22,9 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 	//Des variables qui ne seront au final que des constantes lors de la simulation
 
 	protected double coutStockage; // cout de stockage par tonne et par step
-	protected HashMap<Chocolat, Double> coutProdChoco; // cout de production unitaire du chocolat produit durant cette step, censé contenir salaires, ingrédients secondaires, et autres couts fixes
-	protected double coutProd;
+	protected double coutProd; // cout de production unitaire du chocolat produit durant cette step, censé contenir salaires, ingrédients secondaires, et autres couts fixes
 	protected double STOCK_MAX_TOTAL_FEVES = 1000000;
+	protected double PRIX_MAX = 1000000;
 
 	//Listes regroupant les contrats cadres actifs
 	protected List<ExemplaireContratCadre> mesContratEnTantQuAcheteur;
@@ -39,12 +39,10 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 
 		this.chocosProduits = new LinkedList<ChocolatDeMarque>();
 
-		this.coutProdChoco = new HashMap<Chocolat, Double>();
 		this.prixTFeveStockee = new HashMap<Feve, Double>();
 		this.prixTChocoBase = new HashMap<Chocolat, Double>();
 
 		this.marges = new HashMap<Chocolat, Double>();
-
 	}
 
 
@@ -55,50 +53,36 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 	public void initialiser() {
 		super.initialiser();
 
+		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*4;
+
+		this.coutProd = 0; //il s'agit du cout de la production d'une tonne de chocolat, valeur arbitraire censée contenir salaires, ingrédients secondaires, et autres couts fixes
+
+
 		//Initialisation des prix de nos stocks de fève
 		this.prixTFeveStockee.put(Feve.F_MQ, 2000.);
 		this.prixTFeveStockee.put(Feve.F_BQ_E, 2000.);
 		this.prixTFeveStockee.put(Feve.F_MQ_E, 2000.);
 		this.prixTFeveStockee.put(Feve.F_HQ_BE, 2000.);
 
-		this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur()*4;
-
-		for (Chocolat c : lesChocolats) {
-			this.coutProdChoco.put(c, 0.);
-		}
-
-		this.coutProd = 4000; //A MODIFIER il s'agit du cout de la production d'une tonne de chocolat, valeur arbitraire censée contenir salaires, ingrédients secondaires, et autres couts fixes
-
 		//Initialisation des prix de base des chocolats que l'on veut produire
-		this.prixTChocoBase.put(Chocolat.C_MQ, 2000.);
-		this.prixTChocoBase.put(Chocolat.C_BQ_E, 2000.);
-		this.prixTChocoBase.put(Chocolat.C_HQ_BE, 2000.);
-		this.prixTChocoBase.put(Chocolat.C_MQ_E, 2000.);
+		this.prixTChocoBase.put(Chocolat.C_MQ, 20000.);
+		this.prix_Limdt_MQ.setValeur(this, 20000.);
+
+		this.prixTChocoBase.put(Chocolat.C_BQ_E, 20000.);
+		this.prix_Limdt_BQ_E.setValeur(this, 20000.);
+
+		this.prixTChocoBase.put(Chocolat.C_MQ_E, 20000.);
+		this.prix_Limdt_MQ_E.setValeur(this, 20000.);
+
+		this.prixTChocoBase.put(Chocolat.C_HQ_BE, 20000.);
+		this.prix_Limdt_HQ_BE.setValeur(this, 20000.);
 		
 
 		//Initialisation des marges que l'on va faire sur les différents produits
-		this.marges.put(Chocolat.C_MQ, 1.5);
-		this.marges.put(Chocolat.C_BQ_E, 1.16);
-		this.marges.put(Chocolat.C_MQ_E, 1.16);
-		this.marges.put(Chocolat.C_HQ_BE, 1.3);
-
-
-		//Initialisation des pourcentage de conversion fèves vers chocolat
-		this.pourcentageTransfo.put(Feve.F_HQ_BE, new HashMap<Chocolat, Double>());
-		double conversion = 1.0 + (100.0 - Filiere.LA_FILIERE.getParametre("pourcentage min cacao HQ").getValeur())/100.0;
-		this.pourcentageTransfo.get(Feve.F_HQ_BE).put(Chocolat.C_HQ_BE, conversion);// la masse de chocolat obtenue est plus importante que la masse de feve vue l'ajout d'autres ingredients
-
-		this.pourcentageTransfo.put(Feve.F_MQ_E, new HashMap<Chocolat, Double>());
-		conversion = 1.0 + (100.0 - Filiere.LA_FILIERE.getParametre("pourcentage min cacao MQ").getValeur())/100.0;
-		this.pourcentageTransfo.get(Feve.F_MQ_E).put(Chocolat.C_MQ_E, conversion);
-
-		this.pourcentageTransfo.put(Feve.F_MQ, new HashMap<Chocolat, Double>());
-		conversion = 1.0 + (100.0 - Filiere.LA_FILIERE.getParametre("pourcentage min cacao BQ").getValeur())/100.0;
-		this.pourcentageTransfo.get(Feve.F_MQ).put(Chocolat.C_MQ, conversion);
-
-		this.pourcentageTransfo.put(Feve.F_BQ_E, new HashMap<Chocolat, Double>());
-		this.pourcentageTransfo.get(Feve.F_BQ_E).put(Chocolat.C_BQ_E, conversion);
-
+		this.marges.put(Chocolat.C_MQ, 2.5);
+		this.marges.put(Chocolat.C_BQ_E, 1.5);
+		this.marges.put(Chocolat.C_MQ_E, 1.5);
+		this.marges.put(Chocolat.C_HQ_BE, 2.3);
 
 		this.journalStock.ajouter(Romu.COLOR_LLGRAY, Color.PINK, "Stock initial chocolat de marque : ");
 
@@ -140,26 +124,28 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 	 */
 	protected void transformation(){
 
+		// La quantité de fèves à transformer
+		double transfo=0.;
+		this.qttProduiteChoco.setValeur(this, 0.); //On initialise la quantité produite à 0 pour le step en cours
+
 		for (Feve f : lesFeves) {
 			for (Chocolat c : lesChocolats) {
-                // La quantité de fèves à transformer
-				double transfo;
 
 				if (this.getQuantiteEnStock(f, this.cryptogramme) > 0. && this.pourcentageTransfo.get(f).get(c) != null){
 
 					//On calcule la quantité de fèves à transformer
 					transfo = Math.min(this.getQuantiteEnStock(f, this.cryptogramme), this.prodMax.getValeur() * this.repartitionTransfo.get(c).getValeur() / this.pourcentageTransfo.get(f).get(c));
 
+					if (transfo == this.getQuantiteEnStock(f, this.cryptogramme)) {
+						this.journal.ajouter(Color.pink, Color.red, "-> Aïe... On transforme tout notre stock de fèves "+f+" car on n'en achète pas assez");
+					}
+
 					//On s'assure que l'on produit quelque chose pour faire nos opérations
 					if (transfo > 0.) {
-
-
 
 						double pourcentageMarque = 1.0;  //Modifiable
 						// La Pourcentage ainsi definie sera stockee sous forme de marquee, la quantité restante sera alors stockee comme non marquee
 
-	
-						
 						//A MODIFIER
 						int pourcentageCacao =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+c.getGamme()).getValeur());
 						ChocolatDeMarque cm= new ChocolatDeMarque(c, "LimDt", pourcentageCacao);
@@ -167,25 +153,8 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 						//calcul du choclat produit
 						double nouveauStock = transfo*this.pourcentageTransfo.get(f).get(c);
 
-						//calcul du cout de production unitaire du chocolat produit durant cette step
-						this.coutProdChoco.put(c, totalCoutsUsineStep/(4*nouveauStock));
-
-						//Détermination du prix de base des chocolats à la tonne en pondérant avec les coûts de la période précédente
-						if(prixTChocoBase.containsKey(c) && nouveauStock > 0 ){
-							
-							double ancienPrix = prixTChocoBase.get(c);
-							double nouveauPrix;
-
-							//On vérifie que nos stocks ne sont pas négatifs car sinon on pourrait se retrouver avec des prix négatifs
-							if ( this.getQuantiteEnStock(cm, this.cryptogramme) >=0.){
-								nouveauPrix = ancienPrix * ((this.getQuantiteEnStock(c, this.cryptogramme) + this.getQuantiteEnStock(cm, this.cryptogramme))/ (nouveauStock+this.getQuantiteEnStock(c, this.cryptogramme) + this.getQuantiteEnStock(cm, this.cryptogramme))) + (prixTFeveStockee.get(f) + coutProdChoco.get(c) + this.coutStockage) * (pourcentageTransfo.get(f).get(c) * transfo / (nouveauStock+ this.getQuantiteEnStock(c, this.cryptogramme) + this.getQuantiteEnStock(cm, this.cryptogramme)));
-							}
-							//Si on est en dette de stock, on va garder le même prix qu'au step précédent et on l'augmente pour évite que l'on ne s'enfonce davantage
-							else {
-								nouveauPrix = 1.15*ancienPrix;
-							}
-							prixTChocoBase.put(c, nouveauPrix);
-						}
+                        // On met à jour la qtt produite chocolat
+						this.qttProduiteChoco.ajouter(this, nouveauStock);
 
 						//Ajout des chocolats produits au stock
 						this.retirerDuStock(f, transfo, this.cryptogramme);
@@ -204,19 +173,60 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 				}
 			}
 		}
+		this.coutProd = totalCoutsUsineStep/this.qttProduiteChoco.getValeur();
+        this.journalCouts.ajouter("Le cout unitaire moyen est "+coutProd);
+		this.journalCouts.ajouter("\n");
+
+		
+		for (Feve  f : lesFeves) {
+			for (Chocolat c : lesChocolats) {
+				if (this.getQuantiteEnStock(f, this.cryptogramme) > 0. && this.pourcentageTransfo.get(f).get(c) != null) {
+					transfo = Math.min(this.getQuantiteEnStock(f, this.cryptogramme), this.prodMax.getValeur() * this.repartitionTransfo.get(c).getValeur() / this.pourcentageTransfo.get(f).get(c));
+					if (transfo > 0.) {
+					    double pourcentageMarque = 1.0;  //Modifiable
+						// La Pourcentage ainsi definie sera stockee sous forme de marquee, la quantité restante sera alors stockee comme non marquee
+
+						//A MODIFIER
+						int pourcentageCacao =  (int) (Filiere.LA_FILIERE.getParametre("pourcentage min cacao "+c.getGamme()).getValeur());
+						ChocolatDeMarque cm= new ChocolatDeMarque(c, "LimDt", pourcentageCacao);
+					
+						//calcul du choclat produit
+						double nouveauStock = transfo*this.pourcentageTransfo.get(f).get(c);
+						//Détermination du prix de base des chocolats à la tonne en pondérant avec les coûts de la période précédente
+						if(prixTChocoBase.containsKey(c) && nouveauStock > 0 ){
+							
+							double ancienPrix = prixTChocoBase.get(c);
+							double nouveauPrix;
+
+							//On vérifie que nos stocks ne sont pas négatifs car sinon on pourrait se retrouver avec des prix négatifs
+							if ( this.getQuantiteEnStock(cm, this.cryptogramme) >=0.){
+								int indMax = this.getMaxPeremption(c);
+								nouveauPrix = ancienPrix * ((this.getQuantiteEnStock(c, this.cryptogramme) + this.getQuantiteEnStock(cm, this.cryptogramme))/ (nouveauStock+this.getQuantiteEnStock(c, this.cryptogramme) + this.getQuantiteEnStock(cm, this.cryptogramme))) + (prixTFeveStockee.get(f) + coutProd + indMax*this.coutStockage) * (pourcentageTransfo.get(f).get(c) * transfo / (nouveauStock+ this.getQuantiteEnStock(c, this.cryptogramme) + this.getQuantiteEnStock(cm, this.cryptogramme)));
+							}
+							//Si on est en dette de stock, on va garder le même prix qu'au step précédent et on l'augmente pour évite que l'on ne s'enfonce davantage
+							else {
+								nouveauPrix = 1.15*ancienPrix;
+							}
+							prixTChocoBase.put(c, nouveauPrix);
+							if (c == Chocolat.C_MQ) {
+								this.prix_Limdt_MQ.setValeur(this, nouveauPrix);
+							} else if (c == Chocolat.C_BQ_E) {
+								this.prix_Limdt_BQ_E.setValeur(this, nouveauPrix);
+							} else if (c == Chocolat.C_MQ_E) {
+								this.prix_Limdt_MQ_E.setValeur(this, nouveauPrix);
+							} else if (c == Chocolat.C_HQ_BE) {
+								this.prix_Limdt_HQ_BE.setValeur(this, nouveauPrix);
+							}
+						}
+					}
+				}
+			}
+		}
 	}
-
-
-
-
-
-
-
-
-
 
 	/**
 	 * @author MURY Julien
+	 * @author YAOU Reda
 	 * Une méthode qui permet de déterminer la quantitié de fèves entrant dans le stock à la période actuelle selon les contrats négociés et achats en bourse
 	 * Les résultats sont stockés dans la HashMap qttEntrantes
 	 * @param None
@@ -224,15 +234,20 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 	 */
 	public void determinerQttEntrantFeves(){
 
+		//Réinitialisation des qttEntrantes
+		for(Feve f : this.lesFeves){
+			this.qttEntrantesFeve.put(f, 0.);
+		}
+
 		//Quantité entrante de fèves f par contrat cadre
 		for (Feve f : pourcentageTransfo.keySet()){
 			for (ExemplaireContratCadre cc : mesContratEnTantQuAcheteur){
 				if (cc.getProduit() == f){
 					if (this.qttEntrantesFeve.containsKey(f)){
-						this.qttEntrantesFeve.put(f, cc.getPrix()+qttEntrantesFeve.get(f));
+						this.qttEntrantesFeve.put(f, cc.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape()) +qttEntrantesFeve.get(f));
 					}
 					else {
-						this.qttEntrantesFeve.put(f, cc.getPrix());
+						this.qttEntrantesFeve.put(f, cc.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape()));
 					}
 				}
 			}
@@ -240,39 +255,75 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 
 
 		//Quantité entrante de fèves par achat en bourse
-		qttEntrantesFeve.put(Feve.F_BQ, 80.);
-
-
-
+		if (qttEntrantesFeve.containsKey(Feve.F_MQ)){
+			double ancienneValeur = this.qttEntrantesFeve.get(Feve.F_MQ);
+			this.qttEntrantesFeve.put(Feve.F_MQ, ancienneValeur + qttFevesAcheteesBourse.getValeur());
+		} else {
+			this.qttEntrantesFeve.put(Feve.F_MQ, qttFevesAcheteesBourse.getValeur());
+		}
 	}
 
+	/**
+	 * @author MURY Julien
+	 * Cette méthode retourne la quantité entrante de fève f à un step donné
+	 * @param step
+	 * @param f
+	 * @return quantité de fève f qui entre dans nos stocks
+	 */
+	public double determinerQttEntrantFevesAuStep(int step, Feve f){
 
+		double qttEntrante = 0.;
 
+		//Quantité entrante de fèves f par contrat cadre
+		for (ExemplaireContratCadre cc : mesContratEnTantQuAcheteur){
+			if (cc.getProduit() == f){
+				qttEntrante+= cc.getEcheancier().getQuantite(step);
+			}
+		}
+	
+		//Quantité entrante de fèves par achat en bourse (On approxime par le fait que la quantité de feve achetée en bourse est constante pour les autres step)
+		qttEntrante += qttFevesAcheteesBourse.getValeur();
 
-/**
- * @author MURY Julien
- */
+		return qttEntrante;
+	}
+
+   /**
+    * @author MURY Julien
+	* @author YAOU Reda
+    */
 	public void determinerQttSortantChoco(){
+
+		//Réinitialisation des qttSortantes
+		for (Chocolat c : lesChocolats){
+			this.qttSortantesChoco.put(c, 0.);
+		}
+
 		//Qtt sortante par contrat cadre
 		for (Chocolat c : lesChocolats){
 			for (ExemplaireContratCadre cc : mesContratEnTantQueVendeur){
 				if (cc.getProduit().equals(c) || ((ChocolatDeMarque)cc.getProduit()).getChocolat().equals(c)){
 					if (this.qttSortantesChoco.containsKey(c)){
-						this.qttSortantesChoco.put(c, cc.getPrix()+qttSortantesChoco.get(c));
+
+						this.qttSortantesChoco.put(c, cc.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape())+qttSortantesChoco.get(c));
 					}
 					else {
-						this.qttSortantesChoco.put(c, cc.getPrix());
+						this.qttSortantesChoco.put(c, cc.getEcheancier().getQuantite(Filiere.LA_FILIERE.getEtape()));
 					}
 				}
 			}
 		}
 
-		//Quantité sortante par enchère
-		
+		//Qtt sortante par vente en transaction (enchéres + AO)
+		for (Chocolat c : lesChocolats){
+			if (this.qttSortantesChoco.containsKey(c)){
+				this.qttSortantesChoco.put(c, this.qttSortantesTransactions.get(c) +this.qttSortantesChoco.get(c));
+			}
+			else {
+				this.qttSortantesChoco.put(c, this.qttSortantesTransactions.get(c));
+			}
 
-		//Quantité sortante par appel d'offre
+		}
 	}
-
 
 	/**
 	 * @author MURY Julien
@@ -292,7 +343,6 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 		
 		return qttSortant;
 	}
-
 
 
 	/**
@@ -319,11 +369,10 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 				}
 			}
 			//On calcule le prix pour les ajouts par bourse
-			if (f == Feve.F_BQ){
+			if (f == Feve.F_MQ){
 				BourseCacao bourse = (BourseCacao) Filiere.LA_FILIERE.getActeur("BourseCacao");	
-				if (qttEntrantesFeve.get(f) != 0.) prix += bourse.getCours(f).getValeur() * (80. / qttEntrantesFeve.get(f));
+				if (qttEntrantesFeve.get(f) != 0.) prix += bourse.getCours(f).getValeur() * (this.qttFevesAcheteesBourse.getValeur() / qttEntrantesFeve.get(f));
 			}
-
 
 			//Calcul du nouveau prix des fèves en stock
 			double ancienPrixPondere = 0.;
@@ -336,43 +385,10 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 				else {
 					ancienPrixPondere = 0.;
 				}
-
 				prixTFeveStockee.put(f, ancienPrixPondere + prix*(qttEntrantesFeve.get(f)/(qttEntrantesFeve.get(f)+getQuantiteEnStock(f, this.cryptogramme))));
 			}
-			
 		}
 	}
-
-
-
-		/**
-	 * @author MURY Julien
-	 * Cette méthode retourne la quantité entrante de fève f à un step donné
-	 * @param step
-	 * @param f
-	 * @return quantité de fève f qui entre dans nos stocks
-	 */
-	public double determinerQttEntrantFevesAuStep(int step, Feve f){
-
-		double qttEntrante = 0.;
-
-		//Quantité entrante de fèves f par contrat cadre
-		for (ExemplaireContratCadre cc : mesContratEnTantQuAcheteur){
-			if (cc.getProduit() == f){
-				qttEntrante+= cc.getEcheancier().getQuantite(step);
-			}
-		}
-	
-		//Quantité entrante de fèves par achat en bourse (On approxime par le fait que la quantité de feve achetée en bourse est constante pour les autres step)
-		qttEntrante += qttFevesAcheteesBourse.getValeur();
-
-		return qttEntrante;
-	}
-
-
-
-
-
 
 
 	////////////////////////////////////////////////////////
@@ -395,15 +411,10 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 		}*/
 
 
+
 		this.journalStock.ajouter("\n");
-		this.journalStock.ajouter(Color.yellow, Romu.COLOR_LBLUE, "N° Etape " + Filiere.LA_FILIERE.getEtape());
-
-		this.journalCC.ajouter(Color.yellow, Romu.COLOR_LBLUE, "N° Etape " + Filiere.LA_FILIERE.getEtape());
-
-		this.journalTransactions.ajouter(Color.yellow, Romu.COLOR_LBLUE, "N° Etape " + Filiere.LA_FILIERE.getEtape());
-
 		this.journalPeremptionLimdt.ajouter("\n");
-		this.journalPeremptionFeves.ajouter(Color.yellow, Romu.COLOR_LBLUE, "N° Etape " + Filiere.LA_FILIERE.getEtape());
+		this.journalPeremptionFeves.ajouter("\n");
 
 	
 
@@ -447,24 +458,60 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 
 
 		// Respect de la règle de péremption des choco marque après 6 mois soit 12 nexts: on retire du stock ce qui est périmé
+		//On met également à jour les prix par rapport à la nouvelle production. Si celui-ci est excessif, on le limite à PRIX_MAX
 		for (ChocolatDeMarque cm : chocolatsLimDt){
 			switch (cm.getChocolat()){
 
 				case C_MQ : 
-				    pertePeremption(peremption_C_MQ_Limdt, cm, Color.black);
+				    pertePeremption(peremption_C_MQ_Limdt, cm, Color.black, journalPeremptionLimdt);
+
+
+					if ((prixTChocoBase.get(Chocolat.C_MQ) + coutProd + this.getMaxPeremption(Chocolat.C_MQ)*this.coutStockage)*marges.get(Chocolat.C_MQ)< PRIX_MAX){
+						prix_Limdt_MQ.setValeur(this, (prixTChocoBase.get(Chocolat.C_MQ) + coutProd + this.getMaxPeremption(Chocolat.C_MQ)*this.coutStockage)*marges.get(Chocolat.C_MQ));
+					}
+					else {
+						prix_Limdt_MQ.setValeur(this, PRIX_MAX);
+					}
+
 
 					break;
 
 				case C_BQ_E : 
-				    pertePeremption(peremption_C_BQ_E_Limdt, cm, Romu.COLOR_GREEN);
+				    pertePeremption(peremption_C_BQ_E_Limdt, cm, Romu.COLOR_GREEN, journalPeremptionLimdt);
+
+
+					if ((prixTChocoBase.get(Chocolat.C_BQ_E) + coutProd + this.getMaxPeremption(Chocolat.C_BQ_E)*this.coutStockage)*marges.get(Chocolat.C_BQ_E) < PRIX_MAX){
+						prix_Limdt_BQ_E.setValeur(this, (prixTChocoBase.get(Chocolat.C_BQ_E) + coutProd + this.getMaxPeremption(Chocolat.C_BQ_E)*this.coutStockage)*marges.get(Chocolat.C_BQ_E));
+					}
+					else {
+						prix_Limdt_BQ_E.setValeur(this, PRIX_MAX);
+					}
+
 					break;
 
 				case C_MQ_E : 
-				    pertePeremption(peremption_C_MQ_E_Limdt, cm, Color.blue);
+				    pertePeremption(peremption_C_MQ_E_Limdt, cm, Color.blue, journalPeremptionLimdt);
+
+					if ((prixTChocoBase.get(Chocolat.C_MQ_E) + coutProd + this.getMaxPeremption(Chocolat.C_MQ_E)*this.coutStockage)*marges.get(Chocolat.C_MQ_E) < PRIX_MAX){
+						prix_Limdt_MQ_E.setValeur(this, (prixTChocoBase.get(Chocolat.C_MQ_E) + coutProd + this.getMaxPeremption(Chocolat.C_MQ_E)*this.coutStockage)*marges.get(Chocolat.C_MQ_E));
+					}
+					else {
+						prix_Limdt_MQ_E.setValeur(this, PRIX_MAX);
+					}
+
 					break;
 
 				case C_HQ_BE :
-				    pertePeremption(peremption_C_HQ_BE_Limdt, cm, Color.red);
+				    pertePeremption(peremption_C_HQ_BE_Limdt, cm, Color.red, journalPeremptionLimdt);
+
+
+					if ((prixTChocoBase.get(Chocolat.C_HQ_BE) + coutProd + this.getMaxPeremption(Chocolat.C_HQ_BE)*this.coutStockage)*marges.get(Chocolat.C_HQ_BE) < PRIX_MAX){
+						prix_Limdt_HQ_BE.setValeur(this, (prixTChocoBase.get(Chocolat.C_HQ_BE) + coutProd + this.getMaxPeremption(Chocolat.C_HQ_BE)*this.coutStockage)*marges.get(Chocolat.C_HQ_BE));
+					}
+					else {
+						prix_Limdt_HQ_BE.setValeur(this, PRIX_MAX);
+					}
+
 					break;
 
 				default : 
@@ -478,19 +525,19 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 			switch (f){
 
 				case F_MQ : 
-				    pertePeremption(peremption_F_MQ, f, Color.black);
+				    pertePeremption(peremption_F_MQ, f, Color.black, journalPeremptionFeves);
 					break;
 
 				case F_BQ_E : 
-				    pertePeremption(peremption_F_BQ_E, f, Romu.COLOR_GREEN);
+				    pertePeremption(peremption_F_BQ_E, f, Romu.COLOR_GREEN, journalPeremptionFeves);
 					break;
 
 				case F_MQ_E : 
-				    pertePeremption(peremption_F_MQ_E, f, Color.blue);
+				    pertePeremption(peremption_F_MQ_E, f, Color.blue, journalPeremptionFeves);
 					break;
 
 				case F_HQ_BE :
-				    pertePeremption(peremption_F_HQ_BE, f, Color.red);
+				    pertePeremption(peremption_F_HQ_BE, f, Color.red, journalPeremptionFeves);
 					break;
 
 				default : 
@@ -513,10 +560,7 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 			totalStocks += this.getQuantiteEnStock(cm, this.cryptogramme);
 		}
 
-
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", (totalStocks*this.coutStockage));
-
-		//System.out.println("Voici nos prix : " + prixTChocoBase);
 	}
 
 
@@ -548,11 +592,11 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 		res.add(this.nbMachines);
 		res.add(this.nbOuvriers);
 		res.add(this.prodMax);
+		res.add(this.qttProduiteChoco);
+		res.add(this.totalSortant);
 		for (Chocolat c : lesChocolats){
 			res.add(this.repartitionTransfo.get(c));
 		}
-		
-
 		return res;
 	}
 
@@ -578,9 +622,6 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 		}
 		return this.chocosProduits;
 	}
-
-
-
 
     /**
      * @author MURY Julien
@@ -768,11 +809,11 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 	 * @author YAOU Reda 
 	 * Cette méthode nous fait perdre du stock lorsque le produit est périmé
 	 */
-	private void pertePeremption(double[] peremptionArray, IProduit p, Color color) {
+	private void pertePeremption(double[] peremptionArray, IProduit p, Color color, Journal journalPer) {
 		int n = peremptionArray.length - 1;
 		if (peremptionArray[n] > 0) {
+			journalPer.ajouter(Color.pink, color, "Péremption: On retire "+peremptionArray[n]+ " tonnes de "+p+" de notre stock");
 			this.retirerDuStock(p, peremptionArray[n], this.cryptogramme);
-			this.journalPeremptionLimdt.ajouter(Color.pink, color, "Péremption: On retire "+peremptionArray[n]+ " tonnes de "+p+" de notre stock");
 		}
 
 		for (int i=n; i>=1; i--) {
@@ -790,6 +831,31 @@ public class Transformateur1Stocks extends Transformateur1Usine implements IFabr
 			journalPer.ajouter(Romu.COLOR_LLGRAY, color, i+" : "+peremptionArray[i]);
 		}
 		journalPer.ajouter("\n");
+	}
+
+	/**
+	 * @author YAOU Reda
+	 * Cette méthode permet d'avoir le plus grand indice de l'array de péremption non vide, pour un type de chocolat
+	 * Et ce pour déduire à quel point ce chocolat nous a couté pour le stockage et ainsi optimiser son prix
+	 */
+	private int getMaxPeremption(Chocolat c) {
+		double[] peremptionArray = null;
+		if (c == Chocolat.C_MQ) {
+			peremptionArray = peremption_C_MQ_Limdt;
+		} else if (c == Chocolat.C_BQ_E) {
+			peremptionArray = peremption_C_BQ_E_Limdt;
+		} else if (c == Chocolat.C_MQ_E) {
+			peremptionArray = peremption_C_MQ_E_Limdt;
+		} else if (c == Chocolat.C_HQ_BE) {
+			peremptionArray = peremption_C_HQ_BE_Limdt;
+		}
+		int max = 0;
+		for (int i=0; i<peremptionArray.length; i++) {
+			if (peremptionArray[i] > 0) {
+				max+= 1;
+			}
+		}
+		return max;
 	}
 
 }

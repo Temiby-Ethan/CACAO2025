@@ -37,11 +37,13 @@ public class Producteur3 extends Producteur3Vente  {
 		getCump(Feve.F_BQ);
 		actualiserJournalMasseSalariale();
 		actualiserJournalCump();
+
 		degraderfeve(Feve.F_HQ_BE);
 		degraderfeve(Feve.F_HQ_E);
 		degraderfeve(Feve.F_MQ_E);
 		degraderfeve(Feve.F_BQ_E);
 		
+
 		}
 	
 	}

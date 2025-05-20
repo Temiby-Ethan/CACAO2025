@@ -1,6 +1,4 @@
-/**
- * @author tidzzz 
- */
+
 
 package abstraction.eq8Distributeur2;
 
@@ -71,22 +69,22 @@ public class Distributeur2Vendeur extends Distributeur2Acteur implements IDistri
 		}
 	}
 
+	//@author tidzzz
+	public void setPrix(ChocolatDeMarque choco) {
 
-public void setPrix(ChocolatDeMarque choco) {
+		if (choco.getChocolat() == Chocolat.C_MQ_E) {
+			ListPrix.put(choco, (double) 10000);
+		}
+		
 
-	if (choco.getChocolat() == Chocolat.C_MQ_E) {
-		ListPrix.put(choco, (double) 10000);
+		if (choco.getChocolat() == Chocolat.C_HQ_E) {
+			ListPrix.put(choco, (double) 22000);
+		}
+		if (choco.getChocolat() == Chocolat.C_HQ_BE) {
+			ListPrix.put(choco, (double) 30000);
+		}
+
 	}
-	
-
-	if (choco.getChocolat() == Chocolat.C_HQ_E) {
-		ListPrix.put(choco, (double) 22000);
-	}
-	if (choco.getChocolat() == Chocolat.C_HQ_BE) {
-		ListPrix.put(choco, (double) 30000);
-	}
-
-}
 
 
     public double prix(ChocolatDeMarque cm){
@@ -98,7 +96,7 @@ public void setPrix(ChocolatDeMarque choco) {
 		}
     }
 
-    
+    //@author tidzzz
     public double quantiteEnVente(ChocolatDeMarque choco, int crypto){
         if (crypto!=this.cryptogramme || !chocolats.contains(choco)) {
 			journalVente.ajouter("Quelqu'un essaye de me pirater !");
@@ -166,7 +164,7 @@ public void setPrix(ChocolatDeMarque choco) {
 	}
 
 
-
+	//@author tidzzz
     public void vendre(ClientFinal client, ChocolatDeMarque choco, double quantite, double montant, int crypto) {
 		int pos = (chocolats.indexOf(choco));
 		if (pos>=0) {
@@ -196,7 +194,7 @@ public void setPrix(ChocolatDeMarque choco) {
 	}
 
 
-
+	//@author tidzzz
 	public void next() {
 		super.next();
 		
@@ -241,7 +239,7 @@ public void setPrix(ChocolatDeMarque choco) {
 		
 	}
 
-	
+	//@author tidzzz
 	// Méthode pour ajuster les prix des chocolats en fonction du stock et des limites définies.
 	public void ajusterPrix() {
 		for (ChocolatDeMarque cm : chocolats) {
@@ -343,6 +341,8 @@ public void setPrix(ChocolatDeMarque choco) {
 		}
 	}
 
+	//@author tidzzz
+	// Méthode pour trouver le prix minimum d'un chocolat de marque parmi les distributeurs
 	private double prix_minimum(ChocolatDeMarque choco, double min) {
 		double minimum = min;
 		

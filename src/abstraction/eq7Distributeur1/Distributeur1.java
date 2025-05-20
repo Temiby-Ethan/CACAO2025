@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 import java.awt.Color;
+import java.text.DecimalFormat;
 
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.filiere.Filiere;
@@ -21,19 +22,16 @@ import abstraction.eqXRomu.contratsCadres.IAcheteurContratCadre;
 import abstraction.eqXRomu.contratsCadres.IVendeurContratCadre;
 import abstraction.eqXRomu.contratsCadres.SuperviseurVentesContratCadre;
 import abstraction.eqXRomu.general.Variable;
+import com.sun.net.httpserver.Authenticator;
 
 public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements IDistributeurChocolatDeMarque {
 	
 	// défi 1 et 2 par Alexiho
 	protected Journal journal; // Déclaration du journal
-	// protected Map<ChocolatDeMarque, Variable> stocksChocolats; // Table de hachage pour stocker les quantités de chocolat
-	//protected List<ChocolatDeMarque> chocolats;
+	protected Journal journalV;
 	protected List<Double> prix;
 	protected List<Double> capaciteDeVente;
 	protected IAcheteurAO identity;
-	//protected List<Integer> successedSell = new ArrayList<Integer>();
-	//protected List<Double> priceProduct = new ArrayList<Double>();
-	//protected List<Double> requiredQuantities  = new ArrayList<Double>();
 	protected int step = 0;
 	protected String name = "HexaFridge";
 	protected Color color = new Color(162, 207, 238);
@@ -44,7 +42,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 		super();
         
         this.journal = new Journal("Journal stock de EQ7", this); // Initialisation du journal
-
+		this.journalV = new Journal("Journal ventes de EQ7", this);
 		
 		predictionsVentesPourcentage = Arrays.asList(3.6 , 3.6 , 5.0 , 3.6 , 3.6 , 3.6 , 3.6 , 7.0 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 3.6 , 13.0);
 
@@ -62,13 +60,13 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
         ChocolatDeMarque chocolat = chocolats.get(i);
 
         // Initialize stocksChocolats with a default stock value
-        this.stocksChocolats.put(chocolat, new Variable(this.getNom() + "Stock" + chocolat.getNom(), this, 1000.0));
+        this.stocksChocolats.put(chocolat, new Variable(this.getNom() + "Stock" + chocolat.getNom(), this, 10000.0));
 
         // Initialize other lists
         this.prix.add(10.0); // Default price
         this.capaciteDeVente.add(900.0); // Default sales capacity
         this.successedSell.add(0); // Default successful sales count
-        this.priceProduct.add(1000.0); // Default product price
+        this.priceProduct.add(10000.0); // Default product price
         this.requiredQuantities.add(1000.0); // Default required quantity
     }
 
@@ -87,7 +85,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 			return 99999999.0;
 		} else {
 			//return prix.get(pos);
-			double price = 2*this.priceProduct.get(pos) + 0.5*(this.stocksChocolats.get(choco).getValeur()/1000) + 0.5*(this.successedSell.get(pos)/1000) + 0.5*(this.capaciteDeVente.get(pos)/1000);
+			double price = 3.5*this.priceProduct.get(pos) - 0.5*(this.stocksChocolats.get(choco).getValeur()/1000)  - 0.5*(this.capaciteDeVente.get(pos)/10000);
 			return price;
 		}
 	}
@@ -98,6 +96,10 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 		//List<Double> requiredQuantities = new ArrayList<>();
 		//Distributeur1Stock acteurStock = new Distributeur1Stock();
 		int step = Filiere.LA_FILIERE.getEtape(); // Récupération du numéro de l'étape
+		journal.ajouter(" ==============  Etape : " + step +  " ====================");
+		journalV.ajouter(" ==============  Etape : " + step +  " ====================");
+		journalCC.ajouter(" ==============  Etape : " + step +  " ====================");
+		journalAO.ajouter(" ==============  Etape : " + step +  " ====================");
 		for (int i=0; i< this.chocolats.size(); i++){
 			if ("Fraudolat".equals(this.stocksChocolats.get(chocolats.get(i)).getNom())){
 				requiredQuantities.set(i,500.0);
@@ -146,6 +148,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 
 		for (int i = 0 ; i<chocolats.size() ; i++){
 			str_journal_stock = this.stocksChocolats.get(chocolats.get(i)).getNom() + " = " + this.stocksChocolats.get(chocolats.get(i)).getValeur() + ";";
+			str_journal_stock = str_journal_stock.replace("EQ7Stock", "Stock ");
 			journal.ajouter(str_journal_stock);
 		}
 
@@ -203,9 +206,11 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 		int pos= (chocolats.indexOf(choco));
 		if (pos>=0) {
 			this.getStock(choco).retirer(this, quantite);
+			journalV.ajouter("Vente de " + quantite + " tonnes de " + choco.getNom());
 		}
-		journal.ajouter("vente" + quantite + choco.getNom());
 	}
+
+
 	@Override
 	public Variable getStock(ChocolatDeMarque c) { // par Alexiho
 		return this.stocksChocolats.get(c);
@@ -251,7 +256,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
                 @SuppressWarnings("Convert2Diamond")
 		List<Journal> res=new ArrayList<Journal>();
 		res.add(journal);
-		res.add(journalE);
+		res.add(journalV);
 		res.add(journalCC);
 		res.add(journalAO);
 		return res;
