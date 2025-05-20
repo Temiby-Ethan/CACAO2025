@@ -271,13 +271,13 @@ public class Distributeur2Vendeur extends Distributeur2Acteur implements IDistri
 				double prixMaximum;
 				
 				if (cm.getChocolat() == Chocolat.C_MQ_E) {
-					prixMinimum = prix_minimum(cm, 9500);
+					prixMinimum = Math.max(prix_minimum(cm, 9500),7000);
 					prixMaximum = 13000;
 				} else if (cm.getChocolat() == Chocolat.C_HQ_E) {
-					prixMinimum = prix_minimum(cm, 20000);
+					prixMinimum = Math.max(prix_minimum(cm, 20000),17000);
 					prixMaximum = 25000;
 				} else if (cm.getChocolat() == Chocolat.C_HQ_BE) {
-					prixMinimum = prix_minimum(cm, 28000);
+					prixMinimum = Math.max(prix_minimum(cm, 28000), 20000);
 					prixMaximum = 35000;
 				} else {
 					prixMinimum = 8000;
