@@ -163,7 +163,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 		for (int i=0; i<this.chocolats.size(); i++) {
 			this.capaciteDeVente.set(i, stocksChocolats.get(chocolats.get(i)).getValeur()/1.1);
 			if (this.capaciteDeVente.get(i)*Filiere.LA_FILIERE.getParametre("cout mise en rayon").getValeur()<1){
-				Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Mise en rayon", 0.1);
+				Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Mise en rayon", 1);
 
 			} else {
 				Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Mise en rayon", (this.capaciteDeVente.get(i)*Filiere.LA_FILIERE.getParametre("cout mise en rayon").getValeur()));
@@ -171,8 +171,13 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 			
 
 		}
-
-		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", (totalStocks*this.coutStockage));
+		if (totalStocks*this.coutStockage<1) 
+		{
+			Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", 1);
+		} else {
+			Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Stockage", (totalStocks*this.coutStockage));
+			
+		}
 		Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Salaires", this.salairetotal);
 		
 
