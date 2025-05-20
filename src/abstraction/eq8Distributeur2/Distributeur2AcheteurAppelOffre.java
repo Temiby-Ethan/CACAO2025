@@ -27,6 +27,8 @@ public class Distributeur2AcheteurAppelOffre extends Distributeur2AcheteurContra
 	protected Journal journalAO;
 	protected HashMap<Integer,OffreVente> choix;
     private Journal journalStock;
+    private double coutStockage;
+
     
     public Distributeur2AcheteurAppelOffre(){
         super();
@@ -38,6 +40,8 @@ public class Distributeur2AcheteurAppelOffre extends Distributeur2AcheteurContra
     public void initialiser() {
 		super.initialiser();
 		this.supAO = (SuperviseurVentesAO)(Filiere.LA_FILIERE.getActeur("Sup.AO"));
+        this.coutStockage = Filiere.LA_FILIERE.getParametre("cout moyen stockage producteur").getValeur() * 16;
+
 		
         this.prixRetenus = new HashMap<ChocolatDeMarque, List<Double>>();
 		for (ChocolatDeMarque cm : this.stock_Choco.keySet()) {
@@ -47,7 +51,7 @@ public class Distributeur2AcheteurAppelOffre extends Distributeur2AcheteurContra
 	}
 
     
-    
+    //@author ArmandChanane
     public OffreVente choisirOV(List<OffreVente> propositions) {
         if (propositions == null || propositions.isEmpty()) {
             return null;
@@ -83,7 +87,7 @@ public class Distributeur2AcheteurAppelOffre extends Distributeur2AcheteurContra
 				
                 journalAO.ajouter("Je lance un appel d'offre de "+quantite+"T de "+cm);
 				if (ov!=null) { 
-                    journalAO.ajouter("AO finalise : on ajoute "+quantite+"T de "+cm+" au stock");
+                    journalAO.ajouter(Romu.COLOR_LLGRAY,Romu.COLOR_GREEN,"AO finalise : on ajoute "+quantite+"T de "+cm+" au stock");
 					stock_Choco.put(cm, stock_Choco.get(cm)+quantite);
 					
 					prixRetenus.get(cm).add(ov.getPrixT());
@@ -116,16 +120,29 @@ public class Distributeur2AcheteurAppelOffre extends Distributeur2AcheteurContra
 		this.journal.ajouter("");
 
         for (Chocolat choc : Chocolat.values()) {
-            journalStock.ajouter("=== Stock pour la qualité de chocolat : " + choc + " ===");
+            journalStock.ajouter(Romu.COLOR_LBLUE, Romu.COLOR_LLGRAY, "=== Stock pour la qualité de chocolat : " + choc + " ===");
             for (ChocolatDeMarque cm : this.stock_Choco.keySet()) {
             if (cm.getChocolat().equals(choc)) {
-                journalStock.ajouter("Stock de " + cm + " : " + this.stock_Choco.get(cm));
+                journalStock.ajouter(Romu.COLOR_LBLUE, Romu.COLOR_LLGRAY, "Stock de " + cm + " : " + this.stock_Choco.get(cm));
             }
             }
         }
-        journalStock.ajouter("Stock total : " + this.stockTotal.getValeur(cryptogramme));
-        journalStock.ajouter("====================================================");
+        journalStock.ajouter(Romu.COLOR_LBLUE, Romu.COLOR_LLGRAY, "Stock total : " + this.stockTotal.getValeur(cryptogramme));
+        journalStock.ajouter(Romu.COLOR_LBLUE, Romu.COLOR_LLGRAY, "====================================================");
+
+        // paiement des stocks
+        double montant_a_payer_stock = stockTotal.getValeur(cryptogramme) * coutStockage;
+        Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "coutStockage", montant_a_payer_stock);
+
+        // paiement des employes
+        double salaire = 1200;
+        int nb_employes = (int) Math.ceil(0.0067 * stockTotal.getValeur(cryptogramme));
+        double montant_a_payer_salaire = nb_employes * salaire;
+        Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "salaire", montant_a_payer_salaire);
         
+        journal.ajouter(Romu.COLOR_LPURPLE, Romu.COLOR_LLGRAY, "Montant à payer pour le stockage : " + montant_a_payer_stock);
+        journal.ajouter(Romu.COLOR_LPURPLE, Romu.COLOR_LLGRAY, "Montant à payer pour les employés : " + montant_a_payer_salaire);
+
     }
 
     //@author pebinoh
