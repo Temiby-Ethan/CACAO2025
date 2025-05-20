@@ -68,26 +68,26 @@ public class Distributeur2AcheteurContratCadre extends Distributeur2Vendeur impl
         Echeancier echeancier = contrat.getEcheancier();
         IProduit produit = contrat.getProduit();
         
-        // Vérifier si nous avons besoin urgent du produit
+        // Vérifier si nous avons un besoin urgent du produit
         if (produit instanceof ChocolatDeMarque) {
             ChocolatDeMarque choco = (ChocolatDeMarque) produit;
             double stockActuel = stock_Choco.get(choco);
             
             // Si le stock est faible, on accepte l'échéancier tel quel
             if (stockActuel < 5000) {
-                journalCC.ajouter("Stock faible pour " + choco + ", j'accepte l'échéancier proposé.");
+                journalCC.ajouter(Romu.COLOR_LPURPLE, Romu.COLOR_LLGRAY, "Stock faible pour " + choco + ", j'accepte l'échéancier proposé.");
                 return echeancier;
             }
             
             // Sinon, on essaie d'étaler les livraisons pour mieux gérer notre stock
             if (echeancier.getNbEcheances() > 1) {
                 Echeancier contre = new Echeancier(echeancier.getStepDebut(), echeancier.getNbEcheances() + 2, echeancier.getQuantiteTotale() / (echeancier.getNbEcheances() + 2));
-                journalCC.ajouter("Contre-proposition d'échéancier: étalement sur " + contre.getNbEcheances() + " étapes.");
+                journalCC.ajouter(Romu.COLOR_LPURPLE, Romu.COLOR_LLGRAY, "Contre-proposition d'échéancier: étalement sur " + contre.getNbEcheances() + " étapes.");
                 return contre;
             }
         }
         
-        journalCC.ajouter("J'accepte l'échéancier proposé pour " + produit);
+        journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LGREEN, "J'accepte l'échéancier proposé pour " + produit);
         return echeancier;
     }
 
@@ -103,15 +103,7 @@ public class Distributeur2AcheteurContratCadre extends Distributeur2Vendeur impl
             
             // Prix maximum que nous sommes prêts à payer selon le type de chocolat
             double prixMaximum;
-            if (choco.getChocolat() == Chocolat.C_HQ_BE) {
-                prixMaximum = 27000;
-            } else if (choco.getChocolat() == Chocolat.C_HQ_E) {
-                prixMaximum = 20000;
-            } else if (choco.getChocolat() == Chocolat.C_MQ_E) {
-                prixMaximum = 9000;
-            } else {
-                prixMaximum = 8000;
-            }
+            prixMaximum = ListPrix.get(choco) * 0.85; // On est prêt à payer 85% du prix de vente
             
             // Si notre stock est très bas, on est prêt à payer plus
             if (stockActuel < 2000) {
@@ -123,17 +115,17 @@ public class Distributeur2AcheteurContratCadre extends Distributeur2Vendeur impl
             // Si le prix proposé est trop élevé, on fait une contre-proposition
             if (prixPropose > prixMaximum) {
                 double contreOffre = prixMaximum * 0.9; // On propose 90% de notre maximum
-                journalCC.ajouter("Prix proposé (" + prixPropose + ") trop élevé pour " + choco + ", je propose " + contreOffre);
+                journalCC.ajouter(Romu.COLOR_LPURPLE, Romu.COLOR_LLGRAY, "Prix proposé (" + prixPropose + ") trop élevé pour " + choco + ", je propose " + contreOffre);
                 return contreOffre;
             }
             
             // Si le prix est acceptable, on accepte mais on essaie quand même de négocier un peu
             if (prixPropose < prixMaximum * 0.8) {
-                journalCC.ajouter("Prix proposé (" + prixPropose + ") acceptable pour " + choco + ", j'accepte");
+                journalCC.ajouter(Romu.COLOR_LPURPLE, Romu.COLOR_LLGRAY, "Prix proposé (" + prixPropose + ") acceptable pour " + choco + ", j'accepte");
                 return prixPropose;
             } else {
                 double contreOffre = prixPropose * 0.95; // On essaie de baisser de 5%
-                journalCC.ajouter("Prix proposé (" + prixPropose + ") pour " + choco + ", je propose " + contreOffre);
+                journalCC.ajouter(Romu.COLOR_LPURPLE, Romu.COLOR_LLGRAY, "Prix proposé (" + prixPropose + ") pour " + choco + ", je propose " + contreOffre);
                 return contreOffre;
             }
         }
@@ -143,19 +135,19 @@ public class Distributeur2AcheteurContratCadre extends Distributeur2Vendeur impl
 
     //@author ArmandCHANANE
     public void notificationNouveauContratCadre(ExemplaireContratCadre contrat) {
-        journalCC.ajouter("Nouveau contrat cadre conclu : " + contrat);
+        journalCC.ajouter(Romu.COLOR_LGREEN, Romu.COLOR_LLGRAY, "Nouveau contrat cadre conclu : " + contrat);
     }
 
     //@author tidzzz
     public void receptionner(IProduit p, double quantiteEnTonnes, ExemplaireContratCadre contrat) {
         stock_Choco.put((ChocolatDeMarque) p,this.stock_Choco.get(p)+quantiteEnTonnes);
-        journal.ajouter(Romu.COLOR_PURPLE, Romu.COLOR_GREEN,"Réception de " + quantiteEnTonnes + " tonnes de " + p.toString() + " du contrat " + contrat.toString());
+        journal.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LBLUE,"Réception de " + quantiteEnTonnes + " tonnes de " + p.toString() + " du contrat " + contrat.toString());
         journal.ajouter("");
-        journalCC.ajouter(Romu.COLOR_PURPLE, Romu.COLOR_GREEN,"Réception de " + quantiteEnTonnes + " tonnes de " + p.toString() + " pour le contrat " + contrat.toString());
+        journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_LBLUE,"Réception de " + quantiteEnTonnes + " tonnes de " + p.toString() + " pour le contrat " + contrat.toString());
         
         // Vérifier si le contrat est terminé
 			if (contrat.getQuantiteRestantALivrer() == 0.0) {
-				journalCC.ajouter("Contrat " + contrat.getNumero() + " terminé !");
+				journalCC.ajouter(Romu.COLOR_LLGRAY, Romu.COLOR_BROWN, "Contrat " + contrat.getNumero() + " terminé !");
 				this.contrat_en_cours.remove(contrat);
 				this.contrat_term.add(contrat);
 			}
