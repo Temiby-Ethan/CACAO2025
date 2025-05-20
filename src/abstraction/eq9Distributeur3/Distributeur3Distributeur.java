@@ -15,9 +15,9 @@ public class Distributeur3Distributeur extends Distributeur3Acteur implements ID
     // protected HashMap<ChocolatDeMarque, Double> stocks;
     protected HashMap<ChocolatDeMarque, Float> prix;
     protected VariablePrivee stockTotal;
-    private VariablePrivee stockBQ;
-    private VariablePrivee stockBQ_E;
-    private VariablePrivee stockMQ;
+    protected VariablePrivee stockBQ;
+    protected VariablePrivee stockBQ_E;
+    protected VariablePrivee stockMQ;
     private HashMap<Integer,HashMap<ChocolatDeMarque,Double>> ventes;
 
     // Implémentée par Héloïse
