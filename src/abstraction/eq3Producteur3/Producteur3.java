@@ -40,7 +40,8 @@ public class Producteur3 extends Producteur3Vente  {
 		degraderfeve(Feve.F_HQ_BE);
 		degraderfeve(Feve.F_HQ_E);
 		degraderfeve(Feve.F_MQ_E);
-		degraderfeve(Feve.F_BQ_E);	
+		degraderfeve(Feve.F_BQ_E);
+		
 		}
 	
 	}

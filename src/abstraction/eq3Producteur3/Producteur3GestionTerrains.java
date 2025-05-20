@@ -211,7 +211,7 @@ public class Producteur3GestionTerrains extends Producteur3Acteur{
 
 
     void replanter(){
-        LinkedList<Parcelle> tmp = vie.get(40);
+        LinkedList<Parcelle> tmp = vie.get(39);
         for(Parcelle t : tmp){
             deficteTerrain.add(t.qualite.replanter);
             tmp.remove(t);
@@ -228,6 +228,7 @@ public class Producteur3GestionTerrains extends Producteur3Acteur{
                 vie.put(i+1,vie.get(i));
             }
             // On replante toutes les parcelles de 40 ans
+            vie.put(0, new LinkedList<>());
             for(Parcelle t : aReplanter){
                 deficteTerrain.add(t.qualite.replanter);
                 vie.get(0).add(t);
