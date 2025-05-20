@@ -165,7 +165,7 @@ public class Distributeur1 extends Distributeur1AcheteurAppelOffre implements ID
 			if (this.capaciteDeVente.get(i)*Filiere.LA_FILIERE.getParametre("cout mise en rayon").getValeur()<1){
 				Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Mise en rayon", 1);
 
-			}else{
+			} else {
 				Filiere.LA_FILIERE.getBanque().payerCout(this, cryptogramme, "Mise en rayon", (this.capaciteDeVente.get(i)*Filiere.LA_FILIERE.getParametre("cout mise en rayon").getValeur()));
 			}
 			
