@@ -37,6 +37,8 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 
 	protected int cryptogramme;
 
+	protected Variable qttProduiteChoco; // quantité de chocolat produite durant cette step: devrait être égale à ProdMax
+
 	//Stock de fèves
 	protected Variable stock_F_MQ;
 	protected Variable stock_F_BQ_E;
@@ -96,6 +98,10 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 	protected Variable prix_Limdt_HQ_BE;
 
 
+	//Quantité vendues par step
+	protected Variable totalSortant ;
+
+
 
 	/**
 	 * Cette classe est la plus haute dans l'arbre d'héritage du transformateur 1
@@ -137,17 +143,17 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 		 * @author MURY Julien
 		 * @author ABBASSI Rayene
 		 */
-		this.stock_F_MQ =new Variable("F_BQ","<html>Quantite totale de F_BQ en stock</html>", this, 0., 1000000., 5000.);
+		this.stock_F_MQ =new Variable("F_MQ","<html>Quantite totale de F_MQ en stock</html>", this, 0., 1000000., 5000.);
 		this.stock_F_BQ_E = new Variable("F_BQ_E","<html>Quantite totale de F_BQ_E en stock</html>", this, 0., 1000000., 5000.);
 		this.stock_F_MQ_E = new Variable("F_MQ_E", "<html>Quantite totale de F_MQ_E en stock</html>", this, 0., 1000000., 5000.);
 		this.stock_F_HQ_BE = new Variable("F_HQ_BE", "<html>Quantite totale de F_HQ_BE en stock</html>", this, 0., 1000000., 5000.);
 
-		this.stock_C_MQ=new Variable("EQ4T Stock C_BQ", "<html>Quantite totale de C_BQ en stock</html>",this, 0.0, 1000000.0, 0.0);
+		this.stock_C_MQ=new Variable("EQ4T Stock C_MQ", "<html>Quantite totale de C_MQ en stock</html>",this, 0.0, 1000000.0, 0.0);
 		this.stock_C_BQ_E=new Variable("EQ4T Stock C_BQ_E", "<html>Quantite totale de C_BQ_E en stock</html>",this, 0.0, 1000000.0, 0.0);
 		this.stock_C_MQ_E=new Variable("EQ4T Stock C_MQ_E", "<html>Quantite totale de C_MQ_E en stock</html>",this, 0.0, 1000000.0, 0.0);
 		this.stock_C_HQ_BE=new Variable("EQ4T Stock C_HQ_BE", "<html>Quantite totale de C_HQ_BE en stock</html>",this, 0.0, 1000000.0, 0.0);
 		
-		this.stock_C_MQ_Limdt=new Variable("EQ4T Stock C_BQ_Limdt", "<html>Quantite totale de C_BQ_Limdt en stock</html>",this, 0.0, 1000000.0, 40000.0);
+		this.stock_C_MQ_Limdt=new Variable("EQ4T Stock C_MQ_Limdt", "<html>Quantite totale de C_MQ_Limdt en stock</html>",this, 0.0, 1000000.0, 40000.0);
 		this.stock_C_BQ_E_Limdt=new Variable("EQ4T Stock C_BQ_E_Limdt", "<html>Quantite totale de C_BQ_E_Limdt en stock</html>",this, 0.0, 1000000.0, 40000.0);
 		this.stock_C_MQ_E_Limdt=new Variable("EQ4T Stock C_MQ_E_Limdt", "<html>Quantite totale de C_MQ_E_Limdt en stock</html>",this, 0.0, 1000000.0, 40000.0);
 		this.stock_C_HQ_BE_Limdt=new Variable("EQ4T Stock C_HQ_BE_Limdt", "<html>Quantite totale de C_HQ_BE_Limdt en stock</html>",this, 0.0, 1000000.0, 40000.0);
@@ -183,8 +189,9 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 		this.stocksChocoVar.put(Chocolat.C_MQ_E, stock_C_MQ_E);
 		this.stocksChocoVar.put(Chocolat.C_HQ_BE, stock_C_HQ_BE);
 
-
 		this.stocksMarqueVar = new HashMap<ChocolatDeMarque, Variable>();
+
+		this.qttProduiteChoco = new Variable("Qtt produite chocolat", this, 0., 10000000000., 0.);
 
 		this.pourcentageTransfo = new HashMap<Feve, HashMap<Chocolat, Double>>();
 
@@ -214,8 +221,9 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 		this.qttSortantesTransactions = new HashMap<Chocolat, Double>();
 		this.qttFevesAcheteesBourse = new Variable("Qtt Feves Achetees Bourse", "<html>Quantité de fèves achetées en bourse</html>", this, 0., 1000000., 0.);
 
-		this.marges = new HashMap<Chocolat, Double>();
+		this.totalSortant = new Variable("Quantité vendue au step", this, 0., 1000000, 0.);
 
+		this.marges = new HashMap<Chocolat, Double>();
 	}
 
 	public void initialiser() {
@@ -228,7 +236,6 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 			ChocolatDeMarque cm= new ChocolatDeMarque(c, "LimDt", pourcentageCacao);
 			this.chocolatsLimDt.add(cm);
 			this.qttSortantesTransactions.put(c, 0.);
-
 		}
 
 
@@ -239,7 +246,6 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 				case C_MQ : 
 					stocksMarqueVar.put(cm, stock_C_MQ_Limdt);
 					initialiserPeremption(peremption_C_MQ_Limdt, stock_C_MQ_Limdt);
-
 					break;
 
 				case C_BQ_E : 
@@ -258,9 +264,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 					break;
 
 				default : 
-
 					journalStock.ajouter(Color.pink, Color.BLACK,"Le chocolat " + cm + " ne devrait pas être présent dans notre gammme");
-
 					break;
 			}
 			this.journalStock.ajouter(Romu.COLOR_LLGRAY, Color.BLACK," stock("+cm+")->"+this.stocksMarqueVar.get(cm).getValeur());
@@ -275,24 +279,24 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 		this.prixTFeveStockee.put(Feve.F_HQ_BE, 2000.);
 
 		//Initialisation des prix de base des chocolats que l'on veut produire
-		this.prixTChocoBase.put(Chocolat.C_MQ, 5000.);
-		this.prix_Limdt_MQ.setValeur(this, 5000.);
+		this.prixTChocoBase.put(Chocolat.C_MQ, 20000.);
+		this.prix_Limdt_MQ.setValeur(this, 20000.);
 
-		this.prixTChocoBase.put(Chocolat.C_BQ_E, 5000.);
-		this.prix_Limdt_BQ_E.setValeur(this, 5000.);
+		this.prixTChocoBase.put(Chocolat.C_BQ_E, 20000.);
+		this.prix_Limdt_BQ_E.setValeur(this, 20000.);
 
-		this.prixTChocoBase.put(Chocolat.C_MQ_E, 5000.);
-		this.prix_Limdt_MQ_E.setValeur(this, 5000.);
+		this.prixTChocoBase.put(Chocolat.C_MQ_E, 20000.);
+		this.prix_Limdt_MQ_E.setValeur(this, 20000.);
 
-		this.prixTChocoBase.put(Chocolat.C_HQ_BE, 5000.);
-		this.prix_Limdt_HQ_BE.setValeur(this, 5000.);
+		this.prixTChocoBase.put(Chocolat.C_HQ_BE, 20000.);
+		this.prix_Limdt_HQ_BE.setValeur(this, 20000.);
 		
 
 		//Initialisation des marges que l'on va faire sur les différents produits
-		this.marges.put(Chocolat.C_MQ, 1.5);
-		this.marges.put(Chocolat.C_BQ_E, 1.16);
-		this.marges.put(Chocolat.C_MQ_E, 1.16);
-		this.marges.put(Chocolat.C_HQ_BE, 1.3);
+		this.marges.put(Chocolat.C_MQ, 2.5);
+		this.marges.put(Chocolat.C_BQ_E, 1.5);
+		this.marges.put(Chocolat.C_MQ_E, 1.5);
+		this.marges.put(Chocolat.C_HQ_BE, 2.3);
 
 
 		//Initialisation des pourcentage de conversion fèves vers chocolat
@@ -311,7 +315,6 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 		conversion = 1.0 + (100.0 - Filiere.LA_FILIERE.getParametre("pourcentage min cacao BQ").getValeur())/100.0;
 		this.pourcentageTransfo.get(Feve.F_BQ_E).put(Chocolat.C_BQ_E, conversion);
 
-
 		this.journalStock.ajouter(Romu.COLOR_LLGRAY, Color.PINK, "Stock initial chocolat de marque : ");
 
 		this.journalCC.ajouter(Color.orange, Color.BLACK, "Les achats seront en marron;");
@@ -329,6 +332,8 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 		this.qttEntrantesFeve.put(Feve.F_BQ_E, 0.);
 		this.qttEntrantesFeve.put(Feve.F_HQ_BE, 0.);
 		this.qttEntrantesFeve.put(Feve.F_MQ_E, 0.);
+
+
 
 	}
 
@@ -353,6 +358,7 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 		this.journalStock.ajouter("Stock de chocolat de marque : " + this.totalStocksChocoMarque.getValeur(this.cryptogramme));
 		this.journalStock.ajouter("\n");
 		*/
+
 
 		this.journal.ajouter("Solde : " + this.getSolde());
 		this.journal.ajouter("\n");
@@ -508,13 +514,12 @@ public class Transformateur1Acteur implements IActeur, IMarqueChocolat {
 
 	/**
 	 * @author YAOU Reda
-	 * Cette période initialise les tableaux de péremption de nos produits
+	 * Cette méthode initialise les tableaux de péremption de nos produits
 	 */
 	public void initialiserPeremption(double[] peremptionArray, Variable stock) {
 		peremptionArray[0] = stock.getValeur();
 		for (int i=1; i<peremptionArray.length; i++){
 			peremptionArray[i] = 0.0;
-
 		}
 	}
 }

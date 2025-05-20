@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.produits.Chocolat;
 import abstraction.eqXRomu.produits.ChocolatDeMarque;
@@ -43,5 +42,21 @@ public class Transformateur1 extends Transformateur1AcheteurAppelDOffre {
             this.repartitionTransfo.get(secondSmallestKey).setValeur(this, repartitionTransfo.get(secondSmallestKey).getValeur() + 0.05);
             this.repartitionTransfo.get(secondLargestKey).setValeur(this, repartitionTransfo.get(secondLargestKey).getValeur() - 0.05);
         } 
+
+        //Mise à jour des qtt sortantes maintenant que nous avons de nouveaux contrats cadres et que toutes les transactions ont été effectuées
+        this.determinerQttSortantChoco();
+
+        //Remise à zéro des ventes par transactions : 
+        for(Chocolat c : lesChocolats){
+            this.qttSortantesTransactions.put(c, 0.);
+        }
+        
+        totalSortant.setValeur(this, 0.);
+        for (Chocolat c : lesChocolats){
+            totalSortant.ajouter(this, qttSortantesChoco.get(c));
+        }
+
+        //on réinitialise coutProd
+        this.coutProd = 0;
     }
 }

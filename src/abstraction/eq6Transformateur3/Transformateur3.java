@@ -3,13 +3,11 @@ package abstraction.eq6Transformateur3;
 import java.util.ArrayList;
 import java.util.List;
 
-import abstraction.eqXRomu.contratsCadres.ExemplaireContratCadre;
 import abstraction.eqXRomu.filiere.Filiere;
 import abstraction.eqXRomu.general.Journal;
 import abstraction.eqXRomu.general.Variable;
-import abstraction.eqXRomu.produits.IProduit;
 
-public class Transformateur3 extends Transformateur3StratPrix{
+public class Transformateur3 extends Transformateur3AO{
 
 	public Transformateur3() {
 	}
@@ -21,6 +19,9 @@ public class Transformateur3 extends Transformateur3StratPrix{
 	public void next(){
 		super.next();
 		super.jdb.ajouter("NEXT - TRANSFORMATEUR3");
+
+		super.actualiserEcheanciers();
+		super.displayAllStratQuantityData();
 		//stockChoco.addToStock(super.lesChocolats.get(0), 500.0);
 		//stockChoco.addToStock(lesChocolats.get(1), 800.0);
 
@@ -40,7 +41,6 @@ public class Transformateur3 extends Transformateur3StratPrix{
 		super.jdb.ajouter("Payement Coût stockage : "+Math.round(super.coutStockage*stockTotal/div)+suff);
 
 		//Estimation coût par fèves
-		IProduit testFeve = super.lesFeves.get(0);
 
 		super.stockFeves.display();
 		super.stockChoco.display();
@@ -52,7 +52,6 @@ public class Transformateur3 extends Transformateur3StratPrix{
 		res.add(super.jdb);
 		res.add(super.journalProduction);
 		res.add(super.journalStock);
-		res.add(super.journalTransac);
 		res.add(super.journalCC);
 		res.add(super.journalBourse);
 		res.add(super.journalAO);
